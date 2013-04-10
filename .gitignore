@@ -15,5 +15,12 @@
 # Mappar
 Lilla spelprojektet/Obj/**/
 Lilla spelprojektet/Code/ipch/
+
 *.sdf
 *.opensdf
+*.suo
+*.exe
+*.ilk
+*.pdb
+*.vcxproj
+*.vcxproj.filters
