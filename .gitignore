@@ -15,3 +15,5 @@
 # Mappar
 Lilla spelprojektet/Obj/**/
 Lilla spelprojektet/Code/ipch/
+*.sdf
+*.opensdf
