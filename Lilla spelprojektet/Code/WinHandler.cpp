@@ -104,3 +104,8 @@ LRESULT CALLBACK WinHandler::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 
 	return 0;
 }
+
+HWND WinHandler::getHWND()
+{
+	return this->hWnd;
+}

@@ -1,15 +1,10 @@
 #include "stdafx.h"
-#include "D3D11Handler.h"
-#include "WinHandler.h"
+#include "Game.h"
 
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
 {
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-
-	D3D11Handler d3d;
-	d3d.initWindow(hInstance, nCmdShow);
-	d3d.InitDirect3D();
-
+	
 	MSG msg = {0};
 	__int64 cntsPerSec = 0;
 	__int64 prevTimeStamp = 0;
@@ -19,6 +14,13 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	QueryPerformanceFrequency((LARGE_INTEGER*)&cntsPerSec);
 	float secsPerCnt = 1.0f / (float)cntsPerSec;
 	QueryPerformanceCounter((LARGE_INTEGER*)&prevTimeStamp);
+
+	Game *game = new Game();
+
+	if(!game->init(hInstance,nCmdShow))
+	{
+		return -1;
+	}
 
 	// Main message loop
 	while(WM_QUIT != msg.message)
@@ -35,11 +37,15 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 			dt = (currTimeStamp - prevTimeStamp) * secsPerCnt;
 
 			//main logic and draw calls
+			game->update(dt);
+			game->render();
 	
 
 			prevTimeStamp = currTimeStamp;
 		}
 	}
+
+	delete game;
 
 	return 0;
 }

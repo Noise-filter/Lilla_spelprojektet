@@ -1,7 +1,6 @@
 #include "D3D11Handler.h"
 
 D3D11Handler::D3D11Handler()
-:WinHandler()
 {
 	this->swapChain = NULL;
 	this->renderTargetView = NULL;
@@ -49,19 +48,14 @@ D3D11Handler::~D3D11Handler()
 		this->deviceContext->Release();
 		this->deviceContext = NULL;
 	}
-
-	if(this->shader)
-	{
-		delete this->shader;
-	}
 }
 
 
-HRESULT D3D11Handler::InitDirect3D()
+HRESULT D3D11Handler::InitDirect3D(HWND hWnd)
 {
 	HRESULT hr = S_OK;
 	RECT rec;
-	GetClientRect(this->hWnd, &rec);
+	GetClientRect(hWnd, &rec);
 
 	int screenWidth = rec.right - rec.left;
 	int screenHeight = rec.bottom - rec.top;
@@ -130,7 +124,7 @@ HRESULT D3D11Handler::InitDirect3D()
 				"BTH - Direct3D 11.0 Template | Direct3D 11.0 device initiated with Direct3D %s feature level",
 				FeatureLevelToString(initiatedFeatureLevel)
 			);
-			SetWindowText(this->hWnd, title);
+			SetWindowText(hWnd, title);
 
 			break;
 		}
@@ -189,19 +183,6 @@ HRESULT D3D11Handler::InitDirect3D()
 	viewPort.TopLeftX = 0;
 	viewPort.TopLeftY = 0;
 	this->deviceContext->RSSetViewports( 1, &viewPort );
-
-
-	D3D11_INPUT_ELEMENT_DESC inputDesc[] = {
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXTCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	};
-
-	shader = new Shader();
-	if(FAILED(this->shader->Init(this->device, this->deviceContext, "../Shaders/BasicShadows.fx", inputDesc, 3)))
-	{
-		return E_FAIL;
-	}
 
 	return S_OK;
 }

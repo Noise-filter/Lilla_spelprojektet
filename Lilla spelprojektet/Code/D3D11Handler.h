@@ -5,26 +5,26 @@
 #include "WinHandler.h"
 #include "Shader.h"
 
-class D3D11Handler : public WinHandler
+class D3D11Handler
 {
 	private:
 
 
 	protected:
-		IDXGISwapChain*         swapChain;	
-		ID3D11RenderTargetView* renderTargetView;	
-		ID3D11Texture2D*        depthStencil; 
-		ID3D11DepthStencilView* depthStencilView;
-		ID3D11Device*			device;
-		ID3D11DeviceContext*	deviceContext;
-		Shader*					shader;
 		D3D11_VIEWPORT          viewPort;
 		char* FeatureLevelToString(D3D_FEATURE_LEVEL featureLevel);
 
 	public:
+		ID3D11Device*			device;
+		ID3D11DeviceContext*	deviceContext;
+		IDXGISwapChain*         swapChain;	
+		ID3D11RenderTargetView* renderTargetView;	
+		ID3D11Texture2D*        depthStencil; 
+		ID3D11DepthStencilView* depthStencilView;
+
 		D3D11Handler();
 		~D3D11Handler();
-		HRESULT InitDirect3D();
+		HRESULT InitDirect3D(HWND hWnd);
 		void resetRT();
 };
 
