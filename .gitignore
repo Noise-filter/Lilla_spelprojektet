@@ -16,6 +16,7 @@
 Lilla spelprojektet/Obj/**/
 Lilla spelprojektet/Code/ipch/
 
+#andra saker
 *.sdf
 *.opensdf
 *.suo
