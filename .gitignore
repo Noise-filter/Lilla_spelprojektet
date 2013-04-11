@@ -12,10 +12,6 @@
 *.la
 *.a
 
-# Mappar
-Lilla spelprojektet/Obj/**/
-Lilla spelprojektet/Code/ipch/
-
 #andra saker
 *.sdf
 *.opensdf
@@ -25,3 +21,7 @@ Lilla spelprojektet/Code/ipch/
 *.pdb
 *.vcxproj
 *.vcxproj.filters
+
+# Mappar
+Lilla spelprojektet/Obj/**/
+Lilla spelprojektet/Code/ipch/
