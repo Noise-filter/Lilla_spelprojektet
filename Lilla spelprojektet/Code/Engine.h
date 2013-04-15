@@ -11,9 +11,27 @@ public:
 	void render();
 	bool init(HINSTANCE hInstance, int cmdShow);
 
+	void setRenderData(RenderData* renderData);
+
+	void updateBuffers();
+
 private:
+	struct Vertex
+	{
+		D3DXVECTOR3 pos;
+	};
+
+	struct InstancedData
+	{
+		D3DXMATRIX matrix;
+	};
+
 	D3D11Handler* d3d;
 	WinHandler* win32;
+
+	Shader* shader;
+	ID3D11Buffer* vbs[2];
+	ID3D11Buffer* indexBuffer;
 
 };
 
