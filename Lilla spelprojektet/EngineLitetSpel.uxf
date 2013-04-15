@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="11.5.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>380</x>
+      <y>10</y>
+      <w>320</w>
+      <h>380</h>
+    </coordinates>
+    <panel_attributes>Engine
+--
+/Medlemsvariabler/
+-m_renderData : struct RenderData**
+-m_light : Light**
+-m_lightTypes : struct LightTypes**
+-m_bufferList : BufferList**
+-m_wrapperHLSL : WrapperHLSL
+-m_bufferObj : Buffer
+-fullScreenQuad : Mesh 
+--
+/Medlemsfunktioner/
++render() : void
++addRenderData(...) : void
++init(...) : HRESULT
+--
+-initResource(...) : HRESULT
+-intiSwapChainAndDevice(HWND) : HRESULT
+-initDepth() : HRESULT
+-initRenderTargetView() : HRESULT
+-initBuffers() : bool
+-initShaders() : bool
+-initTexture() : bool
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>90</x>
+      <y>390</y>
+      <w>250</w>
+      <h>310</h>
+    </coordinates>
+    <panel_attributes>Buffer
+--
+Texture buffer
+/Contains world-matrix and textureID/
+matrixList : 
+
+
+-supplyIndex : ID3D11IndexBuffer*
+-towerIndex : ID3D11IndexBuffer*
+-enemyIndex : ID3D11IndexBuffer*
+
+-meshGUI : ID3D11Buffer*
+-supply : ID3D11Buffer*
+-tower : ID3D11Buffer*
+-enemy : ID3D11Buffer*
+-plane : ID3D11Buffer*
+-nodes : ID3D11Buffer*
+
++indexList : ID3D11IndexBuffer**
++vertexList : ID3D11Buffer**
+--
++init() : HRESULT
++swapBuffers(RenderData) : void
++getTextureBuffer  
+--
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>730</x>
+      <y>40</y>
+      <w>160</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>WrapperHLSL
+--
+Shader lista
+Pass lista
+Rendertargets lista</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>670</x>
+      <y>10</y>
+      <w>80</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>30;30;60;40</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>120</x>
+      <y>360</y>
+      <w>280</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>260;30;30;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>0</x>
+      <y>50</y>
+      <w>310</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>D3D
+--
++device : ID3D11Device*
++deviceContext : ID3D11DeviceContext*
++swapChain : IDXGISwapChain*
++depthStencilView : ID3D11DepthStencilView*
++depthStencilState : ID3D11DepthStencilState*
++depthStencil : ID3D11Texture2D*
++renderTargetView : ID3D11RenderTargetView*
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>280</x>
+      <y>40</y>
+      <w>120</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>100;50;30;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>750</x>
+      <y>290</y>
+      <w>100</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>WinHandler
+--
++getHandle() : HWND</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>670</x>
+      <y>170</y>
+      <w>130</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>30;30;110;120</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>890</x>
+      <y>390</y>
+      <w>280</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>D3DGraphicUtility
+--
+enum PASS_STATE
+/Include neccessary libraries for rendering/
+/Macros for releasing pointers and arrays/
+/Detect memory leaks/
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1070</x>
+      <y>60</y>
+      <w>260</w>
+      <h>260</h>
+    </coordinates>
+    <panel_attributes>D3DMathUtility
+--
+/Re-Define D3DXVector and D3DXMatrix/
+#define Vec2 D3DXVECTOR2
+#define Vec3 D3DXVECTOR3
+#define Vec4 D3DXVECTOR4
+#define Matrix D3DXMATRIX
+/Screen dimiensions/
+struct MeshGUI
+{
+  pos : Vec3
+  uv  : Vec2
+}
+struct MeshObj
+{
+  pos : Vec3
+  normal : Vec3
+  uv  : Vec2
+}</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>860</x>
+      <y>50</y>
+      <w>230</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>30;30;210;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>860</x>
+      <y>100</y>
+      <w>50</w>
+      <h>340</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>30;30;30;320</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>70</x>
+      <y>890</y>
+      <w>120</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>Importer
+--
+Very important</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>120</x>
+      <y>670</y>
+      <w>60</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>40;30;30;220</additional_attributes>
+  </element>
+</diagram>
