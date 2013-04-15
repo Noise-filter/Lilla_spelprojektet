@@ -163,20 +163,44 @@
   <ItemGroup>
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="D3D11Handler.h" />
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyHandler.h" />
     <ClInclude Include="Engine.h" />
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameLogic.h" />
+    <ClInclude Include="Headquarter.h" />
+    <ClInclude Include="Level.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="Node.h" />
+    <ClInclude Include="Projectile.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Structure.h" />
+    <ClInclude Include="Supply.h" />
+    <ClInclude Include="Tower.h" />
+    <ClInclude Include="Upgrade.h" />
     <ClInclude Include="WinHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="D3D11Handler.cpp" />
+    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemyHandler.cpp" />
     <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameLogic.cpp" />
+    <ClCompile Include="Headquarter.cpp" />
+    <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Node.cpp" />
+    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Structure.cpp" />
+    <ClCompile Include="Supply.cpp" />
+    <ClCompile Include="Tower.cpp" />
+    <ClCompile Include="Upgrade.cpp" />
     <ClCompile Include="WinHandler.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
