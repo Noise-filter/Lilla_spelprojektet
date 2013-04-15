@@ -27,6 +27,13 @@
 #define SAFE_DELETE(x) if( x ) { delete(x); (x) = NULL; }
 #define SAFE_DELETE_ARRAY(x) if( x ) { delete[](x); (x) = NULL; }
 
+enum PASS_STATE
+{
+	GEOMETRY,
+	LIGHT,
+	FULLSCREENQUAD,
+};
+
 //////////////////////////////////////////////////////////////////////////
 // to find memory leaks
 //////////////////////////////////////////////////////////////////////////
