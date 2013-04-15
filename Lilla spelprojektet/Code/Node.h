@@ -7,11 +7,10 @@ class Node : public Entity
 {
 public:
 	Node();
+	Node(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, int color);
 	virtual ~Node();
 
 	virtual int update(float dt);
-
-
 
 private:
 	int color;

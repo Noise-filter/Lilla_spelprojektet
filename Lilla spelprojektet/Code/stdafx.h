@@ -25,6 +25,8 @@ struct RenderData
 	int meshID;
 	int textureID;
 	D3DXMATRIX worldMat;
+	
+	int lightID;
 };
 
 #ifdef _DEBUG
