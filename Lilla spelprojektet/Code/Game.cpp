@@ -11,16 +11,18 @@ Game::Game(void)
 Game::~Game(void)
 {
 	SAFE_DELETE(engine);
+	SAFE_DELETE(gameLogic);
 }
 
 bool Game::init(HINSTANCE hInstance, int cmdShow)
 {
 	if(!engine->init(hInstance,cmdShow))
-	{
 		return false;
-	}
 
 	//initiate other game resources such as level or whatever
+
+	if(!gameLogic->init(10))
+		return false;
 
 
 
@@ -37,7 +39,7 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 void Game::render()
 {
 	//build engines renderContent with addRenderData then do render to execute those renders
-
+	delete gameLogic->getRenderData();
 
 	engine->render();
 }

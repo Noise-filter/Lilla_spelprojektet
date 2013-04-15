@@ -25,7 +25,15 @@ int GameLogic::update(float dt)
 	return 1;//all went good
 }
 
+bool GameLogic::init(int mapSize)
+{
+	this->level->init(mapSize);
+	//this->eHandler->init(); does not exist yet, need to add this
+
+	return true;
+}
+
 RenderData* GameLogic::getRenderData()
 {
-	return NULL;	
+	return this->level->getRenderData();	
 }

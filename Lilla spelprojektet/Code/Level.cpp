@@ -21,7 +21,7 @@ bool Level::init(int mapSize)
 	{
 		for(int j = 0; j < mapSize; j++)
 		{
-			nodes[i][j] = Node();
+			//nodes[i][j] = Node(D3DXVECTOR3(i*50,0,j*50),0,0,0,0,0);
 		}
 	}
 
@@ -32,7 +32,7 @@ Level::~Level(void)
 {
 	for(int i = 0; i < this->mapSize; i++)
 	{
-		SAFE_DELETE(nodes[i]);
+		SAFE_DELETE_ARRAY(nodes[i]);
 	}
 	SAFE_DELETE_ARRAY(nodes);
 }
@@ -44,5 +44,16 @@ int Level::update(float dt)
 
 RenderData* Level::getRenderData()
 {
-	return NULL;
+	RenderData* rData = new RenderData[mapSize*mapSize];
+	int index = 0;
+
+	for(int i = 0; i < mapSize; i++)
+	{
+		for(int j = 0; j < mapSize; j++)
+		{
+			rData[index++] = nodes[i][j].getRenderData();
+		}
+	}
+
+	return rData;
 }
