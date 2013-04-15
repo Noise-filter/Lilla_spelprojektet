@@ -1,0 +1,26 @@
+*WinHandler (Eriks)
+*D3D ta bort rendertargets, states -> Engine
+*Engine render(), addRenderData(), init(), initRes()
+*Light, lightTypes
+*Geo, light, quad pass -> Engine
+
+
+RenderData struct
+*MeshID
+*Matris
+*Texture
+*lightFlag
+
+Första pass
+*Normal map
+*Depth map
+*Albedo texture
+*SSAO sampling
+
+Andra pass
+*Diffuse map
+*Specular map
+
+
+Obestämt
+*Glow
