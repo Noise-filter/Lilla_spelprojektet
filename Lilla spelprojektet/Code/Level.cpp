@@ -21,7 +21,7 @@ bool Level::init(int mapSize)
 	{
 		for(int j = 0; j < mapSize; j++)
 		{
-			//nodes[i][j] = Node(D3DXVECTOR3(i*50,0,j*50),0,0,0,0,0);
+			nodes[i][j] = Node(D3DXVECTOR3(i*10,0,j*10),0,0,0,0,0);
 		}
 	}
 

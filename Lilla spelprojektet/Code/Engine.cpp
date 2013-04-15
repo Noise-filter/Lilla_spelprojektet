@@ -47,14 +47,14 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 
 	//Skapa buffrar
 	Vertex vertices[3];
-	vertices[0].pos = D3DXVECTOR3(0, 0, 0);
-	vertices[1].pos = D3DXVECTOR3(-1, -1, 0);
-	vertices[2].pos = D3DXVECTOR3(1, -1, 0);
+	vertices[0].pos = D3DXVECTOR3(-1, 0, -1);
+	vertices[1].pos = D3DXVECTOR3(0, 0, 1);
+	vertices[2].pos = D3DXVECTOR3(1, 0, -1);
 
 	int indices[3];
 	indices[0] = 0;
-	indices[1] = 2;
-	indices[2] = 1;
+	indices[1] = 1;
+	indices[2] = 2;
 
 	//Vertex buffer
 	D3D11_BUFFER_DESC vbd;
@@ -95,7 +95,7 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 
 void Engine::render()
 {
-	D3DXMATRIX vp;
+	D3DXMATRIX v, p;
 	static float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 	d3d->deviceContext->ClearRenderTargetView( d3d->renderTargetView, ClearColor );
@@ -106,9 +106,10 @@ void Engine::render()
 	//set topology
 	d3d->deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	D3DXMatrixLookAtLH(&vp,&D3DXVECTOR3(0,0,-5),&D3DXVECTOR3(0,0,1),&D3DXVECTOR3(0,1,0));
+	D3DXMatrixLookAtLH(&v,&D3DXVECTOR3(45,60,45),&D3DXVECTOR3(45,0,45),&D3DXVECTOR3(0,0,1));
+	D3DXMatrixPerspectiveFovLH(&p, (float)D3DX_PI * 0.45f, 1024.0f / 768.0f, 1.0f, 1000.0f);
 
-	shader->SetMatrix("gVP" ,vp);
+	shader->SetMatrix("gVP", v*p);
 	shader->Apply(0);
 
 	UINT stride[2] = {sizeof(Vertex), sizeof(InstancedData)};

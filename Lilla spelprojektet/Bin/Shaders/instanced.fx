@@ -39,7 +39,7 @@ PSIn VSScene(VSIn input)
 
 float4 PSScene(PSIn input) : SV_Target
 {
-	return float4(1, 1, 1, 1);
+	return float4(1, 1, 0, 1);
 }
 
 technique11 BasicTech
