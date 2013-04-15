@@ -49,12 +49,12 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 	Vertex vertices[3];
 	vertices[0].pos = D3DXVECTOR3(0, 0, 0);
 	vertices[1].pos = D3DXVECTOR3(-1, -1, 0);
-	vertices[2].pos = D3DXVECTOR3(0, -1, 1);
+	vertices[2].pos = D3DXVECTOR3(1, -1, 0);
 
 	int indices[3];
 	indices[0] = 0;
-	indices[1] = 1;
-	indices[2] = 2;
+	indices[1] = 2;
+	indices[2] = 1;
 
 	//Vertex buffer
 	D3D11_BUFFER_DESC vbd;
