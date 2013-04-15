@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<diagram program="umlet" version="11.5.1">
+<diagram program="umlet" version="12.0">
   <zoom_level>10</zoom_level>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>420</x>
+      <y>810</y>
+      <w>50</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>30;30;30;80</additional_attributes>
+  </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>380</x>
-      <y>10</y>
+      <x>390</x>
+      <y>890</y>
+      <w>120</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>Importer
+--
+Very important</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>600</x>
+      <y>140</y>
+      <w>210</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>30;30;190;30</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>310</x>
+      <y>50</y>
       <w>320</w>
       <h>380</h>
     </coordinates>
@@ -38,8 +73,8 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>90</x>
-      <y>390</y>
+      <x>340</x>
+      <y>530</y>
       <w>250</w>
       <h>310</h>
     </coordinates>
@@ -75,44 +110,7 @@ matrixList :
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>730</x>
-      <y>40</y>
-      <w>160</w>
-      <h>90</h>
-    </coordinates>
-    <panel_attributes>WrapperHLSL
---
-Shader lista
-Pass lista
-Rendertargets lista</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>670</x>
-      <y>10</y>
-      <w>80</w>
-      <h>60</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>30;30;60;40</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>120</x>
-      <y>360</y>
-      <w>280</w>
-      <h>50</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>260;30;30;30</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Class</type>
-    <coordinates>
-      <x>0</x>
+      <x>790</x>
       <y>50</y>
       <w>310</w>
       <h>190</h>
@@ -133,62 +131,21 @@ Rendertargets lista</panel_attributes>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>280</x>
-      <y>40</y>
-      <w>120</w>
-      <h>70</h>
+      <x>910</x>
+      <y>210</y>
+      <w>50</w>
+      <h>120</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>100;50;30;30</additional_attributes>
+    <additional_attributes>30;30;30;100</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>750</x>
-      <y>290</y>
-      <w>100</w>
-      <h>70</h>
-    </coordinates>
-    <panel_attributes>WinHandler
---
-+getHandle() : HWND</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>670</x>
-      <y>170</y>
-      <w>130</w>
-      <h>140</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>30;30;110;120</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Class</type>
-    <coordinates>
-      <x>890</x>
-      <y>390</y>
-      <w>280</w>
-      <h>100</h>
-    </coordinates>
-    <panel_attributes>D3DGraphicUtility
---
-enum PASS_STATE
-/Include neccessary libraries for rendering/
-/Macros for releasing pointers and arrays/
-/Detect memory leaks/
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <type>com.umlet.element.Class</type>
-    <coordinates>
-      <x>1070</x>
-      <y>60</y>
-      <w>260</w>
-      <h>260</h>
+      <x>680</x>
+      <y>560</y>
+      <w>270</w>
+      <h>320</h>
     </coordinates>
     <panel_attributes>D3DMathUtility
 --
@@ -212,49 +169,94 @@ struct MeshObj
     <additional_attributes/>
   </element>
   <element>
-    <type>com.umlet.element.Relation</type>
+    <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>860</x>
-      <y>50</y>
-      <w>230</w>
-      <h>50</h>
+      <x>850</x>
+      <y>310</y>
+      <w>200</w>
+      <h>120</h>
     </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>30;30;210;30</additional_attributes>
-  </element>
-  <element>
-    <type>com.umlet.element.Relation</type>
-    <coordinates>
-      <x>860</x>
-      <y>100</y>
-      <w>50</w>
-      <h>340</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>30;30;30;320</additional_attributes>
+    <panel_attributes>PassHandler
+--
+Shader lista
+Pass lista
+Rendertargets lista
+
+/Flytta allt till D3D så Länge/</panel_attributes>
+    <additional_attributes/>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>70</x>
-      <y>890</y>
-      <w>120</w>
-      <h>60</h>
+      <x>960</x>
+      <y>560</y>
+      <w>280</w>
+      <h>320</h>
     </coordinates>
-    <panel_attributes>Importer
+    <panel_attributes>D3DGraphicUtility
 --
-Very important</panel_attributes>
+enum PASS_STATE
+/Include neccessary libraries for rendering/
+/Macros for releasing pointers and arrays/
+/Detect memory leaks/
+</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>120</x>
-      <y>670</y>
-      <w>60</w>
-      <h>240</h>
+      <x>430</x>
+      <y>400</y>
+      <w>50</w>
+      <h>150</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>40;30;30;220</additional_attributes>
+    <additional_attributes>30;30;30;130</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>770</x>
+      <y>400</y>
+      <w>160</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>140;30;140;100;30;100;30;160</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>180</x>
+      <y>210</y>
+      <w>150</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>130;30;30;30;30;110</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>160</x>
+      <y>320</y>
+      <w>100</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>WinHandler
+--
++getHandle() : HWND</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>940</x>
+      <y>400</y>
+      <w>180</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>30;30;30;100;160;100;160;160</additional_attributes>
   </element>
 </diagram>
