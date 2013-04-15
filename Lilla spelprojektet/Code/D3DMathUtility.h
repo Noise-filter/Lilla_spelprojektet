@@ -17,7 +17,7 @@ struct MeshPUV
 	MeshPUV()
 	{
 		this->pos = Vec3(0.0f, 0.0f, 0.0f);
-		this->uv	= Vec2(0.0f, 0.0f);
+		this->uv	  = Vec2(0.0f, 0.0f);
 	}
 
 	MeshPUV(Vec3 pos, Vec2 uv)
@@ -47,5 +47,26 @@ struct MeshPNUV
 		this->uv			= uv;
 	}
 };
+
+enum BUILDING_FLAGS
+{
+	MAINBUILDING,
+	SUPPLY,
+	TOWER,
+}
+
+enum TEXTURE_FLAGS
+{
+	MAINBUILDINGTEXTURE1,
+	SUPPLYTEXTURE1,
+	TOWERTEXTURE1,
+}
+
+enum LIGHT_FLAGS
+{
+	DIRECTIONAL,
+	POINT,
+	SPOT,
+}
 
 #endif
