@@ -4,6 +4,7 @@
 Game::Game(void)
 {
 	engine = new Engine();
+	gameLogic = new GameLogic();
 }
 
 
@@ -41,7 +42,12 @@ void Game::render()
 	engine->render();
 }
 
-int Game::update(float deltaTime)
+int Game::update(float dt)
 {
+	if(gameLogic->update(dt))
+		return 0; // error
+
+
 	return 1;
+
 }

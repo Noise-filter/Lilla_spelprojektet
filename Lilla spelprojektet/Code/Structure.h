@@ -7,7 +7,7 @@ class Structure : public Entity
 {
 public:
 	Structure();
-	virutal ~Structure();
+	virtual ~Structure();
 
 	virtual int update(float dt);
 

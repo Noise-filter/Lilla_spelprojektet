@@ -25,7 +25,7 @@ struct RenderData
 	int meshID;
 	int textureID;
 	D3DXMATRIX worldMat;
-}
+};
 
 #ifdef _DEBUG
 #pragma comment(lib, "d3dx11d.lib")
