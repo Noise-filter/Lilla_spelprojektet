@@ -20,6 +20,13 @@
 #define SAFE_DELETE_ARRAY(x) if( x ) { delete[](x); (x) = NULL; }
 #define PI (3.14159265358979323846f)
 
+struct RenderData
+{
+	int meshID;
+	int textureID;
+	D3DXMATRIX worldMat;
+}
+
 #ifdef _DEBUG
 #pragma comment(lib, "d3dx11d.lib")
 #pragma comment(lib, "Effects11D.lib")
