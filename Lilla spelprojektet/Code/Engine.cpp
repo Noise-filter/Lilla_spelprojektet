@@ -95,6 +95,7 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 
 void Engine::render()
 {
+	D3DXMATRIX vp;
 	static float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 	d3d->deviceContext->ClearRenderTargetView( d3d->renderTargetView, ClearColor );
@@ -105,7 +106,9 @@ void Engine::render()
 	//set topology
 	d3d->deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
+	D3DXMatrixLookAtLH(&vp,&D3DXVECTOR3(0,0,-5),&D3DXVECTOR3(0,0,1),&D3DXVECTOR3(0,1,0));
 
+	shader->SetMatrix("gVP" ,vp);
 	shader->Apply(0);
 
 	UINT stride[2] = {sizeof(Vertex), sizeof(InstancedData)};
@@ -133,4 +136,6 @@ void Engine::setRenderData(RenderData* renderData)
 		dataView[i].matrix = renderData[i].worldMat;
 
 	d3d->deviceContext->Unmap(vbs[1], 0);
+
+	delete renderData;
 }

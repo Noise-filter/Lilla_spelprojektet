@@ -39,7 +39,7 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 void Game::render()
 {
 	//build engines renderContent with addRenderData then do render to execute those renders
-	delete gameLogic->getRenderData();
+	engine->setRenderData(gameLogic->getRenderData());
 
 	engine->render();
 }
