@@ -28,10 +28,10 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	if(!gameLogic->init(10,10))
 		return false;
 
-	input->init(engine->gethInstance(), engine->getHWND(), 1024, 768);
+	input->init(engine->gethInstance(), engine->getHWND(), screenWidth, screenHeight);
 
 	camera->LookAt(D3DXVECTOR3(45,60,45), D3DXVECTOR3(0, 0, 1), D3DXVECTOR3(0, 1, 0));
-	camera->SetLens((float)D3DX_PI * 0.45f, 1024.0f / 768.0f, 0.1f, 1000.0f);
+	camera->SetLens((float)D3DX_PI * 0.45f, (float)screenWidth / (float)screenHeight, 0.1f, 1000.0f);
 
 	//initiate other game resources such as level or whatever
 
@@ -72,7 +72,7 @@ int Game::update(float dt)
 
 	camera->UpdateViewMatrix();
 
-	if(gameLogic->update(dt))
+	if(gameLogic->update(dt,input->getMouseState(), camera->View(), camera->Proj()))
 		return 0; // error
 
 

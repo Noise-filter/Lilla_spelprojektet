@@ -7,6 +7,7 @@
 #pragma comment(lib, "dxguid.lib")
 
 #include <dinput.h>
+#include "stdafx.h"
 
 class Input
 {
@@ -27,6 +28,7 @@ public:
 	void getMouseLocation(int &x, int &y);
 	void getDiffMouseLocation(int &x, int &y);
 
+	MouseState getMouseState();
 
 private:
 	bool readKeyBoard();

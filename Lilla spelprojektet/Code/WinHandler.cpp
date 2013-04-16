@@ -42,7 +42,7 @@ HRESULT WinHandler::initWindow(HINSTANCE hInstance, int cmdShow)
 		return E_FAIL;
 
 	hInst = hInstance; 
-	RECT rc = { 0, 0, 1024, 768 };
+	RECT rc = { 0, 0, screenWidth, screenHeight };
 	AdjustWindowRect( &rc, WS_OVERLAPPEDWINDOW, FALSE );
 
 	if(!(hWnd = CreateWindow

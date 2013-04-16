@@ -7,6 +7,7 @@
 #include <D3DX10math.h>
 #include <d3dx11effect.h>
 #include <d3dCompiler.h>
+#include <iostream>
 
 #include <string>
 #include <ctime>
@@ -20,6 +21,13 @@
 #define SAFE_DELETE_ARRAY(x) if( x ) { delete[](x); (x) = NULL; }
 #define PI (3.14159265358979323846f)
 
+struct MouseState
+{
+	int xPos;
+	int yPos;
+	bool clicked;
+};
+
 struct RenderData
 {
 	int meshID;
@@ -28,6 +36,9 @@ struct RenderData
 	
 	int lightID;
 };
+
+const int screenWidth = 1024;
+const int screenHeight = 1024;
 
 #ifdef _DEBUG
 #pragma comment(lib, "d3dx11d.lib")

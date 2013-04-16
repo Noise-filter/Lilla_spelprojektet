@@ -152,3 +152,13 @@ void Input::processInput()
 	if(mouseX > screenWidth) { mouseX = screenWidth; }
 	if(mouseY > screenHeight) { mouseY = screenHeight; }
 }
+
+MouseState Input::getMouseState()
+{
+	MouseState mState;
+	mState.xPos = this->mouseX;
+	mState.yPos = this->mouseY;
+	mState.clicked = this->mouseState.rgbButtons[0];
+
+	return mState;
+}
