@@ -21,7 +21,7 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 
 	//initiate other game resources such as level or whatever
 
-	if(!gameLogic->init(10))
+	if(!gameLogic->init(10,10))
 		return false;
 
 

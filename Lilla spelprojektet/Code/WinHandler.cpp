@@ -95,8 +95,7 @@ LRESULT CALLBACK WinHandler::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 		break;
 
 	case WM_MOUSEMOVE:
-		winHandler->mouseOnMove(wParam, GET_X_LPARAM(lParam) , GET_Y_LPARAM(lParam));
-		break;
+			break;
 
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);

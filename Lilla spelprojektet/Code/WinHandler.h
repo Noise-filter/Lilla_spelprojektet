@@ -11,7 +11,6 @@ class WinHandler
 		HWND getHWND();
 		HRESULT initWindow(HINSTANCE hInstance, int cmdShow);
 		static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-		virtual void mouseOnMove(WPARAM btnState, int x, int y){};
 
 	protected:
 		HINSTANCE   hInst;
