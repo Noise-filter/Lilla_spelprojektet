@@ -17,6 +17,10 @@ Engine::~Engine(void)
 	vbs[0]->Release();
 	vbs[1]->Release();
 	indexBuffer->Release();
+
+	vbs2[0]->Release();
+	vbs2[1]->Release();
+	indexBuffer2->Release();
 }
 
 bool Engine::init(HINSTANCE hInstance, int cmdShow)
@@ -90,6 +94,56 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 	initDataIB.pSysMem = indices;
 	d3d->device->CreateBuffer(&ibd, &initDataIB, &indexBuffer);
 
+
+	//Skapa strukturernas buffrar
+	Vertex vertices2[4];
+	vertices2[0].pos = D3DXVECTOR3(-1, 0, -1);
+	vertices2[1].pos = D3DXVECTOR3(-1, 0, 1);
+	vertices2[2].pos = D3DXVECTOR3(1, 0, 1);
+	vertices2[3].pos = D3DXVECTOR3(1, 0, -1);
+
+	int indices2[6];
+	indices2[0] = 0;
+	indices2[1] = 1;
+	indices2[2] = 2;
+	indices2[3] = 0;
+	indices2[4] = 3;
+	indices2[5] = 2;
+
+	//Vertex buffer
+	D3D11_BUFFER_DESC vbd3;
+	vbd3.Usage = D3D11_USAGE_IMMUTABLE;
+	vbd3.ByteWidth = sizeof(Vertex) * 4;
+	vbd3.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vbd3.CPUAccessFlags = 0;
+	vbd3.MiscFlags = 0;
+	
+	D3D11_SUBRESOURCE_DATA initDataVB2;
+	initDataVB2.pSysMem = vertices2;
+	d3d->device->CreateBuffer(&vbd3, &initDataVB2, &vbs2[0]);
+	
+	//instanced buffer
+	D3D11_BUFFER_DESC vbd4;
+	vbd4.Usage = D3D11_USAGE_DYNAMIC;
+	vbd4.ByteWidth = sizeof(InstancedData) * 100;
+	vbd4.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vbd4.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	vbd4.MiscFlags = 0;
+
+	d3d->device->CreateBuffer(&vbd4, NULL, &vbs2[1]);
+
+	//index buffer
+	D3D11_BUFFER_DESC ibd2;
+	ibd2.Usage = D3D11_USAGE_IMMUTABLE;
+	ibd2.ByteWidth = sizeof(int) * 6;
+	ibd2.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	ibd2.CPUAccessFlags = 0;
+	ibd2.MiscFlags = 0;
+	
+	D3D11_SUBRESOURCE_DATA initDataIB2;
+	initDataIB2.pSysMem = indices2;
+	d3d->device->CreateBuffer(&ibd2, &initDataIB2, &indexBuffer2);
+
 	return true; // allt gick bra
 }
 
@@ -120,6 +174,11 @@ void Engine::render(D3DXMATRIX& vp)
 	d3d->deviceContext->DrawIndexedInstanced(3, 100, 0, 0, 0);
 
 
+	d3d->deviceContext->IASetVertexBuffers(0, 2, vbs2, stride, offset);
+	d3d->deviceContext->IASetIndexBuffer(indexBuffer2, DXGI_FORMAT_R32_UINT, 0);
+
+	d3d->deviceContext->DrawIndexedInstanced(6, 100, 0, 0, 0);
+
 	if(FAILED(d3d->swapChain->Present( 0, 0 )))
 	{
 		return;
@@ -128,15 +187,24 @@ void Engine::render(D3DXMATRIX& vp)
 
 void Engine::setRenderData(vector<vector<RenderData*>> renderData)
 {
-	D3D11_MAPPED_SUBRESOURCE mappedData;
+	D3D11_MAPPED_SUBRESOURCE mappedData, mappedData2;
 	d3d->deviceContext->Map(vbs[1], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData);
+	d3d->deviceContext->Map(vbs2[1], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData2);
 
 	InstancedData* dataView = reinterpret_cast<InstancedData*>(mappedData.pData);
+	InstancedData* dataView2 = reinterpret_cast<InstancedData*>(mappedData2.pData);
 
-	for(int i = 0; i < 100; i++)
-		dataView[i].matrix = renderData[0][i]->worldMat;
+	int a = 0, b = 0;
+	for(int i = 0; i < renderData.at(0).size(); i++)
+	{
+		if(renderData.at(0).at(i)->meshID == 0)
+			dataView[a++].matrix = renderData[0][i]->worldMat;
+		else if(renderData.at(0).at(i)->meshID == 1)
+			dataView2[b++].matrix = renderData[0][i]->worldMat;
+	}
 
 	d3d->deviceContext->Unmap(vbs[1], 0);
+	d3d->deviceContext->Unmap(vbs2[1], 0);
 }
 
 HWND Engine::getHWND()
