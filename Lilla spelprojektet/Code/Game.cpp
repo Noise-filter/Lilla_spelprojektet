@@ -14,6 +14,8 @@ Game::~Game(void)
 {
 	SAFE_DELETE(engine);
 	SAFE_DELETE(gameLogic);
+	SAFE_DELETE(camera);
+	SAFE_DELETE(input);
 }
 
 bool Game::init(HINSTANCE hInstance, int cmdShow)
