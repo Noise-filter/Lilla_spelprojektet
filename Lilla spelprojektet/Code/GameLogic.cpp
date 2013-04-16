@@ -85,7 +85,9 @@ D3DXVECTOR3 GameLogic::getMouseWorldPos(MouseState mState, D3DXMATRIX view, D3DX
 	planeNormal = D3DXVECTOR3(0,1,0);
 	intersect = (D3DXVec3Dot(&-planeNormal, &rayOrigin))/(D3DXVec3Dot(&planeNormal,&rayDir));
 
-	cout << "intersect: " << intersect << endl;
+	//cout << "intersect: " << intersect << endl;
+	intersectPos = rayOrigin + (intersect*rayDir);
+	cout << "X: "<<intersectPos.x << " Y: " << intersectPos.y << " Z: " << intersectPos.z << endl;
 
 	return D3DXVECTOR3(0,0,0);
 }	
