@@ -40,6 +40,8 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 {
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	
+	srand((int)time(NULL));
+
 	MSG msg = {0};
 	__int64 cntsPerSec = 0;
 	__int64 prevTimeStamp = 0;
