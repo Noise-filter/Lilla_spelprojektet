@@ -6,7 +6,11 @@
 class Headquarter : public Structure
 {
 public:
+	Headquarter();
+	Headquarter(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID);
+	virtual ~Headquarter();
 
+	virtual int update(float dt);
 
 private:
 

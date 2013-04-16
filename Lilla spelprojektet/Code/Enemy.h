@@ -7,6 +7,7 @@ class Enemy : public Entity
 {
 public:
 	Enemy();
+	Enemy(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, float speed, float damage);
 	~Enemy();
 
 	virtual int update(float dt);
