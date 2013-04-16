@@ -7,9 +7,12 @@ Level::Level(void)
 	this->nodes = NULL;
 }
 
-bool Level::init(int mapSize)
+bool Level::init(int mapSize, int quadSize)
 {
 	this->mapSize = mapSize;
+	this->quadSize = quadSize;
+
+
 
 	nodes = new Node*[mapSize];
 	for(int i = 0; i < mapSize; i++)
@@ -21,9 +24,23 @@ bool Level::init(int mapSize)
 	{
 		for(int j = 0; j < mapSize; j++)
 		{
-			nodes[i][j] = Node(D3DXVECTOR3(i*10,0,j*10),0,0,0,0,0);
+			nodes[i][j] = Node(D3DXVECTOR3(i*quadSize,0,j*quadSize),0,0,0,0,0);
 		}
 	}
+
+	structures = new Structure*[mapSize-1];
+	for(int i = 0; i < mapSize-1; i++)
+	{
+		structures[i] = new Structure[mapSize-1];
+	}
+	/*for(int i = 0; i < mapSize-1; i++)
+	{
+		for(int j = 0; j < mapSize-1; j++)
+		{
+			structures[i][j] = structure(D3DXVECTOR3(i*quadSize + (quadSize/2),0,j*quadSize + (quadSize/2)),0,0,0,0,0);
+		}	
+	}*/
+
 
 	return true;
 }

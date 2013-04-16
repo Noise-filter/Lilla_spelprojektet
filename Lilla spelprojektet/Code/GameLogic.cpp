@@ -25,9 +25,9 @@ int GameLogic::update(float dt)
 	return 1;//all went good
 }
 
-bool GameLogic::init(int mapSize)
+bool GameLogic::init(int mapSize, int quadSize)
 {
-	this->level->init(mapSize);
+	this->level->init(mapSize,quadSize);
 	//this->eHandler->init(); does not exist yet, need to add this
 
 	return true;

@@ -8,7 +8,7 @@ public:
 	~GameLogic(void);
 
 	RenderData* getRenderData();
-	bool init(int mapSize);
+	bool init(int mapSize, int quadSize);
 	int update(float dt);
 private:
 	Level* level;
