@@ -1,6 +1,8 @@
 #pragma once
 #include "Engine.h"
 #include "GameLogic.h"
+#include "Input.h"
+#include "Camera.h"
 
 class Game
 {
@@ -15,5 +17,8 @@ public:
 private:
 	Engine* engine;
 	GameLogic* gameLogic;
+	Input* input;
+	Camera* camera;
+
 };
 

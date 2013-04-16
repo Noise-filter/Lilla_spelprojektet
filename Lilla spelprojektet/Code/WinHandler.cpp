@@ -108,3 +108,8 @@ HWND WinHandler::getHWND()
 {
 	return this->hWnd;
 }
+
+HINSTANCE WinHandler::gethInst()
+{
+	return hInst;
+}

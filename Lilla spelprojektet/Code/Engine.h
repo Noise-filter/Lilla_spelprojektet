@@ -10,12 +10,15 @@ public:
 	Engine(void);
 	~Engine(void);
 
-	void render();
+	void render(D3DXMATRIX& vp);
 	bool init(HINSTANCE hInstance, int cmdShow);
 
 	void setRenderData(vector<vector<RenderData*>> renderData);
 
 	void updateBuffers();
+	
+	HWND getHWND();
+	HINSTANCE gethInstance();
 
 private:
 	struct Vertex

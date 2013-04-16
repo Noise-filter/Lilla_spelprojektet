@@ -9,6 +9,7 @@ class WinHandler
 		~WinHandler(void);
 		
 		HWND getHWND();
+		HINSTANCE gethInst();
 		HRESULT initWindow(HINSTANCE hInstance, int cmdShow);
 		static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 

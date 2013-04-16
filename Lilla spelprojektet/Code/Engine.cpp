@@ -93,9 +93,9 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 	return true; // allt gick bra
 }
 
-void Engine::render()
+void Engine::render(D3DXMATRIX& vp)
 {
-	D3DXMATRIX v, p;
+	//D3DXMATRIX v, p;
 	static float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 	d3d->deviceContext->ClearRenderTargetView( d3d->renderTargetView, ClearColor );
@@ -106,10 +106,10 @@ void Engine::render()
 	//set topology
 	d3d->deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	D3DXMatrixLookAtLH(&v,&D3DXVECTOR3(45,60,45),&D3DXVECTOR3(45,0,45),&D3DXVECTOR3(0,0,1));
-	D3DXMatrixPerspectiveFovLH(&p, (float)D3DX_PI * 0.45f, 1024.0f / 768.0f, 1.0f, 1000.0f);
+	//D3DXMatrixLookAtLH(&v,&D3DXVECTOR3(45,60,45),&D3DXVECTOR3(45,0,45),&D3DXVECTOR3(0,0,1));
+	//D3DXMatrixPerspectiveFovLH(&p, (float)D3DX_PI * 0.45f, 1024.0f / 768.0f, 1.0f, 1000.0f);
 
-	shader->SetMatrix("gVP", v*p);
+	shader->SetMatrix("gVP", vp);
 	shader->Apply(0);
 
 	UINT stride[2] = {sizeof(Vertex), sizeof(InstancedData)};
@@ -137,4 +137,14 @@ void Engine::setRenderData(vector<vector<RenderData*>> renderData)
 		dataView[i].matrix = renderData[0][i]->worldMat;
 
 	d3d->deviceContext->Unmap(vbs[1], 0);
+}
+
+HWND Engine::getHWND()
+{
+	return win32->getHWND();
+}
+
+HINSTANCE Engine::gethInstance()
+{
+	return win32->gethInst();
 }
