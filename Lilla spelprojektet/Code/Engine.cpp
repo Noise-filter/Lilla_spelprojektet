@@ -126,7 +126,7 @@ void Engine::render()
 	}
 }
 
-void Engine::setRenderData(RenderData* renderData)
+void Engine::setRenderData(vector<vector<RenderData*>> renderData)
 {
 	D3D11_MAPPED_SUBRESOURCE mappedData;
 	d3d->deviceContext->Map(vbs[1], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData);
@@ -134,9 +134,7 @@ void Engine::setRenderData(RenderData* renderData)
 	InstancedData* dataView = reinterpret_cast<InstancedData*>(mappedData.pData);
 
 	for(int i = 0; i < 100; i++)
-		dataView[i].matrix = renderData[i].worldMat;
+		dataView[i].matrix = renderData[0][i]->worldMat;
 
 	d3d->deviceContext->Unmap(vbs[1], 0);
-
-	delete renderData;
 }

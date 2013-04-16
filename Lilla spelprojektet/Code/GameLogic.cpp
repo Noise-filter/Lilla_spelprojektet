@@ -33,7 +33,13 @@ bool GameLogic::init(int mapSize, int quadSize)
 	return true;
 }
 
-RenderData* GameLogic::getRenderData()
+vector<vector<RenderData*>> GameLogic::getRenderData()
 {
-	return this->level->getRenderData();	
+	rDataList.clear();
+
+	rDataList.push_back(level->getRenderData());
+	//rDataList.push_back(eHandler->getRenderData());
+
+
+	return rDataList;	
 }

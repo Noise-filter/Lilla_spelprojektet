@@ -1,7 +1,9 @@
 #pragma once
 #include "D3D11Handler.h"
 #include "WinHandler.h"
+#include <vector>
 
+using namespace std;
 class Engine
 {
 public:
@@ -11,7 +13,7 @@ public:
 	void render();
 	bool init(HINSTANCE hInstance, int cmdShow);
 
-	void setRenderData(RenderData* renderData);
+	void setRenderData(vector<vector<RenderData*>> renderData);
 
 	void updateBuffers();
 

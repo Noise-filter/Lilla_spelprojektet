@@ -28,11 +28,11 @@ bool Level::init(int mapSize, int quadSize)
 		}
 	}
 
-	structures = new Structure*[mapSize-1];
+	/*structures = new Structure*[mapSize-1];
 	for(int i = 0; i < mapSize-1; i++)
 	{
 		structures[i] = new Structure[mapSize-1];
-	}
+	}*/
 	/*for(int i = 0; i < mapSize-1; i++)
 	{
 		for(int j = 0; j < mapSize-1; j++)
@@ -59,18 +59,17 @@ int Level::update(float dt)
 	return 1;
 }
 
-RenderData* Level::getRenderData()
+vector<RenderData*> Level::getRenderData()
 {
-	RenderData* rData = new RenderData[mapSize*mapSize];
-	int index = 0;
+	renderData.clear();
 
 	for(int i = 0; i < mapSize; i++)
 	{
 		for(int j = 0; j < mapSize; j++)
 		{
-			rData[index++] = nodes[i][j].getRenderData();
+			renderData.push_back(&nodes[i][j].getRenderData());
 		}
 	}
 
-	return rData;
+	return renderData;
 }
