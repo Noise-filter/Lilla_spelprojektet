@@ -41,5 +41,7 @@ private:
 	ID3D11Buffer* vbs2[2];
 	ID3D11Buffer* indexBuffer2;
 
+	ID3D11Buffer* vbs3[2];
+	ID3D11Buffer* indexBuffer3;
 };
 

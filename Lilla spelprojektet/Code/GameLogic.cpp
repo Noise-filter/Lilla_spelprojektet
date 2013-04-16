@@ -28,7 +28,7 @@ int GameLogic::update(float dt)
 bool GameLogic::init(int mapSize, int quadSize)
 {
 	this->level->init(mapSize,quadSize);
-	//this->eHandler->init(); does not exist yet, need to add this
+	this->eHandler->init();
 
 	return true;
 }
@@ -38,8 +38,7 @@ vector<vector<RenderData*>> GameLogic::getRenderData()
 	rDataList.clear();
 
 	rDataList.push_back(level->getRenderData());
-	//rDataList.push_back(eHandler->getRenderData());
-
+	rDataList.push_back(eHandler->getRenderData());
 
 	return rDataList;	
 }

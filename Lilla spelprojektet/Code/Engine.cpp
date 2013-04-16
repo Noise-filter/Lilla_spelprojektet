@@ -45,11 +45,11 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 		{ "WORLD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		{ "WORLD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 	};
-	
+
 	shader = new Shader();
 	shader->Init(d3d->device, d3d->deviceContext, "../Shaders/instanced.fx", inputDesc, 5);
 
-	//Skapa buffrar
+	//Skapa nodernas buffrar
 	Vertex vertices[3];
 	vertices[0].pos = D3DXVECTOR3(-1, 0, -1);
 	vertices[1].pos = D3DXVECTOR3(0, 0, 1);
@@ -93,6 +93,7 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 	D3D11_SUBRESOURCE_DATA initDataIB;
 	initDataIB.pSysMem = indices;
 	d3d->device->CreateBuffer(&ibd, &initDataIB, &indexBuffer);
+
 
 
 	//Skapa strukturernas buffrar
@@ -139,17 +140,67 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 	ibd2.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	ibd2.CPUAccessFlags = 0;
 	ibd2.MiscFlags = 0;
-	
+
 	D3D11_SUBRESOURCE_DATA initDataIB2;
 	initDataIB2.pSysMem = indices2;
 	d3d->device->CreateBuffer(&ibd2, &initDataIB2, &indexBuffer2);
+
+
+
+	//Skapa fiendernas buffrar
+	Vertex vertices3[4];
+	vertices3[0].pos = D3DXVECTOR3(-1, 0, -1);
+	vertices3[1].pos = D3DXVECTOR3(-1, 0, 1);
+	vertices3[2].pos = D3DXVECTOR3(1, 0, 1);
+	vertices3[3].pos = D3DXVECTOR3(1, 0, -1);
+
+	int indices3[6];
+	indices3[0] = 0;
+	indices3[1] = 1;
+	indices3[2] = 2;
+	indices3[3] = 0;
+	indices3[4] = 3;
+	indices3[5] = 2;
+
+	//Vertex buffer
+	D3D11_BUFFER_DESC vbd5;
+	vbd5.Usage = D3D11_USAGE_IMMUTABLE;
+	vbd5.ByteWidth = sizeof(Vertex) * 4;
+	vbd5.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vbd5.CPUAccessFlags = 0;
+	vbd5.MiscFlags = 0;
+	
+	D3D11_SUBRESOURCE_DATA initDataVB3;
+	initDataVB3.pSysMem = vertices3;
+	d3d->device->CreateBuffer(&vbd5, &initDataVB3, &vbs3[0]);
+	
+	//instanced buffer
+	D3D11_BUFFER_DESC vbd6;
+	vbd6.Usage = D3D11_USAGE_DYNAMIC;
+	vbd6.ByteWidth = sizeof(InstancedData) * 100;
+	vbd6.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vbd6.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	vbd6.MiscFlags = 0;
+
+	d3d->device->CreateBuffer(&vbd6, NULL, &vbs3[1]);
+
+	//index buffer
+	D3D11_BUFFER_DESC ibd3;
+	ibd3.Usage = D3D11_USAGE_IMMUTABLE;
+	ibd3.ByteWidth = sizeof(int) * 6;
+	ibd3.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	ibd3.CPUAccessFlags = 0;
+	ibd3.MiscFlags = 0;
+	
+	D3D11_SUBRESOURCE_DATA initDataIB3;
+	initDataIB3.pSysMem = indices3;
+	d3d->device->CreateBuffer(&ibd2, &initDataIB3, &indexBuffer3);
 
 	return true; // allt gick bra
 }
 
 void Engine::render(D3DXMATRIX& vp)
 {
-	//D3DXMATRIX v, p;
 	static float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 	d3d->deviceContext->ClearRenderTargetView( d3d->renderTargetView, ClearColor );
@@ -159,9 +210,6 @@ void Engine::render(D3DXMATRIX& vp)
 
 	//set topology
 	d3d->deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	//D3DXMatrixLookAtLH(&v,&D3DXVECTOR3(45,60,45),&D3DXVECTOR3(45,0,45),&D3DXVECTOR3(0,0,1));
-	//D3DXMatrixPerspectiveFovLH(&p, (float)D3DX_PI * 0.45f, 1024.0f / 768.0f, 1.0f, 1000.0f);
 
 	shader->SetMatrix("gVP", vp);
 	shader->Apply(0);
@@ -179,6 +227,12 @@ void Engine::render(D3DXMATRIX& vp)
 
 	d3d->deviceContext->DrawIndexedInstanced(6, 100, 0, 0, 0);
 
+
+	d3d->deviceContext->IASetVertexBuffers(0, 2, vbs3, stride, offset);
+	d3d->deviceContext->IASetIndexBuffer(indexBuffer3, DXGI_FORMAT_R32_UINT, 0);
+
+	d3d->deviceContext->DrawIndexedInstanced(6, 100, 0, 0, 0);
+
 	if(FAILED(d3d->swapChain->Present( 0, 0 )))
 	{
 		return;
@@ -187,24 +241,32 @@ void Engine::render(D3DXMATRIX& vp)
 
 void Engine::setRenderData(vector<vector<RenderData*>> renderData)
 {
-	D3D11_MAPPED_SUBRESOURCE mappedData, mappedData2;
+	D3D11_MAPPED_SUBRESOURCE mappedData, mappedData2, mappedData3;
 	d3d->deviceContext->Map(vbs[1], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData);
 	d3d->deviceContext->Map(vbs2[1], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData2);
+	d3d->deviceContext->Map(vbs3[1], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData3);
 
 	InstancedData* dataView = reinterpret_cast<InstancedData*>(mappedData.pData);
 	InstancedData* dataView2 = reinterpret_cast<InstancedData*>(mappedData2.pData);
+	InstancedData* dataView3 = reinterpret_cast<InstancedData*>(mappedData3.pData);
 
-	int a = 0, b = 0;
-	for(int i = 0; i < renderData.at(0).size(); i++)
+	int a = 0, b = 0, c = 0;
+	for(int j = 0; j < (int)renderData.size(); j++)
 	{
-		if(renderData.at(0).at(i)->meshID == 0)
-			dataView[a++].matrix = renderData[0][i]->worldMat;
-		else if(renderData.at(0).at(i)->meshID == 1)
-			dataView2[b++].matrix = renderData[0][i]->worldMat;
+		for(int i = 0; i < (int)renderData.at(j).size(); i++)
+		{
+			if(renderData.at(j).at(i)->meshID == 0)
+				dataView[a++].matrix = renderData[j][i]->worldMat;
+			else if(renderData.at(j).at(i)->meshID == 1)
+				dataView2[b++].matrix = renderData[j][i]->worldMat;
+			else if(renderData.at(j).at(i)->meshID == 2)
+				dataView3[c++].matrix = renderData[j][i]->worldMat;
+		}
 	}
 
 	d3d->deviceContext->Unmap(vbs[1], 0);
 	d3d->deviceContext->Unmap(vbs2[1], 0);
+	d3d->deviceContext->Unmap(vbs3[1], 0);
 }
 
 HWND Engine::getHWND()
