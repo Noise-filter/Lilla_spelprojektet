@@ -28,18 +28,18 @@ bool Level::init(int mapSize, int quadSize)
 		}
 	}
 
-	/*structures = new Structure*[mapSize-1];
+	structures = new Structure*[mapSize-1];
 	for(int i = 0; i < mapSize-1; i++)
 	{
 		structures[i] = new Structure[mapSize-1];
-	}*/
-	/*for(int i = 0; i < mapSize-1; i++)
+	}
+	for(int i = 0; i < mapSize-1; i++)
 	{
 		for(int j = 0; j < mapSize-1; j++)
 		{
-			structures[i][j] = structure(D3DXVECTOR3(i*quadSize + (quadSize/2),0,j*quadSize + (quadSize/2)),0,0,0,0,0);
+			structures[i][j] = Structure(D3DXVECTOR3(i*quadSize + (quadSize/2),0,j*quadSize + (quadSize/2)),1,1,0,0);
 		}	
-	}*/
+	}
 
 
 	return true;
@@ -52,6 +52,12 @@ Level::~Level(void)
 		SAFE_DELETE_ARRAY(nodes[i]);
 	}
 	SAFE_DELETE_ARRAY(nodes);
+
+	for(int i = 0; i < this->mapSize-1; i++)
+	{
+		SAFE_DELETE_ARRAY(structures[i]);
+	}
+	SAFE_DELETE_ARRAY(structures);
 }
 
 int Level::update(float dt)
@@ -68,6 +74,14 @@ vector<RenderData*> Level::getRenderData()
 		for(int j = 0; j < mapSize; j++)
 		{
 			renderData.push_back(&nodes[i][j].getRenderData());
+		}
+	}
+
+	for(int i = 0; i < mapSize-1; i++)
+	{
+		for(int j = 0; j < mapSize-1; j++)
+		{
+			renderData.push_back(&structures[i][j].getRenderData());
 		}
 	}
 
