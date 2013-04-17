@@ -37,7 +37,7 @@ bool Level::init(int mapSize, int quadSize)
 	{
 		for(int j = 0; j < mapSize-1; j++)
 		{
-			structures[i][j] = new Tower(D3DXVECTOR3(i*quadSize + (quadSize/2),0,j*quadSize + (quadSize/2)),1,1,0,0, 1, 1, 100, 100);
+			structures[i][j] = NULL;
 		}	
 	}
 
@@ -71,10 +71,13 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 	{
 		for(int j = 0; j < mapSize-1; j++)
 		{
-			int id = structures[i][j]->update(dt);
-			if(id == 2 && typeid(*structures[i][j]) == typeid(Tower))
+			if(structures[i][j] != NULL)
 			{
-				dynamic_cast<Tower*>(structures[i][j])->aquireTarget(enemies);
+				int id = structures[i][j]->update(dt);
+				if(id == 2 && typeid(*structures[i][j]) == typeid(Tower))
+				{
+					dynamic_cast<Tower*>(structures[i][j])->aquireTarget(enemies);
+				}
 			}
 		}
 	}
@@ -87,20 +90,23 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 	int xPos = mouseClickPos.x/quadSize;
 	int yPos = mouseClickPos.z/quadSize;
 
-	if(xPos > 0 && xPos < mapSize-1 && yPos > 0 && yPos < mapSize-1)
+	if(xPos >= 0 && xPos < mapSize-1 && yPos >= 0 && yPos < mapSize-1)
 	{
-		if(&structures[xPos][yPos] == NULL)
+		if(structures[xPos][yPos] == NULL)
 		{
 			switch(selectedStructure)
 			{
 			case TOWER:
-					 //structures[xPos][yPos] = new Tower();
-					 break;
+				structures[xPos][yPos] = new Tower(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),0,1,0,0, 1, 1, 100, 100);
+				break;
+			case SUPPLY:
+				structures[xPos][yPos] = new Supply(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)), 1,0,0,0);
+				break;
 			}
 		}
 	}
 
-	cout << "a structure has been built" << endl; 
+	cout << "a structure has been built on the location X:"<< xPos << " Y:" << yPos << endl; 
 	return true;
 }
 
@@ -120,20 +126,24 @@ vector<RenderData*> Level::getRenderData()
 	{
 		for(int j = 0; j < mapSize-1; j++)
 		{
-			if(typeid(*structures[i][j]) == typeid(Tower))
+			if(structures[i][j] != NULL)
 			{
-				vector<RenderData*> rData = dynamic_cast<Tower*>(structures[i][j])->getRenderData();
+				if(typeid(*structures[i][j]) == typeid(Tower))
+				{
+					vector<RenderData*> rData = dynamic_cast<Tower*>(structures[i][j])->getRenderData();
 				
-				//Lägg till tornets övre del
-				renderData.push_back(rData.at(0));
+					//Lägg till tornets övre del
+					renderData.push_back(rData.at(0));
 
-				//lägg till tornets undre del och alla projektiler
-				renderData.insert(renderData.begin(), rData.begin(), rData.end());
+					//lägg till tornets undre del och alla projektiler
+					renderData.insert(renderData.begin(), rData.begin(), rData.end());
+				}
+				else
+				{
+					renderData.push_back(&structures[i][j]->getRenderData());
+				}
 			}
-			else
-			{
-				renderData.push_back(&structures[i][j]->getRenderData());
-			}
+			
 		}
 	}
 

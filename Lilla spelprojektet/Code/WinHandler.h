@@ -19,7 +19,7 @@ class WinHandler
 		HINSTANCE   hInst;
 		HWND        hWnd;
 
-		void setMouseState(LPARAM mousePos,WPARAM btnState);
+		void setMouseState(LPARAM mousePos);
 		void setButtonState(WPARAM btnState);
 		
 		

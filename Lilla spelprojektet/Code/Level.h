@@ -4,6 +4,7 @@
 #include "Structure.h"
 #include "Enemy.h"
 #include "Tower.h"
+#include "Supply.h"
 #include <vector>
 using namespace std;
 
@@ -17,6 +18,8 @@ public:
 
 	vector<RenderData*> getRenderData();
 	int update(float dt, vector<Enemy*>& enemies);
+
+	bool buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure);
 
 private:
 	Node** nodes;
