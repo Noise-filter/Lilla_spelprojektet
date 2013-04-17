@@ -6,6 +6,7 @@ GameLogic::GameLogic(void)
 {
 	this->level = new Level();
 	this->eHandler = new EnemyHandler();
+	selectedStructure = 0;
 }
 
 
@@ -20,7 +21,7 @@ int GameLogic::update(float dt, MouseState* mState, D3DXMATRIX view, D3DXMATRIX 
 
 	switch(mState->btnState)
 	{
-		case VK_TAB:
+		case VK_LBUTTON:
 			level->buildStructure(getMouseWorldPos(mState, view, proj), this->selectedStructure);	
 			break;
 	}	

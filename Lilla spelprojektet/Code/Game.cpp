@@ -72,7 +72,8 @@ int Game::update(float dt)
 
 	//mState->xPos = 0;
 	//mState->yPos = 0;
-	mState->btnState = 0;
+	if(mState->btnState != 0)
+		mState->btnState = 0;
 	
 	return 1;
 

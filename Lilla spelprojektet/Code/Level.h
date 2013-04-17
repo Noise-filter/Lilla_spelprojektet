@@ -4,6 +4,7 @@
 #include "Structure.h"
 #include "Enemy.h"
 #include "Tower.h"
+#include "Supply.h"
 #include <vector>
 using namespace std;
 
