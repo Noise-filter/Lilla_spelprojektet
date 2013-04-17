@@ -59,6 +59,8 @@ D3DXVECTOR3 GameLogic::getMouseWorldPos(MouseState mState, D3DXMATRIX view, D3DX
 	D3DXMATRIX invView, worldIdentity;
 	D3DXVECTOR3 dir, origin, rayOrigin, rayDir, intersectPos, planeNormal;
 	D3DXMatrixIdentity(&worldIdentity);
+
+	cout << "X: "<<mState.xPos << " Y: " << mState.yPos << endl;
 	
 
 	pointX = ((2.0f * (float)mState.xPos) / (float)screenWidth) - 1.0f;
@@ -87,7 +89,7 @@ D3DXVECTOR3 GameLogic::getMouseWorldPos(MouseState mState, D3DXMATRIX view, D3DX
 
 	//cout << "intersect: " << intersect << endl;
 	intersectPos = rayOrigin + (intersect*rayDir);
-	cout << "X: "<<intersectPos.x << " Y: " << intersectPos.y << " Z: " << intersectPos.z << endl;
+	//cout << "X: "<<intersectPos.x << " Y: " << intersectPos.y << " Z: " << intersectPos.z << endl;
 
 	return D3DXVECTOR3(0,0,0);
 }	
