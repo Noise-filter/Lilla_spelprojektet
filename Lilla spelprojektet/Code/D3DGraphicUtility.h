@@ -37,6 +37,28 @@ enum PASS_STATE
 	FULLSCREENQUAD,
 };
 
+enum BUILDING_FLAGS
+{
+	MAINBUILDING,
+	SUPPLY,
+	TOWER,
+};
+
+enum TEXTURE_FLAGS
+{
+	MAINBUILDINGTEXTURE1,
+	SUPPLYTEXTURE1,
+	TOWERTEXTURE1,
+	ENEMYTEXTURE1,
+};
+
+enum LIGHT_FLAGS
+{
+	DIRECTIONAL,
+	POINT,
+	SPOT,
+};
+
 //////////////////////////////////////////////////////////////////////////
 // to find memory leaks
 //////////////////////////////////////////////////////////////////////////
