@@ -18,6 +18,8 @@ public:
 
 	void aquireTarget(vector<Enemy*>& enemies);
 
+	vector<RenderData*> getRenderData();
+
 private:
 	float damage;
 	float attackSpeed;

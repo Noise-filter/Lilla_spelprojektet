@@ -32,6 +32,11 @@ int EnemyHandler::update(float dt)
 	return 1;
 }
 
+vector<Enemy*>& EnemyHandler::getEnemies()
+{
+	return enemies;
+}
+
 vector<RenderData*> EnemyHandler::getRenderData()
 {
 	renderData.clear();

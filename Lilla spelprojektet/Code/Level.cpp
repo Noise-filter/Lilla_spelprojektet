@@ -28,16 +28,16 @@ bool Level::init(int mapSize, int quadSize)
 		}
 	}
 
-	structures = new Structure*[mapSize-1];
+	structures = new Structure**[mapSize-1];
 	for(int i = 0; i < mapSize-1; i++)
 	{
-		structures[i] = new Structure[mapSize-1];
+		structures[i] = new Structure*[mapSize-1];
 	}
 	for(int i = 0; i < mapSize-1; i++)
 	{
 		for(int j = 0; j < mapSize-1; j++)
 		{
-			structures[i][j] = Structure(D3DXVECTOR3(i*quadSize + (quadSize/2),0,j*quadSize + (quadSize/2)),1,1,0,0);
+			structures[i][j] = new Tower(D3DXVECTOR3(i*quadSize + (quadSize/2),0,j*quadSize + (quadSize/2)),1,1,0,0, 1, 1, 100, 100);
 		}	
 	}
 
@@ -55,13 +55,30 @@ Level::~Level(void)
 
 	for(int i = 0; i < this->mapSize-1; i++)
 	{
+		for(int j = 0; j < mapSize-1; j++)
+		{
+			SAFE_DELETE(structures[i][j]);
+		}
+
 		SAFE_DELETE_ARRAY(structures[i]);
 	}
 	SAFE_DELETE_ARRAY(structures);
 }
 
-int Level::update(float dt)
+int Level::update(float dt, vector<Enemy*>& enemies)
 {
+	for(int i = 0; i < mapSize-1; i++)
+	{
+		for(int j = 0; j < mapSize-1; j++)
+		{
+			int id = structures[i][j]->update(dt);
+			if(id == 2 && typeid(*structures[i][j]) == typeid(Tower))
+			{
+				dynamic_cast<Tower*>(structures[i][j])->aquireTarget(enemies);
+			}
+		}
+	}
+
 	return 1;
 }
 
@@ -81,7 +98,20 @@ vector<RenderData*> Level::getRenderData()
 	{
 		for(int j = 0; j < mapSize-1; j++)
 		{
-			renderData.push_back(&structures[i][j].getRenderData());
+			if(typeid(*structures[i][j]) == typeid(Tower))
+			{
+				vector<RenderData*> rData = dynamic_cast<Tower*>(structures[i][j])->getRenderData();
+				
+				//Lägg till tornets övre del
+				renderData.push_back(rData.at(0));
+
+				//lägg till tornets undre del och alla projektiler
+				renderData.insert(renderData.begin(), rData.begin(), rData.end());
+			}
+			else
+			{
+				renderData.push_back(&structures[i][j]->getRenderData());
+			}
 		}
 	}
 

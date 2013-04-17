@@ -21,28 +21,28 @@ Projectile::~Projectile()
 
 int Projectile::update(float dt)
 {
+	float length;
 	D3DXVECTOR3 dir;
 	if(target != NULL)
 	{
 		D3DXVECTOR3 pos = getPosition();
 		dir = target->getPosition() - pos;
+		length = D3DXVec3Length(&dir);
 		D3DXVec3Normalize(&dir, &dir);
 
 		pos += (dir * speed * dt);
 		this->setPosition(pos);
 	}
 	
-	/*
-		returnerna ett annat värde om projektilen har träffat sitt target. Eller om targetet har försvunnit.
-	*/
-	if(D3DXVec3Length(&dir) <= 1)
+	//returnerna ett annat värde om projektilen har träffat sitt target. Eller om targetet har försvunnit.
+	if(length <= 1)
 	{
 		target->doDamage(damage);
-		return 2;
+		return 0;
 	}
 
 	if(target == NULL)
-		return 2;
+		return 0;
 
 	return 1;
 }
