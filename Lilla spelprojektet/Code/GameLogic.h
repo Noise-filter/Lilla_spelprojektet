@@ -12,6 +12,8 @@ public:
 	int update(float dt, MouseState *mState, D3DXMATRIX view, D3DXMATRIX proj);
 	D3DXVECTOR3 getMouseWorldPos(MouseState *mState, D3DXMATRIX view, D3DXMATRIX proj);
 
+	void incrementSelectedStructure(int increment);
+
 private:
 	vector<vector<RenderData*>> rDataList;
 	Level* level;

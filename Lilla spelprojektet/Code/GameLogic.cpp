@@ -16,6 +16,12 @@ GameLogic::~GameLogic(void)
 	SAFE_DELETE(this->eHandler);
 }
 
+void GameLogic::incrementSelectedStructure(int increment)
+{
+	this->selectedStructure += increment;
+}
+
+
 int GameLogic::update(float dt, MouseState* mState, D3DXMATRIX view, D3DXMATRIX proj)
 {
 
@@ -24,7 +30,7 @@ int GameLogic::update(float dt, MouseState* mState, D3DXMATRIX view, D3DXMATRIX 
 		case VK_LBUTTON:
 			level->buildStructure(getMouseWorldPos(mState, view, proj), this->selectedStructure);	
 			break;
-	}	
+	}
 	
 
 	if(level->update(dt, eHandler->getEnemies()))
