@@ -12,6 +12,8 @@ WinHandler::WinHandler(void)
 	HWND					g_hWnd					= NULL;
 
 	winHandler = this;
+
+	mState = new MouseState();
 	
 }
 
@@ -19,6 +21,7 @@ WinHandler::WinHandler(void)
 WinHandler::~WinHandler(void)
 {
 	winHandler = NULL;
+	SAFE_DELETE(mState);
 }
 
 
@@ -69,13 +72,21 @@ HRESULT WinHandler::initWindow(HINSTANCE hInstance, int cmdShow)
 }
 void WinHandler::setMouseState(LPARAM mousePos,WPARAM btnState)
 {
-	mState = MouseState(GET_X_LPARAM(mousePos),GET_Y_LPARAM(mousePos),btnState);
+	mState->xPos = GET_X_LPARAM(mousePos);
+	mState->yPos = GET_Y_LPARAM(mousePos);
+	mState->btnState = btnState;
+}
+void WinHandler::setButtonState(WPARAM btnState)
+{
+	mState->btnState = btnState;
 }
 
 LRESULT CALLBACK WinHandler::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	PAINTSTRUCT ps;
 	HDC hdc;
+
+	
 
 	switch (message) 
 	{
@@ -89,7 +100,7 @@ LRESULT CALLBACK WinHandler::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 		break;
 
 	case WM_KEYDOWN:
-
+		winHandler->setButtonState(wParam);
 		switch(wParam)
 		{
 			case VK_ESCAPE:
@@ -105,6 +116,8 @@ LRESULT CALLBACK WinHandler::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
+
+	
 
 	return 0;
 }

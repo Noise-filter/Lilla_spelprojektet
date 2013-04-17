@@ -48,10 +48,10 @@ void Game::render()
 
 int Game::update(float dt)
 {
-	MouseState mState = engine->getMouseState();
+	MouseState* mState = engine->getMouseState();
 	
-	camera->Yaw((float)this->input->mouseRotateY(mState.btnState, mState.xPos, mState.yPos) * 20);
-	camera->Pitch(this->input->mousePitch(mState.btnState, mState.xPos, mState.yPos) * 20);
+	camera->Yaw((float)this->input->mouseRotateY(mState->btnState, mState->xPos, mState->yPos) * 20);
+	camera->Pitch(this->input->mousePitch(mState->btnState, mState->xPos, mState->yPos) * 20);
 	
 	if(input->checkKeyDown('W'))	//W
 		camera->Walk(30.0f * dt);
@@ -70,7 +70,10 @@ int Game::update(float dt)
 	if(gameLogic->update(dt,mState, camera->View(), camera->Proj()))
 		return 0; // error
 
-
+	//mState->xPos = 0;
+	//mState->yPos = 0;
+	mState->btnState = 0;
+	
 	return 1;
 
 }

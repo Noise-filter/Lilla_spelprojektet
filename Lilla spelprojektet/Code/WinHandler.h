@@ -1,13 +1,14 @@
 #pragma once
 #include "stdafx.h"
 #include <WindowsX.h>
-
+#include <iostream>
+using namespace std;
 class WinHandler
 {
 	public:
 		WinHandler(void);
 		~WinHandler(void);
-		MouseState mState;
+		MouseState* mState;
 
 		HWND getHWND();
 		HINSTANCE gethInst();
@@ -19,6 +20,7 @@ class WinHandler
 		HWND        hWnd;
 
 		void setMouseState(LPARAM mousePos,WPARAM btnState);
+		void setButtonState(WPARAM btnState);
 		
 		
 

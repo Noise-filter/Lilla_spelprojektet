@@ -20,7 +20,7 @@ public:
 	HWND getHWND();
 	HINSTANCE gethInstance();
 
-	MouseState getMouseState();
+	MouseState* getMouseState();
 
 private:
 	struct Vertex

@@ -269,7 +269,7 @@ void Engine::setRenderData(vector<vector<RenderData*>> renderData)
 	d3d->deviceContext->Unmap(vbs3[1], 0);
 }
 
-MouseState Engine::getMouseState()
+MouseState* Engine::getMouseState()
 {
 	return this->win32->mState;
 }

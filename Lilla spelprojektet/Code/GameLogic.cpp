@@ -15,16 +15,16 @@ GameLogic::~GameLogic(void)
 	SAFE_DELETE(this->eHandler);
 }
 
-int GameLogic::update(float dt, MouseState &mState, D3DXMATRIX view, D3DXMATRIX proj)
+int GameLogic::update(float dt, MouseState* mState, D3DXMATRIX view, D3DXMATRIX proj)
 {
 
-	getMouseWorldPos(mState, view, proj);
-
-
-
-
-
-
+	switch(mState->btnState)
+	{
+		case VK_TAB:
+			level->buildStructure(getMouseWorldPos(mState, view, proj), this->selectedStructure);	
+			break;
+	}	
+	
 
 	if(level->update(dt))
 		return 0; //error
@@ -53,7 +53,7 @@ vector<vector<RenderData*>> GameLogic::getRenderData()
 	return rDataList;	
 }
 
-D3DXVECTOR3 GameLogic::getMouseWorldPos(MouseState mState, D3DXMATRIX view, D3DXMATRIX proj)
+D3DXVECTOR3 GameLogic::getMouseWorldPos(MouseState* mState, D3DXMATRIX view, D3DXMATRIX proj)
 {
 	float pointX, pointY, intersect;
 	D3DXMATRIX invView, worldIdentity;
@@ -63,8 +63,8 @@ D3DXVECTOR3 GameLogic::getMouseWorldPos(MouseState mState, D3DXMATRIX view, D3DX
 	//cout << "X: "<<mState.xPos << " Y: " << mState.yPos << endl;
 	
 
-	pointX = ((2.0f * (float)mState.xPos) / (float)screenWidth) - 1.0f;
-	pointY = (((2.0f * (float)mState.yPos) / (float)screenHeight) - 1.0f) * -1.0f;
+	pointX = ((2.0f * (float)mState->xPos) / (float)screenWidth) - 1.0f;
+	pointY = (((2.0f * (float)mState->yPos) / (float)screenHeight) - 1.0f) * -1.0f;
 
 	//cout << "X: "<<pointX << " Y: " << pointY << endl;
 

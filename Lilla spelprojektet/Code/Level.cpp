@@ -65,6 +65,28 @@ int Level::update(float dt)
 	return 1;
 }
 
+bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
+{
+	int xPos = mouseClickPos.x/quadSize;
+	int yPos = mouseClickPos.z/quadSize;
+
+	if(xPos > 0 && xPos < mapSize-1 && yPos > 0 && yPos < mapSize-1)
+	{
+		if(&structures[xPos][yPos] == NULL)
+		{
+			switch(selectedStructure)
+			{
+			case TOWER:
+					 //structures[xPos][yPos] = new Tower();
+					 break;
+			}
+		}
+	}
+
+	cout << "a structure has been built" << endl; 
+	return true;
+}
+
 vector<RenderData*> Level::getRenderData()
 {
 	renderData.clear();
