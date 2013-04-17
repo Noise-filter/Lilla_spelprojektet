@@ -37,10 +37,9 @@ bool Level::init(int mapSize, int quadSize)
 	{
 		for(int j = 0; j < mapSize-1; j++)
 		{
-			structures[i][j] = new Tower(D3DXVECTOR3(i*quadSize + (quadSize/2),0,j*quadSize + (quadSize/2)),1,1,0,0, 1, 1, 100, 100);
+			structures[i][j] = new Tower(D3DXVECTOR3(i*quadSize + (quadSize/2),0,j*quadSize + (quadSize/2)),1,1,0,0, 1, 1, 50, 100);
 		}	
 	}
-
 
 	return true;
 }

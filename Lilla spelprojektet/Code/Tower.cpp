@@ -60,8 +60,27 @@ int Tower::update(float dt)
 
 void Tower::aquireTarget(vector<Enemy*>& enemies)
 {
-	if(enemies.size() > 0)
-		target = enemies.at(0);
+	D3DXVECTOR3 vec;
+	Enemy* t;
+	float closestLength = 1000;
+	float length;
+
+	for(int i = 0; i < enemies.size(); i++)
+	{
+		vec = enemies.at(i)->getPosition() - getPosition();
+		length = D3DXVec3Length(&vec);
+
+		if(length < closestLength)
+		{
+			t = enemies.at(i);
+			closestLength = length;
+		}
+	}
+
+	if(closestLength < range)
+	{
+		target = t;
+	}
 }
 
 vector<RenderData*> Tower::getRenderData()
