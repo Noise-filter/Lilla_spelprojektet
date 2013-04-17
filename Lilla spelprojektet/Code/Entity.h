@@ -12,8 +12,13 @@ public:
 
 	virtual int update(float dt) = 0;
 
+	void doDamage(float damage);	//Does damage on the entity
+
+	void setPosition(D3DXVECTOR3& pos);
+
 	RenderData& getRenderData();
 
+	D3DXVECTOR3 getPosition();
 
 protected:
 	RenderData renderData;

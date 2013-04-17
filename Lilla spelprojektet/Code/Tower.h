@@ -3,6 +3,9 @@
 
 #include "Structure.h"
 #include "Enemy.h"
+#include "Projectile.h"
+#include <vector>
+using namespace std;
 
 class Tower : public Structure
 {
@@ -13,12 +16,18 @@ public:
 
 	virtual int update(float dt);
 
+	void aquireTarget(vector<Enemy*>& enemies);
+
 private:
 	float damage;
 	float attackSpeed;
 	float range;
 	float projectileSpeed;
+	float cooldown;
 	Enemy* target;
+
+	vector<Projectile*> projectiles;
+
 
 };
 

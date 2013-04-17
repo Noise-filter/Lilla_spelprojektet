@@ -51,7 +51,7 @@ bool Input::init(HINSTANCE hInstance, HWND hwnd, int screenWidth, int screenHeig
 	if(FAILED(result))
 		return false;
 
-	result = mouse->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+	result = mouse->SetCooperativeLevel(hwnd, DISCL_BACKGROUND | DISCL_EXCLUSIVE);
 	if(FAILED(result))
 		return false;
 

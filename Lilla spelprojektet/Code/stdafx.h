@@ -38,7 +38,7 @@ struct RenderData
 };
 
 const int screenWidth = 1024;
-const int screenHeight = 1024;
+const int screenHeight = 768;
 
 #ifdef _DEBUG
 #pragma comment(lib, "d3dx11d.lib")
