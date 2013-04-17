@@ -12,7 +12,7 @@ WinHandler::WinHandler(void)
 	HWND					g_hWnd					= NULL;
 
 	winHandler = this;
-
+	
 }
 
 
@@ -67,6 +67,10 @@ HRESULT WinHandler::initWindow(HINSTANCE hInstance, int cmdShow)
 
 	return S_OK;
 }
+void WinHandler::setMouseState(LPARAM mousePos,WPARAM btnState)
+{
+	mState = MouseState(GET_X_LPARAM(mousePos),GET_Y_LPARAM(mousePos),btnState);
+}
 
 LRESULT CALLBACK WinHandler::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -95,6 +99,7 @@ LRESULT CALLBACK WinHandler::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 		break;
 
 	case WM_MOUSEMOVE:
+		winHandler->setMouseState(lParam,wParam);
 			break;
 
 	default:

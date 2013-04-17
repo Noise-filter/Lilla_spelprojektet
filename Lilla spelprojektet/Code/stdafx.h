@@ -25,7 +25,18 @@ struct MouseState
 {
 	int xPos;
 	int yPos;
-	bool clicked;
+	WPARAM btnState;
+
+	MouseState(int xPos, int yPos, WPARAM btnState)
+	{
+		this->xPos = xPos;
+		this->yPos = yPos;
+		this->btnState = btnState;
+	}
+	MouseState()
+	{
+
+	}
 };
 
 struct RenderData
@@ -36,6 +47,8 @@ struct RenderData
 	
 	int lightID;
 };
+
+
 
 const int screenWidth = 1024;
 const int screenHeight = 768;

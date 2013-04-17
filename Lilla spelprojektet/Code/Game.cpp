@@ -28,8 +28,6 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	if(!gameLogic->init(10,10))
 		return false;
 
-	input->init(engine->gethInstance(), engine->getHWND(), screenWidth, screenHeight);
-
 	camera->LookAt(D3DXVECTOR3(45,60,45), D3DXVECTOR3(0, 0, 1), D3DXVECTOR3(0, 1, 0));
 	camera->SetLens((float)D3DX_PI * 0.45f, (float)screenWidth / (float)screenHeight, 0.1f, 1000.0f);
 
@@ -50,29 +48,26 @@ void Game::render()
 
 int Game::update(float dt)
 {
-	input->frame();
-
-	int x, y;
-	input->getDiffMouseLocation(x, y);
-
-	camera->Yaw((float)x*0.5f);
-	camera->Pitch((float)y*0.5f);
-
-	if(input->isKeyPressed(DIK_W))	//W
+	MouseState mState = engine->getMouseState();
+	
+	camera->Yaw((float)this->input->mouseRotateY(mState.btnState, mState.xPos, mState.yPos) * 20);
+	camera->Pitch(this->input->mousePitch(mState.btnState, mState.xPos, mState.yPos) * 20);
+	
+	if(input->checkKeyDown('W'))	//W
 		camera->Walk(30.0f * dt);
 
-	if(input->isKeyPressed(DIK_A))	//A
+	if(input->checkKeyDown('A'))	//A
 		camera->Strafe(-30.0f * dt);
 
-	if(input->isKeyPressed(DIK_S))	//S
+	if(input->checkKeyDown('S'))	//S
 		camera->Walk(-30.0f * dt);
 
-	if(input->isKeyPressed(DIK_D))	//D
+	if(input->checkKeyDown('D'))	//D
 		camera->Strafe(30.0f * dt);
 
 	camera->UpdateViewMatrix();
 
-	if(gameLogic->update(dt,input->getMouseState(), camera->View(), camera->Proj()))
+	if(gameLogic->update(dt,mState, camera->View(), camera->Proj()))
 		return 0; // error
 
 

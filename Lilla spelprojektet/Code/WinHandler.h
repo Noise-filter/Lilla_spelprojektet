@@ -7,7 +7,8 @@ class WinHandler
 	public:
 		WinHandler(void);
 		~WinHandler(void);
-		
+		MouseState mState;
+
 		HWND getHWND();
 		HINSTANCE gethInst();
 		HRESULT initWindow(HINSTANCE hInstance, int cmdShow);
@@ -17,6 +18,9 @@ class WinHandler
 		HINSTANCE   hInst;
 		HWND        hWnd;
 
+		void setMouseState(LPARAM mousePos,WPARAM btnState);
+		
+		
 
 
 };
