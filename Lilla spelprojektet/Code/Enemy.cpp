@@ -16,9 +16,7 @@ Enemy::Enemy(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, 
 }
 
 Enemy::~Enemy()
-{
-
-}
+{}
 
 int Enemy::update(float dt)
 {

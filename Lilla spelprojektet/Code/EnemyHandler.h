@@ -15,6 +15,8 @@ public:
 	vector<RenderData*> getRenderData();
 	int update(float dt);
 
+	vector<Enemy*>& getEnemies();
+
 private:
 	vector<Enemy*> enemies;
 	vector<RenderData*> renderData;

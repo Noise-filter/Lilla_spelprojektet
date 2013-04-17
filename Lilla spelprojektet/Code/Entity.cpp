@@ -24,7 +24,27 @@ Entity::Entity(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID
 Entity::~Entity()
 {}
 
+void Entity::doDamage(float damage)
+{
+	hp -= damage;
+
+	if(hp > maxHp)
+		hp = maxHp;
+	else if(hp < 0)
+		hp = 0;
+}
+
+void Entity::setPosition(D3DXVECTOR3& pos)
+{
+	D3DXMatrixTranslation(&renderData.worldMat, pos.x, pos.y, pos.z);
+}
+
 RenderData& Entity::getRenderData()
 {
 	return renderData;
+}
+
+D3DXVECTOR3 Entity::getPosition()
+{
+	return D3DXVECTOR3(renderData.worldMat._41, renderData.worldMat._42, renderData.worldMat._43);
 }
