@@ -19,8 +19,8 @@ Lilla spelprojektet/Code/*.suo
 *.exe
 *.ilk
 *.pdb
-Lilla spelprojektet/Code/*.vcxproj
-Lilla spelprojektet/Code/*.vcxproj.filters
+/Lilla spelprojektet/Code/*.vcxproj
+/Lilla spelprojektet/Code/*.vcxproj.filters
 
 # Mappar
 Lilla spelprojektet/Obj/**/
