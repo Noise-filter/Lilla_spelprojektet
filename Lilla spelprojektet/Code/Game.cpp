@@ -53,6 +53,9 @@ void Game::render()
 
 int Game::update(float dt)
 {
+
+	static bool pausedMusic = true;
+
 	input->updateMs(engine->getMouseState());
 	
 	camera->Yaw((float)this->input->mouseRotateY());
@@ -71,6 +74,22 @@ int Game::update(float dt)
 
 	if(input->checkKeyDown(0x44))	//D
 		camera->Strafe(30.0f * dt);
+
+	if(input->checkKeyDown(0x20))
+	{
+		if(pausedMusic==true)
+		{
+		soundSystem->setPaused(playlist, pausedMusic);
+		pausedMusic = false;
+		}
+		else
+		{
+			soundSystem->setPaused(playlist, pausedMusic);
+			pausedMusic = true;
+		}
+	}
+		
+
 
 	camera->UpdateViewMatrix();
 

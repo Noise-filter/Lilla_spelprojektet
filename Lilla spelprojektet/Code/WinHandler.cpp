@@ -103,6 +103,7 @@ LRESULT CALLBACK WinHandler::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 		break;
 
 	case WM_KEYDOWN:
+		winHandler->setButtonState(wParam);
 		switch(wParam)
 		{
 			case VK_ESCAPE:
