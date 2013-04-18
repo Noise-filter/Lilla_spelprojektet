@@ -60,16 +60,16 @@ int Game::update(float dt)
 	soundSystem->update();
 	
 	if(input->checkKeyDown(0x57))	//W
-		camera->Walk(30.0f * dt);
+		camera->Walk(300.0f * dt);
 
 	if(input->checkKeyDown(0x41))	//A
-		camera->Strafe(-30.0f * dt);
+		camera->Strafe(-300.0f * dt);
 
 	if(input->checkKeyDown(0x53))	//S
-		camera->Walk(-30.0f * dt);
+		camera->Walk(-300.0f * dt);
 
 	if(input->checkKeyDown(0x44))	//D
-		camera->Strafe(30.0f * dt);
+		camera->Strafe(300.0f * dt);
 
 	camera->UpdateViewMatrix();
 

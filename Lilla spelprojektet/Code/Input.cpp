@@ -31,7 +31,7 @@ float Input::mousePitch()
 
 	this->prevMousePos.y = mState->yPos;
 
-	return dy;
+	return dy* 20;
 }
 
 MouseState* Input::getMs()
@@ -56,5 +56,5 @@ float Input::mouseRotateY()
 
 	this->prevMousePos.x = mState->xPos;
 
-	return dx;
+	return dx * 20;
 }
