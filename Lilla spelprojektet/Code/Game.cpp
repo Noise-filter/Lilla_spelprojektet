@@ -67,26 +67,18 @@ int Game::update(float dt)
 		camera->Walk(3000.0f * dt);
 
 	if(input->checkKeyDown(0x41))	//A
-		camera->Strafe(-30.0f * dt);
+		camera->Strafe(-3000.0f * dt);
 
 	if(input->checkKeyDown(0x53))	//S
-		camera->Walk(-30.0f * dt);
+		camera->Walk(-3000.0f * dt);
 
 	if(input->checkKeyDown(0x44))	//D
-		camera->Strafe(30.0f * dt);
+		camera->Strafe(3000.0f * dt);
 
 	if(input->checkKeyDown(0x20))
 	{
-		if(pausedMusic==true)
-		{
 		soundSystem->setPaused(playlist, pausedMusic);
-		pausedMusic = false;
-		}
-		else
-		{
-			soundSystem->setPaused(playlist, pausedMusic);
-			pausedMusic = true;
-		}
+		pausedMusic = !pausedMusic;
 	}
 		
 
