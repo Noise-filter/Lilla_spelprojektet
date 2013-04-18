@@ -3,19 +3,17 @@
 Buffer::Buffer()
 {
 	pBuffer			= NULL;
-	pIndexBuffer	= NULL;
 }
 
 Buffer::~Buffer()
 {
 	SAFE_RELEASE(pBuffer);
-	SAFE_RELEASE(pIndexBuffer);
 }
 
 void Buffer::Apply(ID3D11DeviceContext *dc, RENDERDATA obj, D3D_PRIMITIVE_TOPOLOGY topology, UINT32 misc)
 {
-	UINT strides;
-	UINT offset = 0;
+	UINT strides	= 0;
+	UINT offset		= 0;
 
 	if(obj.iEntityID != GUI)
 		strides = sizeof(MESH_PNUV);
@@ -32,12 +30,26 @@ void Buffer::Apply(ID3D11DeviceContext *dc, RENDERDATA obj, D3D_PRIMITIVE_TOPOLO
 
 HRESULT Buffer::initVertexBuffer(ID3D11Device *device, BUFFER_INIT &bufferInit)
 {
-	return initBuffer(device, bufferInit);	
+	HRESULT hr = S_OK;
+	
+	hr = initBuffer(device, bufferInit);
+
+	if(!FAILED(hr))
+		vVertexBuffer.push_back(pBuffer);
+
+	return hr;
 }
 
 HRESULT Buffer::initIndexBuffer(ID3D11Device *device, BUFFER_INIT &bufferInit)
 {
-	return initBuffer(device, bufferInit);
+	HRESULT hr = S_OK;
+
+	hr = initBuffer(device, bufferInit);
+
+	if(!FAILED(hr))
+		vIndexBuffer.push_back(pBuffer);
+	
+	return hr;
 }
 //
 //void* Buffer::Map()

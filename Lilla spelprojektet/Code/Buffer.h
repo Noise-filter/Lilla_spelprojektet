@@ -13,8 +13,7 @@ class Buffer
 		HRESULT initBuffer(ID3D11Device *device, BUFFER_INIT &bufferInit);
 
 	private:
-		ID3D11Buffer		*pBuffer;
-		ID3D11Buffer		*pIndexBuffer;
+		ID3D11Buffer *pBuffer;
 
 		std::vector<ID3D11Buffer*> vIndexBuffer;
 		std::vector<ID3D11Buffer*> vVertexBuffer;
