@@ -94,6 +94,10 @@ LRESULT CALLBACK WinHandler::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 		EndPaint(hWnd, &ps);
 		break;
 
+	case WM_MOVE:
+		return 0;
+		break;
+
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;

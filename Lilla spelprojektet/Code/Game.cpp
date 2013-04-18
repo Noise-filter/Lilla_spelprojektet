@@ -18,6 +18,7 @@ Game::~Game(void)
 	SAFE_DELETE(camera);
 	SAFE_DELETE(input);
 	soundSystem->shutdown();
+	delete playlist;
 }
 
 bool Game::init(HINSTANCE hInstance, int cmdShow)
@@ -52,6 +53,9 @@ void Game::render()
 
 int Game::update(float dt)
 {
+
+	static bool pausedMusic = true;
+
 	input->updateMs(engine->getMouseState());
 	
 	camera->Yaw((float)this->input->mouseRotateY());
@@ -60,16 +64,24 @@ int Game::update(float dt)
 	soundSystem->update();
 	
 	if(input->checkKeyDown(0x57))	//W
-		camera->Walk(300.0f * dt);
+		camera->Walk(3000.0f * dt);
 
 	if(input->checkKeyDown(0x41))	//A
-		camera->Strafe(-300.0f * dt);
+		camera->Strafe(-3000.0f * dt);
 
 	if(input->checkKeyDown(0x53))	//S
-		camera->Walk(-300.0f * dt);
+		camera->Walk(-3000.0f * dt);
 
 	if(input->checkKeyDown(0x44))	//D
-		camera->Strafe(300.0f * dt);
+		camera->Strafe(3000.0f * dt);
+
+	if(input->checkKeyDown(0x20))
+	{
+		soundSystem->setPaused(playlist, pausedMusic);
+		pausedMusic = !pausedMusic;
+	}
+		
+
 
 	camera->UpdateViewMatrix();
 

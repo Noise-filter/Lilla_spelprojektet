@@ -4,6 +4,7 @@
 #include "Structure.h"
 #include "Enemy.h"
 #include "Projectile.h"
+#include "SoundSystem.h"
 #include <vector>
 using namespace std;
 
@@ -30,6 +31,7 @@ private:
 
 	vector<Projectile*> projectiles;
 
+	Sound* sound;
 
 };
 

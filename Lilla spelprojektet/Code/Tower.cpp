@@ -19,6 +19,8 @@ Tower::Tower(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, 
 	this->range = range;
 	this->projectileSpeed = projectileSpeed;
 	this->cooldown = 0;
+
+	sound = SoundSystem::Getinstance()->createSound("plop.mp3");
 }
 
 Tower::~Tower()
@@ -49,6 +51,7 @@ int Tower::update(float dt)
 		{
 			projectiles.push_back(new Projectile(getPosition(), 0, 0, 0, 0, target, projectileSpeed* 10.0f, damage));
 			cooldown = attackSpeed;
+			SoundSystem::Getinstance()->playSound(sound);
 		}
 	}
 	else	//Vill ha ett nytt target
