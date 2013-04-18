@@ -39,6 +39,11 @@ void Entity::setPosition(D3DXVECTOR3& pos)
 	D3DXMatrixTranslation(&renderData.worldMat, pos.x, pos.y, pos.z);
 }
 
+float Entity::getHp()
+{
+	return hp;
+}
+
 RenderData& Entity::getRenderData()
 {
 	return renderData;

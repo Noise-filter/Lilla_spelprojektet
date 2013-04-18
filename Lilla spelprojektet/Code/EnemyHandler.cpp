@@ -12,7 +12,7 @@ bool EnemyHandler::init()
 		x = rand() % 100;
 		z = rand() % 100;
 
-		enemies.push_back(new Enemy(D3DXVECTOR3(x, 0, z), 2, 0, 0, 0, 0, 0));
+		enemies.push_back(new Enemy(D3DXVECTOR3(x, 0, z), 2, 0, 10, 0, 0, 0));
 	}
 
 	return true;
@@ -27,7 +27,18 @@ EnemyHandler::~EnemyHandler(void)
 int EnemyHandler::update(float dt)
 {
 	for(int i = 0; i < (int)enemies.size(); i++)
-		enemies.at(i)->update(dt);
+	{
+		if(enemies.at(i)->isDead())
+		{
+			Enemy* temp = enemies.at(i);
+			enemies.erase(enemies.begin() + i);
+			SAFE_DELETE(temp);
+		}
+		else
+		{
+			int id = enemies.at(i)->update(dt);
+		}
+	}
 
 	return 1;
 }
@@ -37,12 +48,8 @@ vector<Enemy*>& EnemyHandler::getEnemies()
 	return enemies;
 }
 
-vector<RenderData*> EnemyHandler::getRenderData()
+void EnemyHandler::getRenderData(vector<vector<RenderData*>>& rData)
 {
-	renderData.clear();
-
 	for(int i = 0; i < (int)enemies.size(); i++)
-		renderData.push_back(&enemies.at(i)->getRenderData());
-
-	return renderData;
+		rData.at(enemies.at(i)->getRenderData().meshID).push_back(&enemies.at(i)->getRenderData());
 }

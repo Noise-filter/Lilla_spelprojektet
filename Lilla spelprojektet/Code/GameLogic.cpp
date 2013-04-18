@@ -1,14 +1,11 @@
 #include "GameLogic.h"
 
-
-
 GameLogic::GameLogic(void)
 {
 	this->level = new Level();
 	this->eHandler = new EnemyHandler();
 	selectedStructure = 0;
 }
-
 
 GameLogic::~GameLogic(void)
 {
@@ -21,7 +18,6 @@ void GameLogic::incrementSelectedStructure(int increment)
 	this->selectedStructure += increment;
 }
 
-
 int GameLogic::update(float dt, MouseState* mState, D3DXMATRIX view, D3DXMATRIX proj)
 {
 
@@ -33,9 +29,9 @@ int GameLogic::update(float dt, MouseState* mState, D3DXMATRIX view, D3DXMATRIX 
 	}
 	
 
-	if(level->update(dt, eHandler->getEnemies()))
+	if(!level->update(dt, eHandler->getEnemies()))
 		return 0; //error
-	if(eHandler->update(dt))
+	if(!eHandler->update(dt))
 		return 0; //error
 
 
@@ -47,17 +43,23 @@ bool GameLogic::init(int mapSize, int quadSize)
 	this->level->init(mapSize,quadSize);
 	this->eHandler->init();
 
+	vector<RenderData*> renderData;
+
+	for(int i = 0; i < 5; i++)	//antal olika mesher
+		rDataList.push_back(renderData);
+
 	return true;
 }
 
 vector<vector<RenderData*>> GameLogic::getRenderData()
 {
-	rDataList.clear();
+	for(int i = 0; i < (int)rDataList.size(); i++)
+		rDataList.at(i).clear();
 
-	rDataList.push_back(level->getRenderData());
-	rDataList.push_back(eHandler->getRenderData());
+	level->getRenderData(rDataList);
+	eHandler->getRenderData(rDataList);
 
-	return rDataList;	
+	return rDataList;
 }
 
 D3DXVECTOR3 GameLogic::getMouseWorldPos(MouseState* mState, D3DXMATRIX view, D3DXMATRIX proj)
@@ -97,4 +99,4 @@ D3DXVECTOR3 GameLogic::getMouseWorldPos(MouseState* mState, D3DXMATRIX view, D3D
 	//cout << "intersect: " << intersect << endl;
 	return intersectPos = rayOrigin + (intersect*rayDir);
 	//cout << "X: "<<intersectPos.x << " Y: " << intersectPos.y << " Z: " << intersectPos.z << endl;
-}	
+}

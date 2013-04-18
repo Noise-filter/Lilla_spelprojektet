@@ -19,30 +19,38 @@ Projectile::~Projectile()
 {
 }
 
+#include <iostream>
+using namespace std;
+
 int Projectile::update(float dt)
 {
+	if(target == NULL)
+		return 0;
+	//if(target->isDead())
+		//return 0;
+
+	if(target->getHp() <= 0)
+	{
+		cout << "a" << endl;
+		return 0;
+	}
+
 	float length;
 	D3DXVECTOR3 dir;
-	if(target != NULL)
-	{
-		D3DXVECTOR3 pos = getPosition();
-		dir = target->getPosition() - pos;
-		length = D3DXVec3Length(&dir);
-		D3DXVec3Normalize(&dir, &dir);
+	D3DXVECTOR3 pos = getPosition();
+	dir = target->getPosition() - pos;
+	length = D3DXVec3Length(&dir);
+	D3DXVec3Normalize(&dir, &dir);
 
-		pos += (dir * speed * dt);
-		this->setPosition(pos);
-	}
-	
-	//returnerna ett annat värde om projektilen har träffat sitt target. Eller om targetet har försvunnit.
-	if(length <= 1)
+	pos += (dir * speed * dt);
+	this->setPosition(pos);
+
+	//returnerna ett annat värde om projektilen har träffat sitt target.
+	if(length <= 5)
 	{
 		target->doDamage(damage);
 		return 0;
 	}
-
-	if(target == NULL)
-		return 0;
 
 	return 1;
 }

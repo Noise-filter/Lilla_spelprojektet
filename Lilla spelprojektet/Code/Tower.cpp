@@ -37,16 +37,17 @@ int Tower::update(float dt)
 			Projectile* temp = projectiles.at(i);
 			projectiles.erase(projectiles.begin() + i);
 			delete temp;
+			cout << "delete" << endl;
 		}
 	}
 
 	cooldown -= dt;
-	if(target != NULL)
+	if(target != NULL && !target->isDead())
 	{
 		//Skjuter ett skott
 		if(cooldown <= 0)
 		{
-			projectiles.push_back(new Projectile(getPosition(), 0, 0, 0, 0, target, projectileSpeed, damage));
+			projectiles.push_back(new Projectile(getPosition(), 0, 0, 0, 0, target, projectileSpeed* 10.0f, damage));
 			cooldown = attackSpeed;
 		}
 	}
@@ -58,21 +59,21 @@ int Tower::update(float dt)
 	return 1;
 }
 
-void Tower::aquireTarget(vector<Enemy*>& enemies)
+void Tower::aquireTarget(vector<Enemy*>* enemies)
 {
 	D3DXVECTOR3 vec;
-	Enemy* t;
+	Enemy* t = NULL;
 	float closestLength = 1000;
 	float length;
 
-	for(int i = 0; i < enemies.size(); i++)
+	for(int i = 0; i < (int)enemies->size(); i++)
 	{
-		vec = enemies.at(i)->getPosition() - getPosition();
+		vec = enemies->at(i)->getPosition() - getPosition();
 		length = D3DXVec3Length(&vec);
 
 		if(length < closestLength)
 		{
-			t = enemies.at(i);
+			t = enemies->at(i);
 			closestLength = length;
 		}
 	}

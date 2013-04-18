@@ -16,7 +16,7 @@ public:
 
 	virtual int update(float dt);
 
-	void aquireTarget(vector<Enemy*>& enemies);
+	void aquireTarget(vector<Enemy*>* enemies);
 
 	vector<RenderData*> getRenderData();
 

@@ -1,6 +1,5 @@
 #include "Level.h"
 
-
 Level::Level(void)
 {
 	this->mapSize = 0;
@@ -11,7 +10,6 @@ bool Level::init(int mapSize, int quadSize)
 {
 	this->mapSize = mapSize;
 	this->quadSize = quadSize;
-
 
 
 	nodes = new Node*[mapSize];
@@ -38,9 +36,8 @@ bool Level::init(int mapSize, int quadSize)
 		for(int j = 0; j < mapSize-1; j++)
 		{
 			structures[i][j] = NULL;
-		}	
+		}
 	}
-
 
 	return true;
 }
@@ -76,7 +73,7 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 				int id = structures[i][j]->update(dt);
 				if(id == 2 && typeid(*structures[i][j]) == typeid(Tower))
 				{
-					dynamic_cast<Tower*>(structures[i][j])->aquireTarget(enemies);
+					dynamic_cast<Tower*>(structures[i][j])->aquireTarget(&enemies);
 				}
 			}
 		}
@@ -97,7 +94,7 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 			switch(selectedStructure)
 			{
 			case TOWER:
-				structures[xPos][yPos] = new Tower(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),0,1,0,0, 1, 1, 100, 100);
+				structures[xPos][yPos] = new Tower(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),2,1,0,0, 1, 1, 10, 100);
 				break;
 			case SUPPLY:
 				structures[xPos][yPos] = new Supply(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)), 1,0,0,0);
@@ -106,46 +103,45 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 		}
 	}
 
-	cout << "a structure has been built on the location X:"<< xPos << " Y:" << yPos << endl; 
+	//cout << "a structure has been built on the location X:"<< xPos << " Y:" << yPos << endl; 
 	return true;
 }
 
-vector<RenderData*> Level::getRenderData()
+void Level::getRenderData(vector<vector<RenderData*>>& rData)
 {
-	renderData.clear();
-
+	//Lägg till alla noder i renderData
 	for(int i = 0; i < mapSize; i++)
 	{
 		for(int j = 0; j < mapSize; j++)
 		{
-			renderData.push_back(&nodes[i][j].getRenderData());
+			rData.at(nodes[i][j].getRenderData().meshID).push_back(&nodes[i][j].getRenderData());
 		}
 	}
 
+	//Lägg till alla byggnader i renderData
 	for(int i = 0; i < mapSize-1; i++)
 	{
 		for(int j = 0; j < mapSize-1; j++)
 		{
 			if(structures[i][j] != NULL)
 			{
+				//Om det är ett torn lägg till övre delen och alla projektiler
 				if(typeid(*structures[i][j]) == typeid(Tower))
 				{
-					vector<RenderData*> rData = dynamic_cast<Tower*>(structures[i][j])->getRenderData();
+					vector<RenderData*> rD = dynamic_cast<Tower*>(structures[i][j])->getRenderData();
 				
 					//Lägg till tornets övre del
-					renderData.push_back(rData.at(0));
+					rData.at(4).push_back(rD.at(0));
 
 					//lägg till tornets undre del och alla projektiler
-					renderData.insert(renderData.begin(), rData.begin(), rData.end());
+					for(int k = 1; k < (int)rD.size(); k++)
+						rData.at(rD.at(k)->meshID).push_back(rD.at(k));
 				}
 				else
 				{
-					renderData.push_back(&structures[i][j]->getRenderData());
+					rData.at(structures[i][j]->getRenderData().meshID).push_back(&structures[i][j]->getRenderData());
 				}
 			}
-			
 		}
 	}
-
-	return renderData;
 }

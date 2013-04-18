@@ -12,6 +12,7 @@ public:
 
 	virtual int update(float dt);
 
+	bool isDead();
 
 private:
 	//Waypoints
@@ -19,7 +20,7 @@ private:
 	int currentWP;
 	float speed;
 	float damage;
-
+	bool dead;
 
 };
 

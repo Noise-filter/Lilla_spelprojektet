@@ -16,7 +16,7 @@ public:
 
 	bool init(int mapSize,int quadSize);
 
-	vector<RenderData*> getRenderData();
+	void getRenderData(vector<vector<RenderData*>>& rData);
 	int update(float dt, vector<Enemy*>& enemies);
 
 	bool buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure);
@@ -24,7 +24,6 @@ public:
 private:
 	Node** nodes;
 	Structure*** structures;
-	vector<RenderData*> renderData;  
 
 	int quadSize;
 	int mapSize;
