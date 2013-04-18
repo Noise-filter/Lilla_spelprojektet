@@ -5,6 +5,7 @@ Engine::Engine(void)
 {
 	d3d = new D3D11Handler();
 	win32 = new WinHandler();
+	pBuffer = new Buffer();
 }
 
 
@@ -12,6 +13,7 @@ Engine::~Engine(void)
 {
 	SAFE_DELETE(d3d);
 	SAFE_DELETE(win32);
+	SAFE_DELETE(pBuffer);
 }
 
 bool Engine::init(HINSTANCE hInstance, int cmdShow)

@@ -1,6 +1,7 @@
 #pragma once
 #include "D3D11Handler.h"
 #include "WinHandler.h"
+#include "Buffer.h"
 
 class Engine
 {
@@ -14,6 +15,6 @@ public:
 private:
 	D3D11Handler* d3d;
 	WinHandler* win32;
-
+	Buffer *pBuffer;
 };
 
