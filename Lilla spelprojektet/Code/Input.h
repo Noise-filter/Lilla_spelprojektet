@@ -7,14 +7,19 @@ class Input
 {
 	private:
 		D3DXVECTOR3 prevMousePos;
+		MouseState* mState;
 
 	public:
 		Input();
 		~Input(){};
 
-		float mousePitch(WPARAM btnState, int x, int y);
-		float mouseRotateY(WPARAM btnState, int x, int y);
-		bool checkKeyDown(char input) const;
+		float mousePitch();
+		float mouseRotateY();
+		bool checkKeyDown(int vkCode) const;
+
+		void updateMs(MouseState* mState);
+		MouseState* getMs();
+		void resetBtnState();
 };
 
 #endif

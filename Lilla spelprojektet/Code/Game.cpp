@@ -48,31 +48,32 @@ void Game::render()
 
 int Game::update(float dt)
 {
-	MouseState* mState = engine->getMouseState();
+	input->updateMs(engine->getMouseState());
 	
-	camera->Yaw((float)this->input->mouseRotateY(mState->btnState, mState->xPos, mState->yPos) * 20);
-	camera->Pitch(this->input->mousePitch(mState->btnState, mState->xPos, mState->yPos) * 20);
+	camera->Yaw((float)this->input->mouseRotateY());
+	camera->Pitch((float)this->input->mousePitch());
+
 	
-	if(input->checkKeyDown('W'))	//W
+	if(input->checkKeyDown(0x57))	//W
 		camera->Walk(30.0f * dt);
 
-	if(input->checkKeyDown('A'))	//A
+	if(input->checkKeyDown(0x41))	//A
 		camera->Strafe(-30.0f * dt);
 
-	if(input->checkKeyDown('S'))	//S
+	if(input->checkKeyDown(0x53))	//S
 		camera->Walk(-30.0f * dt);
 
-	if(input->checkKeyDown('D'))	//D
+	if(input->checkKeyDown(0x44))	//D
 		camera->Strafe(30.0f * dt);
 
 	camera->UpdateViewMatrix();
 
-	if(gameLogic->update(dt,mState, camera->View(), camera->Proj()))
+	if(gameLogic->update(dt,input->getMs(), camera->View(), camera->Proj(), camera->GetPosition()))
 		return 0; // error
 
-	if(mState->btnState != 0)
-		mState->btnState = 0;
-	
+	input->resetBtnState();
+
+
 	return 1;
 
 }
