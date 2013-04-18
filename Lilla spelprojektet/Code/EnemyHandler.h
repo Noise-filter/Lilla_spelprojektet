@@ -12,14 +12,13 @@ public:
 	
 	bool init();
 
-	vector<RenderData*> getRenderData();
+	void getRenderData(vector<vector<RenderData*>>& rData);
 	int update(float dt);
 
 	vector<Enemy*>& getEnemies();
 
 private:
 	vector<Enemy*> enemies;
-	vector<RenderData*> renderData;
 
 };
 

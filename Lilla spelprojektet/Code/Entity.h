@@ -16,6 +16,8 @@ public:
 
 	void setPosition(D3DXVECTOR3& pos);
 
+	float getHp();
+
 	RenderData& getRenderData();
 
 	D3DXVECTOR3 getPosition();
