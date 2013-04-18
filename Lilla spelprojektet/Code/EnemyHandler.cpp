@@ -40,6 +40,12 @@ int EnemyHandler::update(float dt)
 		}
 	}
 
+	if(enemies.size() < 10)
+	{
+		enemies.push_back(new Enemy(D3DXVECTOR3(rand() % 100, 0, rand() % 100), 2, 0, 10, 0, 0, 0));
+	}
+
+
 	return 1;
 }
 

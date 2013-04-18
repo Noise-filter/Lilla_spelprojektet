@@ -18,6 +18,7 @@ Game::~Game(void)
 	SAFE_DELETE(camera);
 	SAFE_DELETE(input);
 	soundSystem->shutdown();
+	delete playlist;
 }
 
 bool Game::init(HINSTANCE hInstance, int cmdShow)
@@ -60,7 +61,7 @@ int Game::update(float dt)
 	soundSystem->update();
 	
 	if(input->checkKeyDown(0x57))	//W
-		camera->Walk(30.0f * dt);
+		camera->Walk(3000.0f * dt);
 
 	if(input->checkKeyDown(0x41))	//A
 		camera->Strafe(-30.0f * dt);

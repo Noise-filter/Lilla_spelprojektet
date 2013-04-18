@@ -10,7 +10,7 @@ SoundSystem::SoundSystem()
 
 SoundSystem::~SoundSystem()
 {
-	delete m_SoundSystem;
+	//delete m_SoundSystem;
 }
 
 SoundSystem* SoundSystem::m_SoundSystem = NULL;
