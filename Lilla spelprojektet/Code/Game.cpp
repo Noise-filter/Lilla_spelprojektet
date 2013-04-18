@@ -7,6 +7,8 @@ Game::Game(void)
 	gameLogic = new GameLogic();
 	input = new Input();
 	camera = new Camera();
+	//soundSystem = NULL;
+	soundSystem = soundSystem->Getinstance();
 }
 
 
@@ -16,6 +18,7 @@ Game::~Game(void)
 	SAFE_DELETE(gameLogic);
 	SAFE_DELETE(camera);
 	SAFE_DELETE(input);
+	soundSystem->shutdown();
 }
 
 bool Game::init(HINSTANCE hInstance, int cmdShow)
@@ -32,7 +35,8 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	camera->SetLens((float)D3DX_PI * 0.45f, (float)screenWidth / (float)screenHeight, 0.1f, 1000.0f);
 
 	//initiate other game resources such as level or whatever
-
+	soundSystem->init();
+	playlist = soundSystem->createPlaylist("playlist.m3u");
 
 	return true; // all initiates went well
 }
@@ -53,6 +57,8 @@ int Game::update(float dt)
 	camera->Yaw((float)this->input->mouseRotateY(mState->btnState, mState->xPos, mState->yPos) * 20);
 	camera->Pitch(this->input->mousePitch(mState->btnState, mState->xPos, mState->yPos) * 20);
 	
+	soundSystem->update();
+
 	if(input->checkKeyDown('W'))	//W
 		camera->Walk(30.0f * dt);
 
@@ -64,6 +70,7 @@ int Game::update(float dt)
 
 	if(input->checkKeyDown('D'))	//D
 		camera->Strafe(30.0f * dt);
+
 
 	camera->UpdateViewMatrix();
 
