@@ -13,14 +13,14 @@
 *.a
 
 #andra saker
-Lilla spelprojektet/Code/*.sdf
+*.sdf
 *.opensdf
-Lilla spelprojektet/Code/*.suo
+*.suo
 *.exe
 *.ilk
 *.pdb
-/Lilla spelprojektet/Code/*.vcxproj
-/Lilla spelprojektet/Code/*.vcxproj.filters
+*.vcxproj
+*.vcxproj.filters
 
 # Mappar
 Lilla spelprojektet/Obj/**/
