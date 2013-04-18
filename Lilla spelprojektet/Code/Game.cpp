@@ -77,8 +77,6 @@ int Game::update(float dt)
 	if(gameLogic->update(dt,mState, camera->View(), camera->Proj()))
 		return 0; // error
 
-	//mState->xPos = 0;
-	//mState->yPos = 0;
 	if(mState->btnState != 0)
 		mState->btnState = 0;
 	
