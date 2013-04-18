@@ -1,7 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include <WindowsX.h>
-
+#include <Windows.h>
 class WinHandler
 {
 	public:
@@ -13,7 +13,7 @@ class WinHandler
 		static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 		virtual void mouseOnMove(WPARAM btnState, int x, int y){};
 
-	protected:
+	private:
 		HINSTANCE   hInst;
 		HWND        hWnd;
 

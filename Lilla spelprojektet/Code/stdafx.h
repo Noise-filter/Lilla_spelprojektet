@@ -7,6 +7,7 @@
 #include <D3DX10math.h>
 #include <d3dx11effect.h>
 #include <d3dCompiler.h>
+#include <vector>
 
 #include <string>
 #include <ctime>

@@ -1,6 +1,5 @@
 #include "WinHandler.h"
 
-
 namespace
 {
 	WinHandler* winHandler = NULL;
@@ -8,8 +7,8 @@ namespace
 
 WinHandler::WinHandler(void)
 {
-	HINSTANCE				g_hInst					= NULL;  
-	HWND					g_hWnd					= NULL;
+	this->hInst = NULL;
+	this->hWnd = NULL;
 
 	winHandler = this;
 

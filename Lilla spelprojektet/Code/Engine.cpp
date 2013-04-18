@@ -36,15 +36,25 @@ void Engine::render()
 {
 	static float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
-	d3d->deviceContext->ClearRenderTargetView( d3d->renderTargetView, ClearColor );
+	d3d->pDeviceContext->ClearRenderTargetView( d3d->pRTV, ClearColor );
 	
     //clear depth info
-	d3d->deviceContext->ClearDepthStencilView(d3d->depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0 );
+	d3d->pDeviceContext->ClearDepthStencilView(d3d->pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0 );
 
 	//set topology
-	d3d->deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	d3d->pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	if(FAILED(d3d->swapChain->Present( 0, 0 )))
+	this->d3d->setPass(GEOMETRY);
+
+	this->d3d->setPass(LIGHT);
+
+	this->d3d->setFSQDepth();
+	this->d3d->setPass(FULLSCREENQUAD);
+
+	this->d3d->resetDSS();
+
+
+	if(FAILED(d3d->pSwapChain->Present( 0, 0 )))
 	{
 		return;
 	}
