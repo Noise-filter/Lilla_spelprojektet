@@ -3,7 +3,7 @@
 D3D11Handler::D3D11Handler()
 {
 	this->pSwapChain        = NULL;
-	this->pRTV              = NULL;
+	this->pBackBufferV      = NULL;
 
 	this->pDepthStencil     = NULL;
 	this->pDepthStencilView = NULL;
@@ -15,10 +15,6 @@ D3D11Handler::D3D11Handler()
 	this->pRTs              = NULL;
 	this->pRTVs             = NULL;
 	this->iNrRTS            = 0;
-
-	this->iScreenW          = 0;
-	this->iScreenH          = 0;
-
 }
 
 D3D11Handler::~D3D11Handler()
@@ -31,12 +27,12 @@ D3D11Handler::~D3D11Handler()
 	SAFE_RELEASE(this->pDepthState);
 	SAFE_RELEASE(this->pSwapChain)
 	SAFE_RELEASE(this->pRTs);
-	SAFE_RELEASE(this->pRTV);
+	SAFE_RELEASE(this->pRTVs);
 	SAFE_RELEASE(this->pDepthStencil);
 	SAFE_RELEASE(this->pDepthStencilView);
 	SAFE_RELEASE(this->pDevice);
 	SAFE_RELEASE(this->pDeviceContext);
-	SAFE_RELEASE(this->pRTV);
+	SAFE_RELEASE(this->pBackBufferV);
 
 	SAFE_DELETE(this->pViewPort);
 }
@@ -66,14 +62,14 @@ HRESULT D3D11Handler::InitDirect3D(HWND hWnd)
 	}
 	
 	//create forward RTV and RT
-	hr = createFRTV();
+	hr = createBackBufferV();
 	if(FAILED(hr))
 	{
 		return hr;
 	}
 	
 	//set renderTargetview backBuffer
-	setRT(1, this->pRTV);
+	setRT(1, this->pBackBufferV);
 
 	// Setup the viewport
 	setupVP();
@@ -146,7 +142,7 @@ void D3D11Handler::setRT(int nrOfRT, ID3D11RenderTargetView* pRTVs)
 {
 	this->pDeviceContext->OMSetRenderTargets(nrOfRT, &pRTVs, this->pDepthStencilView);
 }
-HRESULT D3D11Handler::createFRTV()
+HRESULT D3D11Handler::createBackBufferV()
 {
 	HRESULT hr = S_OK;
 	// Create a render target view
@@ -155,7 +151,7 @@ HRESULT D3D11Handler::createFRTV()
 	if( FAILED(hr) )
 		return hr;
 
-	hr = this->pDevice->CreateRenderTargetView( pBackBuffer, NULL, &this->pRTV );
+	hr = this->pDevice->CreateRenderTargetView( pBackBuffer, NULL, &this->pBackBufferV );
 	pBackBuffer->Release();
 	if( FAILED(hr) )
 		return hr;
@@ -165,8 +161,8 @@ HRESULT D3D11Handler::createFRTV()
 void D3D11Handler::setupVP()
 {
 	this->pViewPort = new D3D11_VIEWPORT;
-	this->pViewPort->Width = (float)this->iScreenW;
-	this->pViewPort->Height = (float)this->iScreenH;
+	this->pViewPort->Width = SCREEN_WIDTH;
+	this->pViewPort->Height = SCREEN_HEIGHT;
 	this->pViewPort->MinDepth = 0.0f;
 	this->pViewPort->MaxDepth = 1.0f;
 	this->pViewPort->TopLeftX = 0;
@@ -179,8 +175,8 @@ HRESULT D3D11Handler::initZBuffer()
 	HRESULT hr = S_OK;
 	// Create depth stencil texture
 	D3D11_TEXTURE2D_DESC descDepth;
-	descDepth.Width = this->iScreenW;
-	descDepth.Height = this->iScreenH;
+	descDepth.Width = SCREEN_WIDTH;
+	descDepth.Height = SCREEN_HEIGHT;
 	descDepth.MipLevels = 1;
 	descDepth.ArraySize = 1;
 	descDepth.Format = DXGI_FORMAT_D32_FLOAT;
@@ -209,11 +205,6 @@ HRESULT D3D11Handler::initZBuffer()
 HRESULT D3D11Handler::initSwapChainAndDevice(HWND hWnd)
 {
 	HRESULT hr = S_OK;
-	RECT rec;
-	GetClientRect(hWnd, &rec);
-
-	this->iScreenW = rec.right - rec.left;
-	this->iScreenH = rec.bottom - rec.top;
 
 	UINT createDeviceFlags = 0;
 
@@ -234,8 +225,8 @@ HRESULT D3D11Handler::initSwapChainAndDevice(HWND hWnd)
 	DXGI_SWAP_CHAIN_DESC sd;
 	ZeroMemory(&sd, sizeof(sd));
 	sd.BufferCount = 1;
-	sd.BufferDesc.Width = iScreenW;
-	sd.BufferDesc.Height = iScreenH;
+	sd.BufferDesc.Width = SCREEN_WIDTH;
+	sd.BufferDesc.Height = SCREEN_HEIGHT;
 	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	sd.BufferDesc.RefreshRate.Numerator = 60;
 	sd.BufferDesc.RefreshRate.Denominator = 1;
@@ -302,7 +293,7 @@ char* D3D11Handler::FeatureLevelToString(D3D_FEATURE_LEVEL featureLevel)
 }
 void D3D11Handler::resetRT()
 {
-	this->pDeviceContext->OMSetRenderTargets( 1, &this->pRTV, this->pDepthStencilView );
+	this->pDeviceContext->OMSetRenderTargets( 1, &this->pBackBufferV, this->pDepthStencilView );
 
 	this->pDeviceContext->RSSetViewports( 1, this->pViewPort);
 }

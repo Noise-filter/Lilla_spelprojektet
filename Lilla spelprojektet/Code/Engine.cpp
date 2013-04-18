@@ -36,7 +36,7 @@ void Engine::render()
 {
 	static float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
-	d3d->pDeviceContext->ClearRenderTargetView( d3d->pRTV, ClearColor );
+	d3d->pDeviceContext->ClearRenderTargetView( d3d->pBackBufferV, ClearColor );
 	
     //clear depth info
 	d3d->pDeviceContext->ClearDepthStencilView(d3d->pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0 );
@@ -46,12 +46,13 @@ void Engine::render()
 
 	this->d3d->setPass(GEOMETRY);
 
+
 	this->d3d->setPass(LIGHT);
 
-	this->d3d->setFSQDepth();
+	//this->d3d->setFSQDepth();
 	this->d3d->setPass(FULLSCREENQUAD);
 
-	this->d3d->resetDSS();
+	//this->d3d->resetDSS();
 
 
 	if(FAILED(d3d->pSwapChain->Present( 0, 0 )))

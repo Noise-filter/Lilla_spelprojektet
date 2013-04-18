@@ -1,13 +1,9 @@
 #ifndef D3D11HANDLER_H
 #define D3D11HANDLER_H
 
-//TODO : include graphic lib and remove screenWidth/screenHeight
-//TODO : fix shaders
-
 #include "D3DGraphicUtility.h"
-#include <Windows.h>
-#include "stdafx.h"
-#include "WinHandler.h"
+#include "D3DMathUtility.h"
+#include "WindowsUtility.h"
 #include "Shader.h"
 
 class D3D11Handler		
@@ -18,10 +14,11 @@ class D3D11Handler
 		HRESULT initSwapChainAndDevice(HWND hWnd);
 		HRESULT initZBuffer();
 		void setupVP();
-		HRESULT createFRTV();
+		HRESULT createBackBufferV();
 		void setRT(int nrOfRT, ID3D11RenderTargetView* pRTVs);
 		HRESULT createDSS();
 		HRESULT initShaders();
+		HRESULT createMRTS();
 
 
 		//Variables
@@ -36,11 +33,6 @@ class D3D11Handler
 
 		//Shaders for different passes
 		std::vector<Shader*> vShaders;
-		
-
-		//screen width / screen height
-		int iScreenW;
-		int iScreenH;
 
 	public:
 		//Variables
@@ -48,7 +40,7 @@ class D3D11Handler
 		ID3D11DeviceContext*	pDeviceContext;
 		IDXGISwapChain*         pSwapChain;	
 		ID3D11DepthStencilView* pDepthStencilView;
-		ID3D11RenderTargetView* pRTV;	
+		ID3D11RenderTargetView* pBackBufferV;	
 
 		//Functions
 		D3D11Handler();
