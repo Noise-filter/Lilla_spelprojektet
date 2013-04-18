@@ -24,11 +24,9 @@
 #endif
 
 #define SAFE_RELEASE(x) if( x ) { (x)->Release(); (x) = NULL; }
-#define SAFE_DELETE(x) if( x ) { delete(x); (x) = NULL; }
-#define SAFE_DELETE_ARRAY(x) if( x ) { delete[](x); (x) = NULL; }
 
-#define SCREEN_WIDTH 1024
-#define SCREEN_HEIGHT 768
+#define PointList D3D_PRIMITIVE_TOPOLOGY_POINTLIST
+#define TriangleList D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST
 
 enum PASS_STATE
 {
@@ -37,27 +35,90 @@ enum PASS_STATE
 	FULLSCREENQUAD,
 };
 
-enum BUILDING_FLAGS
+
+
+//enum BUFFER_TYPE
+//{
+//	VERTEX_BUFFER,
+//	INDEX_BUFFER,
+//	CONSTANT_BUFFER_VS,
+//	CONSTANT_BUFFER_GS,
+//	CONSTANT_BUFFER_PS,
+//	BUFFER_TYPE_COUNT
+//};
+//
+//enum BUFFER_USAGE
+//{
+//	BUFFER_DEFAULT,
+//	BUFFER_STREAM_OUT_TARGET,
+//	BUFFER_CPU_WRITE,
+//	BUFFER_CPU_WRITE_DISCARD,
+//	BUFFER_CPU_READ,
+//	BUFFER_USAGE_COUNT
+//};
+
+struct BUFFER_INIT
 {
-	MAINBUILDING,
-	SUPPLY,
-	TOWER,
+	struct BUFFER_DESC
+	{
+		UINT        uByteWidth;
+		D3D11_USAGE	eUsage;
+		UINT        uBindFlags;
+		UINT        uCPUAccessFlags;
+		UINT        uMiscFlags;
+		UINT        uStructureByteStride;
+
+		BUFFER_DESC()
+		{
+			uByteWidth				= 0;
+			eUsage					= D3D11_USAGE_DEFAULT;
+			uBindFlags				= 0;
+			uCPUAccessFlags			= 0;
+			uMiscFlags				= 0;
+			uStructureByteStride	= 0;
+		}
+
+		BUFFER_DESC(UINT byteWidth, D3D11_USAGE	usage, UINT bindFlags, UINT cpuAccessFlags, UINT miscFlags, UINT structureByteStride)
+		{
+			uByteWidth				= byteWidth;
+			eUsage					= usage;
+			uBindFlags				= bindFlags;
+			uCPUAccessFlags			= cpuAccessFlags;
+			uMiscFlags				= miscFlags;
+			uStructureByteStride	= structureByteStride;
+		}
+
+	}desc;
+
+	struct SUB_DATA
+	{
+		void*		pInitData;
+		UINT		uSysMemPitch;
+		UINT		uSysMemSlicePitch;
+
+		SUB_DATA()
+		{
+			pInitData				= NULL;
+			uSysMemPitch			= 0;
+			uSysMemSlicePitch		= 0;
+		}
+
+		SUB_DATA(void* initData, UINT sysMemPitch, UINT sysMemSlicePitch)
+		{
+			pInitData			= initData;
+			uSysMemPitch		= sysMemPitch;
+			uSysMemSlicePitch	= sysMemSlicePitch;
+		}
+
+	}data;
+
+	BUFFER_INIT()
+	{
+		desc;
+		data;
+	}
 };
 
-enum TEXTURE_FLAGS
-{
-	MAINBUILDINGTEXTURE1,
-	SUPPLYTEXTURE1,
-	TOWERTEXTURE1,
-	ENEMYTEXTURE1,
-};
-
-enum LIGHT_FLAGS
-{
-	DIRECTIONAL,
-	POINT,
-	SPOT,
-};
 
 //////////////////////////////////////////////////////////////////////////
 // to find memory leaks
