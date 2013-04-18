@@ -110,42 +110,41 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 	return true;
 }
 
-vector<RenderData*> Level::getRenderData()
+void Level::getRenderData(vector<vector<RenderData*>>& rData)
 {
-	renderData.clear();
-
+	//Lägg till alla noder i renderData
 	for(int i = 0; i < mapSize; i++)
 	{
 		for(int j = 0; j < mapSize; j++)
 		{
-			renderData.push_back(&nodes[i][j].getRenderData());
+			rData.at(nodes[i][j].getRenderData().meshID).push_back(&nodes[i][j].getRenderData());
 		}
 	}
 
+	//Lägg till alla byggnader i renderData
 	for(int i = 0; i < mapSize-1; i++)
 	{
 		for(int j = 0; j < mapSize-1; j++)
 		{
 			if(structures[i][j] != NULL)
 			{
+				//Om det är ett torn lägg till övre delen och alla projektiler
 				if(typeid(*structures[i][j]) == typeid(Tower))
 				{
-					vector<RenderData*> rData = dynamic_cast<Tower*>(structures[i][j])->getRenderData();
-				
+					vector<RenderData*> rD = dynamic_cast<Tower*>(structures[i][j])->getRenderData();
+
 					//Lägg till tornets övre del
-					renderData.push_back(rData.at(0));
+					rData.at(4).push_back(rD.at(0));
 
 					//lägg till tornets undre del och alla projektiler
-					renderData.insert(renderData.begin(), rData.begin(), rData.end());
+					for(int k = 1; k < (int)rD.size(); k++)
+						rData.at(rD.at(k)->meshID).push_back(rD.at(k));
 				}
 				else
 				{
-					renderData.push_back(&structures[i][j]->getRenderData());
+					rData.at(structures[i][j]->getRenderData().meshID).push_back(&structures[i][j]->getRenderData());
 				}
 			}
-			
 		}
 	}
-
-	return renderData;
 }
