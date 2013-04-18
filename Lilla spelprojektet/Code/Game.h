@@ -3,6 +3,7 @@
 #include "GameLogic.h"
 #include "Input.h"
 #include "Camera.h"
+#include "SoundSystem.h"
 
 class Game
 {
@@ -19,6 +20,7 @@ private:
 	GameLogic* gameLogic;
 	Input* input;
 	Camera* camera;
-
+	SoundSystem* soundSystem;
+	Sound* playlist;
 };
 
