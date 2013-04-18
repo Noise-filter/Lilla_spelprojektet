@@ -76,7 +76,7 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 				int id = structures[i][j]->update(dt);
 				if(id == 2 && typeid(*structures[i][j]) == typeid(Tower))
 				{
-					dynamic_cast<Tower*>(structures[i][j])->aquireTarget(enemies);
+					dynamic_cast<Tower*>(structures[i][j])->aquireTarget(&enemies);
 				}
 			}
 		}
