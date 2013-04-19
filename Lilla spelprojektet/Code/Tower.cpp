@@ -49,7 +49,7 @@ int Tower::update(float dt)
 		//Skjuter ett skott
 		if(cooldown <= 0)
 		{
-			projectiles.push_back(new Projectile(getPosition(), 0, 0, 0, 0, target, projectileSpeed* 10.0f, damage));
+			projectiles.push_back(new Projectile(getPosition(), 0, 0, 0, 0, target, projectileSpeed, damage));
 			cooldown = attackSpeed;
 			SoundSystem::Getinstance()->playSound(sound);
 		}
