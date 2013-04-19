@@ -36,7 +36,31 @@ bool GameLogic::canAfford()
 					return true;
 				}
 				break;
-			case TYPE_UPGRADE:
+			case TYPE_UPGRADE_HP:
+				if(resource >= COST_UPGRADE)
+				{
+					return true;
+				}
+				break;
+			case TYPE_UPGRADE_ATKSP:
+				if(resource >= COST_UPGRADE)
+				{
+					return true;
+				}
+				break;
+				case TYPE_UPGRADE_DMG:
+				if(resource >= COST_UPGRADE)
+				{
+					return true;
+				}
+				break;
+				case TYPE_UPGRADE_PRJSP:
+				if(resource >= COST_UPGRADE)
+				{
+					return true;
+				}
+				break;
+				case TYPE_UPGRADE_RANGE:
 				if(resource >= COST_UPGRADE)
 				{
 					return true;
@@ -58,7 +82,19 @@ void GameLogic::structureBuilt()
 				availableSupply += COST_TOWER;
 				resource -= COST_SUPPLY;
 				break;
-			case TYPE_UPGRADE:
+			case TYPE_UPGRADE_HP:
+				resource -= COST_UPGRADE;
+				break;
+			case TYPE_UPGRADE_ATKSP:
+				resource -= COST_UPGRADE;
+				break;
+			case TYPE_UPGRADE_DMG:
+				resource -= COST_UPGRADE;
+				break;
+			case TYPE_UPGRADE_PRJSP:
+				resource -= COST_UPGRADE;
+				break;
+			case TYPE_UPGRADE_RANGE:
 				resource -= COST_UPGRADE;
 				break;
 			}
