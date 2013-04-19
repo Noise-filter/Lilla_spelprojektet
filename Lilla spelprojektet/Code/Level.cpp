@@ -5,14 +5,13 @@ Level::Level(void)
 {
 	this->mapSize = 0;
 	this->nodes = NULL;
+	this->towerUpgrades = NULL;
 }
 
 bool Level::init(int mapSize, int quadSize)
 {
 	this->mapSize = mapSize;
 	this->quadSize = quadSize;
-
-
 
 	nodes = new Node*[mapSize];
 	for(int i = 0; i < mapSize; i++)
@@ -41,9 +40,14 @@ bool Level::init(int mapSize, int quadSize)
 			structures[i][j] = NULL;
 		}	
 	}
-	structures[5][5] = new Tower(D3DXVECTOR3(5*quadSize + (quadSize/2),0,5*quadSize + (quadSize/2)),0,1,0,0, 1, 1, 50, 100);
+	structures[5][5]= new Tower(D3DXVECTOR3(5*quadSize + (quadSize/2),0,5*quadSize + (quadSize/2)),0,1,0,0, 1, 1, 50, 100);
 
-
+	towerUpgrades = new TowerUpgrade[5];
+	towerUpgrades[0] = TowerUpgrade(100,0,0,0,0);
+	towerUpgrades[1] = TowerUpgrade(0,100,0,0,0);
+	towerUpgrades[2] = TowerUpgrade(0,0,100,0,0);
+	towerUpgrades[3] = TowerUpgrade(0,0,0,100,0);
+	towerUpgrades[4] = TowerUpgrade(0,0,0,0,100);
 	return true;
 }
 
@@ -89,7 +93,6 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 
 bool Level::isAdjecent(int xPos, int yPos)
 {
-
 
 	if(structures[xPos+1][yPos] != NULL)
 	{
@@ -153,6 +156,21 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 				break;
 			case TYPE_SUPPLY:
 				structures[xPos][yPos] = new Supply(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)), 1,0,0,0);
+				break;
+			case TYPE_UPGRADE_HP:
+				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),1,0,0,0,0);
+				break;
+			case TYPE_UPGRADE_ATKSP:
+				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),1,0,0,0,1);
+				break;
+			case TYPE_UPGRADE_DMG:
+				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),1,0,0,0,2);
+				break;
+			case TYPE_UPGRADE_PRJSP:
+				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),1,0,0,0,3);
+				break;
+			case TYPE_UPGRADE_RANGE:
+				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),1,0,0,0,4);
 				break;
 			}
 			cout << "a structure has been built on the location X:"<< xPos << " Y:" << yPos << endl;

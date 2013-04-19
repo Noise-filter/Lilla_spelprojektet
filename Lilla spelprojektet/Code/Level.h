@@ -5,6 +5,7 @@
 #include "Enemy.h"
 #include "Tower.h"
 #include "Supply.h"
+#include "Upgrade.h"
 #include <vector>
 using namespace std;
 
@@ -26,6 +27,7 @@ public:
 private:
 	Node** nodes;
 	Structure*** structures;
+	TowerUpgrade* towerUpgrades;
 
 	int quadSize;
 	int mapSize;
