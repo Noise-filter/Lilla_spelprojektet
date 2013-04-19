@@ -5,6 +5,8 @@ GameLogic::GameLogic(void)
 	this->level = new Level();
 	this->eHandler = new EnemyHandler();
 	selectedStructure = 0;
+	this->availableSupply = 100;
+	this->resource = 100;
 }
 
 GameLogic::~GameLogic(void)
@@ -27,16 +29,34 @@ bool GameLogic::canAfford()
 					return true;
 				break;
 			case TYPE_SUPPLY:
-				if(availableSupply >= COST_SUPPLY)
+				if(resource >= COST_SUPPLY)
 					return true;
 				break;
 			case TYPE_UPGRADE:
-				if(availableSupply >= COST_UPGRADE)
+				if(resource >= COST_UPGRADE)
 					return true;
 				break;
 			}
 		
 		return false;
+}
+void GameLogic::structureBuilt()
+{
+	switch(this->selectedStructure)
+			{
+			case TYPE_TOWER:
+				availableSupply -= COST_TOWER;
+				cout << "Tower cost " << COST_TOWER << endl; 
+				break;
+			case TYPE_SUPPLY:
+				availableSupply += COST_TOWER;
+				resource -= COST_SUPPLY;
+				break;
+			case TYPE_UPGRADE:
+				resource -= COST_UPGRADE;
+				break;
+			}
+
 }
 
 
@@ -45,8 +65,11 @@ int GameLogic::update(float dt, MouseState* mState, D3DXMATRIX view, D3DXMATRIX 
 	switch(mState->btnState)
 	{
 		case VK_LBUTTON:
-			if(canAfford)
-				level->buildStructure(getMouseWorldPos(mState, view, proj, cameraPos), this->selectedStructure);
+			if(canAfford())
+			{
+				if(level->buildStructure(getMouseWorldPos(mState, view, proj, cameraPos), this->selectedStructure));
+					structureBuilt();
+			}
 			break;
 	}
 	

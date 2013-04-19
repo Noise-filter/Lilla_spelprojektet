@@ -96,10 +96,10 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 		{
 			switch(selectedStructure)
 			{
-			case TOWER:
+			case TYPE_TOWER:
 				structures[xPos][yPos] = new Tower(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),0,1,0,0, 1, 1, 50, 100);
 				break;
-			case SUPPLY:
+			case TYPE_SUPPLY:
 				structures[xPos][yPos] = new Supply(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)), 1,0,0,0);
 				break;
 			}
