@@ -18,13 +18,35 @@ void GameLogic::incrementSelectedStructure(int increment)
 	this->selectedStructure += increment;
 }
 
+bool GameLogic::canAfford()
+{
+		switch(this->selectedStructure)
+			{
+			case TYPE_TOWER:
+				if(availableSupply >= COST_TOWER)
+					return true;
+				break;
+			case TYPE_SUPPLY:
+				if(availableSupply >= COST_SUPPLY)
+					return true;
+				break;
+			case TYPE_UPGRADE:
+				if(availableSupply >= COST_UPGRADE)
+					return true;
+				break;
+			}
+		
+		return false;
+}
+
+
 int GameLogic::update(float dt, MouseState* mState, D3DXMATRIX view, D3DXMATRIX proj, D3DXVECTOR3 cameraPos)
 {
-
 	switch(mState->btnState)
 	{
 		case VK_LBUTTON:
-			level->buildStructure(getMouseWorldPos(mState, view, proj, cameraPos), this->selectedStructure);	
+			if(canAfford)
+				level->buildStructure(getMouseWorldPos(mState, view, proj, cameraPos), this->selectedStructure);
 			break;
 	}
 	
@@ -92,7 +114,5 @@ D3DXVECTOR3 GameLogic::getMouseWorldPos(MouseState* mState, D3DXMATRIX view, D3D
 	intersect = (D3DXVec3Dot(&-planeNormal, &rayOrigin))/(D3DXVec3Dot(&planeNormal,&rayDir));
 
 	return intersectPos = rayOrigin + (intersect*rayDir);
-
-	//cout << "X: "<<intersectPos.x << " Y: " << intersectPos.y << " Z: " << intersectPos.z << endl;
 }
 

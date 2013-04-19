@@ -19,7 +19,13 @@ private:
 	Level* level;
 	EnemyHandler* eHandler;
 	int selectedStructure;
+	bool canAfford();
 
 	D3DXVECTOR3 getMouseWorldPos(MouseState *mState, D3DXMATRIX view, D3DXMATRIX proj, D3DXVECTOR3 cameraPos);
+
+	//resurser
+	int availableSupply;
+	int resource;
+	//resurser
 };
 

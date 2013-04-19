@@ -50,9 +50,17 @@ struct RenderData
 
 enum STRUCTURE_TYPES
 {
-	TOWER,
-	SUPPLY,
+	TYPE_TOWER,
+	TYPE_SUPPLY,
+	TYPE_UPGRADE,
 };
+enum STRUCTURE_COSTS
+{
+	COST_TOWER = 20,
+	COST_SUPPLY = 40,
+	COST_UPGRADE = 60,
+};
+
 
 const int screenWidth = 1024;
 const int screenHeight = 768;
