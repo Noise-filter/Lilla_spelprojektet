@@ -60,6 +60,11 @@ enum STRUCTURE_COSTS
 	COST_SUPPLY = 40,
 	COST_UPGRADE = 60,
 };
+enum NODE_COLORS
+{
+	COLOR_RED,
+	COLOR_GREEN,
+};
 
 
 const int screenWidth = 1024;

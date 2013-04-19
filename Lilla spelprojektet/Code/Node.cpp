@@ -19,3 +19,8 @@ int Node::update(float dt)
 
 	return 1;
 }
+
+int Node::getColor()
+{
+	return this->color;
+}

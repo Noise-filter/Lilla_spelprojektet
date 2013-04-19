@@ -24,10 +24,11 @@ bool Level::init(int mapSize, int quadSize)
 	{
 		for(int j = 0; j < mapSize; j++)
 		{
-			nodes[i][j] = Node(D3DXVECTOR3(i*quadSize,0,j*quadSize),0,0,0,0,0);
+			nodes[i][j] = Node(D3DXVECTOR3(i*quadSize,0,j*quadSize),0,0,0,0,COLOR_GREEN);
 		}
 	}
-
+	nodes[3][3] = Node(D3DXVECTOR3(3*quadSize,0,3*quadSize),0,0,0,0,COLOR_RED);
+	 
 	structures = new Structure**[mapSize-1];
 	for(int i = 0; i < mapSize-1; i++)
 	{
@@ -40,6 +41,7 @@ bool Level::init(int mapSize, int quadSize)
 			structures[i][j] = NULL;
 		}	
 	}
+	structures[5][5] = new Tower(D3DXVECTOR3(5*quadSize + (quadSize/2),0,5*quadSize + (quadSize/2)),0,1,0,0, 1, 1, 50, 100);
 
 
 	return true;
@@ -85,6 +87,56 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 	return 1;
 }
 
+bool Level::isAdjecent(int xPos, int yPos)
+{
+
+
+	if(structures[xPos+1][yPos] != NULL)
+	{
+		return true;
+	}	
+	
+	if(xPos > 0 && structures[xPos-1][yPos] != NULL)
+	{
+		return true;
+	}
+		
+	
+	if(structures[xPos][yPos+1] != NULL)
+	{
+		return true;
+	}
+		
+	
+	if(yPos > 0 && structures[xPos][yPos-1] != NULL)
+	{
+		return true;
+	}	
+
+	return false;
+}
+
+bool Level::isLocationBuildable(int xPos, int yPos)
+{
+	if(nodes[xPos][yPos].getColor() == COLOR_RED)
+	{
+		return false;
+	}
+	if(nodes[xPos+1][yPos].getColor() == COLOR_RED)
+	{
+		return false;
+	}
+	if(nodes[xPos][yPos+1].getColor() == COLOR_RED)
+	{
+		return false;
+	}
+	if(nodes[xPos+1][yPos+1].getColor() == COLOR_RED)
+	{
+		return false;
+	}
+	return true;
+}
+
 bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 {
 	int xPos = mouseClickPos.x/quadSize;
@@ -92,7 +144,7 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 
 	if(xPos >= 0 && xPos < mapSize-1 && yPos >= 0 && yPos < mapSize-1)
 	{
-		if(structures[xPos][yPos] == NULL)
+		if(structures[xPos][yPos] == NULL && isAdjecent(xPos,yPos) && isLocationBuildable(xPos, yPos))
 		{
 			switch(selectedStructure)
 			{
@@ -103,11 +155,12 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 				structures[xPos][yPos] = new Supply(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)), 1,0,0,0);
 				break;
 			}
+			cout << "a structure has been built on the location X:"<< xPos << " Y:" << yPos << endl;
+
+			return true;
 		}
 	}
-
-	cout << "a structure has been built on the location X:"<< xPos << " Y:" << yPos << endl; 
-	return true;
+	return false;
 }
 
 void Level::getRenderData(vector<vector<RenderData*>>& rData)

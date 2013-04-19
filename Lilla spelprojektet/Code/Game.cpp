@@ -26,6 +26,9 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	if(!engine->init(hInstance,cmdShow))
 		return false;
 
+	soundSystem->init();
+	playlist = soundSystem->createPlaylist("playlist.m3u");
+
 	//initiate other game resources such as level or whatever
 
 	if(!gameLogic->init(10,10))
@@ -36,8 +39,7 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 
 	//initiate other game resources such as level or whatever
 
-	soundSystem->init();
-	playlist = soundSystem->createPlaylist("playlist.m3u");
+	
 
 	return true; // all initiates went well
 }

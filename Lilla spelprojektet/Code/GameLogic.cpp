@@ -26,18 +26,25 @@ bool GameLogic::canAfford()
 			{
 			case TYPE_TOWER:
 				if(availableSupply >= COST_TOWER)
+				{
 					return true;
+				}
 				break;
 			case TYPE_SUPPLY:
 				if(resource >= COST_SUPPLY)
+				{
 					return true;
+				}
 				break;
 			case TYPE_UPGRADE:
 				if(resource >= COST_UPGRADE)
+				{
 					return true;
+				}
 				break;
 			}
 		
+		cout << "Cant afford structure" << endl; 
 		return false;
 }
 void GameLogic::structureBuilt()
@@ -45,8 +52,7 @@ void GameLogic::structureBuilt()
 	switch(this->selectedStructure)
 			{
 			case TYPE_TOWER:
-				availableSupply -= COST_TOWER;
-				cout << "Tower cost " << COST_TOWER << endl; 
+				availableSupply -= COST_TOWER; 
 				break;
 			case TYPE_SUPPLY:
 				availableSupply += COST_TOWER;
@@ -67,8 +73,10 @@ int GameLogic::update(float dt, MouseState* mState, D3DXMATRIX view, D3DXMATRIX 
 		case VK_LBUTTON:
 			if(canAfford())
 			{
-				if(level->buildStructure(getMouseWorldPos(mState, view, proj, cameraPos), this->selectedStructure));
+				if(level->buildStructure(getMouseWorldPos(mState, view, proj, cameraPos), this->selectedStructure))
+				{
 					structureBuilt();
+				}
 			}
 			break;
 	}
