@@ -48,11 +48,56 @@ struct RenderData
 	int lightID;
 };
 
+struct TowerUpgrade
+{
+	int hp;
+	int attackSpeed;
+	int dmg;
+	int projectileSpeed;
+	int range;
+
+	TowerUpgrade()
+	{
+		this->hp = hp;
+		this->attackSpeed = attackSpeed;
+		this->dmg = dmg;
+		this->projectileSpeed = projectileSpeed;
+		this->range = range;
+	}
+	
+	TowerUpgrade(int hp, int attackSpeed, int dmg, int projectileSpeed, int range)
+	{
+		this->hp = hp;
+		this->attackSpeed = attackSpeed;
+		this->dmg = dmg;
+		this->projectileSpeed = projectileSpeed;
+		this->range = range;
+	}
+};
+
+
 enum STRUCTURE_TYPES
 {
-	TOWER,
-	SUPPLY,
+	TYPE_TOWER,
+	TYPE_SUPPLY,
+	TYPE_UPGRADE_HP,
+	TYPE_UPGRADE_ATKSP,
+	TYPE_UPGRADE_DMG,
+	TYPE_UPGRADE_PRJSP,
+	TYPE_UPGRADE_RANGE,
 };
+enum STRUCTURE_COSTS
+{
+	COST_TOWER = 20,
+	COST_SUPPLY = 40,
+	COST_UPGRADE = 60,
+};
+enum NODE_COLORS
+{
+	COLOR_RED,
+	COLOR_GREEN,
+};
+
 
 const int screenWidth = 1024;
 const int screenHeight = 768;
