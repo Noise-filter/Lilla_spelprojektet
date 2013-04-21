@@ -24,12 +24,7 @@ using namespace std;
 
 int Projectile::update(float dt)
 {
-	if(target == NULL)
-		return 0;
-	//if(target->isDead())
-		//return 0;
-
-	if(target->getHp() <= 0)
+	if(target->isDead())
 	{
 		cout << "a" << endl;
 		return 0;
@@ -46,7 +41,7 @@ int Projectile::update(float dt)
 	this->setPosition(pos);
 
 	//returnerna ett annat värde om projektilen har träffat sitt target.
-	if(length <= 5)
+	if(length <= 1)
 	{
 		target->doDamage(damage);
 		return 0;

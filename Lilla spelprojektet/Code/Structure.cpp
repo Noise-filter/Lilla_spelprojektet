@@ -12,6 +12,5 @@ Structure::~Structure()
 
 int Structure::update(float dt)
 {
-
-	return 1;
+	return Entity::update(dt);
 }

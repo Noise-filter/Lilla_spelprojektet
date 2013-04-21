@@ -15,6 +15,5 @@ Headquarter::~Headquarter()
 
 int Headquarter::update(float dt)
 {
-
-	return 1;
+	return Structure::update(dt);
 }

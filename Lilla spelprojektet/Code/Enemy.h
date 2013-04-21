@@ -12,15 +12,12 @@ public:
 
 	virtual int update(float dt);
 
-	bool isDead();
-
 private:
 	//Waypoints
 	//vector<Waypoint> waypoints;
 	int currentWP;
 	float speed;
 	float damage;
-	bool dead;
 
 };
 

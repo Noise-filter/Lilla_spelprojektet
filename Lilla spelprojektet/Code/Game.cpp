@@ -1,6 +1,5 @@
 #include "Game.h"
 
-
 Game::Game(void)
 {
 	engine = new Engine();
@@ -10,21 +9,22 @@ Game::Game(void)
 	soundSystem = soundSystem->Getinstance();
 }
 
-
 Game::~Game(void)
 {
 	SAFE_DELETE(engine);
 	SAFE_DELETE(gameLogic);
 	SAFE_DELETE(camera);
 	SAFE_DELETE(input);
-	soundSystem->shutdown();
 	delete playlist;
+	soundSystem->shutdown();
 }
 
 bool Game::init(HINSTANCE hInstance, int cmdShow)
 {
 	if(!engine->init(hInstance,cmdShow))
 		return false;
+
+	soundSystem->init();
 
 	//initiate other game resources such as level or whatever
 
@@ -36,7 +36,6 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 
 	//initiate other game resources such as level or whatever
 
-	soundSystem->init();
 	playlist = soundSystem->createPlaylist("playlist.m3u");
 
 	return true; // all initiates went well
@@ -80,7 +79,7 @@ int Game::update(float dt)
 		soundSystem->setPaused(playlist, pausedMusic);
 		pausedMusic = !pausedMusic;
 	}
-		
+
 
 
 	camera->UpdateViewMatrix();

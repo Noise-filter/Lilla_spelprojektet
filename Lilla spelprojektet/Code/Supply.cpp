@@ -15,6 +15,5 @@ Supply::~Supply()
 
 int Supply::update(float dt)
 {
-
-	return 1;
+	return Structure::update(dt);
 }

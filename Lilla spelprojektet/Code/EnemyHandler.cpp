@@ -36,7 +36,7 @@ int EnemyHandler::update(float dt)
 		}
 		else
 		{
-			int id = enemies.at(i)->update(dt);
+			enemies.at(i)->update(dt);
 		}
 	}
 
@@ -44,7 +44,6 @@ int EnemyHandler::update(float dt)
 	{
 		enemies.push_back(new Enemy(D3DXVECTOR3(rand() % 100, 0, rand() % 100), 2, 0, 10, 0, 0, 0));
 	}
-
 
 	return 1;
 }

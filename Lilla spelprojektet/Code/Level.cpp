@@ -1,6 +1,5 @@
 #include "Level.h"
 
-
 Level::Level(void)
 {
 	this->mapSize = 0;
@@ -41,6 +40,7 @@ bool Level::init(int mapSize, int quadSize)
 		}	
 	}
 
+	structures[0][0] = new Headquarter(D3DXVECTOR3(5, 0, 5), 2, 0, 2, 0);
 
 	return true;
 }
@@ -67,6 +67,7 @@ Level::~Level(void)
 
 int Level::update(float dt, vector<Enemy*>& enemies)
 {
+	int supply = 0;
 	for(int i = 0; i < mapSize-1; i++)
 	{
 		for(int j = 0; j < mapSize-1; j++)
@@ -74,7 +75,23 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 			if(structures[i][j] != NULL)
 			{
 				int id = structures[i][j]->update(dt);
-				if(id == 2 && typeid(*structures[i][j]) == typeid(Tower))
+				if(id == 0)
+				{
+					//En byggnad förstörs
+					if(typeid(structures[i][j]) == typeid(Tower*))
+						supply += 20;
+					else if(typeid(structures[i][j]) == typeid(Supply*))
+						supply -= 20;
+
+					//Ta bort byggnaden
+					SAFE_DELETE(structures[i][j]);
+
+					//Skapa mängder och hitta de byggnader som inte längre sitter ihop med main byggnaden
+					//räkna ut vilka byggnader som kommer förstöras
+					sets.initSets(structures, mapSize-1);
+					supply += destroyBuildings();
+				}
+				else if(id == 2 && typeid(*structures[i][j]) == typeid(Tower))
 				{
 					dynamic_cast<Tower*>(structures[i][j])->aquireTarget(&enemies);
 				}
@@ -82,7 +99,7 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 		}
 	}
 
-	return 1;
+	return supply;
 }
 
 bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
@@ -97,10 +114,10 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 			switch(selectedStructure)
 			{
 			case TOWER:
-				structures[xPos][yPos] = new Tower(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),0,1,0,0, 1, 1, 50, 100);
+				structures[xPos][yPos] = new Tower(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),0,1,100,0, 1, 1, 50, 100);
 				break;
 			case SUPPLY:
-				structures[xPos][yPos] = new Supply(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)), 1,0,0,0);
+				structures[xPos][yPos] = new Supply(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)), 1,0,100,0);
 				break;
 			}
 		}
@@ -147,4 +164,61 @@ void Level::getRenderData(vector<vector<RenderData*>>& rData)
 			}
 		}
 	}
+}
+
+int Level::destroyBuildings()
+{
+	int supply = 0;
+	int mainBuilding = 0;
+
+	for(int i = 0; i < mapSize-1; i++)
+	{
+		for(int j = 0; j < mapSize-1; j++)
+		{
+			if(structures[i][j])
+			{
+				makeSet(i, j);
+				if(typeid(*structures[i][j]) == typeid(Headquarter))
+					mainBuilding = j + (i * mapSize-1);
+			}
+		}
+	}
+
+	for(int i = 0; i < mapSize-1; i++)
+	{
+		for(int j = 0; j < mapSize-1; j++)
+		{
+			if(structures[i][j])
+			{
+				if(sets.findSet(mainBuilding, false) != sets.findSet(j + (i * (mapSize-1)), false))
+				{
+					if(typeid(*structures[i][j]) == typeid(Tower))
+						supply += 20;
+					else if(typeid(*structures[i][j]) == typeid(Supply))
+						supply -= 20;
+					SAFE_DELETE(structures[i][j]);
+				}
+			}
+		}
+	}
+
+	return supply;
+}
+
+void Level::makeSet(int x, int z)
+{
+	bool compress = true;
+	bool rank = true;
+
+	if(x > 0 && structures[x-1][z])
+		sets.Union(z + (x*(mapSize-1)), z + ((x-1)*(mapSize-1)), compress, rank);
+
+	if(x < mapSize-2 && structures[x+1][z])
+		sets.Union(z + (x*(mapSize-1)), z + ((x+1)*(mapSize-1)), compress, rank);
+
+	if(z > 0 && structures[x][z-1])
+		sets.Union(z + (x*(mapSize-1)), z-1 + (x*(mapSize-1)), compress, rank);
+
+	if(z < mapSize-2 && structures[x][z+1])
+		sets.Union(z + (x*(mapSize-1)), z+1 + (x*(mapSize-1)), compress, rank);
 }

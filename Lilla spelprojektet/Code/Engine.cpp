@@ -7,13 +7,12 @@ Engine::Engine(void)
 	win32 = new WinHandler();
 }
 
-
 Engine::~Engine(void)
 {
 	SAFE_DELETE(d3d);
 	SAFE_DELETE(win32);
+	SAFE_DELETE(shader);
 
-	delete shader;
 	vbs[0]->Release();
 	vbs[1]->Release();
 	indexBuffer->Release();

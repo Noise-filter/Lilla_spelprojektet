@@ -16,6 +16,5 @@ Node::~Node()
 
 int Node::update(float dt)
 {
-
 	return 1;
 }

@@ -4,7 +4,9 @@
 #include "Structure.h"
 #include "Enemy.h"
 #include "Tower.h"
+#include "Headquarter.h"
 #include "Supply.h"
+#include "Set.h"
 #include <vector>
 using namespace std;
 
@@ -22,8 +24,14 @@ public:
 	bool buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure);
 
 private:
+	int destroyBuildings();
+	void makeSet(int x, int z);
+
+private:
 	Node** nodes;
 	Structure*** structures;
+
+	Set<Structure*> sets;
 
 	int quadSize;
 	int mapSize;
