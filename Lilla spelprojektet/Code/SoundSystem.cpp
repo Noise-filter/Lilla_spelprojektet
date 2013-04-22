@@ -248,6 +248,7 @@ Sound* SoundSystem::createPlaylist(const char* name)
 	bool isplaylist = (soundtype == FMOD_SOUND_TYPE_PLAYLIST);
 
 	FMOD_TAG tag;
+	int count = 0;
 
 	if(isplaylist)
 	{
