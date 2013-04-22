@@ -10,13 +10,15 @@ public:
 	Entity(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID);
 	virtual ~Entity();
 
-	virtual int update(float dt) = 0;
+	int update(float dt);
 
 	void doDamage(float damage);	//Does damage on the entity
 
 	void setPosition(D3DXVECTOR3& pos);
 
 	float getHp();
+
+	bool isDead();
 
 	RenderData& getRenderData();
 
@@ -25,6 +27,7 @@ public:
 protected:
 	RenderData renderData;
 	float hp, maxHp;
+	bool dead;
 
 };
 

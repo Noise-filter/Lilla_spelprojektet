@@ -5,6 +5,8 @@ GameLogic::GameLogic(void)
 	this->level = new Level();
 	this->eHandler = new EnemyHandler();
 	selectedStructure = 0;
+	this->availableSupply = 100;
+	this->resource = 100;
 }
 
 GameLogic::~GameLogic(void)
@@ -18,22 +20,107 @@ void GameLogic::incrementSelectedStructure(int increment)
 	this->selectedStructure += increment;
 }
 
+bool GameLogic::canAfford()
+{
+		switch(this->selectedStructure)
+			{
+			case TYPE_TOWER:
+				if(availableSupply >= COST_TOWER)
+				{
+					return true;
+				}
+				break;
+			case TYPE_SUPPLY:
+				if(resource >= COST_SUPPLY)
+				{
+					return true;
+				}
+				break;
+			case TYPE_UPGRADE_HP:
+				if(resource >= COST_UPGRADE)
+				{
+					return true;
+				}
+				break;
+			case TYPE_UPGRADE_ATKSP:
+				if(resource >= COST_UPGRADE)
+				{
+					return true;
+				}
+				break;
+				case TYPE_UPGRADE_DMG:
+				if(resource >= COST_UPGRADE)
+				{
+					return true;
+				}
+				break;
+				case TYPE_UPGRADE_PRJSP:
+				if(resource >= COST_UPGRADE)
+				{
+					return true;
+				}
+				break;
+				case TYPE_UPGRADE_RANGE:
+				if(resource >= COST_UPGRADE)
+				{
+					return true;
+				}
+				break;
+			}
+		
+		cout << "Cant afford structure" << endl; 
+		return false;
+}
+void GameLogic::structureBuilt()
+{
+	switch(this->selectedStructure)
+			{
+			case TYPE_TOWER:
+				availableSupply -= COST_TOWER; 
+				break;
+			case TYPE_SUPPLY:
+				availableSupply += COST_TOWER;
+				resource -= COST_SUPPLY;
+				break;
+			case TYPE_UPGRADE_HP:
+				resource -= COST_UPGRADE;
+				break;
+			case TYPE_UPGRADE_ATKSP:
+				resource -= COST_UPGRADE;
+				break;
+			case TYPE_UPGRADE_DMG:
+				resource -= COST_UPGRADE;
+				break;
+			case TYPE_UPGRADE_PRJSP:
+				resource -= COST_UPGRADE;
+				break;
+			case TYPE_UPGRADE_RANGE:
+				resource -= COST_UPGRADE;
+				break;
+			}
+
+}
+
+
 int GameLogic::update(float dt, MouseState* mState, D3DXMATRIX view, D3DXMATRIX proj, D3DXVECTOR3 cameraPos)
 {
-
 	switch(mState->btnState)
 	{
 		case VK_LBUTTON:
-			level->buildStructure(getMouseWorldPos(mState, view, proj, cameraPos), this->selectedStructure);	
+			if(canAfford())
+			{
+				if(level->buildStructure(getMouseWorldPos(mState, view, proj, cameraPos), this->selectedStructure))
+				{
+					structureBuilt();
+				}
+			}
 			break;
 	}
-	
 
-	if(!level->update(dt, eHandler->getEnemies()))
-		return 0; //error
+	level->update(dt, eHandler->getEnemies());
+
 	if(!eHandler->update(dt))
 		return 0; //error
-
 
 	return 1;//all went good
 }
@@ -92,7 +179,5 @@ D3DXVECTOR3 GameLogic::getMouseWorldPos(MouseState* mState, D3DXMATRIX view, D3D
 	intersect = (D3DXVec3Dot(&-planeNormal, &rayOrigin))/(D3DXVec3Dot(&planeNormal,&rayDir));
 
 	return intersectPos = rayOrigin + (intersect*rayDir);
-
-	//cout << "X: "<<intersectPos.x << " Y: " << intersectPos.y << " Z: " << intersectPos.z << endl;
 }
 

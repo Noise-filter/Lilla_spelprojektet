@@ -162,6 +162,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Buffer.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="D3D11Handler.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyHandler.h" />
@@ -170,11 +171,13 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameLogic.h" />
     <ClInclude Include="Headquarter.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="SoundSystem.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Structure.h" />
     <ClInclude Include="Supply.h" />
@@ -184,6 +187,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Buffer.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="D3D11Handler.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyHandler.cpp" />
@@ -192,11 +196,13 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameLogic.cpp" />
     <ClCompile Include="Headquarter.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="SoundSystem.cpp" />
     <ClCompile Include="Structure.cpp" />
     <ClCompile Include="Supply.cpp" />
     <ClCompile Include="Tower.cpp" />

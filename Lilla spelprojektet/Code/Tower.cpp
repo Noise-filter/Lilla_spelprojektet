@@ -31,6 +31,10 @@ Tower::~Tower()
 
 int Tower::update(float dt)
 {
+	int id = Structure::update(dt);
+	if(id == 0)
+		return 0;
+
 	//Uppdatera projektilerna
 	for(int i = 0; i < (int)projectiles.size(); i++)
 	{
@@ -39,7 +43,6 @@ int Tower::update(float dt)
 			Projectile* temp = projectiles.at(i);
 			projectiles.erase(projectiles.begin() + i);
 			delete temp;
-			cout << "delete" << endl;
 		}
 	}
 

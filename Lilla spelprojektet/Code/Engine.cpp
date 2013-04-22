@@ -7,13 +7,12 @@ Engine::Engine(void)
 	win32 = new WinHandler();
 }
 
-
 Engine::~Engine(void)
 {
 	SAFE_DELETE(d3d);
 	SAFE_DELETE(win32);
+	SAFE_DELETE(shader);
 
-	delete shader;
 	vbs[0]->Release();
 	vbs[1]->Release();
 	indexBuffer->Release();
@@ -21,6 +20,10 @@ Engine::~Engine(void)
 	vbs2[0]->Release();
 	vbs2[1]->Release();
 	indexBuffer2->Release();
+
+	vbs3[0]->Release();
+	vbs3[1]->Release();
+	indexBuffer3->Release();
 }
 
 bool Engine::init(HINSTANCE hInstance, int cmdShow)
@@ -219,19 +222,19 @@ void Engine::render(D3DXMATRIX& vp)
 	d3d->deviceContext->IASetVertexBuffers(0, 2, vbs, stride, offset);
 	d3d->deviceContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
-	d3d->deviceContext->DrawIndexedInstanced(3, 10000, 0, 0, 0);
+	d3d->deviceContext->DrawIndexedInstanced(3, size1, 0, 0, 0);
 
 
 	d3d->deviceContext->IASetVertexBuffers(0, 2, vbs2, stride, offset);
 	d3d->deviceContext->IASetIndexBuffer(indexBuffer2, DXGI_FORMAT_R32_UINT, 0);
 
-	d3d->deviceContext->DrawIndexedInstanced(6, 10000, 0, 0, 0);
+	d3d->deviceContext->DrawIndexedInstanced(6, size2, 0, 0, 0);
 
 
 	d3d->deviceContext->IASetVertexBuffers(0, 2, vbs3, stride, offset);
 	d3d->deviceContext->IASetIndexBuffer(indexBuffer3, DXGI_FORMAT_R32_UINT, 0);
 
-	d3d->deviceContext->DrawIndexedInstanced(6, 10000, 0, 0, 0);
+	d3d->deviceContext->DrawIndexedInstanced(6, size3, 0, 0, 0);
 
 	if(FAILED(d3d->swapChain->Present( 0, 0 )))
 	{
@@ -263,6 +266,10 @@ void Engine::setRenderData(vector<vector<RenderData*>> renderData)
 				dataView3[c++].matrix = renderData[j][i]->worldMat;
 		}
 	}
+
+	size1 = a;
+	size2 = b;
+	size3 = c;
 
 	d3d->deviceContext->Unmap(vbs[1], 0);
 	d3d->deviceContext->Unmap(vbs2[1], 0);

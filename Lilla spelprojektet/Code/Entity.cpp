@@ -8,6 +8,7 @@ Entity::Entity()
 	renderData.lightID = 0;
 
 	maxHp = hp = 0;
+	dead = false;
 }
 
 Entity::Entity(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID)
@@ -19,10 +20,21 @@ Entity::Entity(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID
 
 	maxHp = hp;
 	this->hp = hp;
+	dead = false;
 }
 
 Entity::~Entity()
 {}
+
+int Entity::update(float dt)
+{
+	if(hp <= 0)
+	{
+		dead = true;
+		return 0;
+	}
+	return 1;
+}
 
 void Entity::doDamage(float damage)
 {
@@ -42,6 +54,11 @@ void Entity::setPosition(D3DXVECTOR3& pos)
 float Entity::getHp()
 {
 	return hp;
+}
+
+bool Entity::isDead()
+{
+	return dead;
 }
 
 RenderData& Entity::getRenderData()

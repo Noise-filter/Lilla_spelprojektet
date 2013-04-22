@@ -4,7 +4,10 @@
 #include "Structure.h"
 #include "Enemy.h"
 #include "Tower.h"
+#include "Headquarter.h"
 #include "Supply.h"
+#include "Set.h"
+#include "Upgrade.h"
 #include <vector>
 using namespace std;
 
@@ -20,10 +23,19 @@ public:
 	int update(float dt, vector<Enemy*>& enemies);
 
 	bool buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure);
+	bool isAdjecent(int xPos, int yPos);
+	bool isLocationBuildable(int xPos, int yPos);
+
+private:
+	int destroyBuildings();
+	void makeSet(int x, int z);
 
 private:
 	Node** nodes;
 	Structure*** structures;
+	TowerUpgrade* towerUpgrades;
+
+	Set<Structure*> sets;
 
 	int quadSize;
 	int mapSize;

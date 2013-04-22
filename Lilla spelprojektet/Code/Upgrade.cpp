@@ -17,6 +17,5 @@ Upgrade::~Upgrade()
 
 int Upgrade::update(float dt)
 {
-
-	return 1;
+	return Structure::update(dt);
 }
