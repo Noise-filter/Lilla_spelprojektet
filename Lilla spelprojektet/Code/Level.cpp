@@ -70,6 +70,8 @@ Level::~Level(void)
 		SAFE_DELETE_ARRAY(structures[i]);
 	}
 	SAFE_DELETE_ARRAY(structures);
+
+	SAFE_DELETE_ARRAY(towerUpgrades);
 }
 
 int Level::update(float dt, vector<Enemy*>& enemies)
