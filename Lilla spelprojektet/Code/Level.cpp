@@ -188,8 +188,7 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),1,0,100,0,4);
 				break;
 			}
-			if(structures[xPos][yPos])
-				cout << "a structure has been built on the location X:"<< xPos << " Y:" << yPos << endl;
+			cout << "a structure has been built on the location X:"<< xPos << " Y:" << yPos << endl;
 
 			return true;
 		}
