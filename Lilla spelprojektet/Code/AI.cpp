@@ -21,32 +21,56 @@ bool AI::init(Structure*** structures)
 
 	pathScript = lua_open();
 	OpenLuaLibs(pathScript);
-	rv = luaL_dofile(pathScript, "test.lua");
+	rv = luaL_dofile(pathScript, "pathFinding.lua");
 
 	targetScript = lua_open();
 	OpenLuaLibs(targetScript);
-	rv = luaL_dofile(targetScript, "test.lua");
+	rv = luaL_dofile(targetScript, "targetFinding.lua");
 
 	spawnScript = lua_open();
 	OpenLuaLibs(spawnScript);
-	rv = luaL_dofile(spawnScript, "test.lua");
+	rv = luaL_dofile(spawnScript, "spawning.lua");
 
 	return true;
 }
 
 void AI::findPath()
 {
+	lua_getglobal(spawnScript, "findPath");
+
+	//lua_pushnumber(l,inputnumber);
+
+	//lua_pcall(l, inputcount, returncount, 0); //kalla på funktionen
 	
+	//hämta värden
+
+	//lua_pop(l, returncount); // Plocka bort returvärden
 }
 
 void AI::findTarget()
 {
+	lua_getglobal(spawnScript, "findTarget");
+
+	//lua_pushnumber(l,inputnumber);
+
+	//lua_pcall(l, inputcount, returncount, 0); //kalla på funktionen
 	
+	//hämta värden
+
+	//lua_pop(l, returncount); // Plocka bort returvärden	
 }
 
 void AI::spawnEnemies()
 {
+	lua_getglobal(spawnScript, "spawnEnemies");
+
+	//lua_pushnumber(l,inputnumber);
+
+	//lua_pcall(l, inputcount, returncount, 0); //kalla på funktionen
 	
+	//hämta värden
+
+	//lua_pop(l, returncount); // Plocka bort returvärden
 }
 
 void AI::OpenLuaLibs(lua_State* l)

@@ -247,7 +247,6 @@ Sound* SoundSystem::createPlaylist(const char* name)
 
 	int count = 0;
 	FMOD_TAG tag;
-	int count = 0;
 
 	if(isplaylist)
 	{
