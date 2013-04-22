@@ -38,10 +38,9 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 
 	soundSystem->init();
 	playlist = soundSystem->createPlaylist("playlist.m3u");
-
+	//soundSystem->playSound(playlist[0]);
 	return true; // all initiates went well
 }
-
 
 void Game::render()
 {
@@ -77,7 +76,7 @@ int Game::update(float dt)
 
 	if(input->checkKeyDown(0x20))
 	{
-		soundSystem->setPaused(playlist, pausedMusic);
+		soundSystem->setPaused(pausedMusic);
 		pausedMusic = !pausedMusic;
 	}
 		

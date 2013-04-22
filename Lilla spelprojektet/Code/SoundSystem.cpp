@@ -6,6 +6,9 @@ SoundSystem::SoundSystem()
 
 	result = FMOD_OK;
 	lastError = FMOD_OK;
+
+	this->nrOfSounds = 0;
+
 }
 
 SoundSystem::~SoundSystem()
@@ -139,12 +142,18 @@ bool SoundSystem::shutdown()
 
 bool SoundSystem::update()
 {
+
+
 	result = system->update();
 	if(errorCheck(result))
 		return false;
 
 	if(!isplaying(playlist))
+	{
+	
 		playNextSong(playlist);
+	}
+
 
 	FMOD::Memory_GetStats(&memoryUsage, &maxMemoryUsage);
 
@@ -172,6 +181,9 @@ Sound* SoundSystem::createStream(const char* filename)
 			found = true;
 			break;
 		}
+		
+			
+		
 	}
 
 	//if the sound is already created
@@ -245,12 +257,18 @@ Sound* SoundSystem::createPlaylist(const char* name)
 		//Ladda första låten
 		playlist->sound->getTag("FILE", count, &tag);
 		system->createStream((char*)tag.data, FMOD_DEFAULT, 0, &((Playlist*)playlist)->song);
+
 	}
 	else
 	{
 		return NULL;
 	}
-
+	while(playlist->sound->getTag("FILE", count, &tag)==FMOD_OK)
+	{
+		this->nrOfSounds++;
+		count++;
+	}
+	count=0;
 	this->playlist = playlist;
 
 	return playlist;
@@ -277,7 +295,14 @@ bool SoundSystem::playPlaylist(Sound* playlist)
 bool SoundSystem::playNextSong(Sound* playlist)
 {
 	FMOD_TAG tag;
-	((Playlist*)playlist)->count++;
+	//((Playlist*)playlist)->count++;
+
+	int tempRand = rand() % this->nrOfSounds;
+	while(tempRand==((Playlist*)playlist)->count)
+	{
+		tempRand = rand() % this->nrOfSounds;
+	}
+	((Playlist*)playlist)->count = tempRand;
 
 	((Playlist*)playlist)->song->release();
 
@@ -287,11 +312,10 @@ bool SoundSystem::playNextSong(Sound* playlist)
 		((Playlist*)playlist)->count = 0;
 		result = ((Playlist*)playlist)->sound->getTag("FILE", ((Playlist*)playlist)->count, &tag);
 	}
-
+	
 	system->createStream((char*)tag.data, FMOD_DEFAULT, 0, &((Playlist*)playlist)->song);
-
 	system->playSound(FMOD_CHANNEL_FREE, ((Playlist*)playlist)->song, false, &((Playlist*)playlist)->channel);
-
+	cout << ((Playlist*)playlist)->count << endl; 
 	return true;
 }
 
@@ -355,6 +379,58 @@ bool SoundSystem::getMute()
 
 	return paused;
 }
+
+int SoundSystem::loadPlaylist(string filename)
+{
+	char input;
+	ifstream fin;
+	string prefix = "";
+//	playlist_testSize = 4;
+//	this->playlist_test = new Sound*[playlist_testSize];
+//
+//	char* soundFile = "";
+//
+	fin.open(filename);
+	if(!fin.is_open())
+	{
+		return 0;
+	}
+
+	while(!fin.eof())
+	{
+		getline(fin, prefix);
+		if(prefix.at(0)!='#')
+		{
+//			if(nrOfSounds==playlist_testSize)
+//			{
+//				playlist_testSize += 3;
+//				Sound** temp = new Sound*[playlist_testSize];
+//				for(int i = 0; i < nrOfSounds; i++)
+//				{
+//					temp[i] = playlist_test[i];
+//					delete playlist_test[i];
+//				}
+//				delete playlist_test;
+//				playlist_test = temp;
+//				temp = NULL;
+//			}
+//
+//			soundFile = new char[prefix.size() + 1];
+//			strcpy(soundFile, prefix.c_str());
+//			playlist_test[nrOfSounds++] = createStream(soundFile);
+			this->nrOfSounds++;
+		}
+
+	}
+
+//	return playlist_test;
+//
+}
+
+//int SoundSystem::getNrOfSounds()
+//{
+//	return this->nrOfSounds;
+//}
 
 FMOD_RESULT SoundSystem::getLastError()
 {

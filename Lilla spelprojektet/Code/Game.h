@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "SoundSystem.h"
 
+
 class Game
 {
 public:
@@ -15,6 +16,7 @@ public:
 	int update(float dt);
 	bool init(HINSTANCE hInstance, int cmdShow);
 
+
 private:
 	Engine* engine;
 	GameLogic* gameLogic;
@@ -22,5 +24,6 @@ private:
 	Camera* camera;
 	SoundSystem* soundSystem;
 	Sound* playlist;
+	int nrOfSounds;
 };
 

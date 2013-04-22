@@ -6,6 +6,11 @@
 #include <vector>
 #include <fmod.hpp>
 #include <fmod_errors.h>
+#include <fstream>
+#include <string>
+#include <iostream>
+
+using namespace std;
 
 #pragma comment(lib, "fmodex_vc.lib")
 
@@ -47,7 +52,10 @@ public:
 
 	bool getPaused();						// get state of master channel
 	bool getMute();							// get state of master channel
-
+	
+	int loadPlaylist(string filename);
+	int getNrOfSounds();
+	
 	bool update();
 
 	//Error handling
@@ -60,7 +68,7 @@ public:
 
 private:
 	FMOD::System* system;
-
+	
 	SoundSystem();
 	~SoundSystem();
 	static SoundSystem* m_SoundSystem;
@@ -69,6 +77,8 @@ private:
 	Sound* playlist;
 	FMOD::ChannelGroup* masterChannelGroup;
 
+	int nrOfSounds;
+	
 	FMOD_RESULT result;
 	FMOD_RESULT lastError;
 
