@@ -20,6 +20,10 @@ Engine::~Engine(void)
 	vbs2[0]->Release();
 	vbs2[1]->Release();
 	indexBuffer2->Release();
+
+	vbs3[0]->Release();
+	vbs3[1]->Release();
+	indexBuffer3->Release();
 }
 
 bool Engine::init(HINSTANCE hInstance, int cmdShow)

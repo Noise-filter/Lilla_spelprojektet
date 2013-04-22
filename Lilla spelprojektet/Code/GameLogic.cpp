@@ -118,8 +118,8 @@ int GameLogic::update(float dt, MouseState* mState, D3DXMATRIX view, D3DXMATRIX 
 	}
 	
 
-	if(level->update(dt, eHandler->getEnemies()))
-		return 0; //error
+	level->update(dt, eHandler->getEnemies());
+
 	if(!eHandler->update(dt))
 		return 0; //error
 

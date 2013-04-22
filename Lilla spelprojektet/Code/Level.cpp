@@ -42,8 +42,6 @@ bool Level::init(int mapSize, int quadSize)
 
 	structures[0][0] = new Headquarter(D3DXVECTOR3(5, 0, 5), 2, 0, 2, 0);
 
-	structures[5][5]= new Tower(D3DXVECTOR3(5*quadSize + (quadSize/2),0,5*quadSize + (quadSize/2)),0,1,0,0, 1, 1, 50, 100);
-
 	towerUpgrades = new TowerUpgrade[5];
 	towerUpgrades[0] = TowerUpgrade(100,0,0,0,0);
 	towerUpgrades[1] = TowerUpgrade(0,100,0,0,0);
@@ -113,24 +111,21 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 
 bool Level::isAdjecent(int xPos, int yPos)
 {
-
-	if(structures[xPos+1][yPos] != NULL)
+	if(xPos < mapSize-2 && structures[xPos+1][yPos] != NULL)
 	{
 		return true;
-	}	
-	
+	}
+
 	if(xPos > 0 && structures[xPos-1][yPos] != NULL)
 	{
 		return true;
 	}
-		
-	
-	if(structures[xPos][yPos+1] != NULL)
+
+	if(yPos < mapSize-2 && structures[xPos][yPos+1] != NULL)
 	{
 		return true;
 	}
-		
-	
+
 	if(yPos > 0 && structures[xPos][yPos-1] != NULL)
 	{
 		return true;
@@ -172,28 +167,29 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 			switch(selectedStructure)
 			{
 			case TYPE_TOWER:
-				structures[xPos][yPos] = new Tower(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),0,1,0,0, 1, 1, 50, 100);
+				structures[xPos][yPos] = new Tower(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),0,0,100,0, 1, 1, 50, 100);
 				break;
 			case TYPE_SUPPLY:
-				structures[xPos][yPos] = new Supply(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)), 1,0,0,0);
+				structures[xPos][yPos] = new Supply(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)), 1,0,100,0);
 				break;
 			case TYPE_UPGRADE_HP:
-				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),1,0,0,0,0);
+				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),1,0,100,0,0);
 				break;
 			case TYPE_UPGRADE_ATKSP:
-				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),1,0,0,0,1);
+				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),1,0,100,0,1);
 				break;
 			case TYPE_UPGRADE_DMG:
-				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),1,0,0,0,2);
+				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),1,0,100,0,2);
 				break;
 			case TYPE_UPGRADE_PRJSP:
-				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),1,0,0,0,3);
+				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),1,0,100,0,3);
 				break;
 			case TYPE_UPGRADE_RANGE:
-				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),1,0,0,0,4);
+				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),1,0,100,0,4);
 				break;
 			}
-			cout << "a structure has been built on the location X:"<< xPos << " Y:" << yPos << endl;
+			if(structures[xPos][yPos])
+				cout << "a structure has been built on the location X:"<< xPos << " Y:" << yPos << endl;
 
 			return true;
 		}
@@ -228,7 +224,7 @@ void Level::getRenderData(vector<vector<RenderData*>>& rData)
 					rData.at(4).push_back(rD.at(0));
 
 					//lägg till tornets undre del och alla projektiler
-					for(int k = 1; k < (int)rD.size(); k++)
+					for(int k = 0; k < (int)rD.size(); k++)
 						rData.at(rD.at(k)->meshID).push_back(rD.at(k));
 				}
 				else
@@ -253,7 +249,7 @@ int Level::destroyBuildings()
 			{
 				makeSet(i, j);
 				if(typeid(*structures[i][j]) == typeid(Headquarter))
-					mainBuilding = j + (i * mapSize-1);
+					mainBuilding = j + (i * (mapSize-1));
 			}
 		}
 	}
@@ -267,9 +263,9 @@ int Level::destroyBuildings()
 				if(sets.findSet(mainBuilding, false) != sets.findSet(j + (i * (mapSize-1)), false))
 				{
 					if(typeid(*structures[i][j]) == typeid(Tower))
-						supply += 20;
+						supply += COST_TOWER;
 					else if(typeid(*structures[i][j]) == typeid(Supply))
-						supply -= 20;
+						supply -= COST_SUPPLY;
 					SAFE_DELETE(structures[i][j]);
 				}
 			}

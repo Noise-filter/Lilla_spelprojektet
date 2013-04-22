@@ -25,10 +25,7 @@ using namespace std;
 int Projectile::update(float dt)
 {
 	if(target->isDead())
-	{
-		cout << "a" << endl;
 		return 0;
-	}
 
 	float length;
 	D3DXVECTOR3 dir;
