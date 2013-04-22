@@ -137,8 +137,6 @@ bool SoundSystem::shutdown()
 			return false;
 	}
 
-	delete this->m_SoundSystem;
-
 	return true;
 }
 
@@ -247,6 +245,7 @@ Sound* SoundSystem::createPlaylist(const char* name)
 	result = sound->sound->getFormat(&soundtype, 0, 0, 0);
 	bool isplaylist = (soundtype == FMOD_SOUND_TYPE_PLAYLIST);
 
+	int count = 0;
 	FMOD_TAG tag;
 
 	if(isplaylist)
@@ -256,7 +255,7 @@ Sound* SoundSystem::createPlaylist(const char* name)
 		((Playlist*)playlist)->sound = sound->sound;
 
 		//Ladda första låten
-		playlist->sound->getTag(0, 0, &tag);
+		playlist->sound->getTag("FILE", ((Playlist*)playlist)->count, &tag);
 		system->createStream((char*)tag.data, FMOD_DEFAULT, 0, &((Playlist*)playlist)->song);
 
 	}
@@ -264,12 +263,12 @@ Sound* SoundSystem::createPlaylist(const char* name)
 	{
 		return NULL;
 	}
-	while(playlist->sound->getTag("FILE", count, &tag)==FMOD_OK)
+	while(playlist->sound->getTag("FILE", ((Playlist*)playlist)->count, &tag)==FMOD_OK)
 	{
 		this->nrOfSounds++;
-		count++;
+		((Playlist*)playlist)->count++;
 	}
-	count=0;
+	((Playlist*)playlist)->count=0;
 	this->playlist = playlist;
 
 	return playlist;
