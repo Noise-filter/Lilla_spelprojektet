@@ -116,13 +116,11 @@ int GameLogic::update(float dt, MouseState* mState, D3DXMATRIX view, D3DXMATRIX 
 			}
 			break;
 	}
-	
 
 	level->update(dt, eHandler->getEnemies());
 
 	if(!eHandler->update(dt))
 		return 0; //error
-
 
 	return 1;//all went good
 }

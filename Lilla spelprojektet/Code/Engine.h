@@ -45,5 +45,7 @@ private:
 
 	ID3D11Buffer* vbs3[2];
 	ID3D11Buffer* indexBuffer3;
+
+	int size1, size2, size3;
 };
 
