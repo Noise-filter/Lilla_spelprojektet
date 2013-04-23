@@ -5,32 +5,17 @@
 #include "D3DMathUtility.h"
 #include "WindowsUtility.h"
 
-
-
 class Buffer
 {
 	private:
-		HRESULT initBuffer(ID3D11Device *device, BUFFER_INIT &bufferInit);
-
-	private:
 		ID3D11Buffer *pBuffer;
-
-		std::vector<ID3D11Buffer*> vIndexBuffer;
-		std::vector<ID3D11Buffer*> vVertexBuffer;
 		
 	public:
-
 		Buffer();
 		virtual ~Buffer();
 
-		HRESULT initVertexBuffer(ID3D11Device *device, BUFFER_INIT &bufferInit);
-		HRESULT initIndexBuffer(ID3D11Device *device, BUFFER_INIT &bufferInit);
-
-		//void* Map();
-		//void Unmap();
-
-		void Apply(ID3D11DeviceContext *dc, RENDERDATA obj, D3D_PRIMITIVE_TOPOLOGY topology, UINT32 misc = 0);
-
+		ID3D11Buffer *initBuffer(ID3D11Device *device, BUFFER_INIT &bufferInit);
+		ID3D11Buffer *initInstance(ID3D11Device *device, BUFFER_INIT &bufferInit);
 };
 
 #endif

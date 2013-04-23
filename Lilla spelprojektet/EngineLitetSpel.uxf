@@ -60,13 +60,12 @@ Very important</panel_attributes>
 +addRenderData(...) : void
 +init(...) : HRESULT
 --
--initResource(...) : HRESULT
--intiSwapChainAndDevice(HWND) : HRESULT
--initDepth() : HRESULT
--initRenderTargetView() : HRESULT
--initBuffers() : bool
--initShaders() : bool
--initTexture() : bool
+	void render();
+	bool init(HINSTANCE hInstance, int cmdShow);
+
+private:
+	D3D11Handler* d3d;
+	WinHandler* win32;
 </panel_attributes>
     <additional_attributes/>
   </element>

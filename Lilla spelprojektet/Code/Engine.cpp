@@ -4,14 +4,14 @@ Engine::Engine(void)
 {
 	d3d = new D3D11Handler();
 	win32 = new WinHandler();
-	pBuffer = new Buffer();
+	pGeoManager = new GeometryManager();
 }
 
 Engine::~Engine(void)
 {
 	SAFE_DELETE(d3d);
 	SAFE_DELETE(win32);
-	SAFE_DELETE(pBuffer);
+	SAFE_DELETE(pGeoManager);
 }
 
 bool Engine::init(HINSTANCE hInstance, int cmdShow)
@@ -28,24 +28,45 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 		return false;
 	}
 
+	pGeoManager->init(d3d->pDevice);
 
 	return true; // allt gick bra
 }
 
-void Engine::render()
+void Engine::render(std::vector<std::vector<RENDERDATA*>> data)
 {
 	d3d->clearViews();
 
-	//set topology
-	d3d->pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	int index = 0;
+	PRIMITIVE_TOPOLOGIES topology = TOPOLOGY_UNDEFINED;
+	
+	this->d3d->setPass(PASS_GEOMETRY);
+	while(index < (int)data.size())
+	{
+		topology = changeTopology(data[index][0]->iEntityID);
 
-	this->d3d->setPass(GEOMETRY);
+		pGeoManager->updateBuffer(d3d->pDeviceContext, data[index], index);
+		
+		pGeoManager->applyBuffer(d3d->pDeviceContext, data[index][0], (D3D11_PRIMITIVE_TOPOLOGY)topology);
 
+		index++;
+	}
 
-	this->d3d->setPass(LIGHT);
+	index = 0;
+	this->d3d->setPass(PASS_LIGHT);
+	while(index < (int)data.size())
+	{
+		if(data[index][0]->iLightID > -1)
+		{
+			if(topology != PASS_LIGHT) topology = changeTopology(data[index][0]->iEntityID);		
+
+			pGeoManager->applyBuffer(d3d->pDeviceContext, data[index][0], (D3D11_PRIMITIVE_TOPOLOGY)topology);
+		}
+		index++;
+	}
 
 	//this->d3d->setFSQDepth();
-	this->d3d->setPass(FULLSCREENQUAD);
+	this->d3d->setPass(PASS_FULLSCREENQUAD);
 
 	//this->d3d->resetDSS();
 
@@ -54,4 +75,10 @@ void Engine::render()
 	{
 		return;
 	}
+}
+
+PRIMITIVE_TOPOLOGIES Engine::changeTopology(int ID)
+{
+	if(ID != ENTITY_PARTICLESYSTEM) return TOPOLOGY_TRIANGLELIST;
+	else return TOPOLOGY_POINTLIST;
 }

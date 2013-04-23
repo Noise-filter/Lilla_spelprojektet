@@ -36,9 +36,9 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 void Game::render()
 {
 	//build engines renderContent with addRenderData then do render to execute those renders
+	std::vector<std::vector<RENDERDATA*>> data;
 
-
-	engine->render();
+	engine->render(data);
 }
 
 int Game::update(float deltaTime)
