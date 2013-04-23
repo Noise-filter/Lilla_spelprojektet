@@ -30,6 +30,8 @@ public:
 	void findTarget(); // hanterar targetScript
 	void spawnEnemies(); // hanterar spawnScript
 
+	bool initFindPath(lua_State* l, Structure*** structures, int mapSize);
+
 	static void OpenLuaLibs(lua_State* l);
 
 private:
@@ -38,4 +40,3 @@ private:
 	lua_State* targetScript;
 	lua_State* spawnScript;
 };
-
