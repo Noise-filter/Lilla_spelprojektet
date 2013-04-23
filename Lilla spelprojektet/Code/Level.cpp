@@ -298,3 +298,13 @@ Structure*** Level::getStructures()
 {
 	return structures;
 }
+
+Node** Level::getNodes()
+{
+	return nodes;
+}
+
+int Level::getMapSize()
+{
+	return mapSize;
+}

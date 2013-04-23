@@ -5,7 +5,7 @@ EnemyHandler::EnemyHandler(void)
 	ai = new AI();
 }
 
-bool EnemyHandler::init(Structure*** structures)
+bool EnemyHandler::init(Structure*** structures, Node** nodes, int mapSize)
 {
 	int x, z;
 	for(int i = 0; i < 10; i++)
@@ -19,9 +19,9 @@ bool EnemyHandler::init(Structure*** structures)
 	string scripts[3];
 	scripts[0] = "astar.lua";
 	scripts[1] = "astar.lua";
-	scripts[2] = "astar.lua";
+	scripts[2] = "spawning.lua";
 
-	ai->init(structures, scripts);
+	ai->init(structures, nodes, scripts, mapSize);
 
 	return true;
 }

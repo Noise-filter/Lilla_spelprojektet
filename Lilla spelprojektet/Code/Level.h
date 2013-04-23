@@ -27,6 +27,9 @@ public:
 	bool isLocationBuildable(int xPos, int yPos);
 
 	Structure*** getStructures();
+	Node** getNodes();
+	int getMapSize();
+
 
 private:
 	int destroyBuildings();

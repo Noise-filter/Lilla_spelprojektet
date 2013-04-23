@@ -29,6 +29,9 @@ public:
 	void findPath(); // hanterar pathScript
 	void findTarget(); // hanterar targetScript
 	void spawnEnemies(); // hanterar spawnScript
+	bool initSpawnEnemies(string scriptName);
+
+	void sendArray(int** arr, int size, lua_State* script);
 
 	bool initFindPath(lua_State* l, Structure*** structures, int mapSize);
 
@@ -39,4 +42,5 @@ private:
 	lua_State* pathScript;
 	lua_State* targetScript;
 	lua_State* spawnScript;
+
 };
