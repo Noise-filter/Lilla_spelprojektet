@@ -102,15 +102,15 @@ struct BUFFER_INIT
 
 	struct SUB_DATA
 	{
-		void*		pInitData;
-		UINT		uSysMemPitch;
-		UINT		uSysMemSlicePitch;
+		void*	pInitData;
+		UINT	uSysMemPitch;
+		UINT	uSysMemSlicePitch;
 
 		SUB_DATA()
 		{
-			pInitData				= NULL;
-			uSysMemPitch			= 0;
-			uSysMemSlicePitch		= 0;
+			pInitData			= NULL;
+			uSysMemPitch		= 0;
+			uSysMemSlicePitch	= 0;
 		}
 
 		SUB_DATA(void* initData, UINT sysMemPitch, UINT sysMemSlicePitch)
