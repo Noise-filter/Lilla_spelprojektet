@@ -33,6 +33,7 @@ class GeometryManager
 		void applyBuffer(ID3D11DeviceContext *dc, RENDERDATA *obj, D3D_PRIMITIVE_TOPOLOGY topology, UINT32 misc = 0);
 		void updateBuffer(ID3D11DeviceContext *dc, std::vector<RENDERDATA*> data, int index);
 		void debugApplyBuffer(ID3D11DeviceContext *dc, ID3D11Device *d);
+		void geoDebugBuffer(ID3D11DeviceContext *dc, ID3D11Device *d);
 };
 
 #endif
