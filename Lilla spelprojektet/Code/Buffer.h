@@ -15,7 +15,7 @@ class Buffer
 		virtual ~Buffer();
 
 		ID3D11Buffer *initBuffer(ID3D11Device *device, BUFFER_INIT &bufferInit);
-
+		ID3D11Buffer *initInstance(ID3D11Device *device, BUFFER_INIT &bufferInit);
 };
 
 #endif
