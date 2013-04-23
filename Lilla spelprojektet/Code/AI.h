@@ -25,7 +25,7 @@ public:
 	AI(void);
 	~AI(void);
 
-	bool init(Structure*** structures);
+	bool init(Structure*** structures,string* scripts);
 	void findPath(); // hanterar pathScript
 	void findTarget(); // hanterar targetScript
 	void spawnEnemies(); // hanterar spawnScript

@@ -14,23 +14,29 @@ AI::~AI(void)
 {
 }
 
-bool AI::init(Structure*** structures)
+bool AI::init(Structure*** structures, string* scripts)
 {
 	int rv = 0;
 	this->structures = structures;
 
 	pathScript = lua_open();
 	OpenLuaLibs(pathScript);
-	rv = luaL_dofile(pathScript, "pathFinding.lua");
+	if(luaL_dofile(pathScript, scripts[0].c_str()))//pathfinding
+		return false;
 
 	targetScript = lua_open();
 	OpenLuaLibs(targetScript);
-	rv = luaL_dofile(targetScript, "targetFinding.lua");
+	if(luaL_dofile(targetScript, scripts[1].c_str())) //targetfinding
+		return false;
 
 	spawnScript = lua_open();
 	OpenLuaLibs(spawnScript);
-	rv = luaL_dofile(spawnScript, "spawning.lua");
+	if(luaL_dofile(spawnScript, scripts[2].c_str())) //spawning
+		return false;
+	
 
+	cout << "the following scripts have been initiated:" << endl;
+	cout << scripts[0] << endl << scripts[1] << endl << scripts[2] << endl;
 	return true;
 }
 
