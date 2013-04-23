@@ -41,6 +41,8 @@ void Engine::render(std::vector<std::vector<RENDERDATA*>> data)
 	PRIMITIVE_TOPOLOGIES topology = TOPOLOGY_UNDEFINED;
 	
 	this->d3d->setPass(PASS_GEOMETRY);
+
+	/*
 	while(index < (int)data.size())
 	{
 		topology = changeTopology(data[index][0]->iEntityID);
@@ -64,13 +66,11 @@ void Engine::render(std::vector<std::vector<RENDERDATA*>> data)
 		}
 		index++;
 	}
+	*/
 
-	
 
-	//this->d3d->setFSQDepth();
 	this->d3d->setPass(PASS_FULLSCREENQUAD);
-
-	//this->d3d->resetDSS();
+	this->pGeoManager->debugApplyBuffer(d3d->pDeviceContext, d3d->pDevice);
 
 
 	if(FAILED(d3d->pSwapChain->Present( 0, 0 )))

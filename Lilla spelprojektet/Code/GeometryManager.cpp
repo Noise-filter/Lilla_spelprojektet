@@ -58,7 +58,7 @@ void GeometryManager::updateBuffer(ID3D11DeviceContext *dc, std::vector<RENDERDA
 	unmap(dc, vInstanceBuffer[index]); 
 }
 
-void debugApplyBuffer(ID3D11DeviceContext *dc, ID3D11Device *d)
+void GeometryManager::debugApplyBuffer(ID3D11DeviceContext *dc, ID3D11Device *d)
 {
 	ID3D11Buffer *b;
 	MESH_P p[] = {  MESH_P(D3DXVECTOR3(1,-1,0)),
