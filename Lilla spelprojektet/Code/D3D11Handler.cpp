@@ -183,17 +183,18 @@ HRESULT D3D11Handler::initShaders()
 		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TEXTCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 
-		{ "TEXTUREID", 0, DXGI_FORMAT_R32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		/*{ "TEXTUREID", 0, DXGI_FORMAT_R32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 
 		{ "WORLD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 36, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		{ "WORLD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 52, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		{ "WORLD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 68, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		{ "WORLD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 84, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		*/
 	};
 
 	Shader* temp = new Shader();
 	this->vShaders.push_back(temp);
-	hr = this->vShaders.at(PASS_GEOMETRY)->Init(this->pDevice, this->pDeviceContext, "../Shaders/Geometry.fx", inputDesc, 8);
+	hr = this->vShaders.at(PASS_GEOMETRY)->Init(this->pDevice, this->pDeviceContext, "../Shaders/Geometry.fx", inputDesc, 3);
 	if(FAILED(hr))
 	{
 		return hr;
@@ -210,7 +211,7 @@ HRESULT D3D11Handler::initShaders()
 
 	D3D11_INPUT_ELEMENT_DESC tempInput[] = 
 	{
-		{ "SV_Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
 

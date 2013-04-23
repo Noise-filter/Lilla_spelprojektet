@@ -10,7 +10,9 @@ cbuffer MatProperties
 
 cbuffer EveryFrame
 {
+	matrix world;
 	matrix viewProj;
+	matrix worldViewProj;
 };
 
 struct VSIn
@@ -19,19 +21,20 @@ struct VSIn
 	float3 normal : NORMAL;
 	float2 uv : TEXTCOORD;
 
-	float textureID : TEXTUREID;
-	row_major float4x4 world : WORLD;
-	uint instanceID : SV_InstanceID;
+	//float textureID : TEXTUREID;
+	//row_major float4x4 world : WORLD;
+	//uint instanceID : SV_InstanceID;
 };
 
 struct PSIn
 {
+	float3 pos : POSITION;
 	float4 posCS  : SV_Position;
 	float3 posW : worldPos;
 	float3 normalW : TEXTCOORD0;
 	float2 uv : TEXTCOORD2;
 
-	float textureID : TEXTUREID;
+	//float textureID : TEXTUREID;
 };
 
 struct PSOut
@@ -49,12 +52,13 @@ PSIn VSScene(VSIn input)
 {
 	PSIn output = (PSIn)0;
 
-	output.posCS = mul(float4(input.pos, 1), input.world * viewProj);
-	output.posW =  mul(float4(input.pos, 1), input.world);
+	output.pos = input.pos;
+	output.posCS = mul(float4(input.pos, 1), worldViewProj);
+	output.posW =  mul(float4(input.pos, 1), world);
 	
-	output.normalW = normalize(mul(input.normal, input.world));
+	output.normalW = normalize(mul(input.normal, world));
 	output.uv = input.uv;
-	output.textureID = input.textureID;
+	//output.textureID = input.textureID;
 	
 	return output;
 }
@@ -79,17 +83,9 @@ PSOut PSScene(PSIn input)
 	
 }
 
-
-
-
-
-
-
-
-
 RasterizerState NoCulling
 {
-	//CullMode = NONE;
+	CullMode = NONE;
 };
 RasterizerState wire
 {

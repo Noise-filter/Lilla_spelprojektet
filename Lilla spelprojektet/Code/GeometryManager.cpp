@@ -105,7 +105,7 @@ void GeometryManager::geoDebugBuffer(ID3D11DeviceContext *dc, ID3D11Device *d)
 
 		D3D11_BUFFER_DESC desc;
 	desc.Usage = D3D11_USAGE_DEFAULT;
-	desc.ByteWidth = sizeof(MESH_P)*6;
+	desc.ByteWidth = sizeof(MESH_PNUV)*6;
 	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	desc.CPUAccessFlags = 0;
 	desc.MiscFlags = 0;

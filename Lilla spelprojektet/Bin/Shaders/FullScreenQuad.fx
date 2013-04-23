@@ -9,18 +9,18 @@ Texture2D  positionMap;
 
 struct VSIn
 {
-	float3 pos : SV_Position;
+	float3 pos : POSITION;
 };
 
 struct PSIn
 {
-	float3 pos : POSITION;
+	float4 pos : SV_Position;
 };
 
 PSIn VSScene(VSIn input)
 {	
-	PSIn output;
-	output.pos = input.pos;
+	PSIn output =(PSIn)0;
+	output.pos = float4(input.pos, 1.0f);
 
 	return output;
 }
@@ -30,18 +30,21 @@ float4 PSScene(PSIn input) : SV_Target
 {
 	int3 sampleIndices = int3(input.pos.xy, 0);
 
-	return float4( diffuseAlbedoMap.Load(sampleIndices).xyz, 1.0f);
+	return float4( 1, 0, 0 , 1 );
+	return float4( resources[1].Load(sampleIndices).xyz, 1.0f);
 }
+
 
 RasterizerState NoCulling
 {
-	//CullMode = NONE;
+	CullMode = NONE;
 };
 RasterizerState wire
 {
 	CullMode = NONE;
 	FillMode = Wireframe;
 };
+
 //-----------------------------------------------------------------------------------------
 // Technique: RenderTextured  
 //-----------------------------------------------------------------------------------------
