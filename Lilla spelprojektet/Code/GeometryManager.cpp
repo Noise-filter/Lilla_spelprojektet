@@ -91,6 +91,38 @@ void GeometryManager::debugApplyBuffer(ID3D11DeviceContext *dc, ID3D11Device *d)
 
 }
 
+void GeometryManager::geoDebugBuffer(ID3D11DeviceContext *dc, ID3D11Device *d)
+{
+	ID3D11Buffer *b;
+		MESH_P mesh[] = {
+		MESH_P(Vec3(1.0,0,0)),
+		MESH_P(Vec3(-1.0,0,0)),
+		MESH_P(Vec3(0,1.0,0)),
+		MESH_P(Vec3(0,0,1.0)),
+		MESH_P(Vec3(0,0,-1.0)),
+		MESH_P(Vec3(0,-1.0,0))
+	};
+
+		D3D11_BUFFER_DESC desc;
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.ByteWidth = sizeof(MESH_P)*6;
+	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	desc.CPUAccessFlags = 0;
+	desc.MiscFlags = 0;
+	desc.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA data;
+	data.pSysMem = mesh;
+	data.SysMemPitch = 0;
+	data.SysMemSlicePitch = 0;
+	
+	d->CreateBuffer(&desc, &data, &b);
+	UINT strides = 0;
+	UINT offset = 0;
+	dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	dc->IASetVertexBuffers(0, 1, &b, &strides, &offset);
+}
+
 //Private functions
 void GeometryManager::initVertexBuffer(ID3D11Device *device, BUFFER_INIT &bufferInit)
 {
