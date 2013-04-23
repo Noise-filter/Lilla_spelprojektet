@@ -1,66 +1,84 @@
+
+Texture2D textures[3]       : register(t0);
+SamplerState anisoSampler	: register(s0);
+
+cbuffer MatProperties
+{
+	float3 specularAlbedo;
+	float specularPower;
+};
+
 cbuffer EveryFrame
 {
-	matrix lightWVP;
-	matrix WVP;
-	matrix W;
+	matrix viewProj;
 };
 
 struct VSIn
 {
-	float3 Pos : POSITION;
+	float3 pos : POSITION;
 	float3 normal : NORMAL;
 	float2 uv : TEXTCOORD;
+
+	float textureID : TEXTUREID;
+	row_major float4x4 world : WORLD;
+	uint instanceID : SV_InstanceID;
 };
 
-struct PSSceneIn
+struct PSIn
 {
-	float4 Pos  : SV_Position;
-	float4 worldPos : worldPos;
-	float3 normal : TEXTCOORD0;
+	float4 posCS  : SV_Position;
+	float3 posW : worldPos;
+	float3 normalW : TEXTCOORD0;
 	float2 uv : TEXTCOORD2;
-	float4 projUV : TEXTCOORD3;
+
+	float textureID : TEXTUREID;
 };
 
-//-----------------------------------------------------------------------------------------
-// State Structures
-//-----------------------------------------------------------------------------------------
-RasterizerState NoCulling
+struct PSOut
 {
-	//CullMode = NONE;
+	float4 position       : SV_TARGET0;
+	float4 diffuseAlbedo  : SV_TARGET1;
+	float4 normal         : SV_TARGET2;
+	
 };
-RasterizerState wire
-{
-	CullMode = NONE;
-	FillMode = Wireframe;
-};
-
-
 
 //-----------------------------------------------------------------------------------------
 // VertexShader: VSScene
 //-----------------------------------------------------------------------------------------
-PSSceneIn VSScene(VSIn input)
+PSIn VSScene(VSIn input)
 {
-	PSSceneIn output = (PSSceneIn)0;
+	PSIn output = (PSIn)0;
 
-	output.Pos = mul(float4(input.Pos, 1), WVP);
-	output.worldPos =  mul(float4(input.Pos, 1), W);
+	output.posCS = mul(float4(input.pos, 1), input.world * viewProj);
+	output.posW =  mul(float4(input.pos, 1), input.world);
 	
-	output.normal = mul(input.normal, W);
-	output.normal = normalize(output.normal);
+	output.normalW = normalize(mul(input.normal, input.world));
 	output.uv = input.uv;
-	output.projUV = mul(float4(input.Pos, 1.0f) , lightWVP);
-		
+	output.textureID = input.textureID;
+	
 	return output;
 }
 
 //-----------------------------------------------------------------------------------------
 // PixelShader: PSSceneMain
 //-----------------------------------------------------------------------------------------
-float4 PSScene(PSSceneIn input) : SV_Target
+PSOut PSScene(PSIn input)
 {
-	return float4(0,1,0,1);
+	PSOut output;
+
+
+	float3 diffuseAlbedo = textures[input.textureID].Sample( anisoSampler, input.uv).rgb;
+	
+	float3 normalW = normalize(input.normalW);
+
+	output.position = float4(input.posW, 1.0f);
+	output.diffuseAlbedo = float4 ( diffuseAlbedo, 1.0f);
+	output.normal = float4(normalW , 1.0f);
+
+	return output;
+	
 }
+
 
 //-----------------------------------------------------------------------------------------
 // Technique: RenderTextured  
@@ -77,3 +95,15 @@ technique11 BasicTech
 	    SetRasterizerState( NoCulling );
     } 
 }
+
+
+
+RasterizerState NoCulling
+{
+	//CullMode = NONE;
+};
+RasterizerState wire
+{
+	CullMode = NONE;
+	FillMode = Wireframe;
+};

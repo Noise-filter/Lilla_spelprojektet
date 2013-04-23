@@ -9,27 +9,38 @@
 class D3D11Handler		
 {
 	private:
-		//private functions
-		char* FeatureLevelToString(D3D_FEATURE_LEVEL featureLevel);
+		char*   FeatureLevelToString(D3D_FEATURE_LEVEL featureLevel);
+		void    setRT(int nrOfRT, ID3D11RenderTargetView* pRTVs);
 		HRESULT initSwapChainAndDevice(HWND hWnd);
-		HRESULT initZBuffer();
-		void setupVP();
-		HRESULT createBackBufferV();
-		void setRT(int nrOfRT, ID3D11RenderTargetView* pRTVs);
-		HRESULT createDSS();
 		HRESULT initShaders();
-		HRESULT createMRTS();
+		void    initVP();
+		
+		//private methods
+		HRESULT initDeferredMRT();
+			HRESULT initMrtZBuffer();
+			HRESULT initMrtRT();
+
+		HRESULT initBackBufferRT();
+			HRESULT initBbRTV();
+			HRESULT initBbZBuffer();
 
 
 		//Variables
-		ID3D11DepthStencilState* pDepthState;
-		ID3D11Texture2D*         pDepthStencil; 
-		D3D11_VIEWPORT*          pViewPort;
+		D3D11_VIEWPORT*          pVP;
 		
 		//rendertargets for deferred
-		ID3D11Texture2D* pRTs;
-		ID3D11RenderTargetView* pRTVs;
+		ID3D11Texture2D*          mrtRT;
+		ID3D11RenderTargetView*   mrtRTV;
+		ID3D11Texture2D*          mrtDS;
+		ID3D11DepthStencilView*   mrtDSV;
+		ID3D11ShaderResourceView* mrtSRV;
 		int iNrRTS;
+
+		//renderTarget for Full ScreenQuad
+		ID3D11RenderTargetView* bbRTV;
+		ID3D11Texture2D*        bbDS;
+		ID3D11DepthStencilView* bbDSV;
+
 
 		//Shaders for different passes
 		std::vector<Shader*> vShaders;
@@ -39,17 +50,16 @@ class D3D11Handler
 		ID3D11Device*			pDevice;
 		ID3D11DeviceContext*	pDeviceContext;
 		IDXGISwapChain*         pSwapChain;	
-		ID3D11DepthStencilView* pDepthStencilView;
-		ID3D11RenderTargetView* pBackBufferV;	
+			
 
 		//Functions
 		D3D11Handler();
 		~D3D11Handler();
 		HRESULT InitDirect3D(HWND hWnd);
-		void resetRT();
+		
 		Shader* setPass(PASS_STATE pass);
-		void setFSQDepth();
-		void resetDSS();
+		void clearViews();
+	
 };
 
 #endif

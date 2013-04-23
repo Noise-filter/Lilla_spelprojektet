@@ -1,13 +1,11 @@
 #include "Engine.h"
 
-
 Engine::Engine(void)
 {
 	d3d = new D3D11Handler();
 	win32 = new WinHandler();
 	pBuffer = new Buffer();
 }
-
 
 Engine::~Engine(void)
 {
@@ -36,12 +34,7 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 
 void Engine::render()
 {
-	static float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-
-	d3d->pDeviceContext->ClearRenderTargetView( d3d->pBackBufferV, ClearColor );
-	
-    //clear depth info
-	d3d->pDeviceContext->ClearDepthStencilView(d3d->pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0 );
+	d3d->clearViews();
 
 	//set topology
 	d3d->pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
