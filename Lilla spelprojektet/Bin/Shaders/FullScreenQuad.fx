@@ -1,29 +1,36 @@
+//0 = Position
+//1 = DiffuseAlbedo
+//2 = Normal
 
-Texture2D normalMap                 : register(t0);
-Texture2D diffuseAlbedoMap          : register(t1);
-Texture2D  positionMap              : register(t2);
+Texture2D resources[3];
+Texture2D normalMap;
+Texture2D diffuseAlbedoMap;
+Texture2D  positionMap;
 
-float4 PSScene(in float4 screenPos : SV_Position) : SV_Target
+struct VSIn
 {
-	int3 sampleIndices = int3(screenPos.xy, 0);
+	float3 pos : SV_Position;
+};
 
-	return float4( diffuseAlbedoMap.Load(sampleIndices).xyz, 1.0f);
+struct PSIn
+{
+	float3 pos : POSITION;
+};
+
+PSIn VSScene(VSIn input)
+{	
+	PSIn output;
+	output.pos = input.pos;
+
+	return output;
 }
 
-//-----------------------------------------------------------------------------------------
-// Technique: RenderTextured  
-//-----------------------------------------------------------------------------------------
-technique11 BasicTech
+
+float4 PSScene(PSIn input) : SV_Target
 {
-    pass p0
-    {
-		// Set VS, GS, and PS
-        SetVertexShader( NULL );
-        SetGeometryShader( NULL );
-        SetPixelShader( CompileShader( ps_4_0, PSScene() ) );
-	    
-	    SetRasterizerState( NoCulling );
-    } 
+	int3 sampleIndices = int3(input.pos.xy, 0);
+
+	return float4( diffuseAlbedoMap.Load(sampleIndices).xyz, 1.0f);
 }
 
 RasterizerState NoCulling
@@ -35,3 +42,19 @@ RasterizerState wire
 	CullMode = NONE;
 	FillMode = Wireframe;
 };
+//-----------------------------------------------------------------------------------------
+// Technique: RenderTextured  
+//-----------------------------------------------------------------------------------------
+technique11 BasicTech
+{
+    pass p0
+    {
+		// Set VS, GS, and PS
+        SetVertexShader( CompileShader(vs_4_0, VSScene() ) );
+        SetGeometryShader( NULL );
+        SetPixelShader( CompileShader( ps_4_0, PSScene() ) );
+	    
+	    SetRasterizerState( NoCulling );
+    } 
+}
+

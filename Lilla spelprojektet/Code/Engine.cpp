@@ -28,7 +28,7 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 		return false;
 	}
 
-	pGeoManager->init(d3d->pDevice);
+	//pGeoManager->init(d3d->pDevice);
 
 	return true; // allt gick bra
 }

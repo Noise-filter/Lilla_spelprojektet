@@ -67,8 +67,8 @@ PSOut PSScene(PSIn input)
 	PSOut output;
 
 
-	float3 diffuseAlbedo = textures[input.textureID].Sample( anisoSampler, input.uv).rgb;
-	
+	float3 diffuseAlbedo = float3(1,0,0);//textures[input.textureID].Sample( anisoSampler, input.uv).rgb;
+
 	float3 normalW = normalize(input.normalW);
 
 	output.position = float4(input.posW, 1.0f);
@@ -79,6 +79,23 @@ PSOut PSScene(PSIn input)
 	
 }
 
+
+
+
+
+
+
+
+
+RasterizerState NoCulling
+{
+	//CullMode = NONE;
+};
+RasterizerState wire
+{
+	CullMode = NONE;
+	FillMode = Wireframe;
+};
 
 //-----------------------------------------------------------------------------------------
 // Technique: RenderTextured  
@@ -98,12 +115,4 @@ technique11 BasicTech
 
 
 
-RasterizerState NoCulling
-{
-	//CullMode = NONE;
-};
-RasterizerState wire
-{
-	CullMode = NONE;
-	FillMode = Wireframe;
-};
+

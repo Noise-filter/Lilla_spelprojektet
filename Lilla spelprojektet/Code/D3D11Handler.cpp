@@ -29,12 +29,15 @@ D3D11Handler::~D3D11Handler()
 	SAFE_RELEASE(this->mrtRTV);
 	SAFE_RELEASE(this->mrtDS);
 	SAFE_RELEASE(this->mrtDSV);
+	SAFE_RELEASE(this->mrtSRV);
 	
 	SAFE_RELEASE(this->bbDS);
 	SAFE_RELEASE(this->bbDSV);
 	SAFE_RELEASE(this->bbRTV);
+	
 
 	SAFE_DELETE(this->pVP);
+
 
 	for(int i = 0; i < this->vShaders.size(); i++)
 	{
@@ -47,7 +50,7 @@ HRESULT D3D11Handler::InitDirect3D(HWND hWnd)
 {
 	HRESULT hr = S_OK;
 
-	this->iNrRTS = 2;
+	this->iNrRTS = 3;
 
 	hr = initSwapChainAndDevice(hWnd);
 	if(FAILED(hr))
@@ -182,15 +185,15 @@ HRESULT D3D11Handler::initShaders()
 
 		{ "TEXTUREID", 0, DXGI_FORMAT_R32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 
-		{ "TEXTCOORD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 36, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "TEXTCOORD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 52, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "TEXTCOORD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 68, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "TEXTCOORD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 84, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "WORLD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 36, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "WORLD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 52, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "WORLD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 68, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "WORLD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 84, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 	};
 
 	Shader* temp = new Shader();
 	this->vShaders.push_back(temp);
-	hr = this->vShaders.at(GEOMETRY)->Init(this->pDevice, this->pDeviceContext, "../Shaders/Geometry.fx", inputDesc, 3);
+	hr = this->vShaders.at(PASS_GEOMETRY)->Init(this->pDevice, this->pDeviceContext, "../Shaders/Geometry.fx", inputDesc, 8);
 	if(FAILED(hr))
 	{
 		return hr;
@@ -198,7 +201,7 @@ HRESULT D3D11Handler::initShaders()
 
 	temp = new Shader();
 	this->vShaders.push_back(temp);
-	hr = this->vShaders.at(LIGHT)->Init(this->pDevice, this->pDeviceContext, "../Shaders/Lightning.fx", inputDesc, 3);
+	hr = this->vShaders.at(PASS_LIGHT)->Init(this->pDevice, this->pDeviceContext, "../Shaders/Lightning.fx", inputDesc, 3);
 	if(FAILED(hr))
 	{
 		return hr;
@@ -207,18 +210,17 @@ HRESULT D3D11Handler::initShaders()
 
 	D3D11_INPUT_ELEMENT_DESC tempInput[] = 
 	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "SV_Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
 
 	temp = new Shader();
 	this->vShaders.push_back(temp);
-	hr = this->vShaders.at(FULLSCREENQUAD)->Init(this->pDevice, this->pDeviceContext, "../Shaders/FullScreenQuad.fx", tempInput, 1);
+	hr = this->vShaders.at(PASS_FULLSCREENQUAD)->Init(this->pDevice, this->pDeviceContext, "../Shaders/FullScreenQuad.fx", tempInput, 1);
 	if(FAILED(hr))
 	{
 		return hr;
 	}
-	
 }
 
 HRESULT D3D11Handler::initDeferredMRT()
@@ -227,8 +229,8 @@ HRESULT D3D11Handler::initDeferredMRT()
 
 	//Depth Stencil
 	D3D11_TEXTURE2D_DESC ds;
-	ds.Width              = SCREEN_WIDTH;
-	ds.Height             = SCREEN_HEIGHT;
+	ds.Width              = (UINT)SCREEN_WIDTH;
+	ds.Height             = (UINT)SCREEN_HEIGHT;
 	ds.MipLevels          = 1;
 	ds.ArraySize          = this->iNrRTS;
 	ds.SampleDesc.Count   = 1;
@@ -237,6 +239,7 @@ HRESULT D3D11Handler::initDeferredMRT()
 	ds.Usage              = D3D11_USAGE_DEFAULT;
 	ds.BindFlags          = D3D11_BIND_DEPTH_STENCIL;
 	ds.CPUAccessFlags     = 0;
+	ds.MiscFlags          = 0;
 
 	hr = this->pDevice->CreateTexture2D(&ds , NULL, &this->mrtDS);
 	if(FAILED(hr))
@@ -246,11 +249,12 @@ HRESULT D3D11Handler::initDeferredMRT()
 
 	//Depth Stencil View
 	D3D11_DEPTH_STENCIL_VIEW_DESC  dsv;
-	dsv.Format                         = ds.Format;
+	dsv.Format                         = DXGI_FORMAT_D32_FLOAT;
 	dsv.ViewDimension                  = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
 	dsv.Texture2DArray.FirstArraySlice = 0;
-	dsv.Texture2DArray.ArraySize       = this->iNrRTS;
+	dsv.Texture2DArray.ArraySize       = (UINT)this->iNrRTS;
 	dsv.Texture2DArray.MipSlice        = 0;
+	dsv.Flags                          = 0;
 
 	hr = this->pDevice->CreateDepthStencilView(this->mrtDS, &dsv, &this->mrtDSV);
 	if(FAILED(hr))
@@ -268,7 +272,7 @@ HRESULT D3D11Handler::initDeferredMRT()
 		return hr;
 	}
 
-	//create 2 rendertarget view from the rendertargets
+	//create 3 rendertarget view from the rendertargets
 	D3D11_RENDER_TARGET_VIEW_DESC rtv;
 	rtv.Format = ds.Format;
 	rtv.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
@@ -283,8 +287,9 @@ HRESULT D3D11Handler::initDeferredMRT()
 	}
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC srv;
-	srv.Format = ds.Format;
+	srv.Format = DXGI_FORMAT_R16G16B16A16_UNORM;
 	srv.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+	srv.Texture2DArray.MostDetailedMip = 0;
 	srv.Texture2DArray.FirstArraySlice = 0;
 	srv.Texture2DArray.ArraySize = this->iNrRTS;
 	srv.Texture2DArray.MipLevels = 1;
@@ -384,22 +389,23 @@ Shader* D3D11Handler::setPass(PASS_STATE pass)
 {
 	switch(pass)
 	{
-		case GEOMETRY:
-			this->pDeviceContext->OMSetRenderTargets(this->iNrRTS, &this->mrtRTV, this->mrtDSV);
-			return this->vShaders.at(GEOMETRY);
+		case PASS_GEOMETRY:
+			this->pDeviceContext->OMSetRenderTargets(1, &this->mrtRTV, this->mrtDSV);
+			return this->vShaders.at(PASS_GEOMETRY);
 			break;
 
-		case LIGHT:
-			return this->vShaders.at(LIGHT);
+		case PASS_LIGHT:
+			return this->vShaders.at(PASS_LIGHT);
 			break;
 
-		case FULLSCREENQUAD:
+		case PASS_FULLSCREENQUAD:
 			this->pDeviceContext->OMSetRenderTargets(1, &this->bbRTV, this->bbDSV);
-			this->vShaders.at(FULLSCREENQUAD)->SetResource("positionMap" , &this->mrtSRV[0]);
-			this->vShaders.at(FULLSCREENQUAD)->SetResource("diffuseAlbedoMap" , &this->mrtSRV[1]);
-			this->vShaders.at(FULLSCREENQUAD)->SetResource("normalMap" , &this->mrtSRV[2]);
+			this->vShaders.at(PASS_FULLSCREENQUAD)->SetResource("resources" , this->mrtSRV);
+			//this->vShaders.at(PASS_FULLSCREENQUAD)->SetResource("positionMap" , &this->mrtSRV[0]);
+			//this->vShaders.at(PASS_FULLSCREENQUAD)->SetResource("diffuseAlbedoMap" , &this->mrtSRV[1]);
+			//this->vShaders.at(PASS_FULLSCREENQUAD)->SetResource("normalMap" , &this->mrtSRV[2]);
 
-			return this->vShaders.at(FULLSCREENQUAD);
+			return this->vShaders.at(PASS_FULLSCREENQUAD);
 			break;
 	}
 }
