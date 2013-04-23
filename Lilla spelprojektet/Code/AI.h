@@ -29,6 +29,9 @@ public:
 	void findPath(); // hanterar pathScript
 	void findTarget(); // hanterar targetScript
 	void spawnEnemies(); // hanterar spawnScript
+	bool initSpawnEnemies(string scriptName);
+
+	void sendArray(int** arr, int size, lua_State* script);
 
 	static void OpenLuaLibs(lua_State* l);
 
@@ -38,4 +41,3 @@ private:
 	lua_State* targetScript;
 	lua_State* spawnScript;
 };
-
