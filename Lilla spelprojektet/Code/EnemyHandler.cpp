@@ -2,9 +2,10 @@
 
 EnemyHandler::EnemyHandler(void)
 {
+	ai = new AI();
 }
 
-bool EnemyHandler::init()
+bool EnemyHandler::init(Structure*** structures)
 {
 	int x, z;
 	for(int i = 0; i < 10; i++)
@@ -14,6 +15,13 @@ bool EnemyHandler::init()
 
 		enemies.push_back(new Enemy(D3DXVECTOR3(x, 0, z), 2, 0, 10, 0, 0, 0));
 	}
+	
+	string scripts[3];
+	scripts[0] = "astar.lua";
+	scripts[1] = "astar.lua";
+	scripts[2] = "astar.lua";
+
+	ai->init(structures, scripts);
 
 	return true;
 }

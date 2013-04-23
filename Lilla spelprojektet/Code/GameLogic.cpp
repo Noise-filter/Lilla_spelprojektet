@@ -128,7 +128,8 @@ int GameLogic::update(float dt, MouseState* mState, D3DXMATRIX view, D3DXMATRIX 
 bool GameLogic::init(int mapSize, int quadSize)
 {
 	this->level->init(mapSize,quadSize);
-	this->eHandler->init();
+
+	this->eHandler->init(level->getStructures());
 
 	vector<RenderData*> renderData;
 

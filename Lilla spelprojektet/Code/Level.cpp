@@ -293,3 +293,8 @@ void Level::makeSet(int x, int z)
 	if(z < mapSize-2 && structures[x][z+1])
 		sets.Union(z + (x*(mapSize-1)), z+1 + (x*(mapSize-1)), compress, rank);
 }
+
+Structure*** Level::getStructures()
+{
+	return structures;
+}

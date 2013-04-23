@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "Enemy.h"
+#include "AI.h"
 #include <vector>
 using namespace std;
 
@@ -10,7 +11,7 @@ public:
 	EnemyHandler(void);
 	~EnemyHandler(void);
 	
-	bool init();
+	bool init(Structure*** structures);
 
 	void getRenderData(vector<vector<RenderData*>>& rData);
 	int update(float dt);
@@ -19,6 +20,7 @@ public:
 
 private:
 	vector<Enemy*> enemies;
+	AI* ai;
 
 };
 

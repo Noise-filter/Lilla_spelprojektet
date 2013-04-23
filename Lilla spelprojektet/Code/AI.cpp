@@ -23,6 +23,46 @@ bool AI::init(Structure*** structures, string* scripts)
 	OpenLuaLibs(pathScript);
 	if(luaL_dofile(pathScript, scripts[0].c_str()))//pathfinding
 		return false;
+	lua_pcall(pathScript, 0, 0, 0);
+
+	lua_getglobal(pathScript, "init");
+	lua_newtable(pathScript);
+	lua_pushnumber(pathScript,0);
+	lua_newtable(pathScript);
+	lua_pushnumber(pathScript,0);
+	lua_pushnumber(pathScript,4);
+
+	lua_pushnumber(pathScript,1);
+	lua_pushnumber(pathScript,2);
+
+	lua_pushnumber(pathScript,2);
+	lua_pushnumber(pathScript,3);
+
+	lua_settable(pathScript,-7);
+	lua_settable(pathScript,-5);
+
+	lua_pushnumber(pathScript,1);
+	lua_newtable(pathScript);
+	lua_pushnumber(pathScript,0);
+	lua_pushnumber(pathScript,13);
+
+	lua_pushnumber(pathScript,1);
+	lua_pushnumber(pathScript,37);
+
+	lua_pushnumber(pathScript,2);
+	lua_pushnumber(pathScript,5);
+
+	lua_settable(pathScript,-7);
+	lua_settable(pathScript,-5);
+
+	lua_settable(pathScript,-7);
+	lua_settable(pathScript,-5);
+	
+	lua_setglobal(pathScript,"myTable");
+	lua_pcall(pathScript, 1, 1, 0);
+
+	int a = lua_tonumber(pathScript, -1);
+	lua_pop(pathScript, 1);
 
 	targetScript = lua_open();
 	OpenLuaLibs(targetScript);

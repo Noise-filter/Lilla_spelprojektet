@@ -26,6 +26,8 @@ public:
 	bool isAdjecent(int xPos, int yPos);
 	bool isLocationBuildable(int xPos, int yPos);
 
+	Structure*** getStructures();
+
 private:
 	int destroyBuildings();
 	void makeSet(int x, int z);
