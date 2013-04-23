@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "Enemy.h"
 #include "AI.h"
+#include "Node.h"
 #include <vector>
 using namespace std;
 
@@ -11,7 +12,7 @@ public:
 	EnemyHandler(void);
 	~EnemyHandler(void);
 	
-	bool init(Structure*** structures);
+	bool init(Structure*** structures, Node** nodes, int mapSize);
 
 	void getRenderData(vector<vector<RenderData*>>& rData);
 	int update(float dt);
