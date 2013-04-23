@@ -21,7 +21,7 @@ bool EnemyHandler::init(Structure*** structures)
 	scripts[1] = "astar.lua";
 	scripts[2] = "spawning.lua";
 
-	ai->init(structures, scripts);
+	//ai->init(structures, scripts);
 
 	return true;
 }

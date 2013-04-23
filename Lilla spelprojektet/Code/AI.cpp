@@ -12,12 +12,23 @@ AI::AI(void)
 
 AI::~AI(void)
 {
+	//delete both int 2Darrays
 }
 
-bool AI::init(Structure*** structures, string* scripts)
+bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize)
 {
 	int rv = 0;
 	this->structures = structures;
+	this->nodes = nodes;
+
+	structuresInt = new int*[mapSize-1];
+	for(int i= 0; i < mapSize-1; i++)
+		structuresInt[i] = new int[mapSize-1];
+
+	nodesInt = new int*[mapSize];
+	for(int i= 0; i < mapSize; i++)
+		nodesInt[i] = new int[mapSize];
+
 
 	//pathScript = lua_open();
 	//OpenLuaLibs(pathScript);
@@ -31,7 +42,7 @@ bool AI::init(Structure*** structures, string* scripts)
 	//if(luaL_dofile(targetScript, scripts[1].c_str())) //targetfinding
 	//	return false;
 
-	if(!initSpawnEnemies(scripts[2]))
+	if(!initSpawnEnemies(scripts[2],mapSize))
 		return false;
 
 	cout << "the following scripts have been initiated:" << endl;
@@ -82,7 +93,7 @@ void AI::spawnEnemies()
 	lua_pop(spawnScript, 1); // Plocka bort returvärden
 }
 
-bool AI::initSpawnEnemies(string scriptName)
+bool AI::initSpawnEnemies(string scriptName, int mapSize)
 {
 	int enemiesPerMin = 10;
 
@@ -93,7 +104,9 @@ bool AI::initSpawnEnemies(string scriptName)
 		return false;
 	lua_getglobal(spawnScript,"init");
 
-	//sendArray(arr, size, spawnedScript);
+	convertNodesToInt(mapSize);
+	sendArray(nodesInt, mapSize, spawnScript);
+
 	lua_pushnumber(spawnScript,enemiesPerMin);
 
 
@@ -101,7 +114,7 @@ bool AI::initSpawnEnemies(string scriptName)
 	int a = lua_tonumber(spawnScript, -1);
 	
 	
-	lua_pop(spawnScript, 2);
+	lua_pop(spawnScript, 1);
 	cout << "output: " << a << endl;
 
 	return true;
@@ -115,6 +128,28 @@ void AI::OpenLuaLibs(lua_State* l)
 	{
 		lpLib->func(l);
 		lua_settop(l, 0);
+	}
+}
+
+void AI::convertNodesToInt(int mapSize)
+{
+	for(int i = 0; i < mapSize; i++)
+	{
+		for(int j = 0; j < mapSize; j++)
+		{
+			nodesInt[i][j] = nodes[i][j].getColor();
+		}
+	}
+}
+
+void AI::convertStructuresToInt(int mapSize)
+{
+	for(int i = 0; i < mapSize; i++)
+	{
+		for(int j = 0; j < mapSize; j++)
+		{
+			structuresInt[i][j] = structures[i][j]->getRenderData().meshID;
+		}
 	}
 }
 
