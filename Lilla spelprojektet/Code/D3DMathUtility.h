@@ -9,6 +9,21 @@
 
 #define PI (3.14159265358979323846f)
 
+struct MESH_P
+{
+	Vec3 pos;
+
+	MESH_P()
+	{
+		this->pos = Vec3(0.0f, 0.0f, 0.0f);
+	};
+
+	MESH_P(Vec3 pos)
+	{
+		this->pos = pos;
+	};
+};
+
 struct MESH_PUV
 {
 	Vec3 pos;
