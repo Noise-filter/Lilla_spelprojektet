@@ -65,6 +65,8 @@ void Engine::render(std::vector<std::vector<RENDERDATA*>> data)
 		index++;
 	}
 
+	
+
 	//this->d3d->setFSQDepth();
 	this->d3d->setPass(PASS_FULLSCREENQUAD);
 
