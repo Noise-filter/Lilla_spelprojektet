@@ -70,13 +70,16 @@ void AI::spawnEnemies()
 {
 	lua_getglobal(spawnScript, "spawnEnemies");
 
+	lua_newtable(spawnScript);
+
+
 	//lua_pushnumber(l,inputnumber);
 
-	//lua_pcall(l, inputcount, returncount, 0); //kalla på funktionen
+	lua_pcall(spawnScript, 1, 1, 0); //kalla på funktionen
 	
 	//hämta värden
 
-	//lua_pop(l, returncount); // Plocka bort returvärden
+	lua_pop(spawnScript, 1); // Plocka bort returvärden
 }
 
 void AI::OpenLuaLibs(lua_State* l)
