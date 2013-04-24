@@ -18,7 +18,7 @@ bool EnemyHandler::init(Structure*** structures, Node** nodes, int mapSize)
 	
 	string scripts[3];
 	scripts[0] = "astar.lua";
-	scripts[1] = "astar.lua";
+	scripts[1] = "targetFind.lua";
 	scripts[2] = "spawning.lua";
 
 	ai->init(structures, nodes, scripts, mapSize);

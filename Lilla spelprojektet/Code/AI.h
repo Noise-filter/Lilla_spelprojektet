@@ -33,6 +33,7 @@ public:
 	
 	bool initSpawnEnemies(string scriptName, int mapSize);
 	bool initFindPath(string scriptName, int mapSize);
+	bool initFindTarget(string scriptName, int mapSize);
 
 	void sendArray(int** arr, int mapSize, int quadSize, lua_State* script);
 
