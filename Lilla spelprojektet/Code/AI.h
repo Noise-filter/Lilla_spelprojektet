@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include <iostream>
 #include "Structure.h"
-
+#include "Node.h"
 
 extern "C"
 {
@@ -25,22 +25,27 @@ public:
 	AI(void);
 	~AI(void);
 
-	bool init(Structure*** structures,string* scripts);
+	bool init(Structure*** structures, Node** nodes ,string* scripts, int mapSize);
 	void findPath(); // hanterar pathScript
 	void findTarget(); // hanterar targetScript
 	void spawnEnemies(); // hanterar spawnScript
-	bool initSpawnEnemies(string scriptName);
+
+	bool initSpawnEnemies(string scriptName, int mapSize);
 
 	void sendArray(int** arr, int size, lua_State* script);
 
-	bool initFindPath(lua_State* l, Structure*** structures, int mapSize);
+	void convertNodesToInt(int mapSize);
+	void convertStructuresToInt(int mapSize);
 
 	static void OpenLuaLibs(lua_State* l);
 
 private:
+	int** structuresInt;
+	int** nodesInt;
+
 	Structure*** structures;
+	Node** nodes;
 	lua_State* pathScript;
 	lua_State* targetScript;
 	lua_State* spawnScript;
-
 };
