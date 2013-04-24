@@ -85,21 +85,10 @@ bool AI::initFindPath(lua_State* l, Structure*** structures, int mapSize)
 {
 	lua_getglobal(pathScript, "init");
 
-	lua_newtable(pathScript); 
+	sendArray(convertStructures(structures, mapSize), mapSize, l);
 
-	lua_pushnumber(pathScript, 1);
-	lua_pushnumber(pathScript, 34);
-	lua_rawset(pathScript, -3);
-
-	lua_pushnumber(pathScript, 2);
-	lua_pushnumber(pathScript, 32);
-	lua_rawset(pathScript, -3);
-
-	lua_pushliteral(pathScript, "n");
-	lua_pushnumber(pathScript, 2);
-	lua_rawset(pathScript, -3);
-	
-	lua_pcall(pathScript, 1, 0, 0);
+	lua_pushnumber(mapSize);
+	lua_pcall(pathScript, 2, 0, 0);
 
 	return true;
 }
