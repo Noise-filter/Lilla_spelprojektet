@@ -174,7 +174,7 @@ bool AI::initFindTarget(string scriptName)
 {
 	targetScript = lua_open();
 	OpenLuaLibs(targetScript);
-	if(luaL_dofile(targetScript, scriptName.c_str()))//pathfinding
+	if(luaL_dofile(targetScript, scriptName.c_str()))
 		return false;
 
 	lua_getglobal(targetScript, "init");
