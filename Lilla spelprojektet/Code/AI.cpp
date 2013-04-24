@@ -32,13 +32,13 @@ bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize
 	for(int i= 0; i < mapSize; i++)
 		nodesInt[i] = new int[mapSize];
 
-	//if(!initSpawnEnemies(scripts[0], mapSize))
+	//if(!initSpawnEnemies(scripts[0]))
 	//	return false;
 
-	if(!initFindTarget(scripts[1], mapSize))
+	if(!initFindTarget(scripts[1]))
 		return false;
 
-	//if(!initSpawnEnemies(scripts[2],mapSize))
+	//if(!initSpawnEnemies(scripts[2))
 	//	return false;
 
 	cout << "the following scripts have been initiated:" << endl;
@@ -64,7 +64,7 @@ void AI::findTarget()
 {
 	lua_getglobal(spawnScript, "findTarget");
 
-	sendArray(structuresInt);
+	sendArray(structuresInt, mapSize-1, targetScript);
 
 	//lua_pcall(l, inputcount, returncount, 0); //kalla på funktionen
 	
@@ -119,7 +119,7 @@ vector<Enemy*> AI::spawnEnemies(float dt, int nrOfEnemies)
 	return enemies;
 }
 
-bool AI::initFindPath(string scriptName, int mapSize)
+bool AI::initFindPath(string scriptName)
 {
 	pathScript = lua_open();
 	OpenLuaLibs(pathScript);
@@ -128,7 +128,7 @@ bool AI::initFindPath(string scriptName, int mapSize)
 
 	lua_getglobal(pathScript, "init");
 
-	convertNodesToInt(mapSize);
+	convertNodesToInt();
 	//sendArray(nodesInt, mapSize, pathScript);
 
 	lua_pushnumber(pathScript, mapSize);
@@ -142,7 +142,7 @@ bool AI::initFindPath(string scriptName, int mapSize)
 	return true;
 }
 
-bool AI::initSpawnEnemies(string scriptName, int mapSize)
+bool AI::initSpawnEnemies(string scriptName)
 {
 	int enemiesPerMin = 10;
 
@@ -154,8 +154,8 @@ bool AI::initSpawnEnemies(string scriptName, int mapSize)
 	
 	lua_getglobal(spawnScript,"init");
 
-	convertNodesToInt(mapSize);
-	sendArray(nodesInt, mapSize, 10 ,spawnScript);
+	convertNodesToInt();
+	sendArray(nodesInt, mapSize ,spawnScript);
 
 	lua_pushnumber(spawnScript,enemiesPerMin);
 
@@ -170,7 +170,7 @@ bool AI::initSpawnEnemies(string scriptName, int mapSize)
 	return true;
 }
 
-bool AI::initFindTarget(string scriptName, int mapSize)
+bool AI::initFindTarget(string scriptName)
 {
 	targetScript = lua_open();
 	OpenLuaLibs(targetScript);

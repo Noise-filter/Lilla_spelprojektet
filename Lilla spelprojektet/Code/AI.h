@@ -31,9 +31,9 @@ public:
 	void findTarget(); // hanterar targetScript
 	vector<Enemy*> spawnEnemies(float dt, int nrOfEnemies); // hanterar spawnScript
 	
-	bool initSpawnEnemies(string scriptName, int mapSize);
-	bool initFindPath(string scriptName, int mapSize);
-	bool initFindTarget(string scriptName, int mapSize);
+	bool initSpawnEnemies(string scriptName);
+	bool initFindPath(string scriptName);
+	bool initFindTarget(string scriptName);
 
 	void sendArray(int** arr, int mapSize, lua_State* script);
 
