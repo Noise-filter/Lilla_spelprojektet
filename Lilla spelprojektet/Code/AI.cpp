@@ -30,16 +30,14 @@ bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize
 	for(int i= 0; i < mapSize; i++)
 		nodesInt[i] = new int[mapSize];
 
-	if(!initSpawnEnemies(scripts[0], mapSize))
-		return false;
-
-	//targetScript = lua_open();
-	//OpenLuaLibs(targetScript);
-	//if(luaL_dofile(targetScript, scripts[1].c_str())) //targetfinding
+	//if(!initSpawnEnemies(scripts[0], mapSize))
 	//	return false;
 
-	if(!initSpawnEnemies(scripts[2],mapSize))
+	if(!initFindTarget(scripts[1], mapSize))
 		return false;
+
+	//if(!initSpawnEnemies(scripts[2],mapSize))
+	//	return false;
 
 	cout << "the following scripts have been initiated:" << endl;
 	cout << scripts[0] << endl << scripts[1] << endl << scripts[2] << endl;
@@ -129,7 +127,7 @@ bool AI::initFindPath(string scriptName, int mapSize)
 	lua_getglobal(pathScript, "init");
 
 	convertNodesToInt(mapSize);
-	sendArray(nodesInt, mapSize, pathScript);
+	//sendArray(nodesInt, mapSize, pathScript);
 
 	lua_pushnumber(pathScript, mapSize);
 	lua_pcall(pathScript, 2, 0, 0);
@@ -170,6 +168,29 @@ bool AI::initSpawnEnemies(string scriptName, int mapSize)
 	return true;
 }
 
+bool AI::initFindTarget(string scriptName, int mapSize)
+{
+	targetScript = lua_open();
+	OpenLuaLibs(targetScript);
+	if(luaL_dofile(targetScript, scriptName.c_str()))//pathfinding
+		return false;
+
+	lua_getglobal(targetScript, "init");
+
+	convertStructuresToInt(mapSize);
+	sendArray(structuresInt, mapSize, 10, targetScript);
+
+	lua_pushnumber(targetScript, mapSize);
+	lua_pcall(targetScript, 2, 1, 0);
+
+	int a = lua_tonumber(targetScript, -1);
+	lua_pop(targetScript, 1);
+
+	cout << "Output: " << a << endl;
+
+	return true;
+}
+
 void AI::OpenLuaLibs(lua_State* l)
 {
 	const luaL_reg* lpLib;
@@ -203,7 +224,7 @@ void AI::convertStructuresToInt(int mapSize)
 	}
 }
 
-void AI::sendArray(int** arr, int mapSize, int quadSize,lua_State* script)
+void AI::sendArray(int** arr, int mapSize, int quadSize, lua_State* script)
 {
 	lua_newtable( script );
 
