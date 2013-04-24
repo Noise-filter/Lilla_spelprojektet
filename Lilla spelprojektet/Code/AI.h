@@ -31,6 +31,7 @@ public:
 	void spawnEnemies(); // hanterar spawnScript
 
 	bool initSpawnEnemies(string scriptName, int mapSize);
+	bool initFindPath(string scriptName, int mapSize);
 
 	void sendArray(int** arr, int size, lua_State* script);
 
