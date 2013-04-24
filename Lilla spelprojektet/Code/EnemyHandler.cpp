@@ -7,14 +7,14 @@ EnemyHandler::EnemyHandler(void)
 
 bool EnemyHandler::init(Structure*** structures, Node** nodes, int mapSize)
 {
-	int x, z;
+	/*int x, z;
 	for(int i = 0; i < 10; i++)
 	{
 		x = rand() % 100;
 		z = rand() % 100;
 
 		enemies.push_back(new Enemy(D3DXVECTOR3(x, 0, z), 2, 0, 10, 0, 0, 0));
-	}
+	}*/
 	
 	string scripts[3];
 	scripts[0] = "astar.lua";
@@ -53,10 +53,10 @@ int EnemyHandler::update(float dt)
 		}
 	}
 
-	if(enemies.size() < 10)
+	/*if(enemies.size() < 10)
 	{
 		enemies.push_back(new Enemy(D3DXVECTOR3(rand() % 100, 0, rand() % 100), 2, 0, 10, 0, 0, 0));
-	}
+	}*/
 
 	return 1;
 }

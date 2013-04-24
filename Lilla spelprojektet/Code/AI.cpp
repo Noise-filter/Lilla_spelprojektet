@@ -13,7 +13,6 @@ AI::AI(void)
 AI::~AI(void)
 {
 	//delete both int 2Darrays
-
 }
 
 bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize)
@@ -30,8 +29,13 @@ bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize
 	for(int i= 0; i < mapSize; i++)
 		nodesInt[i] = new int[mapSize];
 
-	if(!initSpawnEnemies(scripts[0], mapSize))
-		return false;
+
+	//pathScript = lua_open();
+	//OpenLuaLibs(pathScript);
+	//if(luaL_dofile(pathScript, scripts[0].c_str()))//pathfinding
+	//	return false;
+
+
 
 	//targetScript = lua_open();
 	//OpenLuaLibs(targetScript);
@@ -119,32 +123,9 @@ vector<Enemy*> AI::spawnEnemies(float dt, int nrOfEnemies)
 	return enemies;
 }
 
-bool AI::initFindPath(string scriptName, int mapSize)
-{
-	pathScript = lua_open();
-	OpenLuaLibs(pathScript);
-	if(luaL_dofile(pathScript, scriptName.c_str()))//pathfinding
-		return false;
-
-	lua_getglobal(pathScript, "init");
-
-	convertNodesToInt(mapSize);
-	sendArray(nodesInt, mapSize, pathScript);
-
-	lua_pushnumber(pathScript, mapSize);
-	lua_pcall(pathScript, 2, 0, 0);
-
-	int a = lua_tonumber(pathScript, -1);
-	lua_pop(pathScript, 1);
-
-	cout << "Output: " << a << endl;
-
-	return true;
-}
-
 bool AI::initSpawnEnemies(string scriptName, int mapSize)
 {
-	int enemiesPerMin = 10;
+	int enemiesPerMin = 30;
 
 
 	spawnScript = lua_open();
