@@ -35,16 +35,18 @@ public:
 	bool initFindPath(string scriptName, int mapSize);
 	bool initFindTarget(string scriptName, int mapSize);
 
-	void sendArray(int** arr, int mapSize, int quadSize, lua_State* script);
+	void sendArray(int** arr, int mapSize, lua_State* script);
 
-	void convertNodesToInt(int mapSize);
-	void convertStructuresToInt(int mapSize);
+	void convertNodesToInt();
+	void convertStructuresToInt();
 
 	static void OpenLuaLibs(lua_State* l);
 
 private:
 	int** structuresInt;
 	int** nodesInt;
+	int mapSize;
+	int quadSize;
 
 	Structure*** structures;
 	Node** nodes;

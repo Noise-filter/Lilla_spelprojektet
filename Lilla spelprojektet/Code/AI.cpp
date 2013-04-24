@@ -21,6 +21,8 @@ bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize
 	int rv = 0;
 	this->structures = structures;
 	this->nodes = nodes;
+	this->mapSize = mapSize;
+	this->quadSize = quadSize;
 
 	structuresInt = new int*[mapSize-1];
 	for(int i= 0; i < mapSize-1; i++)
@@ -62,7 +64,7 @@ void AI::findTarget()
 {
 	lua_getglobal(spawnScript, "findTarget");
 
-	//lua_pushnumber(l,inputnumber);
+	sendArray(structuresInt);
 
 	//lua_pcall(l, inputcount, returncount, 0); //kalla på funktionen
 	
@@ -177,8 +179,8 @@ bool AI::initFindTarget(string scriptName, int mapSize)
 
 	lua_getglobal(targetScript, "init");
 
-	convertStructuresToInt(mapSize);
-	sendArray(structuresInt, mapSize, 10, targetScript);
+	convertStructuresToInt();
+	sendArray(structuresInt, mapSize-1, targetScript);
 
 	lua_pushnumber(targetScript, mapSize);
 	lua_pcall(targetScript, 2, 1, 0);
@@ -202,7 +204,7 @@ void AI::OpenLuaLibs(lua_State* l)
 	}
 }
 
-void AI::convertNodesToInt(int mapSize)
+void AI::convertNodesToInt()
 {
 	for(int i = 0; i < mapSize; i++)
 	{
@@ -213,18 +215,25 @@ void AI::convertNodesToInt(int mapSize)
 	}
 }
 
-void AI::convertStructuresToInt(int mapSize)
+void AI::convertStructuresToInt()
 {
-	for(int i = 0; i < mapSize; i++)
+	for(int i = 0; i < mapSize-1; i++)
 	{
-		for(int j = 0; j < mapSize; j++)
+		for(int j = 0; j < mapSize-1; j++)
 		{
-			structuresInt[i][j] = structures[i][j]->getRenderData().meshID;
+			if(structures[i][j] != NULL)
+			{
+				structuresInt[i][j] = structures[i][j]->getRenderData().meshID;
+			}
+			else
+			{
+				structuresInt[i][j] = 0;
+			}
 		}
 	}
 }
 
-void AI::sendArray(int** arr, int mapSize, int quadSize, lua_State* script)
+void AI::sendArray(int** arr, int mapSize, lua_State* script)
 {
 	lua_newtable( script );
 
