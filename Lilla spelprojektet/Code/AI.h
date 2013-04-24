@@ -3,7 +3,8 @@
 #include <iostream>
 #include "Structure.h"
 #include "Node.h"
-
+#include "Enemy.h"
+#include <vector>
 extern "C"
 {
 	#include <lua.h>
@@ -28,11 +29,11 @@ public:
 	bool init(Structure*** structures, Node** nodes ,string* scripts, int mapSize);
 	void findPath(); // hanterar pathScript
 	void findTarget(); // hanterar targetScript
-	void spawnEnemies(); // hanterar spawnScript
-
+	vector<Enemy*> spawnEnemies(float dt, int nrOfEnemies); // hanterar spawnScript
+	
 	bool initSpawnEnemies(string scriptName, int mapSize);
 
-	void sendArray(int** arr, int size, lua_State* script);
+	void sendArray(int** arr, int mapSize, int quadSize, lua_State* script);
 
 	void convertNodesToInt(int mapSize);
 	void convertStructuresToInt(int mapSize);

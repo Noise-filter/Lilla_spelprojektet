@@ -129,7 +129,7 @@ bool GameLogic::init(int mapSize, int quadSize)
 {
 	this->level->init(mapSize,quadSize);
 
-	this->eHandler->init(level->getStructures());
+	this->eHandler->init(level->getStructures(),this->level->getNodes(),mapSize);
 
 	vector<RenderData*> renderData;
 

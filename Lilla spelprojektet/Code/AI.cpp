@@ -77,20 +77,50 @@ void AI::findTarget()
 	//lua_pop(l, returncount); // Plocka bort returvärden	
 }
 
-void AI::spawnEnemies()
+vector<Enemy*> AI::spawnEnemies(float dt, int nrOfEnemies)
 {
-	lua_getglobal(spawnScript, "spawnEnemies");
+	vector<Enemy*> enemies;
+	Enemy* tempE;
+	int retVals[4];
+	int counter = 0;
+	lua_getglobal(spawnScript, "spawning");
+	lua_pushnumber(spawnScript,dt);
+	lua_pushnumber(spawnScript,nrOfEnemies);
 
-	lua_newtable(spawnScript);
-
-
-	//lua_pushnumber(l,inputnumber);
-
-	lua_pcall(spawnScript, 1, 1, 0); //kalla på funktionen
+	lua_pcall(spawnScript, 2, 2, 0); //kalla på funktionen
 	
 	//hämta värden
+	int spawnedEnemies = lua_tonumber(spawnScript,-1);
+	if(spawnedEnemies > 0)
+	{
+		cout << "#enemies: " << spawnedEnemies << endl;
+	}
 
-	lua_pop(spawnScript, 1); // Plocka bort returvärden
+	lua_pushnil(spawnScript);
+	while (lua_next(spawnScript, 1) != 0)
+	{
+		counter = 0;
+		lua_pushnil(spawnScript);
+		while (lua_next(spawnScript, -2) != 0)
+		{
+			if( lua_tonumber(spawnScript, -1) > -1)
+			{
+				retVals[counter++] = lua_tonumber(spawnScript, -1);
+				cout << lua_typename(spawnScript, lua_type(spawnScript, -2)) << ": value"<< lua_tonumber(spawnScript, -1) << endl;
+			}
+			lua_pop(spawnScript, 1);	
+		}
+		if(spawnedEnemies > 0)
+		{
+			Enemy* tempE = new Enemy(D3DXVECTOR3(retVals[0],0,retVals[1]),1,0,5,0,0,0);
+			enemies.push_back(tempE);			
+		}
+
+		lua_pop(spawnScript, 1);
+	}
+	lua_pop(spawnScript, 2);
+	
+	return enemies;
 }
 
 bool AI::initSpawnEnemies(string scriptName, int mapSize)
@@ -102,10 +132,11 @@ bool AI::initSpawnEnemies(string scriptName, int mapSize)
 	OpenLuaLibs(spawnScript);
 	if(luaL_dofile(spawnScript, scriptName.c_str())) //spawning
 		return false;
+	
 	lua_getglobal(spawnScript,"init");
 
 	convertNodesToInt(mapSize);
-	sendArray(nodesInt, mapSize, spawnScript);
+	sendArray(nodesInt, mapSize, 10 ,spawnScript);
 
 	lua_pushnumber(spawnScript,enemiesPerMin);
 
@@ -137,7 +168,7 @@ void AI::convertNodesToInt(int mapSize)
 	{
 		for(int j = 0; j < mapSize; j++)
 		{
-			nodesInt[i][j] = nodes[i][j].getColor();
+				nodesInt[i][j] = nodes[i][j].getColor();
 		}
 	}
 }
@@ -153,15 +184,15 @@ void AI::convertStructuresToInt(int mapSize)
 	}
 }
 
-void AI::sendArray(int** arr, int size, lua_State* script)
+void AI::sendArray(int** arr, int mapSize, int quadSize,lua_State* script)
 {
 	lua_newtable( script );
 
-	for(int i = 0; i < size; i++)
+	for(int i = 0; i < mapSize; i++)
 	{
-		for(int j = 0; j < size; j++)
+		for(int j = 0; j < mapSize; j++)
 		{
-			lua_pushnumber( script, i + j*size);
+			lua_pushnumber( script, i + j*mapSize);
 			lua_pushnumber( script, arr[i][j] );
 			lua_rawset( script, -3 );			
 		}
@@ -170,6 +201,10 @@ void AI::sendArray(int** arr, int size, lua_State* script)
 
 	// set the number of elements (index to the last array element)
 	lua_pushliteral( script, "n" );
-	lua_pushnumber( script, size );
+	lua_pushnumber( script, mapSize );
+	lua_rawset( script, -3 );
+
+	lua_pushliteral( script, "q" );
+	lua_pushnumber( script, quadSize);
 	lua_rawset( script, -3 );
 }
