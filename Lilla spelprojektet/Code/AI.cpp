@@ -22,7 +22,7 @@ bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize
 	this->structures = structures;
 	this->nodes = nodes;
 	this->mapSize = mapSize;
-	this->quadSize = quadSize;
+	this->quadSize = 10;
 
 	structuresInt = new int*[mapSize-1];
 	for(int i= 0; i < mapSize-1; i++)
@@ -35,11 +35,11 @@ bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize
 	//if(!initSpawnEnemies(scripts[0], mapSize))
 	//	return false;
 
-	if(!initFindTarget(scripts[1], mapSize))
-		return false;
+	//if(!initFindTarget(scripts[1], mapSize))
+		//return false;
 
-	//if(!initSpawnEnemies(scripts[2],mapSize))
-	//	return false;
+	if(!initSpawnEnemies(scripts[2],mapSize))
+		return false;
 
 	cout << "the following scripts have been initiated:" << endl;
 	cout << scripts[0] << endl << scripts[1] << endl << scripts[2] << endl;
@@ -49,7 +49,7 @@ bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize
 
 void AI::findPath()
 {
-	lua_getglobal(spawnScript, "findPath");
+	lua_getglobal(pathScript, "findPath");
 
 	//lua_pushnumber(l,inputnumber);
 
@@ -62,9 +62,9 @@ void AI::findPath()
 
 void AI::findTarget()
 {
-	lua_getglobal(spawnScript, "findTarget");
+	lua_getglobal(targetScript, "findTarget");
 
-	sendArray(structuresInt);
+	sendArray(structuresInt,mapSize,targetScript);
 
 	//lua_pcall(l, inputcount, returncount, 0); //kalla på funktionen
 	
@@ -128,7 +128,7 @@ bool AI::initFindPath(string scriptName, int mapSize)
 
 	lua_getglobal(pathScript, "init");
 
-	convertNodesToInt(mapSize);
+	convertNodesToInt();
 	//sendArray(nodesInt, mapSize, pathScript);
 
 	lua_pushnumber(pathScript, mapSize);
@@ -144,7 +144,7 @@ bool AI::initFindPath(string scriptName, int mapSize)
 
 bool AI::initSpawnEnemies(string scriptName, int mapSize)
 {
-	int enemiesPerMin = 10;
+	int enemiesPerMin = 20;
 
 
 	spawnScript = lua_open();
@@ -154,8 +154,8 @@ bool AI::initSpawnEnemies(string scriptName, int mapSize)
 	
 	lua_getglobal(spawnScript,"init");
 
-	convertNodesToInt(mapSize);
-	sendArray(nodesInt, mapSize, 10 ,spawnScript);
+	convertNodesToInt();
+	sendArray(nodesInt, mapSize,spawnScript);
 
 	lua_pushnumber(spawnScript,enemiesPerMin);
 
