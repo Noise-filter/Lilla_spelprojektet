@@ -22,7 +22,7 @@ bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize
 	this->structures = structures;
 	this->nodes = nodes;
 	this->mapSize = mapSize;
-	this->quadSize = quadSize;
+	this->quadSize = 10;
 
 	structuresInt = new int*[mapSize-1];
 	for(int i= 0; i < mapSize-1; i++)
@@ -32,14 +32,11 @@ bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize
 	for(int i= 0; i < mapSize; i++)
 		nodesInt[i] = new int[mapSize];
 
-	//if(!initSpawnEnemies(scripts[0]))
-	//	return false;
+	//if(!initFindTarget(scripts[1]))
+		//return false;
 
-	if(!initFindTarget(scripts[1]))
+	if(!initSpawnEnemies(scripts[2]))
 		return false;
-
-	//if(!initSpawnEnemies(scripts[2))
-	//	return false;
 
 	cout << "the following scripts have been initiated:" << endl;
 	cout << scripts[0] << endl << scripts[1] << endl << scripts[2] << endl;
@@ -49,7 +46,7 @@ bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize
 
 void AI::findPath()
 {
-	lua_getglobal(spawnScript, "findPath");
+	//lua_getglobal(spawnScript, "findPath");
 
 	//lua_pushnumber(l,inputnumber);
 
@@ -62,9 +59,9 @@ void AI::findPath()
 
 void AI::findTarget()
 {
-	lua_getglobal(spawnScript, "findTarget");
+	//lua_getglobal(spawnScript, "findTarget");
 
-	sendArray(structuresInt, mapSize-1, targetScript);
+	//sendArray(structuresInt, mapSize-1, targetScript);
 
 	//lua_pcall(l, inputcount, returncount, 0); //kalla på funktionen
 	
