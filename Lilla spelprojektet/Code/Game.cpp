@@ -18,7 +18,7 @@ Game::~Game(void)
 	SAFE_DELETE(camera);
 	SAFE_DELETE(input);
 	soundSystem->shutdown();
-	delete playlist;
+	SAFE_DELETE(playlist);
 }
 
 bool Game::init(HINSTANCE hInstance, int cmdShow)

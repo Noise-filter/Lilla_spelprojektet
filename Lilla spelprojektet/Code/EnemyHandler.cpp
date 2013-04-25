@@ -7,15 +7,6 @@ EnemyHandler::EnemyHandler(void)
 
 bool EnemyHandler::init(Structure*** structures, Node** nodes, int mapSize)
 {
-	/*int x, z;
-	for(int i = 0; i < 10; i++)
-	{
-		x = rand() % 100;
-		z = rand() % 100;
-
-		enemies.push_back(new Enemy(D3DXVECTOR3(x, 0, z), 2, 0, 10, 0, 0, 0));
-	}*/
-	
 	string scripts[3];
 	scripts[0] = "astar.lua";
 	scripts[1] = "targetFind.lua";
@@ -30,6 +21,8 @@ EnemyHandler::~EnemyHandler(void)
 {
 	for(int i = 0; i < (int)enemies.size(); i++)
 		delete enemies.at(i);
+
+	SAFE_DELETE(ai);
 }
 
 int EnemyHandler::update(float dt)

@@ -13,7 +13,6 @@ SoundSystem::SoundSystem()
 
 SoundSystem::~SoundSystem()
 {
-	//delete m_SoundSystem;
 }
 
 SoundSystem* SoundSystem::m_SoundSystem = NULL;
@@ -136,6 +135,8 @@ bool SoundSystem::shutdown()
 		if(errorCheck(result))
 			return false;
 	}
+
+	delete m_SoundSystem;
 
 	return true;
 }

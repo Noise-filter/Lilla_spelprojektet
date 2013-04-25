@@ -14,6 +14,18 @@ AI::~AI(void)
 {
 	//delete both int 2Darrays
 
+	for(int i = 0; i < mapSize; i++)
+	{
+		SAFE_DELETE_ARRAY(nodesInt[i])	
+	}
+	SAFE_DELETE_ARRAY(nodesInt)
+
+
+	for(int i = 0; i < mapSize-1; i++)
+	{
+		SAFE_DELETE_ARRAY(structuresInt[i])	
+	}
+	SAFE_DELETE_ARRAY(structuresInt)
 }
 
 bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize)
