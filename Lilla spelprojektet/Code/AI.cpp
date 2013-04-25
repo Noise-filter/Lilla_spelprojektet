@@ -59,9 +59,9 @@ bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize
 	return true;
 }
 
-vector<int> AI::findPath(int start, int goal, int enemyType)
+vector<Waypoint> AI::findPath(int start, int goal, int enemyType)
 {
-	vector<int> wayPoints;
+	vector<Waypoint> wayPoints;
 
 	lua_getglobal(pathScript, "astar");
 
@@ -73,20 +73,22 @@ vector<int> AI::findPath(int start, int goal, int enemyType)
 
 	//hämta värden
 	int a = lua_tonumber(pathScript, -1);
-	//lua_pop(pathScript, 1);
-	//cout << a << ' ';
+	lua_pop(pathScript, 1);
 
-	if(a != -1)
+	if(a > 0)
 	{
 		lua_pushnil(pathScript);
-		while(lua_next(pathScript, 1) != 0)
+		while(lua_next(pathScript, -2) != 0)
 		{
 			int temp = lua_tonumber(pathScript, -1);
-			cout << "A*: " << temp << endl;
+			wayPoints.push_back(Waypoint((int)temp % 10, (int)temp / 10));
+			//cout << "A*: " << temp << endl;
 			lua_pop(pathScript, 1);
 		}
+		lua_pop(pathScript, 1);
 	}
-	lua_pop(pathScript, 1);
+
+	cout << lua_gettop(pathScript) << ' ';
 
 	return wayPoints;
 }

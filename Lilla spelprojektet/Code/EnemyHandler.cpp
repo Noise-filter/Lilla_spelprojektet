@@ -32,7 +32,9 @@ int EnemyHandler::update(float dt)
 	//for(int i = 0; i < spawnedEnemies.size(); i++)
 	//	enemies.push_back(spawnedEnemies.at(i));
 
-	ai->findPath(1, 99, 1);
+	//ai->findPath(1, 99, 1);
+
+	static bool Switch = false;
 
 	for(int i = 0; i < (int)enemies.size(); i++)
 	{
@@ -44,14 +46,22 @@ int EnemyHandler::update(float dt)
 		}
 		else
 		{
-			enemies.at(i)->update(dt);
+			if(enemies.at(i)->update(dt) == 2)
+			{
+				vector<Waypoint> wp = ai->findPath(enemies.at(i)->getCurrentWaypoint1D(), rand() % 100, 1);
+				if(wp.size() > 0)
+					enemies.at(i)->setPath(wp);
+			}
 		}
 	}
 
-	/*if(enemies.size() < 10)
+	if(enemies.size() < 1000)
 	{
-		enemies.push_back(new Enemy(D3DXVECTOR3(rand() % 100, 0, rand() % 100), 2, 0, 10, 0, 0, 0));
-	}*/
+		enemies.push_back(new Enemy(D3DXVECTOR3(0, 0, 0), 2, 0, 3, 0, 10, 0));
+		vector<Waypoint> wp = ai->findPath(0, rand() % 100, 1);
+		if(wp.size() > 0)
+			enemies.at(enemies.size()-1)->setPath(wp);
+	}
 
 	return 1;
 }

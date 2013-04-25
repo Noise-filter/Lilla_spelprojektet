@@ -28,7 +28,7 @@ public:
 	~AI(void);
 
 	bool init(Structure*** structures, Node** nodes ,string* scripts, int mapSize);
-	vector<int> findPath(int start, int goal, int enemyType); // hanterar pathScript
+	vector<Waypoint> findPath(int start, int goal, int enemyType); // hanterar pathScript
 	void findTarget(); // hanterar targetScript
 	vector<Enemy*> spawnEnemies(float dt, int nrOfEnemies); // hanterar spawnScript
 
