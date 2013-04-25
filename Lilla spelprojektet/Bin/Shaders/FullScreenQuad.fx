@@ -2,7 +2,7 @@
 //1 = DiffuseAlbedo
 //2 = Normal
 
-Texture2D resources[3];
+Texture2D resources;
 Texture2D normalMap;
 Texture2D diffuseAlbedoMap;
 Texture2D  positionMap;
@@ -30,9 +30,9 @@ float4 PSScene(PSIn input) : SV_Target
 {
 	int3 sampleIndices = int3(input.pos.xy, 0);
 
-	return float4( resources[1].Load(sampleIndices).xyz, 1.0f);
+	return float4( resources.Load(sampleIndices).xyz, 1.0f);
 
-	//return float4( 1, 0, 0 , 1 );
+	//return float4(sampleIndices, 1 );
 }
 
 

@@ -73,6 +73,8 @@ class D3D11Handler
 		ID3D11Texture2D				**pDeferredTargets;
 		ID3D11RenderTargetView		**pMultipleRTVs;
 		ID3D11ShaderResourceView	**pMultipleSRVs;
+		ID3D11ShaderResourceView	**pNullSRVs;
+		ID3D11DepthStencilView		*pDSVDeferred; //Needed?
 		int							iNrOfDeferred;
 
 	private:
@@ -98,11 +100,11 @@ class D3D11Handler
 		D3D11Handler();
 		virtual~D3D11Handler();
 
-		HRESULT initDirect3D(HWND hWnd);
+		bool initDirect3D(HWND hWnd);
 
 		Shader *setPass(PASS_STATE pass);
 
-		void clearViews();
+		void clearAndBindRenderTarget();
 	
 };
 

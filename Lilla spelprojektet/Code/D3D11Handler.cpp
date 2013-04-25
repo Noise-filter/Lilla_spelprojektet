@@ -429,6 +429,88 @@
 //	return "Unknown";
 //}
 
+D3D11Handler::D3D11Handler()
+{
+	pRenderTargetView	= NULL;	
+	pDepthStencil		= NULL;
+	pDepthStencilView	= NULL;
+
+	//Deferred targets
+	pDeferredTargets	= NULL;
+	pMultipleRTVs		= NULL;
+	pMultipleSRVs		= NULL;
+	pNullSRVs			= NULL;
+	pDSVDeferred		= NULL; //Needed?
+	iNrOfDeferred		= 3;
+}
+
+D3D11Handler::~D3D11Handler()
+{
+	SAFE_RELEASE(pRenderTargetView);
+	SAFE_RELEASE(pDepthStencil);
+	SAFE_RELEASE(pDepthStencilView);
+
+	//Deferred targets
+	SAFE_DELETE_ARRAY(pDeferredTargets);
+	SAFE_DELETE_ARRAY(pMultipleRTVs);		
+	SAFE_DELETE_ARRAY(pMultipleSRVs);		
+	SAFE_DELETE_ARRAY(pNullSRVs);			
+	SAFE_RELEASE(pDSVDeferred);
+}
+
+bool D3D11Handler::initDirect3D(HWND hWnd)
+{
+	if(!initSwapChainAndDevice(hWnd)) return false;
+
+	if(!initRenderTargetView()) return false;
+
+	if(!initDepthStencil()) return false;
+
+	if(!initShaders()) return false;
+
+	if(!initDeferred()) return false;
+
+	initAndSetViewPort();
+}
+
+Shader *D3D11Handler::setPass(PASS_STATE pass)
+{
+	switch(pass)
+	{
+		case PASS_GEOMETRY:
+			this->pDeviceContext->OMSetRenderTargets(this->iNrOfDeferred, pMultipleRTVs, pDSVDeferred);
+			return this->vShaders.at(PASS_GEOMETRY);
+			break;
+
+		case PASS_LIGHT:
+			return this->vShaders.at(PASS_LIGHT);
+			break;
+
+		case PASS_FULLSCREENQUAD:
+			this->pDeviceContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);
+			this->vShaders.at(PASS_FULLSCREENQUAD)->SetResource("resources" , *pMultipleSRVs);
+			//this->vShaders.at(PASS_FULLSCREENQUAD)->SetResource("positionMap" , &this->mrtSRV[0]);
+			//this->vShaders.at(PASS_FULLSCREENQUAD)->SetResource("diffuseAlbedoMap" , &this->mrtSRV[1]);
+			//this->vShaders.at(PASS_FULLSCREENQUAD)->SetResource("normalMap" , &this->mrtSRV[2]);
+
+			return this->vShaders.at(PASS_FULLSCREENQUAD);
+			break;
+	}
+}
+
+void D3D11Handler::clearAndBindRenderTarget()
+{
+	static float clearColour[4] = { 0.6f, 0.3f, 0.3f, 0.4f };
+	pDeviceContext->ClearRenderTargetView(pRenderTargetView, clearColour);
+	pDeviceContext->ClearDepthStencilView(pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+	pDeviceContext->OMSetRenderTargets(this->iNrOfDeferred, pMultipleRTVs, pDSVDeferred);
+	pDeviceContext->ClearDepthStencilView(pDSVDeferred, 1, 1.0f, 0);
+
+	for(int i = 0; i < this->iNrOfDeferred; i++) pDeviceContext->ClearRenderTargetView(pMultipleRTVs[i], clearColour);
+}
+
+
 /*
 #########################################
 		Private functions
@@ -619,11 +701,48 @@ bool D3D11Handler::initDeferred()
 	texDesc.CPUAccessFlags		= 0;
 	texDesc.MiscFlags			= 0;
 
-	pDeferredTargets = new ID3D11Texture2D *[this->iNrOfDeferred];
-	pMultipleRTVs	 = new ID3D11RenderTargetView *[this->
+	pDeferredTargets	= new ID3D11Texture2D *[this->iNrOfDeferred + 1];
+	pMultipleRTVs		= new ID3D11RenderTargetView *[this->iNrOfDeferred];
+	pMultipleSRVs		= new ID3D11ShaderResourceView *[this->iNrOfDeferred + 1];
+	pNullSRVs			= new ID3D11ShaderResourceView *[this->iNrOfDeferred + 1];
+
+	for(int i = 0; i < this->iNrOfDeferred; i++)
+	{
+		if(FAILED(pDevice->CreateTexture2D(&texDesc, NULL, &pDeferredTargets[i]))) return false;
+
+		if(FAILED(pDevice->CreateRenderTargetView(pDeferredTargets[i], NULL, &pMultipleRTVs[i]))) return false;
+
+		if(FAILED(pDevice->CreateShaderResourceView(pDeferredTargets[i], NULL, &pMultipleSRVs[i]))) return false;
+
+		pNullSRVs[i] = NULL;
+	}
+
+	pNullSRVs[this->iNrOfDeferred] = NULL;
+
+	if(!bindResources(texDesc)) return false;
+
+	return true;
 }
 
 bool D3D11Handler::bindResources(D3D11_TEXTURE2D_DESC &texDesc)
 {
+	texDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+	texDesc.Format		= DXGI_FORMAT_R32_TYPELESS;
+	if(FAILED(pDevice->CreateTexture2D(&texDesc, NULL, &pDeferredTargets[this->iNrOfDeferred]))) return false;
 
+	D3D11_DEPTH_STENCIL_VIEW_DESC desc;
+	desc.Format				= DXGI_FORMAT_D32_FLOAT;
+	desc.Flags				= 0;
+	desc.ViewDimension		= D3D11_DSV_DIMENSION_TEXTURE2D;
+	desc.Texture2D.MipSlice	= 0;
+	if(FAILED(pDevice->CreateDepthStencilView(pDeferredTargets[this->iNrOfDeferred], &desc, &pDSVDeferred))) return false;
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc;
+	SRVDesc.Format						= DXGI_FORMAT_R32_FLOAT;
+	SRVDesc.ViewDimension				= D3D11_SRV_DIMENSION_TEXTURE2D;
+	SRVDesc.Texture2D.MipLevels			= 1;
+	SRVDesc.Texture2D.MostDetailedMip	= 0;
+	if(FAILED(pDevice->CreateShaderResourceView(pDeferredTargets[this->iNrOfDeferred], &SRVDesc, &pMultipleSRVs[this->iNrOfDeferred]))) return false;
+
+	return true;
 }

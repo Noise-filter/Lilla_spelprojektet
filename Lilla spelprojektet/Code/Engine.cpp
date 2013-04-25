@@ -22,8 +22,8 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 		return false;
 	}
 
-	hr = d3d->InitDirect3D(win32->getHWND()); // initierar directX
-	if(FAILED(hr))
+	// initierar directX
+	if(!d3d->initDirect3D(win32->getHWND()))
 	{
 		return false;
 	}
@@ -35,7 +35,7 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 
 void Engine::render(std::vector<std::vector<RENDERDATA*>> data)
 {
-	d3d->clearViews();
+	d3d->clearAndBindRenderTarget();
 
 	int index = 0;
 	PRIMITIVE_TOPOLOGIES topology = TOPOLOGY_UNDEFINED;
@@ -49,7 +49,7 @@ void Engine::render(std::vector<std::vector<RENDERDATA*>> data)
 	wvp = world * view * proj;
 	
 	Shader* temp;
-			temp = this->d3d->setPass(PASS_GEOMETRY);
+	temp = this->d3d->setPass(PASS_GEOMETRY);
 	temp->SetMatrix("world", world);
 	temp->SetMatrix("viewProj", view * proj);
 	temp->SetMatrix("worldViewProj", wvp);
@@ -57,11 +57,6 @@ void Engine::render(std::vector<std::vector<RENDERDATA*>> data)
 			UINT strides = sizeof(MESH_P);
 	UINT offset = 0;
 	
-
-		
-	
-
-
 	ID3D11Buffer *b;
 		MESH_P mesh[] = {
 
@@ -155,6 +150,9 @@ void Engine::render(std::vector<std::vector<RENDERDATA*>> data)
 	{
 		return;
 	}
+
+	SAFE_RELEASE(b);
+	SAFE_RELEASE(bxv);
 }
 
 PRIMITIVE_TOPOLOGIES Engine::changeTopology(int ID)
