@@ -50,7 +50,7 @@ void GeometryManager::init(ID3D11Device *device)
 
 	bufferInit.desc.eUsage = D3D11_USAGE_DEFAULT;
 	bufferInit.desc.uByteWidth = sizeof(MESH_P)*6;
-	bufferInit.desc.uCPUAccessFlags = D3D11_BIND_VERTEX_BUFFER;
+	bufferInit.desc.uBindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bufferInit.desc.uCPUAccessFlags = 0;
 	bufferInit.desc.uMiscFlags = 0;
 	bufferInit.desc.uStructureByteStride = 0;
@@ -61,9 +61,19 @@ void GeometryManager::init(ID3D11Device *device)
 
 	initVertexBuffer(device, bufferInit);
 
-	/*initIndexBuffer(device, bufferInit);
+	/*initIndexBuffer(device, bufferInit);*/
 
-	initInstance(device, instanceInit);*/
+
+	instanceInit.desc.eUsage				= D3D11_USAGE_DYNAMIC;
+	instanceInit.desc.uByteWidth			= sizeof(OBJECT_WORLD_AND_TEXTURE)*10;
+	instanceInit.desc.uBindFlags			= D3D11_BIND_VERTEX_BUFFER;
+	instanceInit.desc.uCPUAccessFlags		= D3D11_CPU_ACCESS_WRITE;
+	instanceInit.desc.uMiscFlags			= 0;
+	instanceInit.desc.uStructureByteStride	= 0;
+
+	initInstance(device, instanceInit);
+
+	initInstance(device, instanceInit);
 }
 
 void GeometryManager::applyBuffer(ID3D11DeviceContext *dc, RENDERDATA *obj, D3D_PRIMITIVE_TOPOLOGY topology, UINT32 misc)
@@ -78,7 +88,7 @@ void GeometryManager::applyBuffer(ID3D11DeviceContext *dc, RENDERDATA *obj, D3D_
 
 	dc->IASetVertexBuffers(misc, 2, buffers, strides, offset);
 	
-	dc->IASetIndexBuffer(vIndexBuffer[(int)obj->iEntityID], DXGI_FORMAT_R32_UINT, offset[0]);
+	//dc->IASetIndexBuffer(vIndexBuffer[(int)obj->iEntityID], DXGI_FORMAT_R32_UINT, offset[0]);
 
 	dc->IASetPrimitiveTopology(topology);
 }
@@ -131,13 +141,14 @@ void *GeometryManager::map(ID3D11DeviceContext *dc, ID3D11Buffer *buffer)
 	void* ret = NULL;
 	D3D11_BUFFER_DESC bufferUsage;
 	buffer->GetDesc(&bufferUsage);
-
-	if(bufferUsage.CPUAccessFlags == WRITE_DISCARD || bufferUsage.Usage == WRITE_NO_OVERWRITE)
+	UINT i = bufferUsage.CPUAccessFlags;
+	i = (UINT)bufferUsage.Usage;
+	if(bufferUsage.CPUAccessFlags == (UINT)D3D11_CPU_ACCESS_WRITE || bufferUsage.Usage == WRITE_NO_OVERWRITE)
 	{
 		D3D11_MAPPED_SUBRESOURCE mappedResource;
 		D3D11_MAP mapType;
 
-		if(bufferUsage.CPUAccessFlags == (UINT)WRITE_DISCARD) mapType = (D3D11_MAP)WRITE_DISCARD;
+		if(bufferUsage.CPUAccessFlags == (UINT)D3D11_CPU_ACCESS_WRITE) mapType = (D3D11_MAP)WRITE_DISCARD;
 		else if(bufferUsage.CPUAccessFlags == (UINT)WRITE_NO_OVERWRITE) mapType = (D3D11_MAP)WRITE_NO_OVERWRITE;
 
 		HRESULT hr = S_OK;

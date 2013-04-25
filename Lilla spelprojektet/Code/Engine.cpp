@@ -42,21 +42,44 @@ void Engine::render(float deltaTime, std::vector<std::vector<RENDERDATA*>> data)
 	
 	static float rot = 0;
 	rot += deltaTime;
-	D3DXMATRIX world, view, proj, wvp;
+	D3DXMATRIX world, world2, view, proj, wvp, wvp2;
 	D3DXMatrixIdentity(&world);
 	D3DXMatrixRotationY(&world, rot);
+	D3DXMatrixRotationY(&world2, -rot);
 	D3DXMatrixLookAtLH(&view, &D3DXVECTOR3(0,0,-5), &D3DXVECTOR3(0,0,0), &D3DXVECTOR3(0,1,0));
 	D3DXMatrixPerspectiveFovLH(&proj, (float)D3DX_PI * 0.45f, 1024.0f / 768.0f, 1.0f, 100.0f);
 	wvp = world * view * proj;
-	
+	wvp2 = world2 * view * proj;
+
+	RENDERDATA *adata = new RENDERDATA();
+	adata->iEntityID = ENTITY_MAINBUILDING;
+	adata->iLightID = LIGHT_NONE;
+	adata->worldTex.mWorld = wvp;
+
+	std::vector<RENDERDATA*> dtest;
+	dtest.push_back(adata);
+	std::vector<std::vector<RENDERDATA*>> test;
+	test.push_back(dtest);
+
+	adata->iEntityID = ENTITY_SUPPLY;
+	adata->worldTex.mWorld = wvp2;
+	dtest.push_back(adata);
+	test.push_back(dtest);
+
+	pGeoManager->updateBuffer(d3d->pDeviceContext, test[0], 0);
+	pGeoManager->updateBuffer(d3d->pDeviceContext, test[1], 1);
+
 	Shader* temp;
 	temp = this->d3d->setPass(PASS_GEOMETRY);
 	temp->SetMatrix("world", world);
 	temp->SetMatrix("viewProj", view * proj);
 	temp->SetMatrix("worldViewProj", wvp);
-	pGeoManager->debugApplyBuffer(d3d->pDeviceContext, 0);
+	pGeoManager->applyBuffer(d3d->pDeviceContext, test[0][0], D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 0);
 	temp->Apply(0);
-	d3d->pDeviceContext->Draw(6, 0);
+	d3d->pDeviceContext->DrawInstanced(6, 1, 0, 0);
+
+	pGeoManager->applyBuffer(d3d->pDeviceContext, test[1][0], D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 0);
+	d3d->pDeviceContext->DrawInstanced(6, 1, 0, 0);
 
 	/*
 	while(index < (int)data.size())

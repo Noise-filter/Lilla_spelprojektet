@@ -19,7 +19,7 @@ class GeometryManager
 		std::vector<ID3D11Buffer*>	vIndexBuffer;
 		std::vector<ID3D11Buffer*>	vVertexBuffer;
 		std::vector<ID3D11Buffer*>	vInstanceBuffer;
-		std::vector<MESH_PNUV>		vMesh;
+		std::vector<MESH_PNUV*>		vMesh;
 
 		//Used to send in the appropriate vertex and instance buffer to the Input Assembler
 		ID3D11Buffer *buffers[2];
