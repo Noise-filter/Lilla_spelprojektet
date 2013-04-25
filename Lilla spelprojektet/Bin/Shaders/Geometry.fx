@@ -1,13 +1,3 @@
-
-Texture2D textures[3]       : register(t0);
-SamplerState anisoSampler	: register(s0);
-
-cbuffer MatProperties
-{
-	float3 specularAlbedo;
-	float specularPower;
-};
-
 cbuffer EveryFrame
 {
 	matrix world;
@@ -21,9 +11,9 @@ struct VSIn
 	float3 normal : NORMAL;
 	float2 uv : TEXTCOORD;
 
-	//float textureID : TEXTUREID;
-	//row_major float4x4 world : WORLD;
-	//uint instanceID : SV_InstanceID;
+	float textureID : TEXTUREID;
+	row_major float4x4 world : WORLD;
+	uint instanceID : SV_InstanceID;
 };
 
 struct PSIn
@@ -73,7 +63,7 @@ PSOut PSScene(PSIn input)
 
 	float3 diffuseAlbedo = float3(1,0,0);//textures[input.textureID].Sample( anisoSampler, input.uv).rgb;
 
-	float3 normalW = normalize(input.normalW);
+	float3 normalW = float3(0,1,0);// normalize(input.normalW);
 
 	output.position = float4(input.posW, 1.0f);
 	output.diffuseAlbedo = float4 ( diffuseAlbedo, 1.0f);
