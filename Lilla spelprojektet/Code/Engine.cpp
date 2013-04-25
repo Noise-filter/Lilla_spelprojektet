@@ -249,8 +249,8 @@ void Engine::setRenderData(vector<vector<RenderData*>> renderData)
 	d3d->deviceContext->Map(vbs2[1], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData2);
 	d3d->deviceContext->Map(vbs3[1], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData3);
 
-	InstancedData* dataView = reinterpret_cast<InstancedData*>(mappedData.pData);
-	InstancedData* dataView2 = reinterpret_cast<InstancedData*>(mappedData2.pData);
+ 	InstancedData* dataView = reinterpret_cast<InstancedData*>(mappedData.pData);
+	InstancedData* dataView2= reinterpret_cast<InstancedData*>(mappedData2.pData);
 	InstancedData* dataView3 = reinterpret_cast<InstancedData*>(mappedData3.pData);
 
 	int a = 0, b = 0, c = 0;

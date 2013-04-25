@@ -27,10 +27,12 @@ EnemyHandler::~EnemyHandler(void)
 
 int EnemyHandler::update(float dt)
 {
-	vector<Enemy*> spawnedEnemies = ai->spawnEnemies(dt,0);
+	//vector<Enemy*> spawnedEnemies = ai->spawnEnemies(dt,0);
 
-	for(int i = 0; i < spawnedEnemies.size(); i++)
-		enemies.push_back(spawnedEnemies.at(i));
+	//for(int i = 0; i < spawnedEnemies.size(); i++)
+	//	enemies.push_back(spawnedEnemies.at(i));
+
+	ai->findPath(1, 99, 1);
 
 	for(int i = 0; i < (int)enemies.size(); i++)
 	{

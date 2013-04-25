@@ -15,6 +15,7 @@ static const luaL_reg lualibs[] =
 {
 	{ "base",       luaopen_base },
 	{ "math",       luaopen_math },
+	{ "table",		luaopen_table },
 	{ NULL,         NULL }
 };
 
@@ -27,10 +28,10 @@ public:
 	~AI(void);
 
 	bool init(Structure*** structures, Node** nodes ,string* scripts, int mapSize);
-	void findPath(); // hanterar pathScript
+	vector<int> findPath(int start, int goal, int enemyType); // hanterar pathScript
 	void findTarget(); // hanterar targetScript
 	vector<Enemy*> spawnEnemies(float dt, int nrOfEnemies); // hanterar spawnScript
-	
+
 	bool initSpawnEnemies(string scriptName);
 	bool initFindPath(string scriptName);
 	bool initFindTarget(string scriptName);
