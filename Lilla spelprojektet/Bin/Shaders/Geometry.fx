@@ -52,11 +52,11 @@ PSIn VSScene(VSIn input)
 {
 	PSIn output = (PSIn)0;
 
-	output.pos = input.pos;
+	
 	output.posCS = mul(float4(input.pos, 1), worldViewProj);
 	output.posW =  mul(float4(input.pos, 1), world);
 	
-	output.normalW = normalize(mul(input.normal, world));
+	output.normalW = normalize(mul(float4(input.normal, 0), world));
 	output.uv = input.uv;
 	//output.textureID = input.textureID;
 	
@@ -68,8 +68,8 @@ PSIn VSScene(VSIn input)
 //-----------------------------------------------------------------------------------------
 PSOut PSScene(PSIn input)
 {
-	PSOut output;
-
+	PSOut output = (PSOut)0;
+	output.position = input.posCS;
 
 	float3 diffuseAlbedo = float3(1,0,0);//textures[input.textureID].Sample( anisoSampler, input.uv).rgb;
 
@@ -80,7 +80,6 @@ PSOut PSScene(PSIn input)
 	output.normal = float4(normalW , 1.0f);
 
 	return output;
-	
 }
 
 RasterizerState NoCulling

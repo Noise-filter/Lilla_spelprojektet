@@ -26,7 +26,7 @@ void GeometryManager::init(ID3D11Device *device)
 
 void GeometryManager::applyBuffer(ID3D11DeviceContext *dc, RENDERDATA *obj, D3D_PRIMITIVE_TOPOLOGY topology, UINT32 misc)
 {
-	UINT strides[2]		= {0, sizeof(OBJECT_WORLD_AND_TEXTURE)};
+	/*UINT strides[2]		= {0, sizeof(OBJECT_WORLD_AND_TEXTURE)};
 	UINT offset[2]		= {0, 0};
 	buffers[0] = vVertexBuffer[(int)obj->iEntityID];
 	buffers[1] = vInstanceBuffer[(int)obj->iEntityID];
@@ -38,7 +38,7 @@ void GeometryManager::applyBuffer(ID3D11DeviceContext *dc, RENDERDATA *obj, D3D_
 	
 	dc->IASetIndexBuffer(vIndexBuffer[(int)obj->iEntityID], DXGI_FORMAT_R32_UINT, offset[0]);
 
-	dc->IASetPrimitiveTopology(topology);
+	dc->IASetPrimitiveTopology(topology);*/
 }
 
 void GeometryManager::updateBuffer(ID3D11DeviceContext *dc, std::vector<RENDERDATA*> data, int index)
@@ -60,67 +60,13 @@ void GeometryManager::updateBuffer(ID3D11DeviceContext *dc, std::vector<RENDERDA
 
 void GeometryManager::debugApplyBuffer(ID3D11DeviceContext *dc, ID3D11Device *d)
 {
-	ID3D11Buffer *b;
-	MESH_P p[] = {  MESH_P(D3DXVECTOR3(1,-1,0)),
-					MESH_P(D3DXVECTOR3(-1,-1,0)), 
-					MESH_P(D3DXVECTOR3(1,1,0)),
-     
-      MESH_P(D3DXVECTOR3(1,1,0)),  
-      MESH_P(D3DXVECTOR3(-1,-1,0)), 
-      MESH_P(D3DXVECTOR3(-1,1,0)), 
-	};
-
-	D3D11_BUFFER_DESC desc;
-	desc.Usage = D3D11_USAGE_DEFAULT;
-	desc.ByteWidth = sizeof(MESH_P)*6;
-	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	desc.CPUAccessFlags = 0;
-	desc.MiscFlags = 0;
-	desc.StructureByteStride = 0;
-
-	D3D11_SUBRESOURCE_DATA data;
-	data.pSysMem = p;
-	data.SysMemPitch = 0;
-	data.SysMemSlicePitch = 0;
 	
-	d->CreateBuffer(&desc, &data, &b);
-	UINT strides = 0;
-	UINT offset = 0;
-	dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	dc->IASetVertexBuffers(0, 1, &b, &strides, &offset);
 
 }
 
 void GeometryManager::geoDebugBuffer(ID3D11DeviceContext *dc, ID3D11Device *d)
 {
-	ID3D11Buffer *b;
-		MESH_P mesh[] = {
-		MESH_P(Vec3(1.0,0,0)),
-		MESH_P(Vec3(-1.0,0,0)),
-		MESH_P(Vec3(0,1.0,0)),
-		MESH_P(Vec3(0,0,1.0)),
-		MESH_P(Vec3(0,0,-1.0)),
-		MESH_P(Vec3(0,-1.0,0))
-	};
-
-		D3D11_BUFFER_DESC desc;
-	desc.Usage = D3D11_USAGE_DEFAULT;
-	desc.ByteWidth = sizeof(MESH_PNUV)*6;
-	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	desc.CPUAccessFlags = 0;
-	desc.MiscFlags = 0;
-	desc.StructureByteStride = 0;
-
-	D3D11_SUBRESOURCE_DATA data;
-	data.pSysMem = mesh;
-	data.SysMemPitch = 0;
-	data.SysMemSlicePitch = 0;
 	
-	d->CreateBuffer(&desc, &data, &b);
-	UINT strides = 0;
-	UINT offset = 0;
-	dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	dc->IASetVertexBuffers(0, 1, &b, &strides, &offset);
 }
 
 //Private functions

@@ -49,12 +49,48 @@ void Engine::render(std::vector<std::vector<RENDERDATA*>> data)
 	wvp = world * view * proj;
 	
 	Shader* temp;
-	temp = this->d3d->setPass(PASS_GEOMETRY);
+			temp = this->d3d->setPass(PASS_GEOMETRY);
 	temp->SetMatrix("world", world);
 	temp->SetMatrix("viewProj", view * proj);
 	temp->SetMatrix("worldViewProj", wvp);
+	
+			UINT strides = sizeof(MESH_P);
+	UINT offset = 0;
+	
 
-	this->pGeoManager->geoDebugBuffer(d3d->pDeviceContext, d3d->pDevice);
+		
+	
+
+
+	ID3D11Buffer *b;
+		MESH_P mesh[] = {
+
+		MESH_P(Vec3(1.0,0,0)),
+		MESH_P(Vec3(-1.0,0,0)),
+		MESH_P(Vec3(0,1.0,0)),
+		MESH_P(Vec3(0,0,1.0)),
+		MESH_P(Vec3(0,0,-1.0)),
+		MESH_P(Vec3(0,-1.0,0))
+	};
+		D3D11_BUFFER_DESC desc;
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.ByteWidth = sizeof(MESH_P)*6;
+	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	desc.CPUAccessFlags = 0;
+	desc.MiscFlags = 0;
+	desc.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA xdata;
+	xdata.pSysMem = mesh;
+	xdata.SysMemPitch = 0;
+	xdata.SysMemSlicePitch = 0;
+
+	d3d->pDevice->CreateBuffer(&desc, &xdata, &b);
+
+	d3d->pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	d3d->pDeviceContext->IASetVertexBuffers(0, 1, &b, &strides, &offset);
+
+	//this->pGeoManager->geoDebugBuffer(d3d->pDeviceContext, d3d->pDevice);
 	temp->Apply(0);
 	d3d->pDeviceContext->Draw(6, 0);
 
@@ -85,7 +121,33 @@ void Engine::render(std::vector<std::vector<RENDERDATA*>> data)
 	*/
 
 	temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
-	this->pGeoManager->debugApplyBuffer(d3d->pDeviceContext, d3d->pDevice);
+	ID3D11Buffer *bxv;
+	MESH_P p[] = {  MESH_P(D3DXVECTOR3(1,-1,0)),
+									MESH_P(D3DXVECTOR3(-1,-1,0)), 
+									MESH_P(D3DXVECTOR3(1,1,0)),
+									MESH_P(D3DXVECTOR3(1,1,0)),  
+									MESH_P(D3DXVECTOR3(-1,-1,0)), 
+									MESH_P(D3DXVECTOR3(-1,1,0)), 
+	};
+
+	D3D11_BUFFER_DESC zdesc;
+	zdesc.Usage = D3D11_USAGE_DEFAULT;
+	zdesc.ByteWidth = sizeof(MESH_P)*6;
+	zdesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	zdesc.CPUAccessFlags = 0;
+	zdesc.MiscFlags = 0;
+	zdesc.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA zdata;
+	zdata.pSysMem = p;
+	zdata.SysMemPitch = 0;
+	zdata.SysMemSlicePitch = 0;
+
+	d3d->pDevice->CreateBuffer(&zdesc, &zdata, &bxv);
+	
+	d3d->pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	d3d->pDeviceContext->IASetVertexBuffers(0, 1, &bxv, &strides, &offset);
+	//this->pGeoManager->debugApplyBuffer(d3d->pDeviceContext, d3d->pDevice);
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);
 	

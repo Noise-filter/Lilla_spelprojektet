@@ -9,18 +9,21 @@
 
 #define PI (3.14159265358979323846f)
 
+
 struct MESH_P
 {
 	Vec3 pos;
-
+	float pad;
 	MESH_P()
 	{
 		this->pos = Vec3(0.0f, 0.0f, 0.0f);
+		pad = 0;
 	};
 
 	MESH_P(Vec3 pos)
 	{
 		this->pos = pos;
+		pad = 9;
 	};
 };
 
@@ -62,6 +65,7 @@ struct MESH_PNUV
 		this->uv			= uv;
 	};
 };
+
 
 struct OBJECT_WORLD_AND_TEXTURE
 {
