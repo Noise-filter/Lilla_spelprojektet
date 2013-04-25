@@ -7,7 +7,7 @@ public:
 	Game(void);
 	~Game(void);
 
-	void render();
+	void render(float deltaTime);
 	int update(float deltaTime);
 	bool init(HINSTANCE hInstance, int cmdShow);
 

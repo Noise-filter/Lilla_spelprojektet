@@ -16,17 +16,59 @@ void GeometryManager::init(ID3D11Device *device)
 {
 	BUFFER_INIT bufferInit		= BUFFER_INIT();
 	BUFFER_INIT instanceInit	= BUFFER_INIT();
+	
+	MESH_P mesh[] = {
+
+		MESH_P(Vec3(1.0,0,0)),
+		MESH_P(Vec3(-1.0,0,0)),
+		MESH_P(Vec3(0,1.0,0)),
+		MESH_P(Vec3(0,0,1.0)),
+		MESH_P(Vec3(0,0,-1.0)),
+		MESH_P(Vec3(0,-1.0,0))
+	};
+
+	bufferInit.desc.eUsage = D3D11_USAGE_DEFAULT;
+	bufferInit.desc.uByteWidth = sizeof(MESH_P)*6;
+	bufferInit.desc.uBindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bufferInit.desc.uCPUAccessFlags = 0;
+	bufferInit.desc.uMiscFlags = 0;
+	bufferInit.desc.uStructureByteStride = 0;
+
+	bufferInit.data.pInitData = mesh;
+	bufferInit.data.uSysMemPitch = 0;
+	bufferInit.data.uSysMemSlicePitch = 0;
 
 	initVertexBuffer(device, bufferInit);
 
-	initIndexBuffer(device, bufferInit);
+		MESH_P p[] = {  MESH_P(D3DXVECTOR3(1,-1,0)),
+									MESH_P(D3DXVECTOR3(-1,-1,0)), 
+									MESH_P(D3DXVECTOR3(1,1,0)),
+									MESH_P(D3DXVECTOR3(1,1,0)),  
+									MESH_P(D3DXVECTOR3(-1,-1,0)), 
+									MESH_P(D3DXVECTOR3(-1,1,0)), 
+	};
 
-	initInstance(device, instanceInit);
+	bufferInit.desc.eUsage = D3D11_USAGE_DEFAULT;
+	bufferInit.desc.uByteWidth = sizeof(MESH_P)*6;
+	bufferInit.desc.uCPUAccessFlags = D3D11_BIND_VERTEX_BUFFER;
+	bufferInit.desc.uCPUAccessFlags = 0;
+	bufferInit.desc.uMiscFlags = 0;
+	bufferInit.desc.uStructureByteStride = 0;
+
+	bufferInit.data.pInitData = p;
+	bufferInit.data.uSysMemPitch = 0;
+	bufferInit.data.uSysMemSlicePitch = 0;
+
+	initVertexBuffer(device, bufferInit);
+
+	/*initIndexBuffer(device, bufferInit);
+
+	initInstance(device, instanceInit);*/
 }
 
 void GeometryManager::applyBuffer(ID3D11DeviceContext *dc, RENDERDATA *obj, D3D_PRIMITIVE_TOPOLOGY topology, UINT32 misc)
 {
-	/*UINT strides[2]		= {0, sizeof(OBJECT_WORLD_AND_TEXTURE)};
+	UINT strides[2]		= {0, sizeof(OBJECT_WORLD_AND_TEXTURE)};
 	UINT offset[2]		= {0, 0};
 	buffers[0] = vVertexBuffer[(int)obj->iEntityID];
 	buffers[1] = vInstanceBuffer[(int)obj->iEntityID];
@@ -38,7 +80,7 @@ void GeometryManager::applyBuffer(ID3D11DeviceContext *dc, RENDERDATA *obj, D3D_
 	
 	dc->IASetIndexBuffer(vIndexBuffer[(int)obj->iEntityID], DXGI_FORMAT_R32_UINT, offset[0]);
 
-	dc->IASetPrimitiveTopology(topology);*/
+	dc->IASetPrimitiveTopology(topology);
 }
 
 void GeometryManager::updateBuffer(ID3D11DeviceContext *dc, std::vector<RENDERDATA*> data, int index)
@@ -58,15 +100,14 @@ void GeometryManager::updateBuffer(ID3D11DeviceContext *dc, std::vector<RENDERDA
 	unmap(dc, vInstanceBuffer[index]); 
 }
 
-void GeometryManager::debugApplyBuffer(ID3D11DeviceContext *dc, ID3D11Device *d)
+void GeometryManager::debugApplyBuffer(ID3D11DeviceContext *dc, int ID)
 {
-	
+	UINT strides = sizeof(MESH_P);
+	UINT offset = 0;
 
-}
+	dc->IASetVertexBuffers(0, 1, &vVertexBuffer[ID], &strides, &offset);
+	dc->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-void GeometryManager::geoDebugBuffer(ID3D11DeviceContext *dc, ID3D11Device *d)
-{
-	
 }
 
 //Private functions

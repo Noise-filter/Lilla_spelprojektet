@@ -488,7 +488,7 @@ Shader *D3D11Handler::setPass(PASS_STATE pass)
 
 		case PASS_FULLSCREENQUAD:
 			this->pDeviceContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);
-			this->vShaders.at(PASS_FULLSCREENQUAD)->SetResource("resources" , *pMultipleSRVs);
+			this->vShaders.at(PASS_FULLSCREENQUAD)->SetResource("resources" , pMultipleSRVs[0]);
 			//this->vShaders.at(PASS_FULLSCREENQUAD)->SetResource("positionMap" , &this->mrtSRV[0]);
 			//this->vShaders.at(PASS_FULLSCREENQUAD)->SetResource("diffuseAlbedoMap" , &this->mrtSRV[1]);
 			//this->vShaders.at(PASS_FULLSCREENQUAD)->SetResource("normalMap" , &this->mrtSRV[2]);

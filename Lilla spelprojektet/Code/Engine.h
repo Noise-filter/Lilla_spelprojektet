@@ -9,7 +9,7 @@ public:
 	Engine(void);
 	~Engine(void);
 
-	void render(std::vector<std::vector<RENDERDATA*>> data);
+	void render(float deltaTime, std::vector<std::vector<RENDERDATA*>> data);
 	bool init(HINSTANCE hInstance, int cmdShow);
 	PRIMITIVE_TOPOLOGIES changeTopology(int ID);
 
