@@ -6,9 +6,18 @@ Input::Input()
 	this->mState = NULL;
 }
 
-bool Input::checkKeyDown(int vkCode) const
+bool Input::checkKeyDown(int vkCode)
 {
 	if(vkCode == mState->btnState)
+	{
+		return true;
+	}
+
+	return false;
+}
+bool Input::checkMovement(char input) const
+{
+	if(GetAsyncKeyState(input))
 	{
 		return true;
 	}
@@ -44,6 +53,7 @@ void Input::resetBtnState()
 {
 	if(mState->btnState != 0)
 		mState->btnState = 0;
+		
 }
 
 float Input::mouseRotateY()

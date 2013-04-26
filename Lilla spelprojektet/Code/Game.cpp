@@ -33,9 +33,11 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	if(!gameLogic->init(20,10))
 		return false;
 
-	camera->LookAt(D3DXVECTOR3(45,60,45), D3DXVECTOR3(45, 0, 45), D3DXVECTOR3(-1, 0, 0));
+	camera->LookAt(D3DXVECTOR3(45,60,45), D3DXVECTOR3(35, 0, 45), D3DXVECTOR3(-1, 0, 0));
 	camera->SetLens((float)D3DX_PI * 0.45f, (float)screenWidth / (float)screenHeight, 0.1f, 1000.0f);
 
+
+	//soundSystem->setPaused(true);
 	return true; // all initiates went well
 }
 
@@ -54,27 +56,39 @@ int Game::update(float dt)
 
 	input->updateMs(engine->getMouseState());
 	
-	camera->Yaw((float)this->input->mouseRotateY());
-	camera->Pitch((float)this->input->mousePitch());
+	//camera->Yaw((float)this->input->mouseRotateY());
+	//camera->Pitch((float)this->input->mousePitch());
 	
 	soundSystem->update();
 	
-	if(input->checkKeyDown(0x57))	//W
-		camera->Walk(3000.0f * dt);
+	if(input->checkMovement('W'))	//W
+		camera->Walk(-100.0f * dt);
 
-	if(input->checkKeyDown(0x41))	//A
-		camera->Strafe(-3000.0f * dt);
+	if(input->checkMovement('A'))	//A
+		camera->Strafe(-100.0f * dt);
 
-	if(input->checkKeyDown(0x53))	//S
-		camera->Walk(-3000.0f * dt);
+	if(input->checkMovement('S'))	//S
+		camera->Walk(100.0f * dt);
 
-	if(input->checkKeyDown(0x44))	//D
-		camera->Strafe(3000.0f * dt);
+	if(input->checkMovement('D'))	//D
+		camera->Strafe(100.0f * dt);
 
 	if(input->checkKeyDown(0x20))
 	{
 		soundSystem->setPaused(pausedMusic);
 		pausedMusic = !pausedMusic;
+	}
+
+	if(input->checkKeyDown(0x45)) // E
+	{
+		//byt byggnad +1
+		gameLogic->incrementSelectedStructure(1);
+	}
+
+	if(input->checkKeyDown(0x51)) // Q
+	{
+		//byt byggnad -1
+		gameLogic->incrementSelectedStructure(-1);
 	}
 		
 
