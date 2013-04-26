@@ -383,7 +383,7 @@ bool SoundSystem::getMute()
 
 int SoundSystem::loadPlaylist(string filename)
 {
-	char input;
+	//char input;
 	ifstream fin;
 	string prefix = "";
 //	playlist_testSize = 4;
