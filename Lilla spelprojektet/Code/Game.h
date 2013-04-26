@@ -4,6 +4,7 @@
 #include "Input.h"
 #include "Camera.h"
 #include "SoundSystem.h"
+#include "ParticleSystem.h"
 
 
 class Game
@@ -23,6 +24,7 @@ private:
 	Input* input;
 	Camera* camera;
 	SoundSystem* soundSystem;
+	ParticleSystem* pSystem;
 	Sound* playlist;
 	int nrOfSounds;
 };

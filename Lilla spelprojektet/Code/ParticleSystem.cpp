@@ -28,7 +28,15 @@ void ParticleSystem::update()
 	//update all policies
 	for(int i = 0; i < particlePolicies.size(); i++)
 	{
-		particlePolicies.at(i)->update();
+		if(particlePolicies.at(i) == NULL)
+		{
+			particlePolicies.erase(particlePolicies.begin() + i);
+			i--;
+		}
+		else
+		{
+			particlePolicies.at(i)->update();
+		}
 	}
 }
 
@@ -42,9 +50,12 @@ vector<vector<VertexColor>> ParticleSystem::getVertexData()
 }
 
 
-void ParticleSystem::addTrail(D3DXVECTOR3 color, D3DXVECTOR3 position , int intensity, int timeToLive, float velocity, float lengthX, float lengthY, float lengthZ)
+Trail* ParticleSystem::addTrail(D3DXVECTOR3 color, D3DXVECTOR3 position , int intensity, int timeToLive, float velocity, float lengthX, float lengthY, float lengthZ)
 {
-	particlePolicies.push_back(new Trail(color, position, intensity, timeToLive, velocity, lengthX, lengthY, lengthZ));
+	Trail* temp = new Trail(color, position, intensity, timeToLive, velocity, lengthX, lengthY, lengthZ);
+	particlePolicies.push_back(temp);
+
+	return temp;
 }
 
 bool ParticleSystem::removePolicy() // kompletera med hur detta ska ske, hur removar man den policy man vill åt?(id? string namn?)

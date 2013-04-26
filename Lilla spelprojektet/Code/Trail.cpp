@@ -25,21 +25,24 @@ Trail::~Trail()
 
 void Trail::update()
 {
+	cout << particles.size() << endl;
 	for(int i = 0; i < this->intensity; i++)
 	{
 		emitt();
 	}
 
+	int i = 0;
 	//for(int i = 0; i < this->particles.size(); i++)
-	for(Node<BaseParticle>* walker = particles.getFirst(); walker != NULL; walker = walker->next)
+	for(ListNode<BaseParticle>* walker = particles.getFirst(); walker != NULL; walker = walker->next)
 	{
 		if(!walker->value.update())
 		{
-			particles.removeFirst();
+			i++;
 			//this->particles.erase(this->particles.begin() + i);
 		}
 	}
 
+	particles.remove(i);
 	createVertices();
 }
 vector<VertexColor> Trail::getVertexData()
@@ -47,7 +50,10 @@ vector<VertexColor> Trail::getVertexData()
 	return vertices;
 }
 
-
+void Trail::updatePosition(D3DXVECTOR3 pos)
+{
+	emitter->setPosition(pos);
+}
 
 void Trail::emitt()
 {
@@ -85,7 +91,7 @@ void Trail::createVertices()
 	this->vertices.clear();
 
 	//for(int i = 0; i < this->particles.size(); i++)
-	for(Node<BaseParticle>* walker = particles.getFirst(); walker != NULL; walker = walker->next)
+	for(ListNode<BaseParticle>* walker = particles.getFirst(); walker != NULL; walker = walker->next)
 	{
 		VertexColor vert1;
 

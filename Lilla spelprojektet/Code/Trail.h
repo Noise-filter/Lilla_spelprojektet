@@ -17,6 +17,8 @@ class Trail : public ParticlePolicy
 		void createVertices();
 		vector<VertexColor> getVertexData();
 
+		void updatePosition(D3DXVECTOR3 pos);
+
 	public:
 		Trail(D3DXVECTOR3 color, D3DXVECTOR3 position , int intensity, int timeToLive, float velocity, float lengthX, float lengthY, float lengthZ);
 		~Trail();

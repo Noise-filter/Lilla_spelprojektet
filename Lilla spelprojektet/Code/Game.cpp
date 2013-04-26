@@ -8,6 +8,7 @@ Game::Game(void)
 	input = new Input();
 	camera = new Camera();
 	soundSystem = soundSystem->Getinstance();
+	pSystem = pSystem->Getinstance();
 }
 
 
@@ -36,7 +37,9 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	camera->LookAt(D3DXVECTOR3(45,60,45), D3DXVECTOR3(35, 0, 45), D3DXVECTOR3(-1, 0, 0));
 	camera->SetLens((float)D3DX_PI * 0.45f, (float)screenWidth / (float)screenHeight, 0.1f, 1000.0f);
 
-
+	
+	Trail* temp = pSystem->addTrail(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 100, 1000, 2, 10, 10, 10);
+	SAFE_DELETE(temp);
 	//soundSystem->setPaused(true);
 	return true; // all initiates went well
 }
@@ -99,7 +102,8 @@ int Game::update(float dt)
 		return 0; // error
 
 	input->resetBtnState();
-	
+
+	pSystem->update();
 
 	return 1;
 

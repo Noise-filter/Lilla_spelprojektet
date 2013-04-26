@@ -8,43 +8,43 @@ using namespace std;
 	Enkel länkad lista med first och last pekare.
 */
 template<class T>
-	class Node
-	{
-	public:
-		T value;
-		Node<T> *next;
-		Node<T>(T value){ this->value = value; this->next = NULL; }
-		~Node<T>() {}
-	};
+class ListNode
+{
+public:
+	T value;
+	ListNode<T> *next;
+	ListNode<T>(T value){ this->value = value; this->next = NULL; }
+	~ListNode<T>() {}
+};
 
 template<class T>
 class List
 {
 private:
-	Node<T> *first;
-	Node<T> *last;
-	int nrOfNodes;
+	ListNode<T> *first;
+	ListNode<T> *last;
+	int nrOfListNodes;
 
 public:
 	List()
 	{
 		first = NULL;
 		last = NULL;
-		nrOfNodes = 0;
+		nrOfListNodes = 0;
 	}
 
 	List(const List<T>& list)
 	{
-		nrOfNodes = 0;
+		nrOfListNodes = 0;
 		for(int i = 0; i < list.size(); i++)
 			insertLast(list.elementAt(i));
 	}
 
 	~List()
 	{
-		Node<T> *walker = first;
-		Node<T> *garbage = walker;
-		for(int i = 0; i < nrOfNodes; i++)
+		ListNode<T> *walker = first;
+		ListNode<T> *garbage = walker;
+		for(int i = 0; i < nrOfListNodes; i++)
 		{
 			garbage = walker;
 			walker = walker->next;
@@ -54,15 +54,15 @@ public:
 
 	List<T>& operator=(const List<T>& list)
 	{
-		Node<T> *walker = first;
-		for(int i = 0; i < nrOfNodes; i++)
+		ListNode<T> *walker = first;
+		for(int i = 0; i < nrOfListNodes; i++)
 		{
-			Node<T> *garbage = walker;
+			ListNode<T> *garbage = walker;
 			walker = walker->next;
 			delete garbage;
 		}
 
-		nrOfNodes = 0;
+		nrOfListNodes = 0;
 		for(int i = 0; i < list.size(); i++)
 			insertLast(list.elementAt(i));
 
@@ -75,53 +75,53 @@ public:
 		{
 			if(pos == 0)
 				insertFirst(value);
-			else if(pos >= nrOfNodes)
+			else if(pos >= nrOfListNodes)
 				insertLast(value);
 			else
 			{
-				Node<T> *newNode = new Node<T>(value);
-				Node<T> *walker = first;
+				ListNode<T> *newListNode = new ListNode<T>(value);
+				ListNode<T> *walker = first;
 				for(int i = 0; i < pos-1; i++)
 					walker = walker->next;
 
-				newNode->next = walker->next;
-				walker->next = newNode;
-				nrOfNodes++;
+				newListNode->next = walker->next;
+				walker->next = newListNode;
+				nrOfListNodes++;
 			}
 		}
 	}*/
 
 	void insertLast(T value)
 	{
-		Node<T> *newNode = new Node<T>(value);
-		if(nrOfNodes == 0)
+		ListNode<T> *newListNode = new ListNode<T>(value);
+		if(nrOfListNodes == 0)
 		{
-			newNode->next = first;
-			first = newNode;
+			newListNode->next = first;
+			first = newListNode;
 			last = first;
 		}
 		else
 		{
-			last->next = newNode;
-			last = newNode;
+			last->next = newListNode;
+			last = newListNode;
 		}
-		nrOfNodes++;
+		nrOfListNodes++;
 	}
 
 	/*
 	void insertFirst(T value)
 	{
-		Node<T> *newNode = new Node<T>(value);
+		ListNode<T> *newListNode = new ListNode<T>(value);
 		
-		nrOfNodes++;
+		nrOfListNodes++;
 	}*/
 
 	T elementAt(int pos) const throw(...)
 	{
-		if(pos < 0 || pos >= nrOfNodes)
+		if(pos < 0 || pos >= nrOfListNodes)
 			throw string("Out of Bounds");
 
-		Node<T> *walker = first;
+		ListNode<T> *walker = first;
 		for(int i = 0; i < pos; i++)
 			walker = walker->next;
 
@@ -130,33 +130,47 @@ public:
 
 	void removeFirst()
 	{
-		if(nrOfNodes == 0)
+		if(nrOfListNodes == 0)
 		{
 			return;
 		}
 
-		Node<T> *walker = first->next;
+		ListNode<T> *walker = first->next;
 		delete first;
 		first = walker;
-		nrOfNodes--;
+		nrOfListNodes--;
+	}
+
+	void remove(int num)
+	{
+		ListNode<T>* temp;
+		ListNode<T>* walker = first;
+		for(int i = 0; i < num; i++)
+		{
+			temp = walker;
+			walker = walker->next;
+			delete temp;
+		}
+		nrOfListNodes -= num;
+		first = walker;
 	}
 
 	/*
 	int removeLast() throw(...)
 	{
 		int value = -1;
-		if(nrOfNodes == 0)
+		if(nrOfListNodes == 0)
 		{
 			throw string("Empty List");
 		}
 
-		Node<T> *walker = first;
-		for(int i = 0; i < nrOfNodes-1; i++)
+		ListNode<T> *walker = first;
+		for(int i = 0; i < nrOfListNodes-1; i++)
 			walker = walker->next;
 
 		value = walker->value;
 		walker->next = NULL;
-		nrOfNodes--;
+		nrOfListNodes--;
 
 		delete walker;
 		return value;
@@ -166,7 +180,7 @@ public:
 	{
 		int value = -1;
 		
-		if(pos < 0 || pos >= nrOfNodes)
+		if(pos < 0 || pos >= nrOfListNodes)
 		{
 			throw string("Out of Bound");
 		}
@@ -175,16 +189,16 @@ public:
 			value = removeFirst();
 		else
 		{
-			Node<T> *walker = first;
+			ListNode<T> *walker = first;
 			for(int i = 0; i < pos-1; i++)
 				walker = walker->next;
 
-			Node<T> *garbage = walker;
+			ListNode<T> *garbage = walker;
 			garbage = garbage->next;
 			value = garbage->value;
 			walker->next = garbage->next;
 			delete garbage;
-			nrOfNodes--;
+			nrOfListNodes--;
 		}
 		return value;
 	}
@@ -192,10 +206,10 @@ public:
 
 	int size() const
 	{
-		return nrOfNodes;
+		return nrOfListNodes;
 	}
 
-	Node<T>* getFirst()
+	ListNode<T>* getFirst()
 	{
 		return first;
 	}
