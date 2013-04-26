@@ -30,7 +30,7 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	playlist = soundSystem->createPlaylist("playlist.m3u");
 	//initiate other game resources such as level or whatever
 
-	if(!gameLogic->init(10,10))
+	if(!gameLogic->init(20,10))
 		return false;
 
 	camera->LookAt(D3DXVECTOR3(45,60,45), D3DXVECTOR3(45, 0, 45), D3DXVECTOR3(-1, 0, 0));
