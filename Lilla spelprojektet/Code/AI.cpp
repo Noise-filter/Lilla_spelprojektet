@@ -88,7 +88,7 @@ vector<Waypoint> AI::findPath(int start, int goal, int enemyType)
 		lua_pop(pathScript, 1);
 	}
 
-	cout << lua_gettop(pathScript) << ' ';
+	//cout << lua_gettop(pathScript) << ' ';
 
 	return wayPoints;
 }

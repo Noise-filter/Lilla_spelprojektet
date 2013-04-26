@@ -34,11 +34,15 @@ public:
 private:
 	int destroyBuildings();
 	void makeSet(int x, int z);
+	void upgradeStructures(int selectedUpgrade);
+	void removeUpgrade(int selectedUpgrade);
 
 private:
 	Node** nodes;
 	Structure*** structures;
-	TowerUpgrade* towerUpgrades;
+
+	UpgradeStats* availibleUpgrades;
+	vector<UpgradeStats> upgradesInUse;
 
 	Set<Structure*> sets;
 

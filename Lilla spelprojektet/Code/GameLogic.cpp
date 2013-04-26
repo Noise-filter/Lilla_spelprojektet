@@ -7,6 +7,7 @@ GameLogic::GameLogic(void)
 	this->selectedStructure = 0;
 	this->availableSupply = 100;
 	this->resource = 100;
+	
 }
 
 GameLogic::~GameLogic(void)
