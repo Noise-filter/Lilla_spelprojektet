@@ -5,6 +5,7 @@
 #include "Buffer.h"
 #include "Shader.h"
 #include "BaseParticle.h"
+#include "List.h"
 #include <vector>
 
 using namespace std;
@@ -15,7 +16,7 @@ class ParticlePolicy
 		int intensity;
 		
 		BaseParticle *emitter;
-		std::vector<BaseParticle> particles;
+		List<BaseParticle> particles;
 
 		virtual void emitt() = 0;
 		virtual void createVertices() = 0;

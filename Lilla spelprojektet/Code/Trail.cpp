@@ -30,11 +30,13 @@ void Trail::update()
 		emitt();
 	}
 
-	for(int i = 0; i < this->particles.size(); i++)
+	//for(int i = 0; i < this->particles.size(); i++)
+	for(Node<BaseParticle>* walker = particles.getFirst(); walker != NULL; walker = walker->next)
 	{
-		if(!this->particles.at(i).update())
+		if(!walker->value.update())
 		{
-			this->particles.erase(this->particles.begin() + i);
+			particles.removeFirst();
+			//this->particles.erase(this->particles.begin() + i);
 		}
 	}
 
@@ -73,19 +75,22 @@ void Trail::emitt()
 	Particle.setDirection(D3DXVECTOR3(dirX,dirY,dirZ));
 	Particle.setPosition(D3DXVECTOR3(posX,posY,posZ));
 
-	this->particles.push_back(Particle);
+	particles.insertLast(Particle);
+
+	//this->particles.push_back(Particle);
 	
 }
 void Trail::createVertices()
 {
 	this->vertices.clear();
 
-	for(int i = 0; i < this->particles.size(); i++)
+	//for(int i = 0; i < this->particles.size(); i++)
+	for(Node<BaseParticle>* walker = particles.getFirst(); walker != NULL; walker = walker->next)
 	{
 		VertexColor vert1;
 
 		vert1.normal = D3DXVECTOR3(0,0,-1);
-		vert1.pos = this->particles.at(i).getPosition();
+		vert1.pos = walker->value.getPosition();//this->particles.at(i).getPosition();
 		vert1.color = this->color;
 
 		vertices.push_back(vert1);
