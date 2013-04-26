@@ -50,8 +50,8 @@ bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize
 	//if(!initFindTarget(scripts[1]))
 		//return false;
 
-	//if(!initSpawnEnemies(scripts[2]))
-		//return false;
+	if(!initSpawnEnemies(scripts[2]))
+		return false;
 
 	cout << "the following scripts have been initiated:" << endl;
 	cout << scripts[0] << endl << scripts[1] << endl << scripts[2] << endl;
@@ -77,18 +77,17 @@ vector<Waypoint> AI::findPath(int start, int goal, int enemyType)
 
 	if(a > 0)
 	{
+		//Hämta ut tabellen
 		lua_pushnil(pathScript);
 		while(lua_next(pathScript, -2) != 0)
 		{
 			int temp = lua_tonumber(pathScript, -1);
-			wayPoints.push_back(Waypoint((int)temp % 10, (int)temp / 10));
+			wayPoints.push_back(Waypoint(((int)temp % mapSize), ((int)temp / mapSize)));
 			//cout << "A*: " << temp << endl;
 			lua_pop(pathScript, 1);
 		}
 		lua_pop(pathScript, 1);
 	}
-
-	//cout << lua_gettop(pathScript) << ' ';
 
 	return wayPoints;
 }
@@ -141,7 +140,7 @@ vector<Enemy*> AI::spawnEnemies(float dt, int nrOfEnemies)
 		}
 		if(spawnedEnemies > 0)
 		{
-			Enemy* tempE = new Enemy(D3DXVECTOR3(retVals[0],0,retVals[1]),1,0,5,0,0,0);
+			Enemy* tempE = new Enemy(D3DXVECTOR3(retVals[0],0,retVals[1]),1,0,5,0,30,0);
 			enemies.push_back(tempE);			
 		}
 
