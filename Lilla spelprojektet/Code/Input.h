@@ -15,10 +15,11 @@ class Input
 
 		float mousePitch();
 		float mouseRotateY();
-		bool checkKeyDown(int vkCode) const;
+		bool checkKeyDown(int vkCode);
+		bool checkMovement(char input) const;
 
 		void updateMs(MouseState* mState);
-		MouseState* getMs();
+		MouseState* getMs();	
 		void resetBtnState();
 };
 

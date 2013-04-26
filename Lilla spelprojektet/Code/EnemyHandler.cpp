@@ -20,14 +20,14 @@ bool EnemyHandler::init(Structure*** structures, Node** nodes, int mapSize)
 EnemyHandler::~EnemyHandler(void)
 {
 	for(int i = 0; i < (int)enemies.size(); i++)
-		delete enemies.at(i);
+		SAFE_DELETE(enemies.at(i));
 
 	SAFE_DELETE(ai);
 }
 
 int EnemyHandler::update(float dt)
 {
-	vector<Enemy*> spawnedEnemies = ai->spawnEnemies(dt,0);
+	vector<Enemy*> spawnedEnemies = ai->spawnEnemies(dt,enemies.size());
 
 	for(int i = 0; i < spawnedEnemies.size(); i++)
 		enemies.push_back(spawnedEnemies.at(i));
