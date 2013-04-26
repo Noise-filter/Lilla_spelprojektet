@@ -1,6 +1,7 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
+#include "Structure.h"
 #include "Entity.h"
 #include <vector>
 
@@ -36,6 +37,8 @@ private:
 	//Waypoints
 	std::vector<Waypoint> waypoints;
 	int currentWP;
+
+	Structure* target;
 
 	float speed;
 	float damage;
