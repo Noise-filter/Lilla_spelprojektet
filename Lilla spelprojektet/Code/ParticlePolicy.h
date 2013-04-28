@@ -20,13 +20,13 @@ class ParticlePolicy
 
 		virtual void emitt() = 0;
 		virtual void createVertices() = 0;
-		virtual vector<VertexColor> getVertexData() = 0;
 
 	public:
 		virtual void update() = 0;
 
 		virtual ~ParticlePolicy(){};
-
+		
+		virtual vector<VertexColor> getVertexData() = 0;
 };
 
 #endif

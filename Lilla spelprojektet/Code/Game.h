@@ -26,6 +26,6 @@ private:
 	SoundSystem* soundSystem;
 	ParticleSystem* pSystem;
 	Sound* playlist;
-	int nrOfSounds;
+
 };
 

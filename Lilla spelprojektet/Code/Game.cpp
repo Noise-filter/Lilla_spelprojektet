@@ -20,13 +20,14 @@ Game::~Game(void)
 	SAFE_DELETE(input);
 	soundSystem->shutdown();
 	SAFE_DELETE(playlist);
+	pSystem->shutdown();
 }
 
 bool Game::init(HINSTANCE hInstance, int cmdShow)
 {
 	if(!engine->init(hInstance,cmdShow))
 		return false;
-	
+
 	soundSystem->init();
 	playlist = soundSystem->createPlaylist("playlist.m3u");
 	//initiate other game resources such as level or whatever
@@ -37,10 +38,11 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	camera->LookAt(D3DXVECTOR3(45,60,45), D3DXVECTOR3(35, 0, 45), D3DXVECTOR3(-1, 0, 0));
 	camera->SetLens((float)D3DX_PI * 0.45f, (float)screenWidth / (float)screenHeight, 0.1f, 1000.0f);
 
-	
-	Trail* temp = pSystem->addTrail(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 0, 0), 100, 1000, 2, 10, 10, 10);
-	SAFE_DELETE(temp);
-	//soundSystem->setPaused(true);
+
+	Trail* temp = pSystem->addTrail(D3DXVECTOR3(1, 1, 1), D3DXVECTOR3(0, 0, 0), 10, 100, 1, 1, 1, 1);
+	Trail* temp2 = pSystem->addTrail(D3DXVECTOR3(0, 1, 0), D3DXVECTOR3(100, 0, 100), 10, 100, 1, 1, 1, 1);
+	//SAFE_DELETE(temp);
+
 	return true; // all initiates went well
 }
 
@@ -49,12 +51,13 @@ void Game::render()
 	//build engines renderContent with addRenderData then do render to execute those renders
 	engine->setRenderData(gameLogic->getRenderData());
 
+	engine->setRenderData(pSystem->getVertexData());
+
 	engine->render(camera->ViewsProj());
 }
 
 int Game::update(float dt)
 {
-
 	static bool pausedMusic = true;
 
 	input->updateMs(engine->getMouseState());
@@ -76,7 +79,7 @@ int Game::update(float dt)
 	if(input->checkMovement('D'))	//D
 		camera->Strafe(100.0f * dt);
 
-	if(input->checkKeyDown(0x20))
+	if(input->checkKeyDown(0x20))	//Space
 	{
 		soundSystem->setPaused(pausedMusic);
 		pausedMusic = !pausedMusic;
@@ -93,7 +96,6 @@ int Game::update(float dt)
 		//byt byggnad -1
 		gameLogic->incrementSelectedStructure(-1);
 	}
-		
 
 
 	camera->UpdateViewMatrix();
@@ -106,5 +108,4 @@ int Game::update(float dt)
 	pSystem->update();
 
 	return 1;
-
 }

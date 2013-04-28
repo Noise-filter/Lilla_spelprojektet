@@ -25,20 +25,17 @@ Trail::~Trail()
 
 void Trail::update()
 {
-	cout << particles.size() << endl;
 	for(int i = 0; i < this->intensity; i++)
 	{
 		emitt();
 	}
 
 	int i = 0;
-	//for(int i = 0; i < this->particles.size(); i++)
 	for(ListNode<BaseParticle>* walker = particles.getFirst(); walker != NULL; walker = walker->next)
 	{
 		if(!walker->value.update())
 		{
 			i++;
-			//this->particles.erase(this->particles.begin() + i);
 		}
 	}
 
@@ -59,9 +56,9 @@ void Trail::emitt()
 {
 	BaseParticle Particle = *this->emitter;
 	static float srand(time(NULL));
-	float halfLengthX = this->lengthX * 0.5;
-	float halfLengthY = this->lengthY * 0.5;
-	float halfLengthZ = this->lengthZ * 0.5;
+	float halfLengthX = this->lengthX * 0.5f;
+	float halfLengthY = this->lengthY * 0.5f;
+	float halfLengthZ = this->lengthZ * 0.5f;
 
 	D3DXVECTOR3 origPos = Particle.getPosition();
 
@@ -82,23 +79,20 @@ void Trail::emitt()
 	Particle.setPosition(D3DXVECTOR3(posX,posY,posZ));
 
 	particles.insertLast(Particle);
-
-	//this->particles.push_back(Particle);
-	
 }
+
 void Trail::createVertices()
 {
 	this->vertices.clear();
 
-	//for(int i = 0; i < this->particles.size(); i++)
 	for(ListNode<BaseParticle>* walker = particles.getFirst(); walker != NULL; walker = walker->next)
 	{
 		VertexColor vert1;
 
 		vert1.normal = D3DXVECTOR3(0,0,-1);
-		vert1.pos = walker->value.getPosition();//this->particles.at(i).getPosition();
+		vert1.pos = walker->value.getPosition();
 		vert1.color = this->color;
-
+		
 		vertices.push_back(vert1);
 	}
 }

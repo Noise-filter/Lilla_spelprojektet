@@ -43,7 +43,7 @@ int Enemy::move(float dt)
 		D3DXVECTOR3 target(waypoints.at(currentWP+1).x * 10, 0, waypoints.at(currentWP+1).y * 10);
 		D3DXVECTOR3 dir = target - pos;
 
-		if(D3DXVec3Length(&dir) < 1)
+		if(D3DXVec3Length(&dir) < 0.1)
 		{
 			this->setPosition(target);
 			currentWP++;

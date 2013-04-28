@@ -47,6 +47,7 @@ public:
 	void initSets(vector<T>& data)
 	{
 		sets.clear();
+		sets.resize(data.size() + 5);
 		for(int i = 0; i < (int)data.size(); i++)
 		{
 			sets.push_back(new Node);
@@ -61,48 +62,30 @@ public:
 		sets.at(id)->value = data;
 	}
 
-	void Union(int X, int Y, bool pathCompress, bool rank)
+	void Union(int X, int Y)
 	{
-		Node* x = findSet(X, pathCompress);
-		Node* y = findSet(Y, pathCompress);
+		Node* x = findSet(sets.at(X));
+		Node* y = findSet(sets.at(Y));
 
-		if(rank)
+		if(x->rank >= y->rank)
 		{
-			if(x->rank >= y->rank)
-			{
-				if(x->rank == y->rank)
-					x->rank++;
-				y->parent = x;
-			}
-			else if(x->rank < y->rank)
-				x->parent = y;
-		}
-		else
-		{
+			if(x->rank == y->rank)
+				x->rank++;
 			y->parent = x;
-			x->parent = x;
 		}
+		else if(x->rank < y->rank)
+			x->parent = y;
 	}
 
-	Node* findSet(int x, bool pathCompress)
+	Node* findSet(int x)
 	{
-		if(pathCompress)
-			return findSetPathCompress(sets.at(x));
-		else
-			return findSetNoPathCompress(sets.at(x));
+		return findSet(sets.at(x));
 	}
 
-	Node* findSetNoPathCompress(Node* x)
-	{
-		while(x->parent != x)
-			x = x->parent;
-		return x;
-	}
-
-	Node* findSetPathCompress(Node* x)
+	Node* findSet(Node* x)
 	{
 		if(x != x->parent)
-			x->parent = findSetPathCompress(x->parent->parent);
+			x->parent = findSet(x->parent);
 		return x->parent;
 	}
 

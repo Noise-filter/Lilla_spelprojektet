@@ -74,6 +74,8 @@ Level::~Level(void)
 		SAFE_DELETE_ARRAY(structures[i]);
 	}
 	SAFE_DELETE_ARRAY(structures);
+
+	SAFE_DELETE_ARRAY(availibleUpgrades);
 }
 
 int Level::update(float dt, vector<Enemy*>& enemies)
@@ -208,7 +210,7 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 			{
 			case TYPE_TOWER:
 				structures[xPos][yPos] = new Tower(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),0,0,10,0, 1, 1, 50, 100);
-				for(int i = 0; i < this->upgradesInUse.size();i++)
+				for(int i = 0; i < (int)this->upgradesInUse.size();i++)
 				{
 					dynamic_cast<Tower*>(structures[xPos][yPos])->giveUpgrade(upgradesInUse[i]);
 				}
@@ -324,7 +326,7 @@ int Level::destroyBuildings()
 		{
 			if(structures[i][j])
 			{
-				if(sets.findSet(mainBuilding, false) != sets.findSet(j + (i * (mapSize-1)), false))
+				if(sets.findSet(mainBuilding) != sets.findSet(j + (i * (mapSize-1))))
 				{
 					if(typeid(*structures[i][j]) == typeid(Tower))
 						supply += COST_TOWER;
@@ -347,20 +349,17 @@ int Level::destroyBuildings()
 
 void Level::makeSet(int x, int z)
 {
-	bool compress = true;
-	bool rank = true;
-
 	if(x > 0 && structures[x-1][z])
-		sets.Union(z + (x*(mapSize-1)), z + ((x-1)*(mapSize-1)), compress, rank);
+		sets.Union(z + (x*(mapSize-1)), z + ((x-1)*(mapSize-1)));
 
 	if(x < mapSize-2 && structures[x+1][z])
-		sets.Union(z + (x*(mapSize-1)), z + ((x+1)*(mapSize-1)), compress, rank);
+		sets.Union(z + (x*(mapSize-1)), z + ((x+1)*(mapSize-1)));
 
 	if(z > 0 && structures[x][z-1])
-		sets.Union(z + (x*(mapSize-1)), z-1 + (x*(mapSize-1)), compress, rank);
+		sets.Union(z + (x*(mapSize-1)), z-1 + (x*(mapSize-1)));
 
 	if(z < mapSize-2 && structures[x][z+1])
-		sets.Union(z + (x*(mapSize-1)), z+1 + (x*(mapSize-1)), compress, rank);
+		sets.Union(z + (x*(mapSize-1)), z+1 + (x*(mapSize-1)));
 }
 
 Structure*** Level::getStructures()

@@ -10,6 +10,8 @@ class ParticleSystem
 public:
 	static ParticleSystem* Getinstance();
 
+	void shutdown();
+
 	void update();
 	vector<vector<VertexColor>> getVertexData();
 

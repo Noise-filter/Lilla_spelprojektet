@@ -15,7 +15,6 @@ class Trail : public ParticlePolicy
 		float lengthZ;
 		void emitt();
 		void createVertices();
-		vector<VertexColor> getVertexData();
 
 		void updatePosition(D3DXVECTOR3 pos);
 
@@ -24,6 +23,7 @@ class Trail : public ParticlePolicy
 		~Trail();
 
 		void update();
+		vector<VertexColor> getVertexData();
 };
 
 #endif

@@ -13,6 +13,11 @@ ParticleSystem::~ParticleSystem(void)
 	}
 }
 
+void ParticleSystem::shutdown()
+{
+	delete particleSystem;
+}
+
 ParticleSystem* ParticleSystem::particleSystem = NULL;
 ParticleSystem* ParticleSystem::Getinstance()
 {
@@ -45,6 +50,11 @@ vector<vector<VertexColor>> ParticleSystem::getVertexData()
 	vector<vector<VertexColor>> vertexData;
 
 	//fyll med all vertexdata från particlePolicies
+	for(int i = 0; i < particlePolicies.size(); i++)
+	{
+		vertexData.push_back(particlePolicies.at(i)->getVertexData());
+	}
+
 
 	return vertexData;
 }
