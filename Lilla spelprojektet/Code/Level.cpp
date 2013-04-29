@@ -40,7 +40,7 @@ bool Level::init(int mapSize, int quadSize)
 		}	
 	}
 
-	structures[0][0] = new Headquarter(D3DXVECTOR3(5, 0, 5), 2, 0, 2, 0);
+	structures[5][3] = new Headquarter(D3DXVECTOR3(5, 0, 5), 2, 0, 2, 0);
 
 	towerUpgrades = new TowerUpgrade[5];
 	towerUpgrades[0] = TowerUpgrade(100,0,0,0,0);

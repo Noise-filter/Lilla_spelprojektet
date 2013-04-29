@@ -62,14 +62,23 @@ void AI::findPath()
 
 void AI::findTarget()
 {
-	lua_getglobal(spawnScript, "findTarget");
+	lua_getglobal(targetScript, "findTarget");
 
 	sendArray(structuresInt, mapSize-1, targetScript);
-
-	//lua_pcall(l, inputcount, returncount, 0); //kalla på funktionen
+	lua_pushnumber(targetScript, 10);
+	lua_pushnumber(targetScript, 5);
+	lua_pushnumber(targetScript, 1);
 	
+	lua_pcall(targetScript, 4, 2, 0); //kalla på funktionen
+	
+	float targetY = lua_tonumber(targetScript, -1);
+	lua_pop(targetScript, 1);
+	float targetX = lua_tonumber(targetScript, -1);
+	lua_pop(targetScript, 1);
+
 	//hämta värden
 
+	cout<< "X = "<<targetX<<" Y = "<<targetY<<endl;
 	//lua_pop(l, returncount); // Plocka bort returvärden	
 }
 
@@ -189,7 +198,7 @@ bool AI::initFindTarget(string scriptName)
 	lua_pop(targetScript, 1);
 
 	cout << "Output: " << a << endl;
-
+	findTarget();
 	return true;
 }
 
