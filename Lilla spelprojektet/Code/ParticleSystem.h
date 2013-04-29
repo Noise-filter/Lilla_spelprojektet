@@ -15,9 +15,9 @@ public:
 	void update();
 	vector<vector<VertexColor>> getVertexData();
 
-	Trail* addTrail(D3DXVECTOR3 color, D3DXVECTOR3 position , int intensity, int timeToLive, float velocity, float lengthX, float lengthY, float lengthZ); //kompletera med hur ett cloud ska defineras
+	ParticlePolicy* addTrail(D3DXVECTOR3 color, D3DXVECTOR3 position , int intensity, int timeToLive, float velocity, float lengthX, float lengthY, float lengthZ); //kompletera med hur ett cloud ska defineras
 
-	bool removePolicy(); // kompletera med hur detta ska ske, hur removar man den policy man vill åt?(id? string namn?)
+	bool removePolicy(ParticlePolicy* temp); // kompletera med hur detta ska ske, hur removar man den policy man vill åt?(id? string namn?)
 
 private:
 	vector<ParticlePolicy*> particlePolicies;
