@@ -5,14 +5,14 @@ EnemyHandler::EnemyHandler(void)
 	ai = new AI();
 }
 
-bool EnemyHandler::init(Structure*** structures, Node** nodes, int mapSize)
+bool EnemyHandler::init(Structure*** structures, Node** nodes, int mapSize, int quadSize)
 {
 	string scripts[3];
 	scripts[0] = "astar.lua";
 	scripts[1] = "targetFind.lua";
 	scripts[2] = "spawning.lua";
 
-	ai->init(structures, nodes, scripts, mapSize);
+	ai->init(structures, nodes, scripts, mapSize, quadSize);
 
 	return true;
 }
