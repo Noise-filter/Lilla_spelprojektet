@@ -43,7 +43,7 @@ bool Level::init(int mapSize, int quadSize)
 		}	
 	}
 
-	structures[5][3] = new Headquarter(D3DXVECTOR3(5, 0, 5), 2, 0, 2, 0);
+	structures[0][0] = new Headquarter(D3DXVECTOR3(5, 0, 5), 2, 0, 2, 0);
 
 	this->availibleUpgrades = new UpgradeStats[5];
 	this->availibleUpgrades[0] = (UpgradeStats(TYPE_UPGRADE_HP,10,0,0,0,0));
@@ -51,7 +51,6 @@ bool Level::init(int mapSize, int quadSize)
 	this->availibleUpgrades[2] = (UpgradeStats(TYPE_UPGRADE_DMG,0,0,10,0,0));
 	this->availibleUpgrades[3] = (UpgradeStats(TYPE_UPGRADE_PRJSP,0,0,0,10,0));
 	this->availibleUpgrades[4] = (UpgradeStats(TYPE_UPGRADE_RANGE,0,0,0,0,10));
-
 
 	return true;
 }

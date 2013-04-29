@@ -13,10 +13,25 @@ AI::AI(void)
 AI::~AI(void)
 {
 	//delete both int 2Darrays
+	for(int i = 0; i < mapSize; i++)
+	{
+		SAFE_DELETE_ARRAY(nodesInt[i]);
+	}
+	SAFE_DELETE_ARRAY(nodesInt);
 
+
+	for(int i = 0; i < mapSize-1; i++)
+	{
+		SAFE_DELETE_ARRAY(structuresInt[i]);
+	}
+	SAFE_DELETE_ARRAY(structuresInt);
+
+	lua_close(pathScript);
+	//lua_close(targetScript);
+	lua_close(spawnScript);
 }
 
-bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize)
+bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize, int quadSize)
 {
 	int rv = 0;
 	this->structures = structures;
@@ -32,14 +47,14 @@ bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize
 	for(int i= 0; i < mapSize; i++)
 		nodesInt[i] = new int[mapSize];
 
-	//if(!initSpawnEnemies(scripts[0]))
-	//	return false;
-
-	if(!initFindTarget(scripts[1]))
+	if(!initFindPath(scripts[0]))
 		return false;
 
-	//if(!initSpawnEnemies(scripts[2))
-	//	return false;
+	//if(!initFindTarget(scripts[1]))
+		//return false;
+
+	if(!initSpawnEnemies(scripts[2]))
+		return false;
 
 	cout << "the following scripts have been initiated:" << endl;
 	cout << scripts[0] << endl << scripts[1] << endl << scripts[2] << endl;
@@ -47,17 +62,37 @@ bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize
 	return true;
 }
 
-void AI::findPath()
+vector<Waypoint> AI::findPath(int start, int goal, int enemyType)
 {
-	lua_getglobal(spawnScript, "findPath");
+	vector<Waypoint> wayPoints;
 
-	//lua_pushnumber(l,inputnumber);
+	lua_getglobal(pathScript, "astar");
 
-	//lua_pcall(l, inputcount, returncount, 0); //kalla på funktionen
-	
+	lua_pushnumber(pathScript, start);
+	lua_pushnumber(pathScript, goal);
+	lua_pushnumber(pathScript, enemyType);
+
+	lua_pcall(pathScript, 3, 2, 0); //kalla på funktionen
+
 	//hämta värden
+	int a = lua_tonumber(pathScript, -1);
+	lua_pop(pathScript, 1);
 
-	//lua_pop(l, returncount); // Plocka bort returvärden
+	if(a > 0)
+	{
+		//Hämta ut tabellen
+		lua_pushnil(pathScript);
+		while(lua_next(pathScript, -2) != 0)
+		{
+			int temp = lua_tonumber(pathScript, -1);
+			wayPoints.push_back(Waypoint(((int)temp % mapSize), ((int)temp / mapSize)));
+			//cout << "A*: " << temp << endl;
+			lua_pop(pathScript, 1);
+		}
+		lua_pop(pathScript, 1);
+	}
+
+	return wayPoints;
 }
 
 void AI::findTarget()
@@ -117,7 +152,7 @@ vector<Enemy*> AI::spawnEnemies(float dt, int nrOfEnemies)
 		}
 		if(spawnedEnemies > 0)
 		{
-			Enemy* tempE = new Enemy(D3DXVECTOR3(retVals[0],0,retVals[1]),1,0,5,0,0,0);
+			Enemy* tempE = new Enemy(D3DXVECTOR3(retVals[0],0,retVals[1]),1,0,5,0,30,0);
 			enemies.push_back(tempE);			
 		}
 
@@ -138,15 +173,10 @@ bool AI::initFindPath(string scriptName)
 	lua_getglobal(pathScript, "init");
 
 	convertNodesToInt();
-	//sendArray(nodesInt, mapSize, pathScript);
+	sendArray(nodesInt, mapSize, pathScript);
 
 	lua_pushnumber(pathScript, mapSize);
 	lua_pcall(pathScript, 2, 0, 0);
-
-	int a = lua_tonumber(pathScript, -1);
-	lua_pop(pathScript, 1);
-
-	cout << "Output: " << a << endl;
 
 	return true;
 }

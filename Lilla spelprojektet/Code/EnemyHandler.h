@@ -12,7 +12,7 @@ public:
 	EnemyHandler(void);
 	~EnemyHandler(void);
 	
-	bool init(Structure*** structures, Node** nodes, int mapSize);
+	bool init(Structure*** structures, Node** nodes, int mapSize, int quadSize);
 
 	void getRenderData(vector<vector<RenderData*>>& rData);
 	int update(float dt);
