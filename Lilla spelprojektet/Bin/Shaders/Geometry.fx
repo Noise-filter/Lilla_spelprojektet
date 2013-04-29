@@ -18,11 +18,11 @@ struct VSIn
 struct PSIn
 {
 	float4 posCS  : SV_Position;
-	float3 posW : worldPos;
-	float3 normalW : TEXTCOORD0;
+	float4 posW : worldPos;
+	float4 normalW : TEXTCOORD0;
 	float2 uv : TEXTCOORD1;
 
-	//float textureID : TEXTUREID;
+	uint textureID : TEXTUREID;
 };
 
 struct PSOut
@@ -40,12 +40,12 @@ PSIn VSScene(VSIn input)
 {
 	PSIn output = (PSIn)0;
 
-	output.posCS = mul(float4(input.pos, 1), mul(input.world , mul(view,proj) ));
+	output.posCS = mul(float4(input.pos, 1), mul(input.world, mul(view, proj)));
 	output.posW =  mul(float4(input.pos, 1), input.world);
 	
 	output.normalW = normalize(mul(float4(input.normal, 0), input.world));
 	output.uv = input.uv;
-	//output.textureID = input.textureID;
+	output.textureID = input.textureID;
 	
 	return output;
 }
@@ -62,7 +62,7 @@ PSOut PSScene(PSIn input)
 
 	float3 normalW = float3(0,1,0);// normalize(input.normalW);
 
-	output.position = float4(input.posW, 1.0f);
+	output.position = input.posW;
 	output.diffuseAlbedo = float4 ( diffuseAlbedo, 1.0f);
 	output.normal = float4(normalW , 1.0f);
 
