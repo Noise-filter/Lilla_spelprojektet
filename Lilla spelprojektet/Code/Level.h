@@ -41,6 +41,11 @@ private:
 	Node** nodes;
 	Structure*** structures;
 
+	vector<Node> neutralNodes;
+	vector<Structure> neutralStructures;
+
+	
+
 	UpgradeStats* availibleUpgrades;
 	vector<UpgradeStats> upgradesInUse;
 
