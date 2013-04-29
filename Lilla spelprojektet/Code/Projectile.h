@@ -3,6 +3,7 @@
 
 #include "Entity.h"
 #include "Enemy.h"
+#include "ParticleSystem.h"
 
 class Projectile : public Entity
 {
@@ -17,6 +18,8 @@ private:
 	Enemy* target;
 	float speed;
 	float damage;
+
+	Trail* trail;
 
 };
 

@@ -13,10 +13,13 @@ Projectile::Projectile(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int
 	this->target = target;
 	this->speed = speed;
 	this->damage = damage;
+
+	trail = ParticleSystem::Getinstance()->addTrail(D3DXVECTOR3(1, 1, 1),this->getPosition(), 10, 100, 1, 1, 1, 1);
 }
 
 Projectile::~Projectile()
 {
+	ParticleSystem::Getinstance()->removePolicy(trail);
 }
 
 #include <iostream>
@@ -43,6 +46,8 @@ int Projectile::update(float dt)
 		target->doDamage(damage);
 		return 0;
 	}
+
+	trail->updatePosition(pos);
 
 	return 1;
 }
