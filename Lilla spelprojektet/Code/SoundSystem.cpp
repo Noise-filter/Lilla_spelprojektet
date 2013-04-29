@@ -9,6 +9,7 @@ SoundSystem::SoundSystem()
 
 	this->nrOfSounds = 0;
 
+	playlist = NULL;
 }
 
 SoundSystem::~SoundSystem()
@@ -150,10 +151,12 @@ bool SoundSystem::update()
 	if(errorCheck(result))
 		return false;
 
-	if(!isplaying(playlist))
+	if(playlist)
 	{
-	
-		playNextSong(playlist);
+		if(!isplaying(playlist))
+		{
+			playNextSong(playlist);
+		}
 	}
 
 

@@ -153,7 +153,7 @@ vector<Enemy*> AI::spawnEnemies(float dt, int nrOfEnemies)
 		if(spawnedEnemies > 0)
 		{
 			Enemy* tempE = new Enemy(D3DXVECTOR3(retVals[0],0,retVals[1]),1,0,5,0,30,0);
-			enemies.push_back(tempE);			
+			enemies.push_back(tempE);
 		}
 
 		lua_pop(spawnScript, 1);

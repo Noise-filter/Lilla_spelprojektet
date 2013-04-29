@@ -19,7 +19,7 @@ Game::~Game(void)
 	SAFE_DELETE(camera);
 	SAFE_DELETE(input);
 	soundSystem->shutdown();
-	SAFE_DELETE(playlist);
+	//SAFE_DELETE(playlist);
 	pSystem->shutdown();
 }
 
@@ -29,10 +29,10 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 		return false;
 
 	soundSystem->init();
-	playlist = soundSystem->createPlaylist("playlist.m3u");
+	//playlist = soundSystem->createPlaylist("playlist.m3u");
 	//initiate other game resources such as level or whatever
 
-	if(!gameLogic->init(20,10))
+	if(!gameLogic->init(10,10))
 		return false;
 
 	camera->LookAt(D3DXVECTOR3(45,60,45), D3DXVECTOR3(35, 0, 45), D3DXVECTOR3(-1, 0, 0));
@@ -100,7 +100,12 @@ int Game::update(float dt)
 
 	input->resetBtnState();
 
-	pSystem->update();
+	pSystem->update(dt);
+
+	char title[255];
+
+	sprintf_s(title, "%f", 1/dt);
+	SetWindowTextA(engine->getHWND(), title);
 
 	return 1;
 }

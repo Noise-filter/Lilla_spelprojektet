@@ -5,7 +5,7 @@ BaseParticle::BaseParticle(void)
 {
 }
 
-BaseParticle::BaseParticle(D3DXVECTOR3 position, D3DXVECTOR3 direction, int timeToLive, float velocity)
+BaseParticle::BaseParticle(D3DXVECTOR3 position, D3DXVECTOR3 direction, float timeToLive, float velocity)
 {
 	this->position = position;
 	this->timeToLive = timeToLive;
@@ -23,7 +23,7 @@ D3DXVECTOR3 BaseParticle::getPosition()
 	return this->position;
 }
 
-int BaseParticle::getTimeToLive()
+float BaseParticle::getTimeToLive()
 {
 	return this->timeToLive;
 }
@@ -38,14 +38,14 @@ void BaseParticle::setDirection(D3DXVECTOR3 direction)
 	this->direction = direction;	
 }
 
-void BaseParticle::setTimeToLive(int timeToLive)
+void BaseParticle::setTimeToLive(float timeToLive)
 {
 	this->timeToLive = timeToLive;
 }
 
 
 
-bool BaseParticle::update()
+bool BaseParticle::update(float dt)
 {
 	//check if timeToLive is out and the particle is to be killed
 	static float srand(time(NULL));
@@ -58,7 +58,7 @@ bool BaseParticle::update()
 	}
 	else
 	{
-		timeToLive--; // decreasing particle lifetime
+		timeToLive -= dt; // decreasing particle lifetime
 	}
 	
 	//position += direction * velocity; //new position calculated if the particle is to be alive

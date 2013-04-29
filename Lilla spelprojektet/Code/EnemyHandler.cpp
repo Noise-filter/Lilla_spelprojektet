@@ -44,7 +44,7 @@ int EnemyHandler::update(float dt)
 		{
 			if(enemies.at(i)->update(dt) == 2)
 			{
-				vector<Waypoint> wp = ai->findPath(enemies.at(i)->getCurrentWaypoint1D(), rand() % 400, 1);
+				vector<Waypoint> wp = ai->findPath(enemies.at(i)->getCurrentWaypoint1D(), rand() % 100, 1);
 				if(wp.size() > 0)
 					enemies.at(i)->setPath(wp);
 			}
