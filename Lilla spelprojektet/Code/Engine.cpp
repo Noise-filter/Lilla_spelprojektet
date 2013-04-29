@@ -12,6 +12,7 @@ Engine::~Engine(void)
 	SAFE_DELETE(d3d);
 	SAFE_DELETE(win32);
 	SAFE_DELETE(shader);
+	SAFE_DELETE(particleShader);
 
 	vbs[0]->Release();
 	vbs[1]->Release();
@@ -24,6 +25,8 @@ Engine::~Engine(void)
 	vbs3[0]->Release();
 	vbs3[1]->Release();
 	indexBuffer3->Release();
+
+	particleBuffer->Release();
 }
 
 bool Engine::init(HINSTANCE hInstance, int cmdShow)
@@ -51,6 +54,17 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 
 	shader = new Shader();
 	shader->Init(d3d->device, d3d->deviceContext, "../Shaders/instanced.fx", inputDesc, 5);
+
+	D3D11_INPUT_ELEMENT_DESC inputDesc2[] = {
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+
+	particleShader = new Shader();
+	particleShader->Init(d3d->device, d3d->deviceContext, "../Shaders/particleColor.fx", inputDesc2, 3);
+
+	size1 = size2 = size3 = 0;
 
 	//Skapa nodernas buffrar
 	Vertex vertices[3];
@@ -199,6 +213,18 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 	initDataIB3.pSysMem = indices3;
 	d3d->device->CreateBuffer(&ibd2, &initDataIB3, &indexBuffer3);
 
+
+	//Particles
+	D3D11_BUFFER_DESC particleVertexBufferDesc;
+	particleVertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	particleVertexBufferDesc.ByteWidth = sizeof(VertexColor) * 1000000;
+	particleVertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	particleVertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	particleVertexBufferDesc.MiscFlags = 0;
+
+	d3d->device->CreateBuffer(&particleVertexBufferDesc, NULL, &particleBuffer);
+	particleNum = 0;
+
 	return true; // allt gick bra
 }
 
@@ -219,22 +245,45 @@ void Engine::render(D3DXMATRIX& vp)
 
 	UINT stride[2] = {sizeof(Vertex), sizeof(InstancedData)};
 	UINT offset[2] = {0, 0};
-	d3d->deviceContext->IASetVertexBuffers(0, 2, vbs, stride, offset);
-	d3d->deviceContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
-	d3d->deviceContext->DrawIndexedInstanced(3, size1, 0, 0, 0);
+	if(size1 > 0)
+	{
+		d3d->deviceContext->IASetVertexBuffers(0, 2, vbs, stride, offset);
+		d3d->deviceContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
+		d3d->deviceContext->DrawIndexedInstanced(3, size1, 0, 0, 0);
+	}
 
-	d3d->deviceContext->IASetVertexBuffers(0, 2, vbs2, stride, offset);
-	d3d->deviceContext->IASetIndexBuffer(indexBuffer2, DXGI_FORMAT_R32_UINT, 0);
+	if(size2 > 0)
+	{
+		d3d->deviceContext->IASetVertexBuffers(0, 2, vbs2, stride, offset);
+		d3d->deviceContext->IASetIndexBuffer(indexBuffer2, DXGI_FORMAT_R32_UINT, 0);
 
-	d3d->deviceContext->DrawIndexedInstanced(6, size2, 0, 0, 0);
+		d3d->deviceContext->DrawIndexedInstanced(6, size2, 0, 0, 0);
+	}
 
+	if(size3 > 0)
+	{
+		d3d->deviceContext->IASetVertexBuffers(0, 2, vbs3, stride, offset);
+		d3d->deviceContext->IASetIndexBuffer(indexBuffer3, DXGI_FORMAT_R32_UINT, 0);
 
-	d3d->deviceContext->IASetVertexBuffers(0, 2, vbs3, stride, offset);
-	d3d->deviceContext->IASetIndexBuffer(indexBuffer3, DXGI_FORMAT_R32_UINT, 0);
+		d3d->deviceContext->DrawIndexedInstanced(6, size3, 0, 0, 0);
+	}
 
-	d3d->deviceContext->DrawIndexedInstanced(6, size3, 0, 0, 0);
+	//Particles
+	if(particleNum > 0)
+	{
+		d3d->deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+	
+		particleShader->SetMatrix("gWVP", vp);
+		particleShader->Apply(0);
+
+		UINT stri[1] = { sizeof(VertexColor) };
+		UINT off[1] = {0};
+		d3d->deviceContext->IASetVertexBuffers(0, 1, &particleBuffer, stri, off);
+
+		d3d->deviceContext->Draw(particleNum, 0);
+	}
 
 	if(FAILED(d3d->swapChain->Present( 0, 0 )))
 	{
@@ -249,8 +298,8 @@ void Engine::setRenderData(vector<vector<RenderData*>> renderData)
 	d3d->deviceContext->Map(vbs2[1], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData2);
 	d3d->deviceContext->Map(vbs3[1], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData3);
 
-	InstancedData* dataView = reinterpret_cast<InstancedData*>(mappedData.pData);
-	InstancedData* dataView2 = reinterpret_cast<InstancedData*>(mappedData2.pData);
+ 	InstancedData* dataView = reinterpret_cast<InstancedData*>(mappedData.pData);
+	InstancedData* dataView2= reinterpret_cast<InstancedData*>(mappedData2.pData);
 	InstancedData* dataView3 = reinterpret_cast<InstancedData*>(mappedData3.pData);
 
 	int a = 0, b = 0, c = 0;
@@ -274,6 +323,27 @@ void Engine::setRenderData(vector<vector<RenderData*>> renderData)
 	d3d->deviceContext->Unmap(vbs[1], 0);
 	d3d->deviceContext->Unmap(vbs2[1], 0);
 	d3d->deviceContext->Unmap(vbs3[1], 0);
+}
+
+void Engine::setRenderData(vector<vector<VertexColor>> renderData)
+{
+	D3D11_MAPPED_SUBRESOURCE mappedData;
+	d3d->deviceContext->Map(particleBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData);
+
+	VertexColor* dataView = reinterpret_cast<VertexColor*>(mappedData.pData);
+
+	particleNum = 0;
+
+	for(int j = 0; j < (int)renderData.size(); j++)
+	{
+		for(int i = 0; i < (int)renderData.at(j).size(); i++)
+		{
+			dataView[i + particleNum] = renderData.at(j).at(i);
+		}
+		particleNum += renderData.at(j).size();
+	}
+
+	d3d->deviceContext->Unmap(particleBuffer, 0);
 }
 
 MouseState* Engine::getMouseState()

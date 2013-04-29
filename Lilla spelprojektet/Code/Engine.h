@@ -14,6 +14,7 @@ public:
 	bool init(HINSTANCE hInstance, int cmdShow);
 
 	void setRenderData(vector<vector<RenderData*>> renderData);
+	void setRenderData(vector<vector<VertexColor>> renderData);
 
 	void updateBuffers();
 	
@@ -47,5 +48,11 @@ private:
 	ID3D11Buffer* indexBuffer3;
 
 	int size1, size2, size3;
+
+	Shader* particleShader;
+	ID3D11Buffer* particleBuffer;
+	int particleNum;
+
+
 };
 

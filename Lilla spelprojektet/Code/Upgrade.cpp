@@ -19,3 +19,8 @@ int Upgrade::update(float dt)
 {
 	return Structure::update(dt);
 }
+
+int Upgrade::getUpgradeID()
+{
+	return this->upgradeID;
+}

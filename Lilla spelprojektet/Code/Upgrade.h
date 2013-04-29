@@ -12,6 +12,8 @@ public:
 
 	virtual int update(float dt);
 
+	int getUpgradeID();
+
 
 private:
 	int upgradeID;

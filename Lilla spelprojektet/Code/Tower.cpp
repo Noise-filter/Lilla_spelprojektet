@@ -23,6 +23,27 @@ Tower::Tower(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, 
 	sound = SoundSystem::Getinstance()->createSound("plop.mp3");
 }
 
+void Tower::giveUpgrade(UpgradeStats &stats)
+{
+	this->damage += stats.dmg;
+	this->attackSpeed += stats.atkSpeed;
+	this->maxHp += stats.hp;
+	this->hp += stats.hp;
+	this->projectileSpeed += stats.prjSpeed;
+	this->range += stats.range;
+}
+
+void Tower::removeUpgrade(UpgradeStats &stats)
+{
+	this->damage -= stats.dmg;
+	this->attackSpeed -= stats.atkSpeed;
+	this->maxHp -= stats.hp;
+	this->hp -= stats.hp;
+	this->projectileSpeed -= stats.prjSpeed;
+	this->range -= stats.range;	
+}
+
+
 Tower::~Tower()
 {
 	for(int i = 0; i < (int)projectiles.size(); i++)

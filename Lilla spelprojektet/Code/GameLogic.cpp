@@ -4,9 +4,10 @@ GameLogic::GameLogic(void)
 {
 	this->level = new Level();
 	this->eHandler = new EnemyHandler();
-	selectedStructure = 0;
+	this->selectedStructure = 0;
 	this->availableSupply = 100;
 	this->resource = 100;
+	
 }
 
 GameLogic::~GameLogic(void)
@@ -174,7 +175,6 @@ D3DXVECTOR3 GameLogic::getMouseWorldPos(MouseState* mState, D3DXMATRIX view, D3D
 	D3DXVec3TransformCoord(&rayOrigin, &origin, &worldIdentity);
 	D3DXVec3TransformNormal(&rayDir, &dir, &worldIdentity);
 
-	//Normalize the ray direction.
 	D3DXVec3Normalize(&rayDir, &rayDir);
 	planeNormal = D3DXVECTOR3(0,1,0);
 	intersect = (D3DXVec3Dot(&-planeNormal, &rayOrigin))/(D3DXVec3Dot(&planeNormal,&rayDir));

@@ -20,6 +20,8 @@ public:
 	void aquireTarget(vector<Enemy*>* enemies);
 
 	vector<RenderData*> getRenderData();
+	void giveUpgrade(UpgradeStats &stats);
+	void removeUpgrade(UpgradeStats &stats);
 
 private:
 	float damage;

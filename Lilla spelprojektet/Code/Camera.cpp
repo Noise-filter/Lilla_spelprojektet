@@ -113,7 +113,7 @@ D3DXMATRIX Camera::ViewsProj()const
 
 void Camera::Walk(float dist)
 {
-	this->m_position += dist*this->mLook;
+	this->m_position += dist*D3DXVECTOR3(1,0,0);
 }
 
 void Camera::Strafe(float dist)

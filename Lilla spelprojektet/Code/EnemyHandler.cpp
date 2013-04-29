@@ -7,15 +7,6 @@ EnemyHandler::EnemyHandler(void)
 
 bool EnemyHandler::init(Structure*** structures, Node** nodes, int mapSize)
 {
-	/*int x, z;
-	for(int i = 0; i < 10; i++)
-	{
-		x = rand() % 100;
-		z = rand() % 100;
-
-		enemies.push_back(new Enemy(D3DXVECTOR3(x, 0, z), 2, 0, 10, 0, 0, 0));
-	}*/
-	
 	string scripts[3];
 	scripts[0] = "astar.lua";
 	scripts[1] = "targetFind.lua";
@@ -30,13 +21,15 @@ EnemyHandler::~EnemyHandler(void)
 {
 	for(int i = 0; i < (int)enemies.size(); i++)
 		delete enemies.at(i);
+
+	SAFE_DELETE(ai);
 }
 
 int EnemyHandler::update(float dt)
 {
 	vector<Enemy*> spawnedEnemies = ai->spawnEnemies(dt,0);
 
-	for(int i = 0; i < spawnedEnemies.size(); i++)
+	for(int i = 0; i < (int)spawnedEnemies.size(); i++)
 		enemies.push_back(spawnedEnemies.at(i));
 
 	for(int i = 0; i < (int)enemies.size(); i++)
@@ -49,14 +42,14 @@ int EnemyHandler::update(float dt)
 		}
 		else
 		{
-			enemies.at(i)->update(dt);
+			if(enemies.at(i)->update(dt) == 2)
+			{
+				vector<Waypoint> wp = ai->findPath(enemies.at(i)->getCurrentWaypoint1D(), rand() % 400, 1);
+				if(wp.size() > 0)
+					enemies.at(i)->setPath(wp);
+			}
 		}
 	}
-
-	/*if(enemies.size() < 10)
-	{
-		enemies.push_back(new Enemy(D3DXVECTOR3(rand() % 100, 0, rand() % 100), 2, 0, 10, 0, 0, 0));
-	}*/
 
 	return 1;
 }

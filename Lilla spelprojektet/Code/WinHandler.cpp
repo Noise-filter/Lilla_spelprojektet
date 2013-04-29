@@ -93,7 +93,7 @@ LRESULT CALLBACK WinHandler::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 		hdc = BeginPaint(hWnd, &ps);
 		EndPaint(hWnd, &ps);
 		break;
-
+		
 	case WM_MOVE:
 		return 0;
 		break;
@@ -101,7 +101,7 @@ LRESULT CALLBACK WinHandler::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
-
+		
 	case WM_KEYDOWN:
 		winHandler->setButtonState(wParam);
 		switch(wParam)
@@ -117,7 +117,7 @@ LRESULT CALLBACK WinHandler::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 	case WM_MOUSEHWHEEL:
 		winHandler->setButtonState(wParam);
 		break;
-
+		
 	case WM_MOUSEMOVE:
 		winHandler->setMouseState(lParam);
 			break;
