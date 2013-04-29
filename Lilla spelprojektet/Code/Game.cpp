@@ -38,11 +38,6 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	camera->LookAt(D3DXVECTOR3(45,60,45), D3DXVECTOR3(35, 0, 45), D3DXVECTOR3(-1, 0, 0));
 	camera->SetLens((float)D3DX_PI * 0.45f, (float)screenWidth / (float)screenHeight, 0.1f, 1000.0f);
 
-
-	Trail* temp = pSystem->addTrail(D3DXVECTOR3(1, 1, 1), D3DXVECTOR3(0, 0, 0), 10, 100, 1, 1, 1, 1);
-	Trail* temp2 = pSystem->addTrail(D3DXVECTOR3(0, 1, 0), D3DXVECTOR3(100, 0, 100), 10, 100, 1, 1, 1, 1);
-	//SAFE_DELETE(temp);
-
 	return true; // all initiates went well
 }
 

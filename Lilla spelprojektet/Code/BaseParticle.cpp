@@ -61,6 +61,6 @@ bool BaseParticle::update()
 		timeToLive--; // decreasing particle lifetime
 	}
 	
-	position += direction * velocity; //new position calculated if the particle is to be alive
+	//position += direction * velocity; //new position calculated if the particle is to be alive
 	return true; //all went good, do not kill the particle
 }

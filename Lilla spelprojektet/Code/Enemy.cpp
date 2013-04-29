@@ -17,13 +17,16 @@ Enemy::Enemy(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, 
 	this->currentWP = 0;
 
 	waypoints.push_back(Waypoint(pos.x/10, pos.z/10));
+	trail = ParticleSystem::Getinstance()->addTrail(D3DXVECTOR3(1, 1, 1),this->getPosition(), 10, 100, 1, 1, 1, 1);
 }
 
 Enemy::~Enemy()
-{}
+{
+}
 
 int Enemy::update(float dt)
 {
+	trail->updatePosition(this->getPosition());
 	int id = Entity::update(dt);
 	if(id == 0)
 		return 0;
