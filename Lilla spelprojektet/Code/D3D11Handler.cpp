@@ -21,7 +21,7 @@ D3D11Handler::~D3D11Handler()
 	SAFE_RELEASE(pDepthStencil);
 	SAFE_RELEASE(pDepthStencilView);
 
-	for(int i = 0; i < this->vShaders.size(); i++)
+	for(int i = 0; i < (int)this->vShaders.size(); i++)
 	{
 		SAFE_DELETE(this->vShaders.at(i));
 	}
@@ -239,7 +239,7 @@ bool D3D11Handler::initShaders()
 		{ "WORLD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		{ "WORLD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		{ "WORLD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "TEXTUREID", 0, DXGI_FORMAT_R32_SINT, 2, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "TEXTUREID", 0, DXGI_FORMAT_R32_UINT, 2, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		
 	};
 

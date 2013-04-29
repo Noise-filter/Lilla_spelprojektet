@@ -70,7 +70,7 @@ struct MESH_PNUV
 struct OBJECT_WORLD_AND_TEXTURE
 {
 	Matrix mWorld;
-	int iTextureID;
+	UINT iTextureID;
 
 	OBJECT_WORLD_AND_TEXTURE()
 	{
@@ -81,7 +81,7 @@ struct OBJECT_WORLD_AND_TEXTURE
 							 0.0f, 0.0f, 0.0f, 1.0f);
 	};
 
-	OBJECT_WORLD_AND_TEXTURE(Matrix world, int ID)
+	OBJECT_WORLD_AND_TEXTURE(Matrix world, UINT ID)
 	{
 		iTextureID	= ID;
 		mWorld		= world;
@@ -130,7 +130,7 @@ struct RENDERDATA
 		iLightID	= 0;
 	};
 
-	RENDERDATA(int entityID, OBJECT_WORLD_AND_TEXTURE wTex, int lightID)
+	RENDERDATA(int entityID, OBJECT_WORLD_AND_TEXTURE wTex, UINT lightID)
 	{
 		iEntityID	= entityID;
 		worldTex	= wTex;
