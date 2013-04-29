@@ -36,12 +36,12 @@ private:
 	void makeSet(int x, int z);
 	void upgradeStructures(int selectedUpgrade);
 	void removeUpgrade(int selectedUpgrade);
+	void constructNeutrals();
 
 private:
 	Node** nodes;
 	Structure*** structures;
 
-	vector<Node> neutralNodes;
 	vector<Structure> neutralStructures;
 
 	
