@@ -45,7 +45,7 @@ void Engine::render(float deltaTime, std::vector<std::vector<RENDERDATA*>> data)
 	D3DXMATRIX world, world2, view, proj, wvp, wvp2;
 	D3DXMatrixRotationY(&world, rot);
 	D3DXMatrixTranslation(&world2, 3, sin(rot), 0);
-	D3DXMatrixLookAtLH(&view, &D3DXVECTOR3(0,0,-5), &D3DXVECTOR3(0,5,0), &D3DXVECTOR3(0,1,0));
+	D3DXMatrixLookAtLH(&view, &D3DXVECTOR3(0,0,-10), &D3DXVECTOR3(0,0, 1), &D3DXVECTOR3(0,1,0));
 	D3DXMatrixPerspectiveFovLH(&proj, (float)D3DX_PI * 0.45f, SCREEN_WIDTH / SCREEN_HEIGHT, 1.0f, 100.0f);
 	/*wvp = view * proj;
 	wvp2 = world2 * view * proj;*/
@@ -53,9 +53,11 @@ void Engine::render(float deltaTime, std::vector<std::vector<RENDERDATA*>> data)
 	RENDERDATA temp1[2];
 	temp1[0].iEntityID = (int)ENTITY_MAINBUILDING;
 	temp1[0].iLightID = LIGHT_NONE;
+	temp1[0].worldTex.iTextureID = 9;
 	temp1[0].worldTex.mWorld = world;
 	temp1[1].iEntityID = (int)ENTITY_MAINBUILDING;
 	temp1[1].iLightID = LIGHT_NONE;
+	temp1[1].worldTex.iTextureID = 9;
 	temp1[1].worldTex.mWorld = world2;
 	std::vector<RENDERDATA*> dtest;
 	dtest.push_back(&temp1[0]);
@@ -74,6 +76,7 @@ void Engine::render(float deltaTime, std::vector<std::vector<RENDERDATA*>> data)
 	//D3DXMatrixTranspose(&proj, &wvp2);
 	//temp->SetMatrix("view", wvp);
 	//temp->SetMatrix("proj", wvp2);
+
 	temp->SetMatrix("view", view);
 	temp->SetMatrix("proj", proj);
 	/*

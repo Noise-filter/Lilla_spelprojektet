@@ -10,8 +10,8 @@ struct VSIn
 	float3 normal : NORMAL;
 	float2 uv : TEXTCOORD;
 
-	float textureID : TEXTUREID;
 	row_major float4x4 world : WORLD;
+	uint textureID : TEXTUREID;
 	uint instanceID : SV_InstanceID;
 };
 
@@ -20,7 +20,7 @@ struct PSIn
 	float4 posCS  : SV_Position;
 	float3 posW : worldPos;
 	float3 normalW : TEXTCOORD0;
-	float2 uv : TEXTCOORD2;
+	float2 uv : TEXTCOORD1;
 
 	//float textureID : TEXTUREID;
 };
@@ -40,8 +40,10 @@ PSIn VSScene(VSIn input)
 {
 	PSIn output = (PSIn)0;
 
-	
-	output.posCS = mul(float4(input.pos, 1), ( proj * view *  input.world ));
+	matrix temp = mul( view , proj  );
+	temp = mul(input.world , temp);
+
+	output.posCS = mul(float4(input.pos, 1), temp );
 	output.posW =  mul(float4(input.pos, 1), input.world);
 	
 	output.normalW = normalize(mul(float4(input.normal, 0), input.world));
