@@ -74,18 +74,17 @@ struct OBJECT_WORLD_AND_TEXTURE
 
 	OBJECT_WORLD_AND_TEXTURE()
 	{
+		iTextureID	= 0;
 		mWorld		= Matrix(0.0f, 0.0f, 0.0f, 0.0f,
 							 0.0f, 0.0f, 0.0f, 0.0f,
 							 0.0f, 0.0f, 0.0f, 0.0f,
 							 0.0f, 0.0f, 0.0f, 1.0f);
-				
-		iTextureID	= 0;
 	};
 
 	OBJECT_WORLD_AND_TEXTURE(Matrix world, int ID)
 	{
-		mWorld		= world;
 		iTextureID	= ID;
+		mWorld		= world;
 	};
 };
 enum ENTITY_FLAGS

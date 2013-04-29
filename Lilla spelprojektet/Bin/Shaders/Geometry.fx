@@ -1,8 +1,7 @@
 cbuffer EveryFrame
 {
-	matrix world;
-	matrix viewProj;
-	matrix worldViewProj;
+	matrix view;
+	matrix proj;
 };
 
 struct VSIn
@@ -18,7 +17,6 @@ struct VSIn
 
 struct PSIn
 {
-	float3 pos : POSITION;
 	float4 posCS  : SV_Position;
 	float3 posW : worldPos;
 	float3 normalW : TEXTCOORD0;
@@ -43,10 +41,10 @@ PSIn VSScene(VSIn input)
 	PSIn output = (PSIn)0;
 
 	
-	output.posCS = mul(float4(input.pos, 1), worldViewProj);
-	output.posW =  mul(float4(input.pos, 1), world);
+	output.posCS = mul(float4(input.pos, 1), ( proj * view *  input.world ));
+	output.posW =  mul(float4(input.pos, 1), input.world);
 	
-	output.normalW = normalize(mul(float4(input.normal, 0), world));
+	output.normalW = normalize(mul(float4(input.normal, 0), input.world));
 	output.uv = input.uv;
 	//output.textureID = input.textureID;
 	

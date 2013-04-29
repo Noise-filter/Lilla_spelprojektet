@@ -8,6 +8,9 @@ GeometryManager::GeometryManager()
 GeometryManager::~GeometryManager()
 {
 	SAFE_DELETE(pBufferObj);
+
+	SAFE_RELEASE(buffers[0]);
+	SAFE_RELEASE(buffers[1]);
 }
 
 //bool importMesh(); TBD
@@ -17,18 +20,19 @@ void GeometryManager::init(ID3D11Device *device)
 	BUFFER_INIT bufferInit		= BUFFER_INIT();
 	BUFFER_INIT instanceInit	= BUFFER_INIT();
 	
-	MESH_P mesh[] = {
+	MESH_PNUV mesh[] = {
 
-		MESH_P(Vec3(1.0,0,0)),
-		MESH_P(Vec3(-1.0,0,0)),
-		MESH_P(Vec3(0,1.0,0)),
-		MESH_P(Vec3(0,0,1.0)),
-		MESH_P(Vec3(0,0,-1.0)),
-		MESH_P(Vec3(0,-1.0,0))
+		MESH_PNUV(Vec3(1.0,0,0), Vec3(0,0,0), Vec2(0,0)),
+		MESH_PNUV(Vec3(-1.0,0,0), Vec3(0,0,0), Vec2(0,0)),
+		MESH_PNUV(Vec3(0,1.0,0), Vec3(0,0,0), Vec2(0,0)),
+
+		//MESH_PNUV(Vec3(0,0,1), Vec3(0,0,0), Vec2(0,0)),
+		//MESH_PNUV(Vec3(0,0,-1), Vec3(0,0,0), Vec2(0,0)),
+		//MESH_PNUV(Vec3(0,-1.0,0), Vec3(0,0,0), Vec2(0,0)),
 	};
 
 	bufferInit.desc.eUsage = D3D11_USAGE_DEFAULT;
-	bufferInit.desc.uByteWidth = sizeof(MESH_P)*6;
+	bufferInit.desc.uByteWidth = sizeof(MESH_PNUV)*3;
 	bufferInit.desc.uBindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bufferInit.desc.uCPUAccessFlags = 0;
 	bufferInit.desc.uMiscFlags = 0;
@@ -63,9 +67,8 @@ void GeometryManager::init(ID3D11Device *device)
 
 	/*initIndexBuffer(device, bufferInit);*/
 
-
 	instanceInit.desc.eUsage				= D3D11_USAGE_DYNAMIC;
-	instanceInit.desc.uByteWidth			= sizeof(OBJECT_WORLD_AND_TEXTURE)*10;
+	instanceInit.desc.uByteWidth			= sizeof(OBJECT_WORLD_AND_TEXTURE)*2;
 	instanceInit.desc.uBindFlags			= D3D11_BIND_VERTEX_BUFFER;
 	instanceInit.desc.uCPUAccessFlags		= D3D11_CPU_ACCESS_WRITE;
 	instanceInit.desc.uMiscFlags			= 0;
@@ -73,17 +76,17 @@ void GeometryManager::init(ID3D11Device *device)
 
 	initInstance(device, instanceInit);
 
-	initInstance(device, instanceInit);
+	//initInstance(device, instanceInit);
 }
 
-void GeometryManager::applyBuffer(ID3D11DeviceContext *dc, RENDERDATA *obj, D3D_PRIMITIVE_TOPOLOGY topology, UINT32 misc)
+void GeometryManager::applyBuffer(ID3D11DeviceContext *dc, std::vector<RENDERDATA*> obj, D3D_PRIMITIVE_TOPOLOGY topology, UINT32 misc)
 {
 	UINT strides[2]		= {0, sizeof(OBJECT_WORLD_AND_TEXTURE)};
 	UINT offset[2]		= {0, 0};
-	buffers[0] = vVertexBuffer[(int)obj->iEntityID];
-	buffers[1] = vInstanceBuffer[(int)obj->iEntityID];
+	buffers[0] = vVertexBuffer[(int)obj[0]->iEntityID];
+	buffers[1] = vInstanceBuffer[(int)obj[0]->iEntityID];
 
-	if(obj->iEntityID != ENTITY_GUI) strides[0] = sizeof(MESH_PNUV);
+	if(obj[0]->iEntityID != ENTITY_GUI) strides[0] = sizeof(MESH_PNUV);
 	else strides[0] = sizeof(MESH_PUV);
 
 	dc->IASetVertexBuffers(misc, 2, buffers, strides, offset);
@@ -93,18 +96,16 @@ void GeometryManager::applyBuffer(ID3D11DeviceContext *dc, RENDERDATA *obj, D3D_
 	dc->IASetPrimitiveTopology(topology);
 }
 
-void GeometryManager::updateBuffer(ID3D11DeviceContext *dc, std::vector<RENDERDATA*> data, int index)
+void GeometryManager::updateBuffer(ID3D11DeviceContext *dc, std::vector<RENDERDATA*> data, int index, Matrix &view, Matrix &proj)
 {
-	D3D11_MAPPED_SUBRESOURCE *mappedData;
-	OBJECT_WORLD_AND_TEXTURE *instance;
+	D3D11_MAPPED_SUBRESOURCE *mappedData = map(dc, vInstanceBuffer[index]);
 
-	mappedData = (D3D11_MAPPED_SUBRESOURCE*)map(dc, vInstanceBuffer[index]);
-	instance = (OBJECT_WORLD_AND_TEXTURE*)mappedData->pData;
+	OBJECT_WORLD_AND_TEXTURE *instance = reinterpret_cast<OBJECT_WORLD_AND_TEXTURE*>(mappedData->pData);
 
 	for(int i = 0; i < (int)data.size(); i++)
 	{
-		instance[i].mWorld			= data[index][i].worldTex.mWorld;
-		instance[i].iTextureID		= data[index][i].worldTex.iTextureID;
+		instance[i].mWorld		= (data[index][i].worldTex.mWorld);// * view * proj);
+		instance[i].iTextureID	= data[index][i].worldTex.iTextureID;
 	}
 
 	unmap(dc, vInstanceBuffer[index]); 
@@ -136,9 +137,9 @@ void GeometryManager::initInstance(ID3D11Device *device, BUFFER_INIT &bufferInit
 	vInstanceBuffer.push_back(pBufferObj->initInstance(device, bufferInit));
 }
 
-void *GeometryManager::map(ID3D11DeviceContext *dc, ID3D11Buffer *buffer)
+D3D11_MAPPED_SUBRESOURCE *GeometryManager::map(ID3D11DeviceContext *dc, ID3D11Buffer *buffer)
 {
-	void* ret = NULL;
+	D3D11_MAPPED_SUBRESOURCE* ret = NULL;
 	D3D11_BUFFER_DESC bufferUsage;
 	buffer->GetDesc(&bufferUsage);
 	UINT i = bufferUsage.CPUAccessFlags;
@@ -163,12 +164,11 @@ void *GeometryManager::map(ID3D11DeviceContext *dc, ID3D11Buffer *buffer)
 		}
 		else
 		{
-			ret = mappedResource.pData;
+			ret = &mappedResource;
 		}
 	}
 
 	return ret;
-
 }
 
 void GeometryManager::unmap(ID3D11DeviceContext *dc, ID3D11Buffer *buffer)

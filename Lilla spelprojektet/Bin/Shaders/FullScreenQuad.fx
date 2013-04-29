@@ -8,7 +8,7 @@ Texture2D  positionMap       : register(t2);
 
 struct VSIn
 {
-	float3 pos : POSITION;
+	float4 pos : POSITION;
 };
 
 struct PSIn
@@ -19,7 +19,7 @@ struct PSIn
 PSIn VSScene(VSIn input)
 {	
 	PSIn output =(PSIn)0;
-	output.pos = float4(input.pos, 1.0f);
+	output.pos = input.pos;//float4(input.pos, 1.0f);
 
 	return output;
 }
@@ -27,7 +27,7 @@ PSIn VSScene(VSIn input)
 
 float4 PSScene(PSIn input) : SV_Target
 {
-	int3 sampleIndices = int3(input.pos.xy, 0);
+	int3 sampleIndices = int3(input.pos.xyz);
 
 	float3 position = positionMap.Load(sampleIndices).xyz;
 	float3 diffuse = diffuseAlbedoMap.Load(sampleIndices).xyz;

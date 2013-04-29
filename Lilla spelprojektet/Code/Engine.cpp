@@ -43,44 +43,48 @@ void Engine::render(float deltaTime, std::vector<std::vector<RENDERDATA*>> data)
 	static float rot = 0;
 	rot += deltaTime;
 	D3DXMATRIX world, world2, view, proj, wvp, wvp2;
-	D3DXMatrixIdentity(&world);
 	D3DXMatrixRotationY(&world, rot);
-	D3DXMatrixRotationY(&world2, -rot);
-	D3DXMatrixLookAtLH(&view, &D3DXVECTOR3(0,0,-5), &D3DXVECTOR3(0,0,0), &D3DXVECTOR3(0,1,0));
-	D3DXMatrixPerspectiveFovLH(&proj, (float)D3DX_PI * 0.45f, 1024.0f / 768.0f, 1.0f, 100.0f);
-	wvp = world * view * proj;
-	wvp2 = world2 * view * proj;
+	D3DXMatrixTranslation(&world2, 3, sin(rot), 0);
+	D3DXMatrixLookAtLH(&view, &D3DXVECTOR3(0,0,-5), &D3DXVECTOR3(0,5,0), &D3DXVECTOR3(0,1,0));
+	D3DXMatrixPerspectiveFovLH(&proj, (float)D3DX_PI * 0.45f, SCREEN_WIDTH / SCREEN_HEIGHT, 1.0f, 100.0f);
+	/*wvp = view * proj;
+	wvp2 = world2 * view * proj;*/
 
-	RENDERDATA *adata = new RENDERDATA();
-	adata->iEntityID = ENTITY_MAINBUILDING;
-	adata->iLightID = LIGHT_NONE;
-	adata->worldTex.mWorld = wvp;
-
+	RENDERDATA temp1[2];
+	temp1[0].iEntityID = (int)ENTITY_MAINBUILDING;
+	temp1[0].iLightID = LIGHT_NONE;
+	temp1[0].worldTex.mWorld = world;
+	temp1[1].iEntityID = (int)ENTITY_MAINBUILDING;
+	temp1[1].iLightID = LIGHT_NONE;
+	temp1[1].worldTex.mWorld = world2;
 	std::vector<RENDERDATA*> dtest;
-	dtest.push_back(adata);
+	dtest.push_back(&temp1[0]);
+	dtest.push_back(&temp1[1]);
 	std::vector<std::vector<RENDERDATA*>> test;
 	test.push_back(dtest);
+	FLOAT meh;
 
-	adata->iEntityID = ENTITY_SUPPLY;
-	adata->worldTex.mWorld = wvp2;
-	dtest.push_back(adata);
-	test.push_back(dtest);
-
-	pGeoManager->updateBuffer(d3d->pDeviceContext, test[0], 0);
-	pGeoManager->updateBuffer(d3d->pDeviceContext, test[1], 1);
+	pGeoManager->updateBuffer(d3d->pDeviceContext, test[0], 0, view, proj);
 
 	Shader* temp;
 	temp = this->d3d->setPass(PASS_GEOMETRY);
-	temp->SetMatrix("world", world);
-	temp->SetMatrix("viewProj", view * proj);
-	temp->SetMatrix("worldViewProj", wvp);
-	pGeoManager->applyBuffer(d3d->pDeviceContext, test[0][0], D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 0);
+	//D3DXMatrixInverse(&wvp, &meh, &view);
+	//D3DXMatrixTranspose(&view, &wvp);
+	//D3DXMatrixInverse(&wvp2, &meh, &proj);
+	//D3DXMatrixTranspose(&proj, &wvp2);
+	//temp->SetMatrix("view", wvp);
+	//temp->SetMatrix("proj", wvp2);
+	temp->SetMatrix("view", view);
+	temp->SetMatrix("proj", proj);
+	/*
+	temp->SetRawData("view", view, sizeof(D3DXMATRIX));
+	temp->SetRawData("proj", proj, sizeof(D3DXMATRIX));*/
+	pGeoManager->applyBuffer(d3d->pDeviceContext, test[0], D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 0);
 	temp->Apply(0);
-	d3d->pDeviceContext->DrawInstanced(6, 1, 0, 0);
+	d3d->pDeviceContext->DrawInstanced(3, 2, 0, 0);
 
-	pGeoManager->applyBuffer(d3d->pDeviceContext, test[1][0], D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 0);
-	d3d->pDeviceContext->DrawInstanced(6, 1, 0, 0);
-
+	//pGeoManager->applyBuffer(d3d->pDeviceContext, test[1][0], D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 0);
+	
 	/*
 	while(index < (int)data.size())
 	{
@@ -113,7 +117,7 @@ void Engine::render(float deltaTime, std::vector<std::vector<RENDERDATA*>> data)
 	
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);
-	
+
 	if(FAILED(d3d->pSwapChain->Present( 0, 0 )))
 	{
 		return;
