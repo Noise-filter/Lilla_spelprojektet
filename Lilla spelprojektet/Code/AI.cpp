@@ -95,16 +95,16 @@ vector<Waypoint> AI::findPath(int start, int goal, int enemyType)
 	return wayPoints;
 }
 
-vector<float> AI::findTarget()
+vector<float> AI::findTarget(Waypoint pos, int type)
 {
 	vector<float> target;
 
 	lua_getglobal(targetScript, "findTarget");
-
+	convertStructuresToInt();
 	sendArray(structuresInt, mapSize-1, targetScript);
-	lua_pushnumber(targetScript, 10);
-	lua_pushnumber(targetScript, 5);
-	lua_pushnumber(targetScript, 1);
+	lua_pushnumber(targetScript, pos.x);
+	lua_pushnumber(targetScript, pos.y);
+	lua_pushnumber(targetScript, type);
 	
 	lua_pcall(targetScript, 4, 2, 0); //kalla på funktionen
 	
@@ -222,7 +222,7 @@ bool AI::initFindTarget(string scriptName)
 
 	lua_getglobal(targetScript, "init");
 
-	convertStructuresToInt();
+	
 	//sendArray(structuresInt, mapSize-1, targetScript);
 
 	lua_pushnumber(targetScript, mapSize);
@@ -270,7 +270,7 @@ void AI::convertStructuresToInt()
 			}
 			else
 			{
-				structuresInt[i][j] = 0;
+				structuresInt[i][j] = -1;
 			}
 		}
 	}

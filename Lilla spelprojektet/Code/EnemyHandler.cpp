@@ -44,10 +44,10 @@ int EnemyHandler::update(float dt)
 		{
 			if(enemies.at(i)->update(dt) == 2)
 			{
-				vector<float> target = ai->findTarget();
+				vector<float> target = ai->findTarget(enemies.at(i)->getCurrentWaypoint(), 1);
 				float x = target[0];
 				float y = target[1];
-				vector<Waypoint> wp = ai->findPath(enemies.at(i)->getCurrentWaypoint1D(), x + y*20, 1);
+				vector<Waypoint> wp = ai->findPath(enemies.at(i)->getCurrentWaypoint1D(), x + y*10, 1);
 				if(wp.size() > 0)
 					enemies.at(i)->setPath(wp);
 			}

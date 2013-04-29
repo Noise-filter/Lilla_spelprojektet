@@ -29,7 +29,7 @@ public:
 
 	bool init(Structure*** structures, Node** nodes ,string* scripts, int mapSize, int quadSize);
 	vector<Waypoint> findPath(int start, int goal, int enemyType); // hanterar pathScript
-	vector<float> findTarget(); // hanterar targetScript
+	vector<float> findTarget(Waypoint pos, int type); // hanterar targetScript
 	vector<Enemy*> spawnEnemies(float dt, int nrOfEnemies); // hanterar spawnScript
 
 	bool initSpawnEnemies(string scriptName);

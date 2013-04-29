@@ -19,7 +19,7 @@ Game::~Game(void)
 	SAFE_DELETE(camera);
 	SAFE_DELETE(input);
 	soundSystem->shutdown();
-	//SAFE_DELETE(playlist);
+	SAFE_DELETE(playlist);
 	pSystem->shutdown();
 }
 
@@ -29,7 +29,7 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 		return false;
 
 	soundSystem->init();
-	//playlist = soundSystem->createPlaylist("playlist.m3u");
+	playlist = soundSystem->createPlaylist("playlist.m3u");
 	//initiate other game resources such as level or whatever
 
 	if(!gameLogic->init(10,10))
