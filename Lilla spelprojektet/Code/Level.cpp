@@ -29,6 +29,11 @@ bool Level::init(int mapSize, int quadSize)
 	nodes[3][5] = Node(D3DXVECTOR3(3*quadSize,0,5*quadSize),0,0,0,0,COLOR_RED);
 	nodes[3][6] = Node(D3DXVECTOR3(3*quadSize,0,6*quadSize),0,0,0,0,COLOR_RED);
 	nodes[3][7] = Node(D3DXVECTOR3(3*quadSize,0,7*quadSize),0,0,0,0,COLOR_RED);
+
+	nodes[4][4] = Node(D3DXVECTOR3(4*quadSize,0,4*quadSize),0,0,0,0,COLOR_GREY);
+	nodes[4][5] = Node(D3DXVECTOR3(4*quadSize,0,5*quadSize),0,0,0,0,COLOR_GREY);
+	nodes[5][4] = Node(D3DXVECTOR3(5*quadSize,0,4*quadSize),0,0,0,0,COLOR_GREY);
+	nodes[5][5] = Node(D3DXVECTOR3(5*quadSize,0,5*quadSize),0,0,0,0,COLOR_GREY);
 	 
 	structures = new Structure**[mapSize-1];
 	for(int i = 0; i < mapSize-1; i++)
@@ -52,7 +57,47 @@ bool Level::init(int mapSize, int quadSize)
 	this->availibleUpgrades[3] = (UpgradeStats(TYPE_UPGRADE_PRJSP,0,0,0,10,0));
 	this->availibleUpgrades[4] = (UpgradeStats(TYPE_UPGRADE_RANGE,0,0,0,0,10));
 
+	constructNeutrals();
+
 	return true;
+}
+
+void Level::constructNeutrals()
+{
+	//kolla igenom nodes och leta efter quads av neutrala noder
+	//placera sedan en neutral byggnad 
+	D3DXVECTOR3 pos = D3DXVECTOR3(0,0,0);
+	int counter = 0;
+	for(int i = 0; i < mapSize-1; i++)
+	{
+		for(int j = 0; j < mapSize-1; j++)
+		{
+			counter = 0;
+
+			if(nodes[i][j].getColor() == COLOR_GREY)
+			{
+				counter++;
+			}
+			if(nodes[i+1][j].getColor() == COLOR_GREY)
+			{
+				counter++;		
+			}
+			if(nodes[i][j+1].getColor() == COLOR_GREY)
+			{
+				counter++;		
+			}
+			if(nodes[i+1][j+1].getColor() == COLOR_GREY)
+			{
+				counter++;			
+			}
+			if(counter == 4)
+			{
+				pos = D3DXVECTOR3(i*quadSize + (quadSize/2),0,j*quadSize + (quadSize/2));
+
+				neutralStructures.push_back(Structure(pos,1,0,100,0));
+			}
+		}
+	}
 }
 
 Level::~Level(void)
@@ -176,23 +221,35 @@ bool Level::isAdjecent(int xPos, int yPos)
 
 bool Level::isLocationBuildable(int xPos, int yPos)
 {
-	if(nodes[xPos][yPos].getColor() == COLOR_RED)
+	int counter = 0;
+
+	if(nodes[xPos][yPos].getColor() == COLOR_GREEN)
+	{
+		counter++;
+	}
+	if(nodes[xPos+1][yPos].getColor() == COLOR_GREEN)
+	{
+		counter++;
+	}
+	if(nodes[xPos][yPos+1].getColor() == COLOR_GREEN)
+	{
+		counter++;
+	}
+	if(nodes[xPos+1][yPos+1].getColor() == COLOR_GREEN)
+	{
+		counter++;
+	}
+	
+	if(counter == 4)
+	{
+		return true;
+	}
+	else
 	{
 		return false;
 	}
-	if(nodes[xPos+1][yPos].getColor() == COLOR_RED)
-	{
-		return false;
-	}
-	if(nodes[xPos][yPos+1].getColor() == COLOR_RED)
-	{
-		return false;
-	}
-	if(nodes[xPos+1][yPos+1].getColor() == COLOR_RED)
-	{
-		return false;
-	}
-	return true;
+		
+
 }
 
 bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
@@ -271,6 +328,11 @@ void Level::getRenderData(vector<vector<RenderData*>>& rData)
 		{
 			rData.at(nodes[i][j].getRenderData().meshID).push_back(&nodes[i][j].getRenderData());
 		}
+	}
+	
+	for(int i = 0; i < neutralStructures.size(); i++)
+	{
+		rData.at(1).push_back(&neutralStructures.at(i).getRenderData());
 	}
 
 	//Lägg till alla byggnader i renderData

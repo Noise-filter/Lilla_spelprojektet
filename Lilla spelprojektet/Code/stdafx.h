@@ -68,6 +68,7 @@ enum NODE_COLORS
 {
 	COLOR_RED,
 	COLOR_GREEN,
+	COLOR_GREY,
 };
 
 struct UpgradeStats
