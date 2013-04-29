@@ -12,6 +12,8 @@ class GeometryManager
 		D3D11_MAPPED_SUBRESOURCE *map(ID3D11DeviceContext *dc, ID3D11Buffer *buffer);
 		void unmap(ID3D11DeviceContext *dc, ID3D11Buffer *buffer);
 
+
+
 	private:
 		Buffer *pBufferObj;
 		//Importer *importer, lägg till om/när vi får godkänt på
@@ -31,8 +33,11 @@ class GeometryManager
 		
 		void init(ID3D11Device *device); //TBA more functionality like calls for importing meshes, also fill out the bufferInit for testing purpose
 		void applyBuffer(ID3D11DeviceContext *dc, std::vector<RENDERDATA*> obj, D3D_PRIMITIVE_TOPOLOGY topology, UINT32 misc = 0);
-		void updateBuffer(ID3D11DeviceContext *dc, std::vector<RENDERDATA*> data, int index, Matrix &view, Matrix &proj);
+		void updateBuffer(ID3D11DeviceContext *dc, std::vector<RENDERDATA*> data, int index);
 		void debugApplyBuffer(ID3D11DeviceContext *dc, int ID);
+
+		int getNrOfInstances(int index);
+		int getNrOfVertexPoints(int index);
 };
 
 #endif

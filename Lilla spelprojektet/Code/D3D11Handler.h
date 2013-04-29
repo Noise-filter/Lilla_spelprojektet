@@ -20,7 +20,7 @@ class D3D11Handler
 		ID3D11RenderTargetView		**pMultipleRTVs;
 		ID3D11ShaderResourceView	**pMultipleSRVs;
 		ID3D11ShaderResourceView	**pNullSRVs;
-		ID3D11DepthStencilView		*pDSVDeferred; //Needed?
+		ID3D11DepthStencilView		*pDSVDeferred;
 		int							 iNrOfDeferred;
 		std::vector<Shader*>         vShaders;
 

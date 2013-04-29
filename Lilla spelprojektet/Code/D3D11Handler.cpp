@@ -11,7 +11,7 @@ D3D11Handler::D3D11Handler()
 	pMultipleRTVs		= NULL;
 	pMultipleSRVs		= NULL;
 	pNullSRVs			= NULL;
-	pDSVDeferred		= NULL; //Needed?
+	pDSVDeferred		= NULL; 
 	iNrOfDeferred		= 3;
 }
 

@@ -42,49 +42,52 @@ void Engine::render(float deltaTime, std::vector<std::vector<RENDERDATA*>> data)
 	
 	static float rot = 0;
 	rot += deltaTime;
-	D3DXMATRIX world, world2, view, proj, wvp, wvp2;
+	D3DXMATRIX world, world2, world3, view, proj, wvp, wvp2;
 	D3DXMatrixRotationY(&world, rot);
 	D3DXMatrixTranslation(&world2, 3, sin(rot), 0);
+	D3DXMatrixTranslation(&world3, -3, -sin(rot), 0);
 	D3DXMatrixLookAtLH(&view, &D3DXVECTOR3(0,0,-10), &D3DXVECTOR3(0,0, 1), &D3DXVECTOR3(0,1,0));
 	D3DXMatrixPerspectiveFovLH(&proj, (float)D3DX_PI * 0.45f, SCREEN_WIDTH / SCREEN_HEIGHT, 1.0f, 100.0f);
-	/*wvp = view * proj;
-	wvp2 = world2 * view * proj;*/
 
-	RENDERDATA temp1[2];
-	temp1[0].iEntityID = (int)ENTITY_MAINBUILDING;
-	temp1[0].iLightID = LIGHT_NONE;
-	temp1[0].worldTex.iTextureID = 9;
-	temp1[0].worldTex.mWorld = world;
-	temp1[1].iEntityID = (int)ENTITY_MAINBUILDING;
-	temp1[1].iLightID = LIGHT_NONE;
-	temp1[1].worldTex.iTextureID = 9;
-	temp1[1].worldTex.mWorld = world2;
-	std::vector<RENDERDATA*> dtest;
-	dtest.push_back(&temp1[0]);
-	dtest.push_back(&temp1[1]);
-	std::vector<std::vector<RENDERDATA*>> test;
-	test.push_back(dtest);
-	FLOAT meh;
+	std::vector<std::vector<RENDERDATA*>> temp3;
+	std::vector<RENDERDATA*> temp1, temp2, tem3;
+	RENDERDATA dtemp1[1], dtemp2[1], dtemp3[1];
+	dtemp1[0].iEntityID = (int)ENTITY_MAINBUILDING;
+	dtemp1[0].iLightID = LIGHT_NONE;
+	dtemp1[0].worldTex.iTextureID = 0;
+	dtemp1[0].worldTex.mWorld = world;
+	temp2.push_back(&dtemp1[0]);
+	temp3.push_back(temp2);
 
-	pGeoManager->updateBuffer(d3d->pDeviceContext, test[0], 0, view, proj);
+	dtemp2[0].iEntityID = (int)ENTITY_SUPPLY;
+	dtemp2[0].iLightID = LIGHT_NONE;
+	dtemp2[0].worldTex.iTextureID = 0;
+	dtemp2[0].worldTex.mWorld = world2;
+	temp1.push_back(&dtemp2[0]);
+	temp3.push_back(temp1);
+
+	dtemp3[0].iEntityID = (int)ENTITY_TOWER;
+	dtemp3[0].iLightID = LIGHT_NONE;
+	dtemp3[0].worldTex.iTextureID = 0;
+	dtemp3[0].worldTex.mWorld = world3;
+	tem3.push_back(&dtemp3[0]);
+	temp3.push_back(tem3);
+
+	for(int i = 0; i < 3; i++)
+		pGeoManager->updateBuffer(d3d->pDeviceContext, temp3[i], i);
 
 	Shader* temp;
-	temp = this->d3d->setPass(PASS_GEOMETRY);
-	//D3DXMatrixInverse(&wvp, &meh, &view);
-	//D3DXMatrixTranspose(&view, &wvp);
-	//D3DXMatrixInverse(&wvp2, &meh, &proj);
-	//D3DXMatrixTranspose(&proj, &wvp2);
-	//temp->SetMatrix("view", wvp);
-	//temp->SetMatrix("proj", wvp2);
 
+	temp = this->d3d->setPass(PASS_GEOMETRY);
 	temp->SetMatrix("view", view);
 	temp->SetMatrix("proj", proj);
-	/*
-	temp->SetRawData("view", view, sizeof(D3DXMATRIX));
-	temp->SetRawData("proj", proj, sizeof(D3DXMATRIX));*/
-	pGeoManager->applyBuffer(d3d->pDeviceContext, test[0], D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 0);
 	temp->Apply(0);
-	d3d->pDeviceContext->DrawInstanced(3, 2, 0, 0);
+
+	for(int i = 0; i < 3; i++)
+	{
+		pGeoManager->applyBuffer(d3d->pDeviceContext, temp3[i], D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 0);
+		d3d->pDeviceContext->DrawInstanced(pGeoManager->getNrOfVertexPoints(i), pGeoManager->getNrOfInstances(i), 0, 0);
+	}
 
 	//pGeoManager->applyBuffer(d3d->pDeviceContext, test[1][0], D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 0);
 	
@@ -115,9 +118,8 @@ void Engine::render(float deltaTime, std::vector<std::vector<RENDERDATA*>> data)
 	*/
 
 	temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
-	pGeoManager->debugApplyBuffer(d3d->pDeviceContext, 1);
+	pGeoManager->debugApplyBuffer(d3d->pDeviceContext, 3);
 
-	
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);
 

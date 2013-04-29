@@ -9,8 +9,8 @@ GeometryManager::~GeometryManager()
 {
 	SAFE_DELETE(pBufferObj);
 
-	SAFE_RELEASE(buffers[0]);
-	SAFE_RELEASE(buffers[1]);
+//	SAFE_RELEASE(buffers[0]);
+	//SAFE_RELEASE(buffers[1]);
 }
 
 //bool importMesh(); TBD
@@ -25,10 +25,6 @@ void GeometryManager::init(ID3D11Device *device)
 		MESH_PNUV(Vec3(1.0,0,0), Vec3(0,0,0), Vec2(0,0)),
 		MESH_PNUV(Vec3(-1.0,0,0), Vec3(0,0,0), Vec2(0,0)),
 		MESH_PNUV(Vec3(0,1.0,0), Vec3(0,0,0), Vec2(0,0)),
-
-		//MESH_PNUV(Vec3(0,0,1), Vec3(0,0,0), Vec2(0,0)),
-		//MESH_PNUV(Vec3(0,0,-1), Vec3(0,0,0), Vec2(0,0)),
-		//MESH_PNUV(Vec3(0,-1.0,0), Vec3(0,0,0), Vec2(0,0)),
 	};
 
 	bufferInit.desc.eUsage = D3D11_USAGE_DEFAULT;
@@ -44,12 +40,42 @@ void GeometryManager::init(ID3D11Device *device)
 
 	initVertexBuffer(device, bufferInit);
 
+	MESH_PNUV diamond[] ={
+		MESH_PNUV(Vec3(1.0,0,0), Vec3(1,0,0), Vec2(1,1)),
+		MESH_PNUV(Vec3(-1.0,0,0), Vec3(0,0,1), Vec2(-1,0)),
+		MESH_PNUV(Vec3(0,1.0,0), Vec3(0,1,0), Vec2(1,0)),
+
+		MESH_PNUV(Vec3(1,0,0), Vec3(0,0,1), Vec2(0,0)),
+		MESH_PNUV(Vec3(-1,0,0), Vec3(0,1,0), Vec2(0,-1)),
+		MESH_PNUV(Vec3(0,-1.0,0), Vec3(1,0,0), Vec2(1,1)),
+	};
+
+	bufferInit.desc.uByteWidth = sizeof(MESH_PNUV)*6;
+	bufferInit.data.pInitData = diamond;
+
+	initVertexBuffer(device, bufferInit);
+
+	MESH_PNUV quad[] ={
+		MESH_PNUV(Vec3(-1,1,0), Vec3(1,0,1), Vec2(1,1)),
+		MESH_PNUV(Vec3(1,1,0), Vec3(1,0,1), Vec2(-1,0)),
+		MESH_PNUV(Vec3(1,0,0), Vec3(0,1,0), Vec2(1,0)),
+
+		MESH_PNUV(Vec3(-1,1,0), Vec3(1,0,1), Vec2(0,0)),
+		MESH_PNUV(Vec3(-1,0,0), Vec3(0,1,1), Vec2(0,-1)),
+		MESH_PNUV(Vec3(1,0,0), Vec3(1,1,0), Vec2(1,1)),
+	};
+
+		bufferInit.desc.uByteWidth = sizeof(MESH_PNUV)*6;
+	bufferInit.data.pInitData = quad;
+
+	initVertexBuffer(device, bufferInit);
+
 		MESH_P p[] = {  MESH_P(D3DXVECTOR3(1,-1,0)),
-									MESH_P(D3DXVECTOR3(-1,-1,0)), 
-									MESH_P(D3DXVECTOR3(1,1,0)),
-									MESH_P(D3DXVECTOR3(1,1,0)),  
-									MESH_P(D3DXVECTOR3(-1,-1,0)), 
-									MESH_P(D3DXVECTOR3(-1,1,0)), 
+						MESH_P(D3DXVECTOR3(-1,-1,0)), 
+						MESH_P(D3DXVECTOR3(1,1,0)),
+						MESH_P(D3DXVECTOR3(1,1,0)),  
+						MESH_P(D3DXVECTOR3(-1,-1,0)), 
+						MESH_P(D3DXVECTOR3(-1,1,0)), 
 	};
 
 	bufferInit.desc.eUsage = D3D11_USAGE_DEFAULT;
@@ -68,12 +94,14 @@ void GeometryManager::init(ID3D11Device *device)
 	/*initIndexBuffer(device, bufferInit);*/
 
 	instanceInit.desc.eUsage				= D3D11_USAGE_DYNAMIC;
-	instanceInit.desc.uByteWidth			= sizeof(OBJECT_WORLD_AND_TEXTURE)*2;
+	instanceInit.desc.uByteWidth			= sizeof(OBJECT_WORLD_AND_TEXTURE);
 	instanceInit.desc.uBindFlags			= D3D11_BIND_VERTEX_BUFFER;
 	instanceInit.desc.uCPUAccessFlags		= D3D11_CPU_ACCESS_WRITE;
 	instanceInit.desc.uMiscFlags			= 0;
 	instanceInit.desc.uStructureByteStride	= 0;
 
+	initInstance(device, instanceInit);
+	initInstance(device, instanceInit);
 	initInstance(device, instanceInit);
 
 	//initInstance(device, instanceInit);
@@ -96,7 +124,7 @@ void GeometryManager::applyBuffer(ID3D11DeviceContext *dc, std::vector<RENDERDAT
 	dc->IASetPrimitiveTopology(topology);
 }
 
-void GeometryManager::updateBuffer(ID3D11DeviceContext *dc, std::vector<RENDERDATA*> data, int index, Matrix &view, Matrix &proj)
+void GeometryManager::updateBuffer(ID3D11DeviceContext *dc, std::vector<RENDERDATA*> data, int index)
 {
 	D3D11_MAPPED_SUBRESOURCE *mappedData = map(dc, vInstanceBuffer[index]);
 
@@ -104,8 +132,8 @@ void GeometryManager::updateBuffer(ID3D11DeviceContext *dc, std::vector<RENDERDA
 
 	for(int i = 0; i < (int)data.size(); i++)
 	{
-		instance[i].mWorld		= (data[index][i].worldTex.mWorld);// * view * proj);
-		instance[i].iTextureID	= data[index][i].worldTex.iTextureID;
+		instance[i].mWorld		= data[i]->worldTex.mWorld;
+		instance[i].iTextureID	= data[i]->worldTex.iTextureID;
 	}
 
 	unmap(dc, vInstanceBuffer[index]); 
@@ -174,4 +202,20 @@ D3D11_MAPPED_SUBRESOURCE *GeometryManager::map(ID3D11DeviceContext *dc, ID3D11Bu
 void GeometryManager::unmap(ID3D11DeviceContext *dc, ID3D11Buffer *buffer)
 {
 	dc->Unmap(buffer, 0);
+}
+
+int GeometryManager::getNrOfInstances(int index)
+{
+	D3D11_BUFFER_DESC temp;
+	int ret = 0;
+	vInstanceBuffer[index]->GetDesc(&temp);
+	return temp.ByteWidth / sizeof(OBJECT_WORLD_AND_TEXTURE);
+}
+
+int GeometryManager::getNrOfVertexPoints(int index)
+{
+	D3D11_BUFFER_DESC temp;
+	int ret = 0;
+	vVertexBuffer[index]->GetDesc(&temp);
+	return temp.ByteWidth / sizeof(MESH_PNUV);
 }
