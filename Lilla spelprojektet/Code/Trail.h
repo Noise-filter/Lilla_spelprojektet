@@ -16,13 +16,13 @@ class Trail : public ParticlePolicy
 		void emitt();
 		void createVertices();
 
-		void updatePosition(D3DXVECTOR3 pos);
-
 	public:
 		Trail(D3DXVECTOR3 color, D3DXVECTOR3 position , int intensity, int timeToLive, float velocity, float lengthX, float lengthY, float lengthZ);
 		~Trail();
 
 		void update();
+		void updatePosition(D3DXVECTOR3 pos);
+
 		vector<VertexColor> getVertexData();
 };
 

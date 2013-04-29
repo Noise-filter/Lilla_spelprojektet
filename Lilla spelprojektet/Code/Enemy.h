@@ -4,6 +4,7 @@
 #include "Structure.h"
 #include "Entity.h"
 #include <vector>
+#include "ParticleSystem.h"
 
 struct Waypoint
 {
@@ -32,9 +33,10 @@ public:
 	Waypoint getCurrentWaypoint();
 	int getCurrentWaypoint1D();
 
-
+	
 private:
 	//Waypoints
+	Trail* trail;
 	std::vector<Waypoint> waypoints;
 	int currentWP;
 
@@ -42,6 +44,8 @@ private:
 
 	float speed;
 	float damage;
+
+
 
 };
 
