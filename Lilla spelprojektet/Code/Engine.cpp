@@ -92,7 +92,7 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 	//instanced buffer
 	D3D11_BUFFER_DESC vbd2;
 	vbd2.Usage = D3D11_USAGE_DYNAMIC;
-	vbd2.ByteWidth = sizeof(InstancedData) * 10000;
+	vbd2.ByteWidth = sizeof(InstancedData) * 100000;
 	vbd2.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vbd2.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	vbd2.MiscFlags = 0;
@@ -143,7 +143,7 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 	//instanced buffer
 	D3D11_BUFFER_DESC vbd4;
 	vbd4.Usage = D3D11_USAGE_DYNAMIC;
-	vbd4.ByteWidth = sizeof(InstancedData) * 10000;
+	vbd4.ByteWidth = sizeof(InstancedData) * 100000;
 	vbd4.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vbd4.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	vbd4.MiscFlags = 0;
@@ -194,7 +194,7 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 	//instanced buffer
 	D3D11_BUFFER_DESC vbd6;
 	vbd6.Usage = D3D11_USAGE_DYNAMIC;
-	vbd6.ByteWidth = sizeof(InstancedData) * 10000;
+	vbd6.ByteWidth = sizeof(InstancedData) * 100000;
 	vbd6.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vbd6.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	vbd6.MiscFlags = 0;
@@ -285,6 +285,8 @@ void Engine::render(D3DXMATRIX& vp)
 		d3d->deviceContext->Draw(particleNum, 0);
 	}
 
+	//cout << particleNum << endl;
+
 	if(FAILED(d3d->swapChain->Present( 0, 0 )))
 	{
 		return;
@@ -350,6 +352,7 @@ MouseState* Engine::getMouseState()
 {
 	return this->win32->mState;
 }
+
 HWND Engine::getHWND()
 {
 	return win32->getHWND();

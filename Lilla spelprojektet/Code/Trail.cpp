@@ -1,6 +1,6 @@
 #include "Trail.h"
 
-Trail::Trail(D3DXVECTOR3 color, D3DXVECTOR3 position , int intensity, int timeToLive, float velocity, float lengthX, float lengthY, float lengthZ)
+Trail::Trail(D3DXVECTOR3 color, D3DXVECTOR3 position , int intensity, float timeToLive, float velocity, float lengthX, float lengthY, float lengthZ)
 {
 	this->nrOfVertsPerParticle = 1;
 	this->intensity = intensity;
@@ -23,9 +23,9 @@ Trail::~Trail()
 	
 }
 
-void Trail::update()
+void Trail::update(float dt)
 {
-	for(int i = 0; i < this->intensity; i++)
+	for(int i = 0; i < this->intensity * dt; i++)
 	{
 		emitt();
 	}
@@ -33,7 +33,7 @@ void Trail::update()
 	int i = 0;
 	for(ListNode<BaseParticle>* walker = particles.getFirst(); walker != NULL; walker = walker->next)
 	{
-		if(!walker->value.update())
+		if(!walker->value.update(dt))
 		{
 			i++;
 		}
