@@ -48,7 +48,7 @@ bool Level::init(int mapSize, int quadSize)
 		}	
 	}
 
-	structures[0][0] = new Headquarter(D3DXVECTOR3(5, 0, 5), 2, 0, 2, 0);
+	structures[5][5] = new Headquarter(D3DXVECTOR3(55, 0, 55), 2, 0, 2, 0);
 
 	this->availibleUpgrades = new UpgradeStats[5];
 	this->availibleUpgrades[0] = (UpgradeStats(TYPE_UPGRADE_HP,10,0,0,0,0));
