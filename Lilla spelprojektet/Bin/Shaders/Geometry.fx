@@ -40,10 +40,7 @@ PSIn VSScene(VSIn input)
 {
 	PSIn output = (PSIn)0;
 
-	matrix temp = mul( view , proj  );
-	temp = mul(input.world , temp);
-
-	output.posCS = mul(float4(input.pos, 1), temp );
+	output.posCS = mul(float4(input.pos, 1), mul(input.world , mul(view,proj) ));
 	output.posW =  mul(float4(input.pos, 1), input.world);
 	
 	output.normalW = normalize(mul(float4(input.normal, 0), input.world));
