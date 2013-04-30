@@ -49,7 +49,7 @@ bool Level::init(int mapSize, int quadSize)
 		}	
 	}
 
-	structures[2][8] = new Headquarter(D3DXVECTOR3(25, 0, 85), ENTITY_MAINBUILDING, 0, 2, 0);
+	structures[2][8] = new Headquarter(D3DXVECTOR3((float)2*quadSize + (quadSize/2),0,(float)8*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 2, 0);
 
 	this->availibleUpgrades = new UpgradeStats[5];
 	this->availibleUpgrades[0] = (UpgradeStats(BUILDABLE_UPGRADE_HP,10,0,0,0,0));
@@ -154,7 +154,7 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 					sets.initSets(structures, mapSize-1);
 					supply += destroyBuildings();
 				}
-				else if(id == 2 && typeid(*structures[i][j]) == typeid(Tower))
+				if(id == 2 && typeid(*structures[i][j]) == typeid(Tower))
 				{
 					dynamic_cast<Tower*>(structures[i][j])->aquireTarget(&enemies);
 				}
@@ -327,7 +327,7 @@ void Level::getRenderData(vector<vector<RenderData*>>& rData)
 	{
 		for(int j = 0; j < mapSize; j++)
 		{
-			rData.at(nodes[i][j].getRenderData().meshID).push_back(&nodes[i][j].getRenderData());
+			rData[nodes[i][j].getRenderData().meshID].push_back(&nodes[i][j].getRenderData());
 		}
 	}
 	

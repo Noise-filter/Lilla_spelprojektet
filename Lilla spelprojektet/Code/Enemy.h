@@ -8,6 +8,11 @@
 
 struct Waypoint
 {
+	Waypoint()
+	{
+		x = y = 0;
+	}
+
 	Waypoint(int X, int Y)
 	{
 		x = X;
@@ -21,7 +26,7 @@ class Enemy : public Entity
 {
 public:
 	Enemy();
-	Enemy(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, float speed, float damage);
+	Enemy(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, float speed, float damage, int quadSize);
 	~Enemy();
 
 	virtual int update(float dt);
@@ -31,7 +36,6 @@ public:
 	int move(float dt);
 
 	Waypoint getCurrentWaypoint();
-	int getCurrentWaypoint1D();
 
 	
 private:
@@ -41,11 +45,11 @@ private:
 	int currentWP;
 
 	Structure* target;
+	float cooldown;
 
 	float speed;
 	float damage;
-
-
+	float attackSpeed;
 
 };
 

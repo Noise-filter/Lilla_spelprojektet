@@ -46,9 +46,9 @@ void DeathExplosion::emitt()
 	float posY = origPos.y;
 	float posZ = origPos.z;
 
-	float dirX = (float)rand() / (float)RAND_MAX -0.5f;
-	float dirY = (float)rand() / (float)RAND_MAX -0.5f;
-	float dirZ = (float)rand() / (float)RAND_MAX -0.5f;
+	float dirX;
+	float dirY;
+	float dirZ;
 
 	for(int i = 0; i < intensity; i++)
 	{

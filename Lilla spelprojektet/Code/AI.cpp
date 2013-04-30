@@ -62,14 +62,14 @@ bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize
 	return true;
 }
 
-vector<Waypoint> AI::findPath(int start, int goal, int enemyType)
+vector<Waypoint> AI::findPath(Waypoint start, Waypoint goal, int enemyType)
 {
 	vector<Waypoint> wayPoints;
 
 	lua_getglobal(pathScript, "astar");
 
-	lua_pushnumber(pathScript, start);
-	lua_pushnumber(pathScript, goal);
+	lua_pushnumber(pathScript, start.x + (start.y * mapSize));
+	lua_pushnumber(pathScript, goal.x + (goal.y * mapSize));
 	lua_pushnumber(pathScript, enemyType);
 
 	lua_pcall(pathScript, 3, 2, 0); //kalla på funktionen
@@ -78,6 +78,8 @@ vector<Waypoint> AI::findPath(int start, int goal, int enemyType)
 	int a = (int)lua_tonumber(pathScript, -1);
 	lua_pop(pathScript, 1);
 
+	wayPoints.reserve(a);
+
 	if(a > 0)
 	{
 		//Hämta ut tabellen
@@ -85,8 +87,7 @@ vector<Waypoint> AI::findPath(int start, int goal, int enemyType)
 		while(lua_next(pathScript, -2) != 0)
 		{
 			int temp = (int)lua_tonumber(pathScript, -1);
-			wayPoints.push_back(Waypoint(((int)temp % mapSize), ((int)temp / mapSize)));
-			//cout << "A*: " << temp << endl;
+			wayPoints.push_back(Waypoint(((int)temp % mapSize) * quadSize, ((int)temp / mapSize) * quadSize));
 			lua_pop(pathScript, 1);
 		}
 		lua_pop(pathScript, 1);
@@ -155,14 +156,14 @@ vector<Enemy*> AI::spawnEnemies(float dt, int nrOfEnemies)
 		}
 		if(spawnedEnemies > 0)
 		{
-			Enemy* tempE = new Enemy(D3DXVECTOR3((float)retVals[0],0,(float)retVals[1]),ENTITY_ENEMY,0,5,0,30,0);
+			Enemy* tempE = new Enemy(D3DXVECTOR3((float)retVals[0],0,(float)retVals[1]),ENTITY_ENEMY,0,5,0,30,0,this->quadSize);
 			enemies.push_back(tempE);
 		}
 
 		lua_pop(spawnScript, 1);
 	}
 	lua_pop(spawnScript, 2);
-	
+
 	return enemies;
 }
 

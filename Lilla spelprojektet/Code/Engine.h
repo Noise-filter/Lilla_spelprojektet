@@ -15,7 +15,7 @@ public:
 	bool init(HINSTANCE hInstance, int cmdShow);
 
 	void setRenderData(vector<vector<RenderData*>> renderData);
-	void setRenderData(vector<vector<VertexColor>> renderData);
+	void setRenderData(vector<vector<VertexColor>>& renderData);
 
 	void updateBuffers();
 	

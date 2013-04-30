@@ -29,8 +29,9 @@ public:
 	{
 		if(sets.size() == 0)
 		{
+			sets.reserve(size*size);
 			for(int i = 0; i < size*size; i++)
-				sets.push_back(new Node);
+				sets.push_back(new Node());
 		}
 
 		//sets.clear();
@@ -47,7 +48,6 @@ public:
 	void initSets(vector<T>& data)
 	{
 		sets.clear();
-		sets.resize(data.size() + 5);
 		for(int i = 0; i < (int)data.size(); i++)
 		{
 			sets.push_back(new Node);

@@ -56,6 +56,9 @@ int Tower::update(float dt)
 	if(id == 0)
 		return 0;
 
+	if(target != NULL && target->isDead())
+		target = NULL;
+
 	//Uppdatera projektilerna
 	for(int i = 0; i < (int)projectiles.size(); i++)
 	{
@@ -68,7 +71,7 @@ int Tower::update(float dt)
 	}
 
 	cooldown -= dt;
-	if(target != NULL && !target->isDead())
+	if(target != NULL)
 	{
 		if(cooldown <= 0)
 		{
@@ -78,13 +81,14 @@ int Tower::update(float dt)
 				cooldown = attackSpeed;
 				SoundSystem::Getinstance()->playSound(sound);
 			}
-			else
+			else	//target har gått bortanför tornets range.
 			{
 				target = NULL;
+				return 2;
 			}
 		}
 	}
-	else	//Vill ha ett nytt target
+	else	//Tornet har inget target
 	{
 		return 2;
 	}
@@ -120,6 +124,7 @@ void Tower::aquireTarget(vector<Enemy*>* enemies)
 vector<RenderData*> Tower::getRenderData()
 {
 	vector<RenderData*> renderData;
+	renderData.reserve(projectiles.size()+1);
 
 	renderData.push_back(&this->renderData);
 	for(int i = 0; i < (int)projectiles.size(); i++)

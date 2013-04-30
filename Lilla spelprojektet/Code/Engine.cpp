@@ -327,7 +327,7 @@ void Engine::setRenderData(vector<vector<RenderData*>> renderData)
 	d3d->deviceContext->Unmap(vbs3[1], 0);
 }
 
-void Engine::setRenderData(vector<vector<VertexColor>> renderData)
+void Engine::setRenderData(vector<vector<VertexColor>>& renderData)
 {
 	D3D11_MAPPED_SUBRESOURCE mappedData;
 	d3d->deviceContext->Map(particleBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData);

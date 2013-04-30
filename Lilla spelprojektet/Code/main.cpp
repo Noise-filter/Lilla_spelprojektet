@@ -76,7 +76,6 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 			game->update(dt);
 			game->render();
 
-
 			prevTimeStamp = currTimeStamp;
 		}
 	}
