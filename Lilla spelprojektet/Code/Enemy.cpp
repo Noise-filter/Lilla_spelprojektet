@@ -17,12 +17,13 @@ Enemy::Enemy(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, 
 	this->currentWP = 0;
 
 	waypoints.push_back(Waypoint((int)pos.x/10, (int)pos.z/10));
-	trail = ParticleSystem::Getinstance()->addTrail(D3DXVECTOR3(1, 1, 1),this->getPosition(), 10, 0.1f, 1, 1, 1, 1);
+	trail = ParticleSystem::Getinstance()->addTrail(D3DXVECTOR3(1, 1, 1),this->getPosition(), 10, 0.1f, 0, 1, 1, 1);
 }
 
 Enemy::~Enemy()
 {
 	ParticleSystem::Getinstance()->removePolicy(trail);
+	ParticleSystem::Getinstance()->addDeathExplosion(D3DXVECTOR3(1,0,0), getPosition(), 100, 0.5, 30);
 }
 
 int Enemy::update(float dt)
