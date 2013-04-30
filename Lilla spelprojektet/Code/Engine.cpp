@@ -5,6 +5,7 @@ Engine::Engine(void)
 	d3d = new D3D11Handler();
 	win32 = new WinHandler();
 	pGeoManager = new GeometryManager();
+	this->nrOfBuffers = 0;
 }
 
 Engine::~Engine(void)
@@ -33,7 +34,7 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 	return true; // allt gick bra
 }
 
-void Engine::render(D3DXMATRIX& vp)
+void Engine::render(Matrix& vp)
 {
 	d3d->clearAndBindRenderTarget();
 
@@ -49,36 +50,36 @@ void Engine::render(D3DXMATRIX& vp)
 	D3DXMatrixLookAtLH(&view, &D3DXVECTOR3(0,0,-10), &D3DXVECTOR3(0,0, 1), &D3DXVECTOR3(0,1,0));
 	D3DXMatrixPerspectiveFovLH(&proj, (float)D3DX_PI * 0.45f, SCREEN_WIDTH / SCREEN_HEIGHT, 1.0f, 100.0f);
 
-	std::vector<std::vector<RENDERDATA*>> temp3;
-	std::vector<RENDERDATA*> temp1, temp2, tem3, tem4;
-	RENDERDATA dtemp1[1], dtemp2[1], dtemp3[1], dtemp4[1];
-	dtemp1[0].iEntityID = (int)ENTITY_MAINBUILDING;
-	dtemp1[0].iLightID = LIGHT_NONE;
-	dtemp1[0].worldTex.iTextureID = 0;
-	dtemp1[0].worldTex.mWorld = world;
-	temp2.push_back(&dtemp1[0]);
-	temp3.push_back(temp2);
+	//std::vector<std::vector<RenderData*>> temp3;
+	//std::vector<RenderData*> temp1, temp2, tem3, tem4;
+	//RenderData dtemp1[1], dtemp2[1], dtemp3[1], dtemp4[1];
+	//dtemp1[0].iEntityID = (int)ENTITY_MAINBUILDING;
+	//dtemp1[0].iLightID = LIGHT_NONE;
+	//dtemp1[0].worldTex.iTextureID = 0;
+	//dtemp1[0].worldTex.mWorld = world;
+	//temp2.push_back(&dtemp1[0]);
+	//temp3.push_back(temp2);
 
-	dtemp2[0].iEntityID = (int)ENTITY_SUPPLY;
-	dtemp2[0].iLightID = LIGHT_NONE;
-	dtemp2[0].worldTex.iTextureID = 0;
-	dtemp2[0].worldTex.mWorld = world2;
-	temp1.push_back(&dtemp2[0]);
-	temp3.push_back(temp1);
+	//dtemp2[0].iEntityID = (int)ENTITY_SUPPLY;
+	//dtemp2[0].iLightID = LIGHT_NONE;
+	//dtemp2[0].worldTex.iTextureID = 0;
+	//dtemp2[0].worldTex.mWorld = world2;
+	//temp1.push_back(&dtemp2[0]);
+	//temp3.push_back(temp1);
 
-	dtemp3[0].iEntityID = (int)ENTITY_TOWER;
-	dtemp3[0].iLightID = LIGHT_NONE;
-	dtemp3[0].worldTex.iTextureID = 0;
-	dtemp3[0].worldTex.mWorld = world3;
-	tem3.push_back(&dtemp3[0]);
-	temp3.push_back(tem3);
+	//dtemp3[0].iEntityID = (int)ENTITY_TOWER;
+	//dtemp3[0].iLightID = LIGHT_NONE;
+	//dtemp3[0].worldTex.iTextureID = 0;
+	//dtemp3[0].worldTex.mWorld = world3;
+	//tem3.push_back(&dtemp3[0]);
+	//temp3.push_back(tem3);
 
-	dtemp4[0].iEntityID = (int)ENTITY_NODE;
-	dtemp4[0].iLightID = LIGHT_NONE;
-	dtemp4[0].worldTex.iTextureID = 0;
-	dtemp4[0].worldTex.mWorld = world3;
-	tem4.push_back(&dtemp4[0]);
-	temp3.push_back(tem4);
+	//dtemp4[0].iEntityID = (int)ENTITY_NODE;
+	//dtemp4[0].iLightID = LIGHT_NONE;
+	//dtemp4[0].worldTex.iTextureID = 0;
+	//dtemp4[0].worldTex.mWorld = world3;
+	//tem4.push_back(&dtemp4[0]);
+	//temp3.push_back(tem4);
 
 
 
@@ -89,9 +90,9 @@ void Engine::render(D3DXMATRIX& vp)
 	temp->SetMatrix("proj", proj);
 	temp->Apply(0);
 
-	for(int i = 0; i < 3; i++)
+	for(int i = 0; i < this->nrOfBuffers; i++)
 	{
-		pGeoManager->applyBuffer(d3d->pDeviceContext, temp3[i], D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 0);
+		pGeoManager->applyBuffer(d3d->pDeviceContext, i, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 0);
 		d3d->pDeviceContext->DrawInstanced(pGeoManager->getNrOfVertexPoints(i), pGeoManager->getNrOfInstances(i), 0, 0);
 	}
 
@@ -124,7 +125,7 @@ void Engine::render(D3DXMATRIX& vp)
 	*/
 
 	temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
-	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, 4);
+	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, this->nrOfBuffers);
 
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);
@@ -137,45 +138,15 @@ void Engine::render(D3DXMATRIX& vp)
 
 PRIMITIVE_TOPOLOGIES Engine::changeTopology(int ID)
 {
-	if(ID != ENTITY_PARTICLESYSTEM) return TOPOLOGY_TRIANGLELIST;
+	if(ID != (int)ENTITY_PARTICLESYSTEM) return TOPOLOGY_TRIANGLELIST;
 	else return TOPOLOGY_POINTLIST;
 }
 
 void Engine::setRenderData(vector<vector<RenderData*>> renderData)
 {
-	/*D3D11_MAPPED_SUBRESOURCE mappedData, mappedData2, mappedData3;
-	d3d->pDeviceContext->Map(vbs[1], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData);
-	d3d->pDeviceContext->Map(vbs2[1], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData2);
-	d3d->pDeviceContext->Map(vbs3[1], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData3);
+	for(int i = 0; i < (int)renderData.size(); i++)	pGeoManager->updateBuffer(d3d->pDeviceContext, renderData[i], i);
 
- 	InstancedData* dataView = reinterpret_cast<InstancedData*>(mappedData.pData);
-	InstancedData* dataView2= reinterpret_cast<InstancedData*>(mappedData2.pData);
-	InstancedData* dataView3 = reinterpret_cast<InstancedData*>(mappedData3.pData);
-
-	int a = 0, b = 0, c = 0;
-	for(int j = 0; j < (int)renderData.size(); j++)
-	{
-		for(int i = 0; i < (int)renderData.at(j).size(); i++)
-		{
-			if(renderData.at(j).at(i)->meshID == 0)
-				dataView[a++].matrix = renderData[j][i]->worldMat;
-			else if(renderData.at(j).at(i)->meshID == 1)
-				dataView2[b++].matrix = renderData[j][i]->worldMat;
-			else if(renderData.at(j).at(i)->meshID == 2)
-				dataView3[c++].matrix = renderData[j][i]->worldMat;
-		}
-	}
-
-	size1 = a;
-	size2 = b;
-	size3 = c;
-
-	d3d->pDeviceContext->Unmap(vbs[1], 0);
-	d3d->pDeviceContext->Unmap(vbs2[1], 0);
-	d3d->pDeviceContext->Unmap(vbs3[1], 0);*/
-
-	for(int i = 0; i < renderData.size(); i++)
-		pGeoManager->updateBuffer(d3d->pDeviceContext, renderData[i], i);
+	this->nrOfBuffers = (int)renderData.size();
 }
 
 void Engine::setRenderData(vector<vector<VertexColor>> renderData)

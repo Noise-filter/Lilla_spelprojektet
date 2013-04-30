@@ -133,14 +133,14 @@ void GeometryManager::init(ID3D11Device *device)
 	//initInstance(device, instanceInit);
 }
 
-void GeometryManager::applyBuffer(ID3D11DeviceContext *dc, std::vector<RenderData*> obj, D3D_PRIMITIVE_TOPOLOGY topology, UINT32 misc)
+void GeometryManager::applyBuffer(ID3D11DeviceContext *dc, int ID, D3D_PRIMITIVE_TOPOLOGY topology, UINT32 misc)
 {
 	UINT strides[2]		= {0, sizeof(INSTANCEDATA)};
 	UINT offset[2]		= {0, 0};
-	buffers[0] = vVertexBuffer[(int)obj[0]->meshID];
-	buffers[1] = vInstanceBuffer[(int)obj[0]->meshID];
+	buffers[0] = vVertexBuffer[ID];
+	buffers[1] = vInstanceBuffer[ID];
 
-	if(obj[0]->meshID != ENTITY_GUI) strides[0] = sizeof(MESH_PNUV);
+	if(ID != (int)ENTITY_GUI) strides[0] = sizeof(MESH_PNUV);
 	else strides[0] = sizeof(MESH_PUV);
 
 	dc->IASetVertexBuffers(misc, 2, buffers, strides, offset);
