@@ -1,6 +1,6 @@
 #pragma once
-#include "D3DMathUtility.h"
 #include <ctime>
+#include "D3DMathUtility.h"
 
 class BaseParticle
 {

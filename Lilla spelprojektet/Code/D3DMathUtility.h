@@ -1,5 +1,6 @@
 #ifndef D3DMATHUTILITY_H
 #define D3DMATHUTILITY_H
+#include <D3D10_1.h>
 #include <D3DX10math.h>
 
 #define Vec2 D3DXVECTOR2

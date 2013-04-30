@@ -51,11 +51,11 @@ bool Level::init(int mapSize, int quadSize)
 	structures[2][8] = new Headquarter(D3DXVECTOR3(25, 0, 85), 2, 0, 2, 0);
 
 	this->availibleUpgrades = new UpgradeStats[5];
-	this->availibleUpgrades[0] = (UpgradeStats(TYPE_UPGRADE_HP,10,0,0,0,0));
-	this->availibleUpgrades[1] = (UpgradeStats(TYPE_UPGRADE_ATKSP,0,10,0,0,0));
-	this->availibleUpgrades[2] = (UpgradeStats(TYPE_UPGRADE_DMG,0,0,10,0,0));
-	this->availibleUpgrades[3] = (UpgradeStats(TYPE_UPGRADE_PRJSP,0,0,0,10,0));
-	this->availibleUpgrades[4] = (UpgradeStats(TYPE_UPGRADE_RANGE,0,0,0,0,10));
+	this->availibleUpgrades[0] = (UpgradeStats(BUILDABLE_UPGRADE_HP,10,0,0,0,0));
+	this->availibleUpgrades[1] = (UpgradeStats(BUILDABLE_UPGRADE_ATKSP,0,10,0,0,0));
+	this->availibleUpgrades[2] = (UpgradeStats(BUILDABLE_UPGRADE_DMG,0,0,10,0,0));
+	this->availibleUpgrades[3] = (UpgradeStats(BUILDABLE_UPGRADE_PRJSP,0,0,0,10,0));
+	this->availibleUpgrades[4] = (UpgradeStats(BUILDABLE_UPGRADE_RANGE,0,0,0,0,10));
 
 	constructNeutrals();
 
@@ -264,44 +264,44 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 			bool builtUpgrade = false;
 			switch(selectedStructure)
 			{
-			case TYPE_TOWER:
+			case BUILDABLE_TOWER:
 				structures[xPos][yPos] = new Tower(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),0,0,10,0, 1, 1, 50, 100);
 				for(int i = 0; i < (int)this->upgradesInUse.size();i++)
 				{
 					dynamic_cast<Tower*>(structures[xPos][yPos])->giveUpgrade(upgradesInUse[i]);
 				}
 				break;
-			case TYPE_SUPPLY:
+			case BUILDABLE_SUPPLY:
 				structures[xPos][yPos] = new Supply(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)), 1,0,100,0);
 				break;
-			case TYPE_UPGRADE_HP:
+			case BUILDABLE_UPGRADE_HP:
 				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),
-					1,0,100,0,TYPE_UPGRADE_HP);
-				upgradesInUse.push_back(availibleUpgrades[(TYPE_UPGRADE_HP)-2]);
+					1,0,100,0,BUILDABLE_UPGRADE_HP);
+				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_HP)-2]);
 				builtUpgrade = true;
 				break;
-			case TYPE_UPGRADE_ATKSP:
+			case BUILDABLE_UPGRADE_ATKSP:
 				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),
-					1,0,100,0,TYPE_UPGRADE_ATKSP);
-				upgradesInUse.push_back(availibleUpgrades[(TYPE_UPGRADE_ATKSP)-2]);
+					1,0,100,0,BUILDABLE_UPGRADE_ATKSP);
+				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_ATKSP)-2]);
 				builtUpgrade = true;
 				break;
-			case TYPE_UPGRADE_DMG:
+			case BUILDABLE_UPGRADE_DMG:
 				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),
-					1,0,100,0,TYPE_UPGRADE_DMG);
-				upgradesInUse.push_back(availibleUpgrades[(TYPE_UPGRADE_DMG)-2]);
+					1,0,100,0,BUILDABLE_UPGRADE_DMG);
+				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_DMG)-2]);
 				builtUpgrade = true;
 				break;
-			case TYPE_UPGRADE_PRJSP:
+			case BUILDABLE_UPGRADE_PRJSP:
 				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),
-					1,0,100,0,TYPE_UPGRADE_PRJSP);
-				upgradesInUse.push_back(availibleUpgrades[(TYPE_UPGRADE_PRJSP)-2]);
+					1,0,100,0,BUILDABLE_UPGRADE_PRJSP);
+				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_PRJSP)-2]);
 				builtUpgrade = true;
 				break;
-			case TYPE_UPGRADE_RANGE:
+			case BUILDABLE_UPGRADE_RANGE:
 				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),
-					1,0,100,0,TYPE_UPGRADE_RANGE);
-				upgradesInUse.push_back(availibleUpgrades[(TYPE_UPGRADE_RANGE)-2]);
+					1,0,100,0,BUILDABLE_UPGRADE_RANGE);
+				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_RANGE)-2]);
 				builtUpgrade = true;
 				break;
 			}

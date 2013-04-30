@@ -2,7 +2,6 @@
 #define D3D11HANDLER_H
 
 #include "D3DGraphicUtility.h"
-#include "D3DMathUtility.h"
 #include "WindowsUtility.h"
 #include "Shader.h"
 

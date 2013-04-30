@@ -97,7 +97,7 @@ void Engine::render(Matrix& vp)
 	}
 
 	//pGeoManager->applyBuffer(d3d->pDeviceContext, test[1][0], D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 0);
-	
+
 	/*
 	while(index < (int)data.size())
 	{

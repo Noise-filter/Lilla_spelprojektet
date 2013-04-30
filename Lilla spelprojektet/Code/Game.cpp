@@ -1,6 +1,5 @@
 #include "Game.h"
 
-
 Game::Game(void)
 {
 	engine = new Engine();
