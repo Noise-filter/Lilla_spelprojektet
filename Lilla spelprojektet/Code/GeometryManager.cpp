@@ -87,9 +87,9 @@ void GeometryManager::init(ID3D11Device *device)
 
 	MESH_PNUV node[] = {
 
-		MESH_PNUV(Vec3(0,0.5,0), Vec3(1,1,0), Vec2(0,0)),
-		MESH_PNUV(Vec3(0,0,0.5), Vec3(1,0,1), Vec2(0,0)),
-		MESH_PNUV(Vec3(0,-0.5,0), Vec3(1,0,0), Vec2(0,0)),
+		MESH_PNUV(Vec3(0,5,0), Vec3(1,1,0), Vec2(0,0)),
+		MESH_PNUV(Vec3(0,0,5), Vec3(1,0,1), Vec2(0,0)),
+		MESH_PNUV(Vec3(0,-5,0), Vec3(1,0,0), Vec2(0,0)),
 	};
 		bufferInit.desc.uByteWidth = sizeof(MESH_PNUV)*3;
 	bufferInit.data.pInitData = node;
@@ -119,7 +119,7 @@ void GeometryManager::init(ID3D11Device *device)
 	/*initIndexBuffer(device, bufferInit);*/
 
 	instanceInit.desc.eUsage				= D3D11_USAGE_DYNAMIC;
-	instanceInit.desc.uByteWidth			= sizeof(INSTANCEDATA);
+	instanceInit.desc.uByteWidth			= sizeof(INSTANCEDATA)*1000;
 	instanceInit.desc.uBindFlags			= D3D11_BIND_VERTEX_BUFFER;
 	instanceInit.desc.uCPUAccessFlags		= D3D11_CPU_ACCESS_WRITE;
 	instanceInit.desc.uMiscFlags			= 0;

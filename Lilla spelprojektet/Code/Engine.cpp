@@ -86,7 +86,7 @@ void Engine::render(Matrix& vp)
 	Shader* temp;
 
 	temp = this->d3d->setPass(PASS_GEOMETRY);
-	temp->SetMatrix("view", view);
+	temp->SetMatrix("view", vp);
 	temp->SetMatrix("proj", proj);
 	temp->Apply(0);
 
@@ -149,9 +149,10 @@ void Engine::setRenderData(vector<vector<RenderData*>> renderData)
 {
 	for(int i = 0; i < (int)renderData.size(); i++)
 	{
-		if((int)renderData[i].size() > 0) pGeoManager->updateBuffer(d3d->pDeviceContext, renderData[i], i);
+		if((int)renderData[i].size() > 0) 
+			pGeoManager->updateBuffer(d3d->pDeviceContext, renderData[i], i);
 	}
-
+	
 	this->nrOfBuffers = (int)renderData.size();
 }
 
