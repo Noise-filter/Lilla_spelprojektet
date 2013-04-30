@@ -80,8 +80,7 @@ void Engine::render(D3DXMATRIX& vp)
 	tem4.push_back(&dtemp4[0]);
 	temp3.push_back(tem4);
 
-	for(int i = 0; i < temp3.size(); i++)
-		pGeoManager->updateBuffer(d3d->pDeviceContext, temp3[i], i);
+
 
 	Shader* temp;
 
@@ -174,6 +173,9 @@ void Engine::setRenderData(vector<vector<RenderData*>> renderData)
 	d3d->pDeviceContext->Unmap(vbs[1], 0);
 	d3d->pDeviceContext->Unmap(vbs2[1], 0);
 	d3d->pDeviceContext->Unmap(vbs3[1], 0);*/
+
+	for(int i = 0; i < renderData.size(); i++)
+		pGeoManager->updateBuffer(d3d->pDeviceContext, renderData[i], i);
 }
 
 void Engine::setRenderData(vector<vector<VertexColor>> renderData)

@@ -67,12 +67,12 @@ struct MESH_PNUV
 };
 
 
-struct OBJECT_WORLD_AND_TEXTURE
+struct INSTANCEDATA
 {
 	Matrix mWorld;
 	UINT iTextureID;
 
-	OBJECT_WORLD_AND_TEXTURE()
+	INSTANCEDATA()
 	{
 		iTextureID	= 0;
 		mWorld		= Matrix(0.0f, 0.0f, 0.0f, 0.0f,
@@ -81,7 +81,7 @@ struct OBJECT_WORLD_AND_TEXTURE
 							 0.0f, 0.0f, 0.0f, 1.0f);
 	};
 
-	OBJECT_WORLD_AND_TEXTURE(Matrix world, UINT ID)
+	INSTANCEDATA(Matrix world, UINT ID)
 	{
 		iTextureID	= ID;
 		mWorld		= world;
@@ -96,7 +96,24 @@ enum ENTITY_FLAGS
 	ENTITY_NODE,
 	ENTITY_PARTICLESYSTEM,
 	ENTITY_GAMEFIELD,
+	ENTITY_UPGRADE_HP,
+	ENTITY_UPGRADE_ATKSP,
+	ENTITY_UPGRADE_DMG,
+	ENTITY_UPGRADE_PRJSP,
+	ENTITY_UPGRADE_RANGE,
 	ENTITY_GUI,
+};
+
+enum BUILDABLE_ENTITY_FLAGS
+{
+	BUILDABLE_MAINBUILDING,
+	BUILDABLE_SUPPLY,
+	BUILDABLE_TOWER,
+	BUILDABLE_UPGRADE_HP,
+	BUILDABLE_UPGRADE_ATKSP,
+	BUILDABLE_UPGRADE_DMG,
+	BUILDABLE_UPGRADE_PRJSP,
+	BUILDABLE_UPGRADE_RANGE,
 };
 
 enum TEXTURE_FLAGS
@@ -119,24 +136,86 @@ enum LIGHT_FLAGS
 	LIGHT_SPOT			= 2,
 };
 
-struct RENDERDATA
+enum STRUCTURE_COSTS
 {
-	int iEntityID;
-	OBJECT_WORLD_AND_TEXTURE worldTex;
-	int iLightID;
+	COST_TOWER = 20,
+	COST_SUPPLY = 40,
+	COST_UPGRADE = 60,
+};
 
-	RENDERDATA()
+enum NODE_COLORS
+{
+	COLOR_RED,
+	COLOR_GREEN,
+	COLOR_GREY,
+};
+
+struct UpgradeStats
+{
+	UpgradeStats()
 	{
-		iEntityID	= 0;
-		worldTex	= OBJECT_WORLD_AND_TEXTURE();
-		iLightID	= 0;
+	}
+
+	UpgradeStats(int id ,int hp, int dmg, int atkSpeed, int prjSpeed, int range)
+	{
+		this->id = id;
+		this->hp = hp;
+		this->dmg = dmg;
+		this->atkSpeed = atkSpeed;
+		this->prjSpeed = prjSpeed;
+		this->range = range;
+	}	
+
+	int id;
+	int hp;
+	int dmg;
+	int atkSpeed;
+	int prjSpeed;
+	int range;
+};
+
+struct VertexColor
+{
+	D3DXVECTOR3 pos;
+	D3DXVECTOR3 normal;
+	D3DXVECTOR3 color;
+
+	VertexColor(D3DXVECTOR3 pos, D3DXVECTOR3 normal, D3DXVECTOR3 color)
+	{
+		this->pos = pos;
+		this->normal = normal;
+		this->color = color;
+	}
+	VertexColor()
+	{
+	}
+
+};
+
+struct RenderData
+{
+	int meshID;
+	int textureID;
+	Matrix worldMat;
+	int lightID;
+
+	RenderData()
+	{
+		meshID		= 0;
+		textureID	= 0;
+		worldMat	= Matrix(0.0f, 0.0f, 0.0f, 0.0f,
+							 0.0f, 0.0f, 0.0f, 0.0f,
+							 0.0f, 0.0f, 0.0f, 0.0f,
+							 0.0f, 0.0f, 0.0f, 1.0f);
+		lightID		= 0;
 	};
 
-	RENDERDATA(int entityID, OBJECT_WORLD_AND_TEXTURE wTex, UINT lightID)
+	RenderData(int meshID, int textureID, Matrix world, int lightID)
 	{
-		iEntityID	= entityID;
-		worldTex	= wTex;
-		iLightID	= lightID;
+		this->meshID 	= meshID;
+		this->textureID = textureID;
+		this->worldMat	= world;
+		this->lightID	= lightID;
 	};
 };
 

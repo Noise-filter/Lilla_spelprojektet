@@ -16,7 +16,7 @@ public:
 	bool init(HINSTANCE hInstance, int cmdShow);
 	PRIMITIVE_TOPOLOGIES changeTopology(int ID);
 
-	void setRenderData(vector<vector<RenderData*>> renderData);
+	void setRenderData(vector<vector<RENDERDATA*>> renderData);
 	void setRenderData(vector<vector<VertexColor>> renderData);
 	MouseState* getMouseState();
 	HWND getHWND();
