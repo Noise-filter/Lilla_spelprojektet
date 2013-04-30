@@ -50,8 +50,8 @@ void Engine::render(float deltaTime, std::vector<std::vector<RENDERDATA*>> data)
 	D3DXMatrixPerspectiveFovLH(&proj, (float)D3DX_PI * 0.45f, SCREEN_WIDTH / SCREEN_HEIGHT, 1.0f, 100.0f);
 
 	std::vector<std::vector<RENDERDATA*>> temp3;
-	std::vector<RENDERDATA*> temp1, temp2, tem3;
-	RENDERDATA dtemp1[1], dtemp2[1], dtemp3[1];
+	std::vector<RENDERDATA*> temp1, temp2, tem3, tem4;
+	RENDERDATA dtemp1[1], dtemp2[1], dtemp3[1], dtemp4[1];
 	dtemp1[0].iEntityID = (int)ENTITY_MAINBUILDING;
 	dtemp1[0].iLightID = LIGHT_NONE;
 	dtemp1[0].worldTex.iTextureID = 0;
@@ -73,7 +73,14 @@ void Engine::render(float deltaTime, std::vector<std::vector<RENDERDATA*>> data)
 	tem3.push_back(&dtemp3[0]);
 	temp3.push_back(tem3);
 
-	for(int i = 0; i < 3; i++)
+	dtemp4[0].iEntityID = (int)ENTITY_NODE;
+	dtemp4[0].iLightID = LIGHT_NONE;
+	dtemp4[0].worldTex.iTextureID = 0;
+	dtemp4[0].worldTex.mWorld = world3;
+	tem4.push_back(&dtemp4[0]);
+	temp3.push_back(tem4);
+
+	for(int i = 0; i < temp3.size(); i++)
 		pGeoManager->updateBuffer(d3d->pDeviceContext, temp3[i], i);
 
 	Shader* temp;
@@ -118,7 +125,7 @@ void Engine::render(float deltaTime, std::vector<std::vector<RENDERDATA*>> data)
 	*/
 
 	temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
-	pGeoManager->debugApplyBuffer(d3d->pDeviceContext, 3);
+	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, 4);
 
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);

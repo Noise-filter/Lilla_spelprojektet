@@ -7,10 +7,25 @@ GeometryManager::GeometryManager()
 
 GeometryManager::~GeometryManager()
 {
-	SAFE_DELETE(pBufferObj);
+	SAFE_RELEASE(buffers[0]);
+	SAFE_RELEASE(buffers[1]);
 
-//	SAFE_RELEASE(buffers[0]);
-	//SAFE_RELEASE(buffers[1]);
+	for(int i = 0; i < vIndexBuffer.size(); i++)
+	{
+		vIndexBuffer[i]->Release();
+	}
+
+	for(int i = 0; i < vVertexBuffer.size(); i++)
+	{
+		vVertexBuffer[i]->Release();
+	}
+
+	for(int i = 0; i < vInstanceBuffer.size(); i++)
+	{
+		vInstanceBuffer[i]->Release();
+	}
+
+	SAFE_DELETE(pBufferObj);
 }
 
 //bool importMesh(); TBD
@@ -22,9 +37,9 @@ void GeometryManager::init(ID3D11Device *device)
 	
 	MESH_PNUV mesh[] = {
 
-		MESH_PNUV(Vec3(1.0,0,0), Vec3(0,0,0), Vec2(0,0)),
-		MESH_PNUV(Vec3(-1.0,0,0), Vec3(0,0,0), Vec2(0,0)),
-		MESH_PNUV(Vec3(0,1.0,0), Vec3(0,0,0), Vec2(0,0)),
+		MESH_PNUV(Vec3(1.0,0,0), Vec3(0,1,1), Vec2(0,0)),
+		MESH_PNUV(Vec3(-1.0,0,0), Vec3(0,0,1), Vec2(0,0)),
+		MESH_PNUV(Vec3(0,1.0,0), Vec3(1,0,1), Vec2(0,0)),
 	};
 
 	bufferInit.desc.eUsage = D3D11_USAGE_DEFAULT;
@@ -70,6 +85,16 @@ void GeometryManager::init(ID3D11Device *device)
 
 	initVertexBuffer(device, bufferInit);
 
+	MESH_PNUV node[] = {
+
+		MESH_PNUV(Vec3(0,0.5,0), Vec3(1,1,0), Vec2(0,0)),
+		MESH_PNUV(Vec3(0,0,0.5), Vec3(1,0,1), Vec2(0,0)),
+		MESH_PNUV(Vec3(0,-0.5,0), Vec3(1,0,0), Vec2(0,0)),
+	};
+		bufferInit.desc.uByteWidth = sizeof(MESH_PNUV)*3;
+	bufferInit.data.pInitData = node;
+	initVertexBuffer(device, bufferInit);
+
 		MESH_P p[] = {  MESH_P(D3DXVECTOR3(1,-1,0)),
 						MESH_P(D3DXVECTOR3(-1,-1,0)), 
 						MESH_P(D3DXVECTOR3(1,1,0)),
@@ -100,6 +125,7 @@ void GeometryManager::init(ID3D11Device *device)
 	instanceInit.desc.uMiscFlags			= 0;
 	instanceInit.desc.uStructureByteStride	= 0;
 
+	initInstance(device, instanceInit);
 	initInstance(device, instanceInit);
 	initInstance(device, instanceInit);
 	initInstance(device, instanceInit);
@@ -139,7 +165,7 @@ void GeometryManager::updateBuffer(ID3D11DeviceContext *dc, std::vector<RENDERDA
 	unmap(dc, vInstanceBuffer[index]); 
 }
 
-void GeometryManager::debugApplyBuffer(ID3D11DeviceContext *dc, int ID)
+void GeometryManager::applyQuadBuffer(ID3D11DeviceContext *dc, int ID)
 {
 	UINT strides = sizeof(MESH_P);
 	UINT offset = 0;
