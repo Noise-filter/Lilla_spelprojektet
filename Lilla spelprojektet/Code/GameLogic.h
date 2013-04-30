@@ -1,6 +1,8 @@
 #pragma once
 #include "Level.h"
 #include "EnemyHandler.h"
+#include "WindowsUtility.h"
+
 class GameLogic
 {
 public:

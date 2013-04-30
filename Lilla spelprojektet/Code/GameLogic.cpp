@@ -160,8 +160,8 @@ D3DXVECTOR3 GameLogic::getMouseWorldPos(MouseState* mState, D3DXMATRIX view, D3D
 
 	
 	origin = cameraPos;
-	pointX = ((2.0f * (float)mState->xPos) / (float)screenWidth) - 1.0f;
-	pointY = (((2.0f * (float)mState->yPos) / (float)screenHeight) - 1.0f) * -1.0f;
+	pointX = ((2.0f * (float)mState->xPos) / (float)SCREEN_WIDTH) - 1.0f;
+	pointY = (((2.0f * (float)mState->yPos) / (float)SCREEN_HEIGHT) - 1.0f) * -1.0f;
 
 	pointX = pointX / proj._11;
 	pointY = pointY / proj._22;

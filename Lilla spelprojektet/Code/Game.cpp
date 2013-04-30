@@ -36,7 +36,7 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 		return false;
 
 	camera->LookAt(D3DXVECTOR3(45,60,45), D3DXVECTOR3(35, 0, 45), D3DXVECTOR3(-1, 0, 0));
-	camera->SetLens((float)D3DX_PI * 0.45f, (float)screenWidth / (float)screenHeight, 0.1f, 1000.0f);
+	camera->SetLens((float)D3DX_PI * 0.45f, (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
 
 	return true; // all initiates went well
 }

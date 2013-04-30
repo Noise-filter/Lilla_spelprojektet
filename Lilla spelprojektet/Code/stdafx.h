@@ -8,6 +8,7 @@
 #include <d3dx11effect.h>
 #include <d3dCompiler.h>
 #include <vector>
+#include <iostream>
 
 #include <string>
 #include <ctime>
@@ -20,6 +21,99 @@
 #define SAFE_DELETE(x) if( x ) { delete(x); (x) = NULL; }
 #define SAFE_DELETE_ARRAY(x) if( x ) { delete[](x); (x) = NULL; }
 #define PI (3.14159265358979323846f)
+
+
+struct MouseState
+{
+	int xPos;
+	int yPos;
+	WPARAM btnState;
+
+	MouseState(int xPos, int yPos, WPARAM btnState)
+	{
+		this->xPos = xPos;
+		this->yPos = yPos;
+		this->btnState = btnState;
+	}
+	MouseState()
+	{
+
+	}
+};
+
+struct RenderData
+{
+	int meshID;
+	int textureID;
+	D3DXMATRIX worldMat;
+	
+	int lightID;
+};
+
+enum STRUCTURE_TYPES
+{
+	TYPE_TOWER,
+	TYPE_SUPPLY,
+	TYPE_UPGRADE_HP,
+	TYPE_UPGRADE_ATKSP,
+	TYPE_UPGRADE_DMG,
+	TYPE_UPGRADE_PRJSP,
+	TYPE_UPGRADE_RANGE,
+};
+enum STRUCTURE_COSTS
+{
+	COST_TOWER = 20,
+	COST_SUPPLY = 40,
+	COST_UPGRADE = 60,
+};
+enum NODE_COLORS
+{
+	COLOR_RED,
+	COLOR_GREEN,
+	COLOR_GREY,
+};
+
+struct UpgradeStats
+{
+	UpgradeStats()
+	{
+	}
+
+	UpgradeStats(int id ,int hp, int dmg, int atkSpeed, int prjSpeed, int range)
+	{
+		this->id = id;
+		this->hp = hp;
+		this->dmg = dmg;
+		this->atkSpeed = atkSpeed;
+		this->prjSpeed = prjSpeed;
+		this->range = range;
+	}	
+
+	int id;
+	int hp;
+	int dmg;
+	int atkSpeed;
+	int prjSpeed;
+	int range;
+};
+
+struct VertexColor
+{
+	D3DXVECTOR3 pos;
+	D3DXVECTOR3 normal;
+	D3DXVECTOR3 color;
+
+	VertexColor(D3DXVECTOR3 pos, D3DXVECTOR3 normal, D3DXVECTOR3 color)
+	{
+		this->pos = pos;
+		this->normal = normal;
+		this->color = color;
+	}
+	VertexColor()
+	{
+	}
+
+};
 
 #ifdef _DEBUG
 #pragma comment(lib, "d3dx11d.lib")
