@@ -108,9 +108,9 @@ vector<float> AI::findTarget(Waypoint pos, int type)
 	
 	lua_pcall(targetScript, 4, 2, 0); //kalla på funktionen
 	
-	float targetY = lua_tonumber(targetScript, -1);
+	float targetY = (float)lua_tonumber(targetScript, -1);
 	lua_pop(targetScript, 1);
-	float targetX = lua_tonumber(targetScript, -1);
+	float targetX = (float)lua_tonumber(targetScript, -1);
 	lua_pop(targetScript, 1);
 
 	//hämta värden
@@ -133,7 +133,7 @@ vector<Enemy*> AI::spawnEnemies(float dt, int nrOfEnemies)
 	lua_pcall(spawnScript, 2, 2, 0); //kalla på funktionen
 	
 	//hämta värden
-	int spawnedEnemies = lua_tonumber(spawnScript,-1);
+	int spawnedEnemies = (int)lua_tonumber(spawnScript,-1);
 	if(spawnedEnemies > 0)
 	{
 		cout << "#enemies: " << spawnedEnemies << endl;
@@ -148,14 +148,14 @@ vector<Enemy*> AI::spawnEnemies(float dt, int nrOfEnemies)
 		{
 			if( lua_tonumber(spawnScript, -1) > -1)
 			{
-				retVals[counter++] = lua_tonumber(spawnScript, -1);
+				retVals[counter++] = (int)lua_tonumber(spawnScript, -1);
 				cout << lua_typename(spawnScript, lua_type(spawnScript, -2)) << ": value"<< lua_tonumber(spawnScript, -1) << endl;
 			}
 			lua_pop(spawnScript, 1);	
 		}
 		if(spawnedEnemies > 0)
 		{
-			Enemy* tempE = new Enemy(D3DXVECTOR3(retVals[0],0,retVals[1]),ENTITY_ENEMY,0,5,0,30,0);
+			Enemy* tempE = new Enemy(D3DXVECTOR3((float)retVals[0],0,(float)retVals[1]),ENTITY_ENEMY,0,5,0,30,0);
 			enemies.push_back(tempE);
 		}
 
@@ -203,7 +203,7 @@ bool AI::initSpawnEnemies(string scriptName)
 
 
 	lua_pcall(spawnScript, 2, 1, 0);
-	int a = lua_tonumber(spawnScript, -1);
+	int a = (int)lua_tonumber(spawnScript, -1);
 	
 	
 	lua_pop(spawnScript, 1);
@@ -227,7 +227,7 @@ bool AI::initFindTarget(string scriptName)
 	lua_pushnumber(targetScript, mapSize);
 	lua_pcall(targetScript, 1, 1, 0);
 
-	int a = lua_tonumber(targetScript, -1);
+	int a = (int)lua_tonumber(targetScript, -1);
 	lua_pop(targetScript, 1);
 
 	//cout << "Output: " << a << endl;

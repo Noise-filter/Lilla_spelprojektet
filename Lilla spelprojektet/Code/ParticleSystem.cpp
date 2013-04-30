@@ -7,7 +7,7 @@ ParticleSystem::ParticleSystem(void)
 
 ParticleSystem::~ParticleSystem(void)
 {
-	for(int i = 0; i < this->particlePolicies.size(); i++)
+	for(int i = 0; i < (int)this->particlePolicies.size(); i++)
 	{
 		delete particlePolicies.at(i);
 	}
@@ -31,7 +31,7 @@ ParticleSystem* ParticleSystem::Getinstance()
 void ParticleSystem::update(float dt)
 {
 	//update all policies
-	for(int i = 0; i < particlePolicies.size(); i++)
+	for(int i = 0; i < (int)particlePolicies.size(); i++)
 	{
 		if(particlePolicies.at(i) == NULL)
 		{
@@ -50,7 +50,7 @@ vector<vector<VertexColor>> ParticleSystem::getVertexData()
 	vector<vector<VertexColor>> vertexData;
 
 	//fyll med all vertexdata från particlePolicies
-	for(int i = 0; i < particlePolicies.size(); i++)
+	for(int i = 0; i < (int)particlePolicies.size(); i++)
 	{
 		vertexData.push_back(particlePolicies.at(i)->getVertexData());
 	}
@@ -70,7 +70,7 @@ Trail* ParticleSystem::addTrail(D3DXVECTOR3 color, D3DXVECTOR3 position , int in
 
 bool ParticleSystem::removePolicy(ParticlePolicy* temp) // kompletera med hur detta ska ske, hur removar man den policy man vill åt?(id? string namn?)
 {
-	for(int i = 0; i < particlePolicies.size(); i++)
+	for(int i = 0; i < (int)particlePolicies.size(); i++)
 	{
 		if(particlePolicies.at(i) == temp)
 		{

@@ -385,58 +385,6 @@ bool SoundSystem::getMute()
 	return paused;
 }
 
-int SoundSystem::loadPlaylist(string filename)
-{
-	//char input;
-	ifstream fin;
-	string prefix = "";
-//	playlist_testSize = 4;
-//	this->playlist_test = new Sound*[playlist_testSize];
-//
-//	char* soundFile = "";
-//
-	fin.open(filename);
-	if(!fin.is_open())
-	{
-		return 0;
-	}
-
-	while(!fin.eof())
-	{
-		getline(fin, prefix);
-		if(prefix.at(0)!='#')
-		{
-//			if(nrOfSounds==playlist_testSize)
-//			{
-//				playlist_testSize += 3;
-//				Sound** temp = new Sound*[playlist_testSize];
-//				for(int i = 0; i < nrOfSounds; i++)
-//				{
-//					temp[i] = playlist_test[i];
-//					delete playlist_test[i];
-//				}
-//				delete playlist_test;
-//				playlist_test = temp;
-//				temp = NULL;
-//			}
-//
-//			soundFile = new char[prefix.size() + 1];
-//			strcpy(soundFile, prefix.c_str());
-//			playlist_test[nrOfSounds++] = createStream(soundFile);
-			this->nrOfSounds++;
-		}
-
-	}
-
-//	return playlist_test;
-//
-}
-
-//int SoundSystem::getNrOfSounds()
-//{
-//	return this->nrOfSounds;
-//}
-
 FMOD_RESULT SoundSystem::getLastError()
 {
 	return lastError;

@@ -16,8 +16,8 @@ Enemy::Enemy(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, 
 	this->damage = damage;
 	this->currentWP = 0;
 
-	waypoints.push_back(Waypoint(pos.x/10, pos.z/10));
-	trail = ParticleSystem::Getinstance()->addTrail(D3DXVECTOR3(1, 1, 1),this->getPosition(), 10, 0.1, 1, 1, 1, 1);
+	waypoints.push_back(Waypoint((int)pos.x/10, (int)pos.z/10));
+	trail = ParticleSystem::Getinstance()->addTrail(D3DXVECTOR3(1, 1, 1),this->getPosition(), 10, 0.1f, 1, 1, 1, 1);
 }
 
 Enemy::~Enemy()
@@ -44,7 +44,7 @@ int Enemy::move(float dt)
 	if((int)waypoints.size()-1 > currentWP)
 	{
 		D3DXVECTOR3 pos = this->getPosition();
-		D3DXVECTOR3 target(waypoints.at(currentWP+1).x * 10, 0, waypoints.at(currentWP+1).y * 10);
+		D3DXVECTOR3 target((float)waypoints.at(currentWP+1).x * 10, 0, (float)waypoints.at(currentWP+1).y * 10);
 		D3DXVECTOR3 dir = target - pos;
 
 		if(D3DXVec3Length(&dir) < 0.8)

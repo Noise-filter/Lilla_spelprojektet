@@ -55,7 +55,6 @@ void Trail::updatePosition(D3DXVECTOR3 pos)
 void Trail::emitt()
 {
 	BaseParticle Particle = *this->emitter;
-	static float srand(time(NULL));
 	float halfLengthX = this->lengthX * 0.5f;
 	float halfLengthY = this->lengthY * 0.5f;
 	float halfLengthZ = this->lengthZ * 0.5f;

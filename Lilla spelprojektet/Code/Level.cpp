@@ -21,20 +21,21 @@ bool Level::init(int mapSize, int quadSize)
 	{
 		for(int j = 0; j < mapSize; j++)
 		{
-			nodes[i][j] = Node(D3DXVECTOR3(i*quadSize,0,j*quadSize),ENTITY_NODE,0,0,0,COLOR_GREEN);
+			nodes[i][j] = Node(D3DXVECTOR3((float)i*quadSize,0,(float)j*quadSize),ENTITY_NODE,0,0,0,COLOR_GREEN);
 		}
 	}
-	nodes[3][3] = Node(D3DXVECTOR3(3*quadSize,0,3*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
-	nodes[3][4] = Node(D3DXVECTOR3(3*quadSize,0,4*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
-	nodes[3][5] = Node(D3DXVECTOR3(3*quadSize,0,5*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
-	nodes[3][6] = Node(D3DXVECTOR3(3*quadSize,0,6*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
-	nodes[3][7] = Node(D3DXVECTOR3(3*quadSize,0,7*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
 
-	nodes[4][4] = Node(D3DXVECTOR3(4*quadSize,0,4*quadSize),ENTITY_NODE,0,0,0,COLOR_GREY);
-	nodes[4][5] = Node(D3DXVECTOR3(4*quadSize,0,5*quadSize),ENTITY_NODE,0,0,0,COLOR_GREY);
-	nodes[5][4] = Node(D3DXVECTOR3(5*quadSize,0,4*quadSize),ENTITY_NODE,0,0,0,COLOR_GREY);
-	nodes[5][5] = Node(D3DXVECTOR3(5*quadSize,0,5*quadSize),ENTITY_NODE,0,0,0,COLOR_GREY);
-	 
+	nodes[3][3] = Node(D3DXVECTOR3((float)3*quadSize,0,(float)3*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
+	nodes[3][4] = Node(D3DXVECTOR3((float)3*quadSize,0,(float)4*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
+	nodes[3][5] = Node(D3DXVECTOR3((float)3*quadSize,0,(float)5*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
+	nodes[3][6] = Node(D3DXVECTOR3((float)3*quadSize,0,(float)6*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
+	nodes[3][7] = Node(D3DXVECTOR3((float)3*quadSize,0,(float)7*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
+
+	nodes[4][4] = Node(D3DXVECTOR3((float)4*quadSize,0,(float)4*quadSize),ENTITY_NODE,0,0,0,COLOR_GREY);
+	nodes[4][5] = Node(D3DXVECTOR3((float)4*quadSize,0,(float)5*quadSize),ENTITY_NODE,0,0,0,COLOR_GREY);
+	nodes[5][4] = Node(D3DXVECTOR3((float)5*quadSize,0,(float)4*quadSize),ENTITY_NODE,0,0,0,COLOR_GREY);
+	nodes[5][5] = Node(D3DXVECTOR3((float)5*quadSize,0,(float)5*quadSize),ENTITY_NODE,0,0,0,COLOR_GREY);
+
 	structures = new Structure**[mapSize-1];
 	for(int i = 0; i < mapSize-1; i++)
 	{
@@ -92,7 +93,7 @@ void Level::constructNeutrals()
 			}
 			if(counter == 4)
 			{
-				pos = D3DXVECTOR3(i*quadSize + (quadSize/2),0,j*quadSize + (quadSize/2));
+				pos = D3DXVECTOR3((float)i*quadSize + (quadSize/2),0,(float)j*quadSize + (quadSize/2));
 
 				neutralStructures.push_back(Structure(pos,0,0,100,0));
 			}
@@ -254,8 +255,8 @@ bool Level::isLocationBuildable(int xPos, int yPos)
 
 bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 {
-	int xPos = mouseClickPos.x/quadSize;
-	int yPos = mouseClickPos.z/quadSize;
+	int xPos = (int)(mouseClickPos.x/quadSize);
+	int yPos = (int)(mouseClickPos.z/quadSize);
 
 	if(xPos >= 0 && xPos < mapSize-1 && yPos >= 0 && yPos < mapSize-1)
 	{
@@ -265,41 +266,41 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 			switch(selectedStructure)
 			{
 			case BUILDABLE_TOWER:
-				structures[xPos][yPos] = new Tower(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),ENTITY_TOWER,0,10,0, 1, 1, 50, 100);
+				structures[xPos][yPos] = new Tower(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWER,0,10,0, 1, 1, 50, 100);
 				for(int i = 0; i < (int)this->upgradesInUse.size();i++)
 				{
 					dynamic_cast<Tower*>(structures[xPos][yPos])->giveUpgrade(upgradesInUse[i]);
 				}
 				break;
 			case BUILDABLE_SUPPLY:
-				structures[xPos][yPos] = new Supply(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)), ENTITY_SUPPLY,0,100,0);
+				structures[xPos][yPos] = new Supply(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_SUPPLY,0,100,0);
 				break;
 			case BUILDABLE_UPGRADE_HP:
-				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),
+				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
 					ENTITY_SUPPLY,0,100,0,BUILDABLE_UPGRADE_HP);
 				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_HP)-2]);
 				builtUpgrade = true;
 				break;
 			case BUILDABLE_UPGRADE_ATKSP:
-				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),
+				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
 					ENTITY_SUPPLY,0,100,0,BUILDABLE_UPGRADE_ATKSP);
 				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_ATKSP)-2]);
 				builtUpgrade = true;
 				break;
 			case BUILDABLE_UPGRADE_DMG:
-				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),
+				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
 					ENTITY_SUPPLY,0,100,0,BUILDABLE_UPGRADE_DMG);
 				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_DMG)-2]);
 				builtUpgrade = true;
 				break;
 			case BUILDABLE_UPGRADE_PRJSP:
-				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),
+				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
 					ENTITY_SUPPLY,0,100,0,BUILDABLE_UPGRADE_PRJSP);
 				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_PRJSP)-2]);
 				builtUpgrade = true;
 				break;
 			case BUILDABLE_UPGRADE_RANGE:
-				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3(xPos*quadSize + (quadSize/2),0,yPos*quadSize + (quadSize/2)),
+				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
 					ENTITY_SUPPLY,0,100,0,BUILDABLE_UPGRADE_RANGE);
 				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_RANGE)-2]);
 				builtUpgrade = true;
@@ -330,7 +331,7 @@ void Level::getRenderData(vector<vector<RenderData*>>& rData)
 		}
 	}
 	
-	for(int i = 0; i < neutralStructures.size(); i++)
+	for(int i = 0; i < (int)neutralStructures.size(); i++)
 	{
 		rData.at(1).push_back(&neutralStructures.at(i).getRenderData());
 	}
