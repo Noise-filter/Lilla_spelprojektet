@@ -1,6 +1,6 @@
 
-Texture2DArray textures;
-SamplerState anisoSampler;
+Texture2DArray textures   : register(t0);
+SamplerState anisoSampler : register(s0);
 
 cbuffer EveryFrame
 {
