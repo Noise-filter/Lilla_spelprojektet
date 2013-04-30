@@ -11,13 +11,15 @@ WinHandler::WinHandler(void)
 	this->hWnd = NULL;
 
 	winHandler = this;
-
+	
+	mState = new MouseState();
 }
 
 
 WinHandler::~WinHandler(void)
 {
 	winHandler = NULL;
+	SAFE_DELETE(mState);
 }
 
 
@@ -67,6 +69,16 @@ HRESULT WinHandler::initWindow(HINSTANCE hInstance, int cmdShow)
 	return S_OK;
 }
 
+void WinHandler::setMouseState(LPARAM mousePos)
+{
+	mState->xPos = GET_X_LPARAM(mousePos);
+	mState->yPos = GET_Y_LPARAM(mousePos);
+}
+void WinHandler::setButtonState(WPARAM btnState)
+{
+	mState->btnState = btnState;
+}
+
 LRESULT CALLBACK WinHandler::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	PAINTSTRUCT ps;
@@ -78,13 +90,17 @@ LRESULT CALLBACK WinHandler::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 		hdc = BeginPaint(hWnd, &ps);
 		EndPaint(hWnd, &ps);
 		break;
+		
+	case WM_MOVE:
+		return 0;
+		break;
 
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
-
+		
 	case WM_KEYDOWN:
-
+		winHandler->setButtonState(wParam);
 		switch(wParam)
 		{
 			case VK_ESCAPE:
@@ -92,10 +108,16 @@ LRESULT CALLBACK WinHandler::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 				break;
 		}
 		break;
-
-	case WM_MOUSEMOVE:
-		winHandler->mouseOnMove(wParam, GET_X_LPARAM(lParam) , GET_Y_LPARAM(lParam));
+	case WM_LBUTTONDOWN:
+		winHandler->setButtonState(wParam);
+			break;
+	case WM_MOUSEHWHEEL:
+		winHandler->setButtonState(wParam);
 		break;
+		
+	case WM_MOUSEMOVE:
+		winHandler->setMouseState(lParam);
+			break;
 
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);

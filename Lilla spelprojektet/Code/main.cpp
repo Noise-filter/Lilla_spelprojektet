@@ -75,7 +75,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 			//main logic and draw calls
 			game->update(dt);
-			game->render(dt);
+			game->render();
 	
 
 			prevTimeStamp = currTimeStamp;

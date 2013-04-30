@@ -33,7 +33,7 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 	return true; // allt gick bra
 }
 
-void Engine::render(float deltaTime, std::vector<std::vector<RENDERDATA*>> data)
+void Engine::render(D3DXMATRIX& vp)
 {
 	d3d->clearAndBindRenderTarget();
 
@@ -41,7 +41,7 @@ void Engine::render(float deltaTime, std::vector<std::vector<RENDERDATA*>> data)
 	PRIMITIVE_TOPOLOGIES topology = TOPOLOGY_UNDEFINED;
 	
 	static float rot = 0;
-	rot += deltaTime;
+	//rot += deltaTime;
 	D3DXMATRIX world, world2, world3, view, proj, wvp, wvp2;
 	D3DXMatrixRotationY(&world, rot);
 	D3DXMatrixTranslation(&world2, 3, sin(rot), 0);
@@ -140,4 +140,69 @@ PRIMITIVE_TOPOLOGIES Engine::changeTopology(int ID)
 {
 	if(ID != ENTITY_PARTICLESYSTEM) return TOPOLOGY_TRIANGLELIST;
 	else return TOPOLOGY_POINTLIST;
+}
+
+void Engine::setRenderData(vector<vector<RenderData*>> renderData)
+{
+	/*D3D11_MAPPED_SUBRESOURCE mappedData, mappedData2, mappedData3;
+	d3d->pDeviceContext->Map(vbs[1], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData);
+	d3d->pDeviceContext->Map(vbs2[1], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData2);
+	d3d->pDeviceContext->Map(vbs3[1], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData3);
+
+ 	InstancedData* dataView = reinterpret_cast<InstancedData*>(mappedData.pData);
+	InstancedData* dataView2= reinterpret_cast<InstancedData*>(mappedData2.pData);
+	InstancedData* dataView3 = reinterpret_cast<InstancedData*>(mappedData3.pData);
+
+	int a = 0, b = 0, c = 0;
+	for(int j = 0; j < (int)renderData.size(); j++)
+	{
+		for(int i = 0; i < (int)renderData.at(j).size(); i++)
+		{
+			if(renderData.at(j).at(i)->meshID == 0)
+				dataView[a++].matrix = renderData[j][i]->worldMat;
+			else if(renderData.at(j).at(i)->meshID == 1)
+				dataView2[b++].matrix = renderData[j][i]->worldMat;
+			else if(renderData.at(j).at(i)->meshID == 2)
+				dataView3[c++].matrix = renderData[j][i]->worldMat;
+		}
+	}
+
+	size1 = a;
+	size2 = b;
+	size3 = c;
+
+	d3d->pDeviceContext->Unmap(vbs[1], 0);
+	d3d->pDeviceContext->Unmap(vbs2[1], 0);
+	d3d->pDeviceContext->Unmap(vbs3[1], 0);*/
+}
+
+void Engine::setRenderData(vector<vector<VertexColor>> renderData)
+{
+	/*D3D11_MAPPED_SUBRESOURCE mappedData;
+	d3d->deviceContext->Map(particleBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData);
+
+	VertexColor* dataView = reinterpret_cast<VertexColor*>(mappedData.pData);
+
+	particleNum = 0;
+
+	for(int j = 0; j < (int)renderData.size(); j++)
+	{
+		for(int i = 0; i < (int)renderData.at(j).size(); i++)
+		{
+			dataView[i + particleNum] = renderData.at(j).at(i);
+		}
+		particleNum += renderData.at(j).size();
+	}
+
+	d3d->deviceContext->Unmap(particleBuffer, 0);*/
+}
+
+MouseState* Engine::getMouseState()
+{
+	return this->win32->mState;
+}
+
+HWND Engine::getHWND()
+{
+	return win32->getHWND();
 }
