@@ -19,7 +19,7 @@ struct PSIn
 PSIn VSScene(VSIn input)
 {	
 	PSIn output =(PSIn)0;
-	output.pos = input.pos;//float4(input.pos, 1.0f);
+	output.pos = input.pos;
 
 	return output;
 }
@@ -33,7 +33,7 @@ float4 PSScene(PSIn input) : SV_Target
 	float3 diffuse = diffuseAlbedoMap.Load(sampleIndices).xyz;
 	float3 normal = normalMap.Load(sampleIndices).xyz;
 
-	//return float4(diffuse, 1.0f);
+	return float4(diffuse, 1.0f);
 	//return float4(normal, 1.0f);
 	return float4( position, 1.0f);
 }

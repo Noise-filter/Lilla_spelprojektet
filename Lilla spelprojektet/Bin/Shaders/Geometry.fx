@@ -1,3 +1,7 @@
+
+Texture2DArray textures;
+SamplerState anisoSampler;
+
 cbuffer EveryFrame
 {
 	matrix view;
@@ -58,13 +62,14 @@ PSOut PSScene(PSIn input)
 	PSOut output = (PSOut)0;
 	output.position = input.posCS;
 
-	float3 diffuseAlbedo = float3(1,0,0);//textures[input.textureID].Sample( anisoSampler, input.uv).rgb;
+	float3 diffuseAlbedo = float3(0.4, 1, 0.7);//textures.Sample( anisoSampler , float3(input.uv.x, input.uv.y , input.textureID)).rgb;
 
-	float3 normalW = float3(0,1,0);// normalize(input.normalW);
+
+	float4 normalW = normalize(input.normalW);
 
 	output.position = input.posW;
 	output.diffuseAlbedo = float4 ( diffuseAlbedo, 1.0f);
-	output.normal = float4(normalW , 1.0f);
+	output.normal = normalW;
 
 	return output;
 }
