@@ -10,17 +10,17 @@ GeometryManager::~GeometryManager()
 	SAFE_RELEASE(buffers[0]);
 	SAFE_RELEASE(buffers[1]);
 
-	for(int i = 0; i < vIndexBuffer.size(); i++)
+	for(int i = 0; i < (int)vIndexBuffer.size(); i++)
 	{
 		vIndexBuffer[i]->Release();
 	}
 
-	for(int i = 0; i < vVertexBuffer.size(); i++)
+	for(int i = 0; i < (int)vVertexBuffer.size(); i++)
 	{
 		vVertexBuffer[i]->Release();
 	}
 
-	for(int i = 0; i < vInstanceBuffer.size(); i++)
+	for(int i = 0; i < (int)vInstanceBuffer.size(); i++)
 	{
 		vInstanceBuffer[i]->Release();
 	}
@@ -119,7 +119,7 @@ void GeometryManager::init(ID3D11Device *device)
 	/*initIndexBuffer(device, bufferInit);*/
 
 	instanceInit.desc.eUsage				= D3D11_USAGE_DYNAMIC;
-	instanceInit.desc.uByteWidth			= sizeof(OBJECT_WORLD_AND_TEXTURE);
+	instanceInit.desc.uByteWidth			= sizeof(INSTANCEDATA);
 	instanceInit.desc.uBindFlags			= D3D11_BIND_VERTEX_BUFFER;
 	instanceInit.desc.uCPUAccessFlags		= D3D11_CPU_ACCESS_WRITE;
 	instanceInit.desc.uMiscFlags			= 0;
@@ -135,12 +135,12 @@ void GeometryManager::init(ID3D11Device *device)
 
 void GeometryManager::applyBuffer(ID3D11DeviceContext *dc, std::vector<RenderData*> obj, D3D_PRIMITIVE_TOPOLOGY topology, UINT32 misc)
 {
-	UINT strides[2]		= {0, sizeof(OBJECT_WORLD_AND_TEXTURE)};
+	UINT strides[2]		= {0, sizeof(INSTANCEDATA)};
 	UINT offset[2]		= {0, 0};
-	buffers[0] = vVertexBuffer[(int)obj[0]->iEntityID];
-	buffers[1] = vInstanceBuffer[(int)obj[0]->iEntityID];
+	buffers[0] = vVertexBuffer[(int)obj[0]->meshID];
+	buffers[1] = vInstanceBuffer[(int)obj[0]->meshID];
 
-	if(obj[0]->iEntityID != ENTITY_GUI) strides[0] = sizeof(MESH_PNUV);
+	if(obj[0]->meshID != ENTITY_GUI) strides[0] = sizeof(MESH_PNUV);
 	else strides[0] = sizeof(MESH_PUV);
 
 	dc->IASetVertexBuffers(misc, 2, buffers, strides, offset);
@@ -154,12 +154,12 @@ void GeometryManager::updateBuffer(ID3D11DeviceContext *dc, std::vector<RenderDa
 {
 	D3D11_MAPPED_SUBRESOURCE *mappedData = map(dc, vInstanceBuffer[index]);
 
-	OBJECT_WORLD_AND_TEXTURE *instance = reinterpret_cast<OBJECT_WORLD_AND_TEXTURE*>(mappedData->pData);
+	INSTANCEDATA *instance = reinterpret_cast<INSTANCEDATA*>(mappedData->pData);
 
 	for(int i = 0; i < (int)data.size(); i++)
 	{
-		instance[i].mWorld		= data[i]->worldTex.mWorld;
-		instance[i].iTextureID	= data[i]->worldTex.iTextureID;
+		instance[i].mWorld		= data[i]->worldMat;
+		instance[i].iTextureID	= data[i]->textureID;
 	}
 
 	unmap(dc, vInstanceBuffer[index]); 
@@ -235,7 +235,7 @@ int GeometryManager::getNrOfInstances(int index)
 	D3D11_BUFFER_DESC temp;
 	int ret = 0;
 	vInstanceBuffer[index]->GetDesc(&temp);
-	return temp.ByteWidth / sizeof(OBJECT_WORLD_AND_TEXTURE);
+	return temp.ByteWidth / sizeof(INSTANCEDATA);
 }
 
 int GeometryManager::getNrOfVertexPoints(int index)
