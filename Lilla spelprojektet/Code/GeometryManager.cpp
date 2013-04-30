@@ -133,7 +133,7 @@ void GeometryManager::init(ID3D11Device *device)
 	//initInstance(device, instanceInit);
 }
 
-void GeometryManager::applyBuffer(ID3D11DeviceContext *dc, std::vector<RENDERDATA*> obj, D3D_PRIMITIVE_TOPOLOGY topology, UINT32 misc)
+void GeometryManager::applyBuffer(ID3D11DeviceContext *dc, std::vector<RenderData*> obj, D3D_PRIMITIVE_TOPOLOGY topology, UINT32 misc)
 {
 	UINT strides[2]		= {0, sizeof(OBJECT_WORLD_AND_TEXTURE)};
 	UINT offset[2]		= {0, 0};
@@ -150,7 +150,7 @@ void GeometryManager::applyBuffer(ID3D11DeviceContext *dc, std::vector<RENDERDAT
 	dc->IASetPrimitiveTopology(topology);
 }
 
-void GeometryManager::updateBuffer(ID3D11DeviceContext *dc, std::vector<RENDERDATA*> data, int index)
+void GeometryManager::updateBuffer(ID3D11DeviceContext *dc, std::vector<RenderData*> data, int index)
 {
 	D3D11_MAPPED_SUBRESOURCE *mappedData = map(dc, vInstanceBuffer[index]);
 
