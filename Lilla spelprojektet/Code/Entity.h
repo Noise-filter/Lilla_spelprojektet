@@ -15,6 +15,7 @@ public:
 	void doDamage(float damage);	//Does damage on the entity
 
 	void setPosition(D3DXVECTOR3& pos);
+	void setRotation(D3DXVECTOR3& dir);
 
 	float getHp();
 
