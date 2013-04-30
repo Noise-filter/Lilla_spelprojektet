@@ -1,7 +1,6 @@
 #ifndef PARTICLEPOLICY_H
 #define PARTICLEPOLICY_H
 
-#include "stdafx.h"
 #include "Buffer.h"
 #include "Shader.h"
 #include "BaseParticle.h"

@@ -1,5 +1,4 @@
 #pragma once
-#include "stdafx.h"
 #include "Enemy.h"
 #include "AI.h"
 #include "Node.h"

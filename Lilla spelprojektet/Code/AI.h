@@ -1,5 +1,4 @@
 #pragma once
-#include "stdafx.h"
 #include <iostream>
 #include "Structure.h"
 #include "Node.h"

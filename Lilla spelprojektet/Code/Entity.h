@@ -1,7 +1,7 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include "stdafx.h"
+#include "D3DMathUtility.h"
 
 class Entity
 {

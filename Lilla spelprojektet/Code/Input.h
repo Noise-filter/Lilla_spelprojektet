@@ -1,7 +1,8 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-#include "stdafx.h"
+#include "WindowsUtility.h"
+#include "D3DMathUtility.h"
 
 class Input
 {

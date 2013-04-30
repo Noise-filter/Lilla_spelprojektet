@@ -4,6 +4,7 @@
 #include "Input.h"
 #include "Camera.h"
 #include "SoundSystem.h"
+#include "D3DMathUtility.h"
 #include "ParticleSystem.h"
 
 

@@ -1,7 +1,8 @@
 #ifndef SHADER__H
 #define SHADER__H
 
-#include "stdafx.h"
+#include "D3DGraphicUtility.h"
+#include "D3DMathUtility.h"
 
 class Shader
 {

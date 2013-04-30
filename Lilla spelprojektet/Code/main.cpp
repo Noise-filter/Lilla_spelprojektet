@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Game.h"
 #include <windows.h>
 #include <stdio.h>
@@ -76,7 +75,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 			//main logic and draw calls
 			game->update(dt);
 			game->render();
-	
+
 
 			prevTimeStamp = currTimeStamp;
 		}

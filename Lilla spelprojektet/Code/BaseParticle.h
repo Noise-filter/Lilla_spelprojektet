@@ -1,5 +1,6 @@
 #pragma once
-#include "stdafx.h"
+#include "D3DMathUtility.h"
+#include <ctime>
 
 class BaseParticle
 {

@@ -1,5 +1,5 @@
 #pragma once
-#include "stdafx.h"
+#include "D3DMathUtility.h"
 #include "Node.h"
 #include "Structure.h"
 #include "Enemy.h"

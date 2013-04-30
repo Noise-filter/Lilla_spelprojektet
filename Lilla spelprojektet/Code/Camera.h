@@ -1,7 +1,7 @@
 #ifndef CAMERA__H
 #define CAMERA__H
 
-#include "stdafx.h"
+#include "D3DMathUtility.h"
 
 class Camera
 {
