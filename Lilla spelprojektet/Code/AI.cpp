@@ -27,7 +27,7 @@ AI::~AI(void)
 	SAFE_DELETE_ARRAY(structuresInt);
 
 	lua_close(pathScript);
-	//lua_close(targetScript);
+	lua_close(targetScript);
 	lua_close(spawnScript);
 }
 
@@ -75,7 +75,7 @@ vector<Waypoint> AI::findPath(int start, int goal, int enemyType)
 	lua_pcall(pathScript, 3, 2, 0); //kalla på funktionen
 
 	//hämta värden
-	int a = lua_tonumber(pathScript, -1);
+	int a = (int)lua_tonumber(pathScript, -1);
 	lua_pop(pathScript, 1);
 
 	if(a > 0)
@@ -84,7 +84,7 @@ vector<Waypoint> AI::findPath(int start, int goal, int enemyType)
 		lua_pushnil(pathScript);
 		while(lua_next(pathScript, -2) != 0)
 		{
-			int temp = lua_tonumber(pathScript, -1);
+			int temp = (int)lua_tonumber(pathScript, -1);
 			wayPoints.push_back(Waypoint(((int)temp % mapSize), ((int)temp / mapSize)));
 			//cout << "A*: " << temp << endl;
 			lua_pop(pathScript, 1);
@@ -124,7 +124,6 @@ vector<float> AI::findTarget(Waypoint pos, int type)
 vector<Enemy*> AI::spawnEnemies(float dt, int nrOfEnemies)
 {
 	vector<Enemy*> enemies;
-	Enemy* tempE;
 	int retVals[4];
 	int counter = 0;
 	lua_getglobal(spawnScript, "spawning");

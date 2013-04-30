@@ -119,7 +119,7 @@ void GeometryManager::init(ID3D11Device *device)
 	/*initIndexBuffer(device, bufferInit);*/
 
 	instanceInit.desc.eUsage				= D3D11_USAGE_DYNAMIC;
-	instanceInit.desc.uByteWidth			= sizeof(INSTANCEDATA)*1000;
+	instanceInit.desc.uByteWidth			= sizeof(INSTANCEDATA) * 100;
 	instanceInit.desc.uBindFlags			= D3D11_BIND_VERTEX_BUFFER;
 	instanceInit.desc.uCPUAccessFlags		= D3D11_CPU_ACCESS_WRITE;
 	instanceInit.desc.uMiscFlags			= 0;
