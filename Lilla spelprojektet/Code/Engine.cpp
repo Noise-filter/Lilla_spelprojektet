@@ -144,7 +144,10 @@ PRIMITIVE_TOPOLOGIES Engine::changeTopology(int ID)
 
 void Engine::setRenderData(vector<vector<RenderData*>> renderData)
 {
-	for(int i = 0; i < (int)renderData.size(); i++)	pGeoManager->updateBuffer(d3d->pDeviceContext, renderData[i], i);
+	for(int i = 0; i < (int)renderData.size(); i++)
+	{
+		if((int)renderData[i].size() > 0) pGeoManager->updateBuffer(d3d->pDeviceContext, renderData[i], i);
+	}
 
 	this->nrOfBuffers = (int)renderData.size();
 }

@@ -129,6 +129,7 @@ void GeometryManager::init(ID3D11Device *device)
 	initInstance(device, instanceInit);
 	initInstance(device, instanceInit);
 	initInstance(device, instanceInit);
+	initInstance(device, instanceInit);
 
 	//initInstance(device, instanceInit);
 }
