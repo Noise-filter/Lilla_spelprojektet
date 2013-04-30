@@ -7,7 +7,8 @@ Buffer::Buffer()
 
 Buffer::~Buffer()
 {
-	SAFE_RELEASE(pBuffer);
+	pBuffer = NULL;
+	//SAFE_RELEASE(pBuffer);
 }
 
 ID3D11Buffer *Buffer::initBuffer(ID3D11Device *device, BUFFER_INIT &bufferInit)
