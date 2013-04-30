@@ -48,7 +48,6 @@ void BaseParticle::setTimeToLive(float timeToLive)
 bool BaseParticle::update(float dt)
 {
 	//check if timeToLive is out and the particle is to be killed
-	static float srand(time(NULL));
 
 	float random = (float)rand()/(float)RAND_MAX  + 0.01f;
 

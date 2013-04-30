@@ -134,7 +134,7 @@ bool GameLogic::init(int mapSize, int quadSize)
 
 	vector<RenderData*> renderData;
 
-	for(int i = 0; i < 10; i++)	//antal olika mesher
+	for(int i = 0; i < 4; i++)	//antal olika mesher
 		rDataList.push_back(renderData);
 
 	return true;
@@ -146,7 +146,7 @@ vector<vector<RenderData*>> GameLogic::getRenderData()
 		rDataList.at(i).clear();
 
 	level->getRenderData(rDataList);
-	eHandler->getRenderData(rDataList);
+	//eHandler->getRenderData(rDataList);
 
 	return rDataList;
 }
