@@ -95,7 +95,7 @@ void GeometryManager::init(ID3D11Device *device)
 	bufferInit.data.pInitData = node;
 	initVertexBuffer(device, bufferInit);
 
-		MESH_P p[] = {  MESH_P(D3DXVECTOR3(1,-1,0)),
+	MESH_P p[] = {  MESH_P(D3DXVECTOR3(1,-1,0)),
 						MESH_P(D3DXVECTOR3(-1,-1,0)), 
 						MESH_P(D3DXVECTOR3(1,1,0)),
 						MESH_P(D3DXVECTOR3(1,1,0)),  
@@ -234,15 +234,23 @@ void GeometryManager::unmap(ID3D11DeviceContext *dc, ID3D11Buffer *buffer)
 int GeometryManager::getNrOfInstances(int index)
 {
 	D3D11_BUFFER_DESC temp;
-	int ret = 0;
-	vInstanceBuffer[index]->GetDesc(&temp);
-	return temp.ByteWidth / sizeof(INSTANCEDATA);
+	if((int)vInstanceBuffer.size() > index)
+	{
+		vInstanceBuffer[index]->GetDesc(&temp);
+		return temp.ByteWidth / sizeof(INSTANCEDATA);
+	}
+
+	return -1;
 }
 
 int GeometryManager::getNrOfVertexPoints(int index)
 {
 	D3D11_BUFFER_DESC temp;
-	int ret = 0;
-	vVertexBuffer[index]->GetDesc(&temp);
-	return temp.ByteWidth / sizeof(MESH_PNUV);
+	if((int)vVertexBuffer.size() > index)
+	{
+		vVertexBuffer[index]->GetDesc(&temp);
+		return temp.ByteWidth / sizeof(MESH_PNUV);
+	}
+
+	return -1;
 }

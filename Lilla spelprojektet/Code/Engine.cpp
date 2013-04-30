@@ -92,8 +92,11 @@ void Engine::render(Matrix& vp)
 
 	for(int i = 0; i < this->nrOfBuffers; i++)
 	{
-		pGeoManager->applyBuffer(d3d->pDeviceContext, i, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 0);
-		d3d->pDeviceContext->DrawInstanced(pGeoManager->getNrOfVertexPoints(i), pGeoManager->getNrOfInstances(i), 0, 0);
+		if(pGeoManager->getNrOfInstances(i) > 0)
+		{
+			pGeoManager->applyBuffer(d3d->pDeviceContext, i, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 0);
+			d3d->pDeviceContext->DrawInstanced(pGeoManager->getNrOfVertexPoints(i), pGeoManager->getNrOfInstances(i), 0, 0);
+		}
 	}
 
 	//pGeoManager->applyBuffer(d3d->pDeviceContext, test[1][0], D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 0);
