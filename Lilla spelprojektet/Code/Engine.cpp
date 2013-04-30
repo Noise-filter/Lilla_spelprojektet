@@ -86,7 +86,7 @@ void Engine::render(Matrix& vp)
 	Shader* temp;
 
 	temp = this->d3d->setPass(PASS_GEOMETRY);
-	temp->SetMatrix("view", view);
+	temp->SetMatrix("view", vp);
 	temp->SetMatrix("proj", proj);
 	temp->Apply(0);
 
@@ -128,7 +128,7 @@ void Engine::render(Matrix& vp)
 	*/
 
 	temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
-	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, this->nrOfBuffers);
+	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, 4);//this->nrOfBuffers);
 
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);

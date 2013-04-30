@@ -9,8 +9,25 @@ class GeometryManager
 		void initVertexBuffer(ID3D11Device *device, BUFFER_INIT &bufferInit);
 		void initIndexBuffer(ID3D11Device *device, BUFFER_INIT &bufferInit);
 		void initInstance(ID3D11Device *device, BUFFER_INIT &bufferInit);
+		void initGUIFSQ(ID3D11Device *device, BUFFER_INIT &bufferInit);
+		void initEntityBuffers(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit);
+
 		D3D11_MAPPED_SUBRESOURCE *map(ID3D11DeviceContext *dc, ID3D11Buffer *buffer);
 		void unmap(ID3D11DeviceContext *dc, ID3D11Buffer *buffer);
+
+		void initMainbuilding(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit);
+		void initSupply(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit);
+		void initTower(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit);
+		void initNode(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit);
+/*TBD*/	void initEnemy(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit);
+/*TBD*/	void initParticleSystem(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit);
+/*TBD*/	void initUpgradeHP(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit);
+/*TBD*/	void initUpgradeATKSP(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit);
+/*TBD*/	void initUpgradeDMG(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit);
+/*TBD*/	void initUpgradePRJSP(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit);
+/*TBD*/	void initUpgradeRANGE(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit);
+/*TBD*/	void initGUI(ID3D11Device *device, BUFFER_INIT &bufferInit);
+		void initFullScreenQuad(ID3D11Device *device, BUFFER_INIT &bufferInit);
 
 
 
