@@ -70,7 +70,6 @@ int Tower::update(float dt)
 	cooldown -= dt;
 	if(target != NULL && !target->isDead())
 	{
-		//Skjuter ett skott
 		if(cooldown <= 0)
 		{
 			if(range > D3DXVec3Length(&(target->getPosition() - getPosition())))

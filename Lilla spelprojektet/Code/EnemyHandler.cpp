@@ -36,9 +36,8 @@ int EnemyHandler::update(float dt)
 	{
 		if(enemies.at(i)->isDead())
 		{
-			Enemy* temp = enemies.at(i);
+			SAFE_DELETE(enemies.at(i));
 			enemies.erase(enemies.begin() + i);
-			SAFE_DELETE(temp);
 		}
 		else
 		{
