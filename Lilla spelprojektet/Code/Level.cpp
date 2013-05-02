@@ -127,14 +127,15 @@ Level::~Level(void)
 int Level::update(float dt, vector<Enemy*>& enemies)
 {
 	int supply = 0;
+	bool buildingDestroyed = false;
+
 	for(int i = 0; i < mapSize-1; i++)
 	{
 		for(int j = 0; j < mapSize-1; j++)
 		{
 			if(structures[i][j] != NULL)
 			{
-				int id = structures[i][j]->update(dt);
-				if(id == 0)
+				if(structures[i][j]->isDead())
 				{
 					//En byggnad förstörs
 					if(typeid(structures[i][j]) == typeid(Tower*))
@@ -154,14 +155,19 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 					//Ta bort byggnaden
 					SAFE_DELETE(structures[i][j]);
 
-					//Skapa mängder och hitta de byggnader som inte längre sitter ihop med main byggnaden
-					//räkna ut vilka byggnader som kommer förstöras
-					sets.initSets(structures, mapSize-1);
-					supply += destroyBuildings();
+					buildingDestroyed = true;
 				}
-				if(id == 2 && typeid(*structures[i][j]) == typeid(Tower))
+				else
 				{
-					dynamic_cast<Tower*>(structures[i][j])->aquireTarget(&enemies);
+					if(structures[i][j])
+					{
+						int id = structures[i][j]->update(dt);
+
+						if(id == 2 && typeid(*structures[i][j]) == typeid(Tower))
+						{
+							dynamic_cast<Tower*>(structures[i][j])->aquireTarget(&enemies);
+						}
+					}
 				}
 			}
 		}
@@ -182,6 +188,14 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 		return 4; // win
 	}
 
+
+	if(buildingDestroyed)
+	{
+		//Skapa mängder och hitta de byggnader som inte längre sitter ihop med main byggnaden
+		//räkna ut vilka byggnader som kommer förstöras
+		sets.initSets(structures, mapSize-1);
+		supply += destroyBuildings();
+	}
 
 	return supply;
 }
@@ -299,7 +313,7 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 			switch(selectedStructure)
 			{
 			case BUILDABLE_TOWER:
-				structures[xPos][yPos] = new Tower(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWER,0,10,0, 1, 1, 50, 100);
+				structures[xPos][yPos] = new Tower(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWER,0,1,0, 1, 1, 50, 100);
 				for(int i = 0; i < (int)this->upgradesInUse.size();i++)
 				{
 					dynamic_cast<Tower*>(structures[xPos][yPos])->giveUpgrade(upgradesInUse[i]);
@@ -437,7 +451,7 @@ int Level::destroyBuildings()
 						removeUpgrade(dynamic_cast<Upgrade*>(structures[i][j])->getUpgradeID());
 					}
 
-					SAFE_DELETE(structures[i][j]);
+					structures[i][j]->setDead(true);
 				}
 			}
 		}

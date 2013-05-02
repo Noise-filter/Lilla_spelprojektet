@@ -66,6 +66,11 @@ bool Entity::isDead()
 	return dead;
 }
 
+void Entity::setDead(bool dead)
+{
+	this->dead = dead;
+}
+
 RenderData& Entity::getRenderData()
 {
 	return renderData;
