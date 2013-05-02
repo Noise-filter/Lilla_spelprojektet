@@ -68,8 +68,8 @@ vector<Waypoint> AI::findPath(Waypoint start, Waypoint goal, int enemyType)
 
 	lua_getglobal(pathScript, "astar");
 
-	lua_pushnumber(pathScript, start.x + (start.y * mapSize));
-	lua_pushnumber(pathScript, goal.x + (goal.y * mapSize));
+	lua_pushnumber(pathScript, (start.x/mapSize) + start.y);
+	lua_pushnumber(pathScript, goal.x + (goal.y*mapSize));
 	lua_pushnumber(pathScript, enemyType);
 
 	lua_pcall(pathScript, 3, 2, 0); //kalla på funktionen
@@ -106,7 +106,7 @@ vector<float> AI::findTarget(Waypoint pos, int type)
 	lua_pushnumber(targetScript, pos.x);
 	lua_pushnumber(targetScript, pos.y);
 	lua_pushnumber(targetScript, type);
-	
+
 	lua_pcall(targetScript, 4, 2, 0); //kalla på funktionen
 	
 	float targetY = (float)lua_tonumber(targetScript, -1);
@@ -253,7 +253,7 @@ void AI::convertNodesToInt()
 	{
 		for(int j = 0; j < mapSize; j++)
 		{
-				nodesInt[i][j] = nodes[i][j].getColor();
+			nodesInt[i][j] = nodes[i][j].getColor();
 		}
 	}
 }
