@@ -70,6 +70,11 @@ void ParticleSystem::addDeathExplosion(D3DXVECTOR3 color, D3DXVECTOR3 position ,
 	particlePolicies.push_back(new DeathExplosion(color, position, intensity, timeToLive, velocity));
 }
 
+void ParticleSystem::addAttackParticlePolicy(D3DXVECTOR3 color, D3DXVECTOR3 position , int intensity, float timeToLive, float velocity, D3DXVECTOR3 direction)
+{
+	particlePolicies.push_back(new AttackParticlePolicy(color, position, intensity, timeToLive, velocity, direction));
+}
+
 bool ParticleSystem::removePolicy(ParticlePolicy* temp) // kompletera med hur detta ska ske, hur removar man den policy man vill åt?(id? string namn?)
 {
 	for(int i = 0; i < (int)particlePolicies.size(); i++)

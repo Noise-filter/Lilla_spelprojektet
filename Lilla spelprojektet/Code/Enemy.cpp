@@ -77,6 +77,9 @@ int Enemy::move(float dt)
 			{
 				target->doDamage(damage);
 				cooldown = attackSpeed;
+				D3DXVECTOR3 dir = target->getPosition() - getPosition();
+				D3DXVec3Normalize(&dir, &dir);
+				ParticleSystem::Getinstance()->addAttackParticlePolicy(D3DXVECTOR3(1, 1, 1), getPosition(), 60, 1, 10, dir);
 			}
 		}
 		else	//Fienden har inget target
@@ -96,4 +99,9 @@ void Enemy::setPath(std::vector<Waypoint>& wp)
 Waypoint Enemy::getCurrentWaypoint()
 {
 	return waypoints.at(currentWP);
+}
+
+void Enemy::setTarget(Structure* t)
+{
+	target = t;
 }
