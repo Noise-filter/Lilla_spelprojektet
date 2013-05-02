@@ -18,8 +18,11 @@ GameLogic::~GameLogic(void)
 
 void GameLogic::incrementSelectedStructure(int increment)
 {
-	this->selectedStructure += increment;
-	printSelected();
+	if(selectedStructure >= 0 && selectedStructure <= BUILDABLE_UPGRADE_RANGE)
+	{
+		this->selectedStructure += increment;
+		printSelected();	
+	}
 }
 
 void GameLogic::giveResource(float dt)
@@ -87,31 +90,31 @@ bool GameLogic::canAfford()
 void GameLogic::structureBuilt()
 {
 	switch(this->selectedStructure)
-			{
-			case BUILDABLE_TOWER:
-				availableSupply -= COST_TOWER; 
-				break;
-			case BUILDABLE_SUPPLY:
-				availableSupply += COST_TOWER;
-				resource -= COST_SUPPLY;
-				nrOfSupplyStructures++;
-				break;
-			case BUILDABLE_UPGRADE_HP:
-				resource -= COST_UPGRADE;
-				break;
-			case BUILDABLE_UPGRADE_ATKSP:
-				resource -= COST_UPGRADE;
-				break;
-			case BUILDABLE_UPGRADE_DMG:
-				resource -= COST_UPGRADE;
-				break;
-			case BUILDABLE_UPGRADE_PRJSP:
-				resource -= COST_UPGRADE;
-				break;
-			case BUILDABLE_UPGRADE_RANGE:
-				resource -= COST_UPGRADE;
-				break;
-			}
+	{
+		case BUILDABLE_TOWER:
+			availableSupply -= COST_TOWER; 
+			break;
+		case BUILDABLE_SUPPLY:
+			availableSupply += COST_TOWER;
+			resource -= COST_SUPPLY;
+			nrOfSupplyStructures++;
+			break;
+		case BUILDABLE_UPGRADE_HP:
+			resource -= COST_UPGRADE;
+			break;
+		case BUILDABLE_UPGRADE_ATKSP:
+			resource -= COST_UPGRADE;
+			break;
+		case BUILDABLE_UPGRADE_DMG:
+			resource -= COST_UPGRADE;
+			break;
+		case BUILDABLE_UPGRADE_PRJSP:
+			resource -= COST_UPGRADE;
+			break;
+		case BUILDABLE_UPGRADE_RANGE:
+			resource -= COST_UPGRADE;
+			break;
+	}
 
 }
 
@@ -128,7 +131,7 @@ int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX v
 					gameState = STATE_PLAYING;
 					structureBuilt();
 					
-					cout << "mainstruct build" << endl;
+					cout << "mainstruct buildt" << endl;
 				}
 			}
 			

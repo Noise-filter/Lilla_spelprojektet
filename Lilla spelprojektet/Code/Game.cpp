@@ -108,15 +108,19 @@ void Game::handleInput(float dt)
 		pausedMusic = !pausedMusic;
 	}
 
-	if(input->checkKeyDown(0x45)) // E
+	if(gameState == STATE_PLAYING)
 	{
-		//byt byggnad +1
-		gameLogic->incrementSelectedStructure(1);
-	}
+		if(input->checkKeyDown(0x45)) // E
+		{
+			//byt byggnad +1
+			gameLogic->incrementSelectedStructure(1);
+		}
 
-	if(input->checkKeyDown(0x51)) // Q
-	{
-		//byt byggnad -1
-		gameLogic->incrementSelectedStructure(-1);
+		if(input->checkKeyDown(0x51)) // Q
+		{
+			//byt byggnad -1
+			gameLogic->incrementSelectedStructure(-1);
+		}	
 	}
+	
 }
