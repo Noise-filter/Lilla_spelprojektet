@@ -4,6 +4,7 @@ Level::Level(void)
 {
 	this->mapSize = 0;
 	this->nodes = NULL;
+	this->nrOfSupplyStructures = 0;
 }
 
 bool Level::init(int mapSize, int quadSize)
@@ -49,7 +50,7 @@ bool Level::init(int mapSize, int quadSize)
 		}	
 	}
 
-	structures[2][8] = new Headquarter(D3DXVECTOR3((float)2*quadSize + (quadSize/2),0,(float)8*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 2, 0);
+	//structures[2][8] = new Headquarter(D3DXVECTOR3((float)2*quadSize + (quadSize/2),0,(float)8*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 2, 0);
 
 	this->availibleUpgrades = new UpgradeStats[5];
 	this->availibleUpgrades[0] = (UpgradeStats(BUILDABLE_UPGRADE_HP,10,0,0,0,0));
@@ -145,6 +146,10 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 						//remove this upgrade from all towers on the map
 						removeUpgrade(dynamic_cast<Upgrade*>(structures[i][j])->getUpgradeID());
 					}
+					else if(typeid(structures[i][j]) == typeid(Headquarter*))
+					{
+						return 5; // mainbuilding died, you lose
+					}
 
 					//Ta bort byggnaden
 					SAFE_DELETE(structures[i][j]);
@@ -161,6 +166,22 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 			}
 		}
 	}
+	int nrOfStructures = 0;
+	for(int i = 0; i < mapSize-1; i++)
+	{
+		for(int j = 0; j  < mapSize-1; j++)
+		{
+			if(structures[i][j] != NULL)
+			{
+				nrOfStructures++;
+			}
+		}
+	}
+	if((float)nrOfStructures/((mapSize-1) * (mapSize-1)) > 0.40f)
+	{
+		return 4; // win
+	}
+
 
 	return supply;
 }
@@ -193,6 +214,11 @@ void Level::removeUpgrade(int selectedUpgrade)
 			}
 		}	
 	}
+}
+
+int Level::getNrOfSupplyStructures()
+{
+	return this->nrOfSupplyStructures;
 }
 
 bool Level::isAdjecent(int xPos, int yPos)
@@ -259,8 +285,15 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 	int yPos = (int)(mouseClickPos.z/quadSize);
 
 	if(xPos >= 0 && xPos < mapSize-1 && yPos >= 0 && yPos < mapSize-1)
-	{
-		if(structures[xPos][yPos] == NULL && isAdjecent(xPos,yPos) && isLocationBuildable(xPos, yPos))
+	{	
+
+		if(selectedStructure == BUILDABLE_MAINBUILDING && structures[xPos][yPos] == NULL && isLocationBuildable(xPos, yPos))
+		{ 
+			structures[xPos][yPos] = new Headquarter(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 2, 0);
+			return true;
+		
+		}
+		else if(structures[xPos][yPos] == NULL && isAdjecent(xPos,yPos) && isLocationBuildable(xPos, yPos))
 		{
 			bool builtUpgrade = false;
 			switch(selectedStructure)
@@ -274,6 +307,7 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 				break;
 			case BUILDABLE_SUPPLY:
 				structures[xPos][yPos] = new Supply(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_SUPPLY,0,100,0);
+				this->nrOfSupplyStructures++;
 				break;
 			case BUILDABLE_UPGRADE_HP:
 				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
@@ -393,7 +427,10 @@ int Level::destroyBuildings()
 					if(typeid(*structures[i][j]) == typeid(Tower))
 						supply += COST_TOWER;
 					else if(typeid(*structures[i][j]) == typeid(Supply))
-						supply -= COST_SUPPLY;
+					{
+						nrOfSupplyStructures--;
+					}
+			
 					else if(typeid(structures[i][j]) == typeid(Upgrade*))
 					{
 						//remove this upgrade from all towers on the map

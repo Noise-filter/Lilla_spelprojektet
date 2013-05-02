@@ -4,10 +4,10 @@ GameLogic::GameLogic(void)
 {
 	this->level = new Level();
 	this->eHandler = new EnemyHandler();
-	this->selectedStructure = 0;
+	this->selectedStructure = 2;
 	this->availableSupply = 100;
 	this->resource = 100;
-	
+	this->resourceCD = 0;
 }
 
 GameLogic::~GameLogic(void)
@@ -19,6 +19,18 @@ GameLogic::~GameLogic(void)
 void GameLogic::incrementSelectedStructure(int increment)
 {
 	this->selectedStructure += increment;
+	printSelected();
+}
+
+void GameLogic::giveResource(float dt)
+{
+	resourceCD += dt;
+	if(resourceCD > 5)
+	{
+		this->resource += 10 + level->getNrOfSupplyStructures();
+		cout << "gained resources: " << 10 + level->getNrOfSupplyStructures() << endl;
+		resourceCD = 0;
+	}
 }
 
 bool GameLogic::canAfford()
@@ -82,6 +94,7 @@ void GameLogic::structureBuilt()
 			case BUILDABLE_SUPPLY:
 				availableSupply += COST_TOWER;
 				resource -= COST_SUPPLY;
+				nrOfSupplyStructures++;
 				break;
 			case BUILDABLE_UPGRADE_HP:
 				resource -= COST_UPGRADE;
@@ -103,26 +116,61 @@ void GameLogic::structureBuilt()
 }
 
 
-int GameLogic::update(float dt, MouseState* mState, D3DXMATRIX view, D3DXMATRIX proj, D3DXVECTOR3 cameraPos)
+int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX view, D3DXMATRIX proj, D3DXVECTOR3 cameraPos)
 {
-	switch(mState->btnState)
-	{
-		case VK_LBUTTON:
-			if(canAfford())
+		if(gameState == STATE_GAMESTART)
+		{
+			if(mState->btnState == VK_LBUTTON)
 			{
-				if(level->buildStructure(getMouseWorldPos(mState, view, proj, cameraPos), this->selectedStructure))
+				//placera ut main byggnad
+				if(level->buildStructure(getMouseWorldPos(mState, view, proj, cameraPos), BUILDABLE_MAINBUILDING))
 				{
+					gameState = STATE_PLAYING;
 					structureBuilt();
+					
+					cout << "mainstruct build" << endl;
 				}
 			}
-			break;
+			
+		}
+		
+		if(gameState == STATE_PLAYING)
+		{
+			switch(mState->btnState)
+			{	
+				case VK_LBUTTON:
+			
+				if(canAfford())
+				{
+					if(level->buildStructure(getMouseWorldPos(mState, view, proj, cameraPos), this->selectedStructure))
+					{
+						structureBuilt();
+					}
+				}
+
+				break;
+			}
+
+			giveResource(dt);
+			int ret = level->update(dt, eHandler->getEnemies()); // returnera 4 om vinst 5 om förlust
+			if(ret == 4) //win
+			{
+				gameState = STATE_WIN;
+			}
+			else if(ret == 5) //lose
+			{
+				gameState = STATE_LOSE;
+			}
+
+			if(!eHandler->update(dt))
+				return 0; //error
+		}
+	
+	if(gameState == STATE_WIN || gameState == STATE_LOSE)
+	{
+		//ska något göras här?
 	}
-
-	level->update(dt, eHandler->getEnemies());
-
-	if(!eHandler->update(dt))
-		return 0; //error
-
+	
 	return 1;//all went good
 }
 
@@ -145,12 +193,40 @@ vector<vector<RenderData*>> GameLogic::getRenderData()
 	for(int i = 0; i < (int)rDataList.size(); i++)
 		rDataList.at(i).clear();
 
+
 	level->getRenderData(rDataList);
 	eHandler->getRenderData(rDataList);
 
 	return rDataList;
 }
 
+void GameLogic::printSelected()
+{
+	switch(this->selectedStructure)
+	{
+		case BUILDABLE_SUPPLY:
+		cout << "SUPPLY SELECTED" << endl;
+		break;
+		case BUILDABLE_TOWER:
+		cout << "TOWER SELECTED" << endl;
+		break;
+		case BUILDABLE_UPGRADE_DMG:
+		cout << "DMG UPGRADE SELECTED" << endl;
+		break;
+		case BUILDABLE_UPGRADE_ATKSP:
+		cout << "ATKSP UPGRADE SELECTED" << endl;
+		break;
+		case BUILDABLE_UPGRADE_HP:
+		cout << "HP UPGRADE SELECTED" << endl;
+		break;
+		case BUILDABLE_UPGRADE_PRJSP:
+		cout << "PRJSP UPGRADE SELECTED" << endl;
+		break;
+		case BUILDABLE_UPGRADE_RANGE:
+		cout << "RANGE UPGRADE SELECTED" << endl;
+		break;
+	}
+}
 D3DXVECTOR3 GameLogic::getMouseWorldPos(MouseState* mState, D3DXMATRIX view, D3DXMATRIX proj, D3DXVECTOR3 cameraPos)
 {
 	float pointX, pointY, intersect;
