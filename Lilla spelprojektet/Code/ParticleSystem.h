@@ -23,7 +23,7 @@ public:
 
 private:
 	vector<ParticlePolicy*> particlePolicies;
-	
+
 	ParticleSystem();
 	~ParticleSystem();
 	static ParticleSystem* particleSystem;

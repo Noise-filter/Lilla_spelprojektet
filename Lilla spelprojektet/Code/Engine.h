@@ -14,7 +14,7 @@ public:
 	void render(D3DXMATRIX& vp);
 	bool init(HINSTANCE hInstance, int cmdShow);
 
-	void setRenderData(vector<vector<RenderData*>> renderData);
+	void setRenderData(vector<vector<RenderData*>>& renderData);
 	void setRenderData(vector<vector<VertexColor>>& renderData);
 
 	void updateBuffers();

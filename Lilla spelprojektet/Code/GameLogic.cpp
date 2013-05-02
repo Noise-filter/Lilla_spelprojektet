@@ -21,7 +21,7 @@ void GameLogic::incrementSelectedStructure(int increment)
 	if(selectedStructure >= 0 && selectedStructure <= BUILDABLE_UPGRADE_RANGE)
 	{
 		this->selectedStructure += increment;
-		printSelected();	
+		printSelected();
 	}
 }
 
@@ -121,53 +121,53 @@ void GameLogic::structureBuilt()
 
 int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX view, D3DXMATRIX proj, D3DXVECTOR3 cameraPos)
 {
-		if(gameState == STATE_GAMESTART)
+	if(gameState == STATE_GAMESTART)
+	{
+		if(mState->btnState == VK_LBUTTON)
 		{
-			if(mState->btnState == VK_LBUTTON)
+			//placera ut main byggnad
+			if(level->buildStructure(getMouseWorldPos(mState, view, proj, cameraPos), BUILDABLE_MAINBUILDING))
 			{
-				//placera ut main byggnad
-				if(level->buildStructure(getMouseWorldPos(mState, view, proj, cameraPos), BUILDABLE_MAINBUILDING))
-				{
-					gameState = STATE_PLAYING;
-					structureBuilt();
+				gameState = STATE_PLAYING;
+				structureBuilt();
 					
-					cout << "mainstruct buildt" << endl;
-				}
+				cout << "mainstruct buildt" << endl;
 			}
-			
 		}
+			
+	}
 		
-		if(gameState == STATE_PLAYING)
-		{
-			switch(mState->btnState)
-			{	
-				case VK_LBUTTON:
+	if(gameState == STATE_PLAYING)
+	{
+		switch(mState->btnState)
+		{	
+			case VK_LBUTTON:
 			
-				if(canAfford())
+			if(canAfford())
+			{
+				if(level->buildStructure(getMouseWorldPos(mState, view, proj, cameraPos), this->selectedStructure))
 				{
-					if(level->buildStructure(getMouseWorldPos(mState, view, proj, cameraPos), this->selectedStructure))
-					{
-						structureBuilt();
-					}
+					structureBuilt();
 				}
-
-				break;
 			}
 
-			giveResource(dt);
-			int ret = level->update(dt, eHandler->getEnemies()); // returnera 4 om vinst 5 om förlust
-			if(ret == 4) //win
-			{
-				gameState = STATE_WIN;
-			}
-			else if(ret == 5) //lose
-			{
-				gameState = STATE_LOSE;
-			}
-
-			if(!eHandler->update(dt))
-				return 0; //error
+			break;
 		}
+
+		giveResource(dt);
+		int ret = level->update(dt, eHandler->getEnemies()); // returnera 4 om vinst 5 om förlust
+		if(ret == 4) //win
+		{
+			gameState = STATE_WIN;
+		}
+		else if(ret == 5) //lose
+		{
+			gameState = STATE_LOSE;
+		}
+
+		if(!eHandler->update(dt))
+			return 0; //error
+	}
 	
 	if(gameState == STATE_WIN || gameState == STATE_LOSE)
 	{
@@ -191,7 +191,7 @@ bool GameLogic::init(int mapSize, int quadSize)
 	return true;
 }
 
-vector<vector<RenderData*>> GameLogic::getRenderData()
+vector<vector<RenderData*>>& GameLogic::getRenderData()
 {
 	for(int i = 0; i < (int)rDataList.size(); i++)
 		rDataList.at(i).clear();

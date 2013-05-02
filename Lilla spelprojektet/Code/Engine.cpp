@@ -293,7 +293,7 @@ void Engine::render(D3DXMATRIX& vp)
 	}
 }
 
-void Engine::setRenderData(vector<vector<RenderData*>> renderData)
+void Engine::setRenderData(vector<vector<RenderData*>>& renderData)
 {
 	D3D11_MAPPED_SUBRESOURCE mappedData, mappedData2, mappedData3;
 	d3d->deviceContext->Map(vbs[1], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData);

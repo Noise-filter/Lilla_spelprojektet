@@ -68,7 +68,7 @@ vector<Waypoint> AI::findPath(Waypoint start, Waypoint goal, int enemyType)
 
 	lua_getglobal(pathScript, "astar");
 
-	lua_pushnumber(pathScript, (start.x/mapSize) + start.y);
+	lua_pushnumber(pathScript, (start.x/quadSize) + ((start.y/quadSize) * mapSize));
 	lua_pushnumber(pathScript, goal.x + (goal.y*mapSize));
 	lua_pushnumber(pathScript, enemyType);
 
@@ -103,8 +103,8 @@ vector<float> AI::findTarget(Waypoint pos, int type)
 	lua_getglobal(targetScript, "findTarget");
 	convertStructuresToInt();
 	sendArray(structuresInt, mapSize-1, targetScript);
-	lua_pushnumber(targetScript, pos.x);
-	lua_pushnumber(targetScript, pos.y);
+	lua_pushnumber(targetScript, pos.x/quadSize);
+	lua_pushnumber(targetScript, pos.y/quadSize);
 	lua_pushnumber(targetScript, type);
 
 	lua_pcall(targetScript, 4, 2, 0); //kalla på funktionen
@@ -156,7 +156,7 @@ vector<Enemy*> AI::spawnEnemies(float dt, int nrOfEnemies)
 		}
 		if(spawnedEnemies > 0)
 		{
-			Enemy* tempE = new Enemy(D3DXVECTOR3((float)retVals[0],0,(float)retVals[1]),ENTITY_ENEMY,0,5,0,30,1,this->quadSize);
+			Enemy* tempE = new Enemy(D3DXVECTOR3((float)retVals[0],0,(float)retVals[1]),ENTITY_ENEMY,0,100,0,30,1,this->quadSize);
 			enemies.push_back(tempE);
 		}
 

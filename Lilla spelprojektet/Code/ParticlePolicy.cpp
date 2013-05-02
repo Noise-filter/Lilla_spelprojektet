@@ -23,7 +23,7 @@ ParticlePolicy::~ParticlePolicy()
 	SAFE_DELETE(emitter);
 }
 
-vector<VertexColor> ParticlePolicy::getVertexData()
+vector<VertexColor>& ParticlePolicy::getVertexData()
 {
 	return vertices;
 }

@@ -79,6 +79,8 @@ public:
 
 	Node* findSet(int x)
 	{
+		if(x == -1)
+			return NULL;
 		return findSet(sets.at(x));
 	}
 

@@ -9,7 +9,7 @@ public:
 	GameLogic(void);
 	~GameLogic(void);
 
-	vector<vector<RenderData*>> getRenderData();
+	vector<vector<RenderData*>>& getRenderData();
 	bool init(int mapSize, int quadSize);
 	int update(int &gameState, float dt, MouseState *mState, D3DXMATRIX view, D3DXMATRIX proj, D3DXVECTOR3 cameraPos);
 	void incrementSelectedStructure(int increment);

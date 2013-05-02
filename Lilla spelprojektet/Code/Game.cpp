@@ -31,7 +31,7 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	playlist = soundSystem->createPlaylist("playlist.m3u");
 	//initiate other game resources such as level or whatever
 
-	if(!gameLogic->init(10,10))
+	if(!gameLogic->init(20,10))
 		return false;
 
 	camera->LookAt(D3DXVECTOR3(45,60,45), D3DXVECTOR3(35, 0, 45), D3DXVECTOR3(-1, 0, 0));
@@ -54,13 +54,12 @@ void Game::render()
 
 int Game::update(float dt)
 {
-	
 	if(gameState == STATE_PLAYING || gameState == STATE_GAMESTART )
 	{
 		handleInput(dt);
 		camera->UpdateViewMatrix();
 		if(!gameLogic->update(gameState, dt,input->getMs(), camera->View(), camera->Proj(), camera->GetPosition()))
-		return 0; // error
+			return 0; // error
 
 		pSystem->update(dt);
 	}
@@ -122,5 +121,4 @@ void Game::handleInput(float dt)
 			gameLogic->incrementSelectedStructure(-1);
 		}	
 	}
-	
 }

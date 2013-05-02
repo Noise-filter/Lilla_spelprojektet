@@ -47,7 +47,7 @@ bool Level::init(int mapSize, int quadSize)
 		for(int j = 0; j < mapSize-1; j++)
 		{
 			structures[i][j] = NULL;
-		}	
+		}
 	}
 
 	//structures[2][8] = new Headquarter(D3DXVECTOR3((float)2*quadSize + (quadSize/2),0,(float)8*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 2, 0);
@@ -138,16 +138,16 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 				if(structures[i][j]->isDead())
 				{
 					//En byggnad förstörs
-					if(typeid(structures[i][j]) == typeid(Tower*))
+					if(typeid(*structures[i][j]) == typeid(Tower))
 						supply += 20;
-					else if(typeid(structures[i][j]) == typeid(Supply*))
+					else if(typeid(*structures[i][j]) == typeid(Supply))
 						supply -= 20;
-					else if(typeid(structures[i][j]) == typeid(Upgrade*))
+					else if(typeid(*structures[i][j]) == typeid(Upgrade))
 					{
 						//remove this upgrade from all towers on the map
 						removeUpgrade(dynamic_cast<Upgrade*>(structures[i][j])->getUpgradeID());
 					}
-					else if(typeid(structures[i][j]) == typeid(Headquarter*))
+					else if(typeid(*structures[i][j]) == typeid(Headquarter))
 					{
 						return 5; // mainbuilding died, you lose
 					}
@@ -183,11 +183,11 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 			}
 		}
 	}
+
 	if((float)nrOfStructures/((mapSize-1) * (mapSize-1)) > 0.40f)
 	{
 		return 4; // win
 	}
-
 
 	if(buildingDestroyed)
 	{
@@ -415,7 +415,7 @@ void Level::getRenderData(vector<vector<RenderData*>>& rData)
 int Level::destroyBuildings()
 {
 	int supply = 0;
-	int mainBuilding = 0;
+	int mainBuilding = -1;
 
 	for(int i = 0; i < mapSize-1; i++)
 	{
@@ -445,7 +445,7 @@ int Level::destroyBuildings()
 						nrOfSupplyStructures--;
 					}
 			
-					else if(typeid(structures[i][j]) == typeid(Upgrade*))
+					else if(typeid(*structures[i][j]) == typeid(Upgrade))
 					{
 						//remove this upgrade from all towers on the map
 						removeUpgrade(dynamic_cast<Upgrade*>(structures[i][j])->getUpgradeID());

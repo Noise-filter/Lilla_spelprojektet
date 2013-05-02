@@ -30,7 +30,7 @@ class ParticlePolicy
 
 		virtual ~ParticlePolicy();
 
-		virtual vector<VertexColor> getVertexData();
+		virtual vector<VertexColor>& getVertexData();
 		virtual void updatePosition(D3DXVECTOR3 pos);
 };
 
