@@ -37,6 +37,8 @@ public:
 
 	Waypoint getCurrentWaypoint();
 
+	void setTarget(Structure* t);
+
 	
 private:
 	//Waypoints

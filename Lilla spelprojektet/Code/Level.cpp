@@ -49,7 +49,7 @@ bool Level::init(int mapSize, int quadSize)
 		}	
 	}
 
-	structures[2][8] = new Headquarter(D3DXVECTOR3((float)2*quadSize + (quadSize/2),0,(float)8*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 2, 0);
+	structures[2][8] = new Headquarter(D3DXVECTOR3((float)2*quadSize + (quadSize/2),0,(float)8*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 30, 0);
 
 	this->availibleUpgrades = new UpgradeStats[5];
 	this->availibleUpgrades[0] = (UpgradeStats(BUILDABLE_UPGRADE_HP,10,0,0,0,0));

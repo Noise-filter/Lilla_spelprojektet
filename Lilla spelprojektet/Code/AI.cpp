@@ -156,7 +156,7 @@ vector<Enemy*> AI::spawnEnemies(float dt, int nrOfEnemies)
 		}
 		if(spawnedEnemies > 0)
 		{
-			Enemy* tempE = new Enemy(D3DXVECTOR3((float)retVals[0],0,(float)retVals[1]),ENTITY_ENEMY,0,5,0,30,0,this->quadSize);
+			Enemy* tempE = new Enemy(D3DXVECTOR3((float)retVals[0],0,(float)retVals[1]),ENTITY_ENEMY,0,5,0,30,1,this->quadSize);
 			enemies.push_back(tempE);
 		}
 
@@ -299,4 +299,9 @@ void AI::sendArray(int** arr, int mapSize, lua_State* script)
 	lua_pushliteral( script, "q" );
 	lua_pushnumber( script, quadSize);
 	lua_rawset( script, -3 );
+}
+
+Structure* AI::getStrucutre(int x, int y)
+{
+	return structures[x][y];
 }
