@@ -5,7 +5,6 @@ Engine::Engine(void)
 	d3d = new D3D11Handler();
 	win32 = new WinHandler();
 	pGeoManager = new GeometryManager();
-	this->nrOfBuffers = 0;
 }
 
 Engine::~Engine(void)
@@ -90,7 +89,7 @@ void Engine::render(Matrix& vp)
 	temp->SetMatrix("proj", proj);
 	temp->Apply(0);
 
-	for(int i = 0; i < this->nrOfBuffers; i++)
+	for(int i = 0; i < this->pGeoManager->getNrOfBuffer(); i++)
 	{
 		if(pGeoManager->getNrOfInstances(i) > 0)
 		{
@@ -128,7 +127,7 @@ void Engine::render(Matrix& vp)
 	*/
 
 	temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
-	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, 4);//this->nrOfBuffers);
+	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, this->pGeoManager->getNrOfBuffer());//this->nrOfBuffers);
 
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);
@@ -150,10 +149,8 @@ void Engine::setRenderData(vector<vector<RenderData*>> renderData)
 	for(int i = 0; i < (int)renderData.size(); i++)
 	{
 		if((int)renderData[i].size() > 0) 
-			pGeoManager->updateBuffer(d3d->pDeviceContext, renderData[i], i);
+			pGeoManager->updateBuffer(d3d->pDeviceContext, renderData[i], i , renderData[i].size());
 	}
-	
-	this->nrOfBuffers = (int)renderData.size();
 }
 
 void Engine::setRenderData(vector<vector<VertexColor>> renderData)

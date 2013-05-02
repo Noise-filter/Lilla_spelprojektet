@@ -24,7 +24,6 @@ private:
 	D3D11Handler* d3d;
 	WinHandler* win32;
 	GeometryManager *pGeoManager;
-	int nrOfBuffers;
 
 };
 

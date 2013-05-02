@@ -349,7 +349,7 @@ void Level::getRenderData(vector<vector<RenderData*>>& rData)
 					vector<RenderData*> rD = dynamic_cast<Tower*>(structures[i][j])->getRenderData();
 
 					//Lägg till tornets övre del
-					rData.at(4).push_back(rD.at(0));
+					//rData.at(4).push_back(rD.at(0));
 
 					//lägg till tornets undre del och alla projektiler
 					for(int k = 0; k < (int)rD.size(); k++)
