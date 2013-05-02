@@ -11,7 +11,7 @@ Enemy::Enemy() : Entity()
 	target = NULL;
 }
 
-Enemy::Enemy(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, float speed, float damage, int quadSize)
+Enemy::Enemy(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, float speed, float damage)
 	: Entity(pos, meshID, textureID, hp, lightID)
 {
 	this->speed = speed;
@@ -53,7 +53,6 @@ int Enemy::move(float dt)
 
 	if((int)waypoints.size()-1 > currentWP && target != NULL)
 	{
-		//cout << "MOVE: " << currentWP << endl;
 		D3DXVECTOR3 pos = this->getPosition();
 		D3DXVECTOR3 target((float)waypoints.at(currentWP+1).x, 0, (float)waypoints.at(currentWP+1).y);
 		D3DXVECTOR3 dir = target - pos;
@@ -76,7 +75,6 @@ int Enemy::move(float dt)
 		{
 			if(cooldown <= 0)	//Fienden slår ett slag 
 			{
-				//cout << "DO DAMAGE" << endl;
 				target->doDamage(damage);
 				cooldown = attackSpeed;
 				D3DXVECTOR3 dir = target->getPosition() - getPosition();
@@ -86,8 +84,6 @@ int Enemy::move(float dt)
 		}
 		else	//Fienden har inget target
 		{
-			
-			//cout << "NEW TARGET" << endl;
 			return 2;
 		}
 	}

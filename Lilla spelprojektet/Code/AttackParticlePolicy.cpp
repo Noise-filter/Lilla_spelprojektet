@@ -32,8 +32,12 @@ int AttackParticlePolicy::update(float dt)
 		}
 	}
 
+	if(i > 0)
+		recreateVertices = true;
+
 	particles.remove(i);
 	createVertices();
+	recreateVertices = false;
 
 	return 1;
 }
@@ -66,4 +70,5 @@ void AttackParticlePolicy::emitt()
 
 		particles.insertLast(Particle);
 	}
+	recreateVertices = true;
 }

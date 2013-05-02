@@ -152,11 +152,11 @@ vector<Enemy*> AI::spawnEnemies(float dt, int nrOfEnemies)
 				retVals[counter++] = (int)lua_tonumber(spawnScript, -1);
 				cout << lua_typename(spawnScript, lua_type(spawnScript, -2)) << ": value"<< lua_tonumber(spawnScript, -1) << endl;
 			}
-			lua_pop(spawnScript, 1);	
+			lua_pop(spawnScript, 1);
 		}
 		if(spawnedEnemies > 0)
 		{
-			Enemy* tempE = new Enemy(D3DXVECTOR3((float)retVals[0],0,(float)retVals[1]),ENTITY_ENEMY,0,100,0,30,1,this->quadSize);
+			Enemy* tempE = new Enemy(D3DXVECTOR3((float)retVals[0],0,(float)retVals[1]),ENTITY_ENEMY,0,10,0,30,1);
 			enemies.push_back(tempE);
 		}
 

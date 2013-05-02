@@ -19,6 +19,8 @@ class ParticlePolicy
 		List<BaseParticle> particles;
 		std::vector<VertexColor> vertices;
 
+		bool recreateVertices;
+
 		virtual void emitt() = 0;
 		virtual void createVertices();
 

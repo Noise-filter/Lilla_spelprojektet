@@ -60,7 +60,7 @@ int Game::update(float dt)
 		camera->UpdateViewMatrix();
 		if(!gameLogic->update(gameState, dt,input->getMs(), camera->View(), camera->Proj(), camera->GetPosition()))
 			return 0; // error
-
+		
 		pSystem->update(dt);
 	}
 	else if(gameState == STATE_WIN) 
