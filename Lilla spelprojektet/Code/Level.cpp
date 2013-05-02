@@ -303,7 +303,7 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 
 		if(selectedStructure == BUILDABLE_MAINBUILDING && structures[xPos][yPos] == NULL && isLocationBuildable(xPos, yPos))
 		{ 
-			structures[xPos][yPos] = new Headquarter(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 2, 0);
+			structures[xPos][yPos] = new Headquarter(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 100, 0);
 			return true;
 		
 		}
