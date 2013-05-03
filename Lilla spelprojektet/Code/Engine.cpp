@@ -142,8 +142,7 @@ void Engine::setRenderData(vector<vector<RenderData*>> renderData)
 {
 	for(int i = 0; i < (int)renderData.size(); i++)
 	{
-		if((int)renderData[i].size() > 0) 
-			pGeoManager->updateBuffer(d3d->pDeviceContext, renderData[i], i , renderData[i].size());
+		pGeoManager->updateBuffer(d3d->pDeviceContext, renderData[i], i , renderData[i].size());
 	}
 }
 
