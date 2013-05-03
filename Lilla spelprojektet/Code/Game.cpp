@@ -24,6 +24,14 @@ Game::~Game(void)
 
 bool Game::init(HINSTANCE hInstance, int cmdShow)
 {
+
+	//read settings from file
+	GameSettings settings = readSettingsFromFile("settings.txt");
+
+	//use settings for the game
+	
+
+
 	if(!engine->init(hInstance,cmdShow))
 		return false;
 
@@ -121,4 +129,16 @@ void Game::handleInput(float dt)
 			gameLogic->incrementSelectedStructure(-1);
 		}	
 	}
+}
+GameSettings Game::readSettingsFromFile(string fileName)
+{
+	GameSettings settings;
+
+	settings.enemiesPerMin = 10;
+	settings.mapSize = 20;
+	settings.quadSize = 20;
+	settings.ScreenHeight = 1080;
+	settings.ScreenWidth = 1920;
+
+	return settings;
 }

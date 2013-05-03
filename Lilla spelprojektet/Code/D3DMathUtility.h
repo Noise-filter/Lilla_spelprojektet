@@ -12,6 +12,17 @@
 
 #define NROFDIFFERENTMESHES (12)
 
+struct GameSettings
+{
+	int enemiesPerMin;
+	int ScreenHeight;
+	int ScreenWidth;
+	int mapSize;
+	int quadSize;
+
+	//add more if needed
+}
+
 struct MESH_P
 {
 	Vec3 pos;

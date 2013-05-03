@@ -18,6 +18,9 @@ public:
 	void handleInput(float dt);
 
 private:
+	GameSettings readSettingsFromFile(string fileName);
+
+private:
 	Engine* engine;
 	GameLogic* gameLogic;
 	Input* input;
