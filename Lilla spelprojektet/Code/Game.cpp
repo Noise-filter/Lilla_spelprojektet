@@ -2,6 +2,7 @@
 
 Game::Game(void)
 {
+	state = STATE_MENU;
 	engine = new Engine();
 	gameLogic = new GameLogic();
 	input = new Input();

@@ -5,6 +5,8 @@
 #include "Camera.h"
 #include "SoundSystem.h"
 #include "ParticleSystem.h"
+#include "GUI.h"
+
 
 class Game
 {
@@ -25,6 +27,9 @@ private:
 	SoundSystem* soundSystem;
 	ParticleSystem* pSystem;
 	Sound* playlist;
+	GUI* GUI;
+	GAMESTATES state;
+
 
 };
 
