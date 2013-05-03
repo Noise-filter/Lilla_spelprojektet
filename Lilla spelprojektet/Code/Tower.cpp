@@ -8,6 +8,10 @@ Tower::Tower() : Structure()
 	this->range = 0;
 	this->projectileSpeed = 0;
 	this->cooldown = 0;
+
+	D3DXMATRIX world;
+	D3DXMatrixTranslation(&world, 0, 70, 0);
+	topTower = new RenderData(ENTITY_TOWERTOP, 0, world, 0);
 }
 
 Tower::Tower(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, float damage, float attackSpeed, float range, float projectileSpeed)
@@ -21,6 +25,11 @@ Tower::Tower(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, 
 	this->cooldown = 0;
 
 	sound = SoundSystem::Getinstance()->createSound("plop.mp3");
+
+	D3DXMATRIX world;
+	D3DXMatrixTranslation(&world, pos.x, 0.0, pos.z);
+	topTower = new RenderData(ENTITY_TOWERTOP, 0, world, 0);
+	temp = world;
 }
 
 void Tower::giveUpgrade(UpgradeStats &stats)
@@ -73,6 +82,7 @@ int Tower::update(float dt)
 	cooldown -= dt;
 	if(target != NULL)
 	{
+		rotateTop();
 		if(cooldown <= 0)
 		{
 			if(range > D3DXVec3Length(&(target->getPosition() - getPosition())))
@@ -124,11 +134,36 @@ void Tower::aquireTarget(vector<Enemy*>* enemies)
 vector<RenderData*> Tower::getRenderData()
 {
 	vector<RenderData*> renderData;
-	renderData.reserve(projectiles.size()+1);
+	renderData.reserve(projectiles.size()+2);
 
 	renderData.push_back(&this->renderData);
+	renderData.push_back(topTower);
 	for(int i = 0; i < (int)projectiles.size(); i++)
 		renderData.push_back(&projectiles.at(i)->getRenderData());
 
 	return renderData;
+}
+
+void Tower::rotateTop()
+{
+	D3DXMATRIX rotation;
+
+	D3DXVECTOR3 pos = getPosition();
+	look = target->getPosition() - pos;
+
+	up = D3DXVECTOR3(0, 1, 0);
+	right = D3DXVECTOR3(0, 0, 1);
+
+	D3DXVec3Normalize(&look, &look);
+
+	float dot = D3DXVec3Dot(&look, &D3DXVECTOR3(-1, 0, 0));
+	float yaw = acos(dot);
+	topTower->worldMat = temp;
+
+	if(look.z > 0)
+		D3DXMatrixRotationY(&rotation, yaw);
+	else
+		D3DXMatrixRotationY(&rotation, -yaw);
+
+	topTower->worldMat = rotation * topTower->worldMat;
 }

@@ -62,13 +62,12 @@ PSOut PSScene(PSIn input)
 	PSOut output = (PSOut)0;
 	output.position = input.posCS;
 
-	float3 diffuseAlbedo = float3(0.7, 0.5, 0.5);//textures.Sample( anisoSampler , float3(input.uv.x, input.uv.y , input.textureID)).rgb;
-
+	float3 diffuseAlbedo = float3(0.5, 0.5, 0.5);//textures.Sample( anisoSampler , float3(input.uv.x, input.uv.y , input.textureID)).rgb;
 
 	float4 normalW = normalize(input.normalW);
 
 	output.position = input.posW;
-	output.diffuseAlbedo = float4 ( diffuseAlbedo, 1.0f);
+	output.diffuseAlbedo = float4 (diffuseAlbedo, 1.0f);
 	output.normal = normalW;
 
 	return output;

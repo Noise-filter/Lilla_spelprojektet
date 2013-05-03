@@ -17,7 +17,7 @@ class ParticlePolicy
 		
 		BaseParticle *emitter;
 		List<BaseParticle> particles;
-		std::vector<VertexColor> vertices;
+		std::vector<MESH_PNC> vertices;
 
 		bool recreateVertices;
 
@@ -32,7 +32,7 @@ class ParticlePolicy
 
 		virtual ~ParticlePolicy();
 
-		virtual vector<VertexColor>& getVertexData();
+		virtual vector<MESH_PNC>& getVertexData();
 		virtual void updatePosition(D3DXVECTOR3 pos);
 };
 

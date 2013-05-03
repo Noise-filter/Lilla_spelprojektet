@@ -8,6 +8,7 @@ OBJReader::OBJReader(void)
 
 OBJReader::~OBJReader(void)
 {
+
 }
 
 bool OBJReader::ReadFileCounts(string fileName, int& vertexCount, int& textureCount, int& normalCount, int& faceCount)

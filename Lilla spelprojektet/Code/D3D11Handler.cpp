@@ -89,7 +89,7 @@ Shader *D3D11Handler::setPass(PASS_STATE pass)
 
 void D3D11Handler::clearAndBindRenderTarget()
 {
-	static float clearColour[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	static float clearColour[4] = { 0.1f , 0.1f, 0.1f, 0.1f };
 	pDeviceContext->ClearRenderTargetView(pRenderTargetView, clearColour);
 	pDeviceContext->ClearDepthStencilView(pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
