@@ -2,9 +2,13 @@
 
 GeometryManager::GeometryManager()
 {
-	pBufferObj = new Buffer();
-}
+	this->pBufferObj = new Buffer();
+	this->iNrOfBuffers = 12;
+	this->vVertexBuffer.resize(iNrOfBuffers + 1, NULL);
+	this->vInstanceBuffer.resize(iNrOfBuffers, NULL);
+	this->vNrOfInstances.resize(iNrOfBuffers, NULL);
 
+}
 GeometryManager::~GeometryManager()
 {
 	SAFE_RELEASE(buffers[0]);
@@ -37,14 +41,14 @@ void GeometryManager::init(ID3D11Device *device)
 	BUFFER_INIT indexInit		= BUFFER_INIT(); //TBA
 
 	//Vertex buffer init
-	bufferInit.desc.eUsage = D3D11_USAGE_DEFAULT;
-	bufferInit.desc.uBindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bufferInit.desc.uCPUAccessFlags = 0;
-	bufferInit.desc.uMiscFlags = 0;
+	bufferInit.desc.eUsage               = D3D11_USAGE_DEFAULT;
+	bufferInit.desc.uBindFlags           = D3D11_BIND_VERTEX_BUFFER;
+	bufferInit.desc.uCPUAccessFlags      = 0;
+	bufferInit.desc.uMiscFlags           = 0;
 	bufferInit.desc.uStructureByteStride = 0;
 
-	bufferInit.data.uSysMemPitch = 0;
-	bufferInit.data.uSysMemSlicePitch = 0;
+	bufferInit.data.uSysMemPitch         = 0;
+	bufferInit.data.uSysMemSlicePitch    = 0;
 	//---------------------------------------------------------------
 
 	//Index buffer init
@@ -57,12 +61,64 @@ void GeometryManager::init(ID3D11Device *device)
 	instanceInit.desc.uCPUAccessFlags		= D3D11_CPU_ACCESS_WRITE;
 	instanceInit.desc.uMiscFlags			= 0;
 	instanceInit.desc.uStructureByteStride	= 0;
+	instanceInit.data.pInitData             = NULL;
+	instanceInit.data.uSysMemPitch          = NULL;
+	instanceInit.data.uSysMemSlicePitch     = NULL;
 	//---------------------------------------------------------------
 
-	initMainbuilding(device, bufferInit, instanceInit);
-	initSupply(device, bufferInit, instanceInit);
-	initTower(device, bufferInit, instanceInit);
-	initNode(device, bufferInit, instanceInit);
+
+
+	//temp meshes
+	//------------------------------------------------------------------
+	MESH_PNUV mainBuilding[] = {
+
+		MESH_PNUV(Vec3(1.0,0,0), Vec3(0,1,1), Vec2(0,0)),
+		MESH_PNUV(Vec3(-1.0,0,0), Vec3(0,0,1), Vec2(0,0)),
+		MESH_PNUV(Vec3(0,1.0,0), Vec3(1,0,1), Vec2(0,0)),
+			
+	};
+
+	MESH_PNUV supply[] ={
+		MESH_PNUV(Vec3(1.0,0,0), Vec3(1,0,0), Vec2(1,1)),
+		MESH_PNUV(Vec3(-1.0,0,0), Vec3(0,0,1), Vec2(-1,0)),
+		MESH_PNUV(Vec3(0,1.0,0), Vec3(0,1,0), Vec2(1,0)),
+
+		MESH_PNUV(Vec3(1,0,0), Vec3(0,0,1), Vec2(0,0)),
+		MESH_PNUV(Vec3(-1,0,0), Vec3(0,1,0), Vec2(0,-1)),
+		MESH_PNUV(Vec3(0,-1.0,0), Vec3(1,0,0), Vec2(1,1)),
+	};
+
+	MESH_PNUV tower[] ={
+		MESH_PNUV(Vec3(-1,1,0), Vec3(1,0,1), Vec2(1,1)),
+		MESH_PNUV(Vec3(1,1,0), Vec3(1,0,1), Vec2(-1,0)),
+		MESH_PNUV(Vec3(1,0,0), Vec3(0,1,0), Vec2(1,0)),
+
+		MESH_PNUV(Vec3(-1,1,0), Vec3(1,0,1), Vec2(0,0)),
+		MESH_PNUV(Vec3(-1,0,0), Vec3(0,1,1), Vec2(0,-1)),
+		MESH_PNUV(Vec3(1,0,0), Vec3(1,1,0), Vec2(1,1)),
+	};
+
+	MESH_PNUV node[] = {
+
+		MESH_PNUV(Vec3(0,0.5,0), Vec3(1,1,0), Vec2(0,0)),
+		MESH_PNUV(Vec3(0,0,0.5), Vec3(1,0,1), Vec2(0,0)),
+		MESH_PNUV(Vec3(0,-0.5,0), Vec3(1,0,0), Vec2(0,0)),
+	};
+
+	//-----------------------------------------------------------------
+
+	initEntity(device, bufferInit, instanceInit, mainBuilding, 3, 100, ENTITY_MAINBUILDING );
+	initEntity(device, bufferInit, instanceInit, supply,       6, 100, ENTITY_SUPPLY       );
+	initEntity(device, bufferInit, instanceInit, tower,        6, 100, ENTITY_TOWERBASE    );
+	initEntity(device, bufferInit, instanceInit, tower,        6, 100, ENTITY_TOWERTOP     );
+	initEntity(device, bufferInit, instanceInit, node,         3, 400, ENTITY_NODE         );
+	initEntity(device, bufferInit, instanceInit, node,         3, 100, ENTITY_ENEMY        );
+	initEntity(device, bufferInit, instanceInit, mainBuilding, 3, 200, ENTITY_PROJECTILE   );
+	initEntity(device, bufferInit, instanceInit, supply,       6, 100, ENTITY_UPGRADE_HP   );
+	initEntity(device, bufferInit, instanceInit, supply,       6, 100, ENTITY_UPGRADE_ATKSP);
+	initEntity(device, bufferInit, instanceInit, supply,       6, 100, ENTITY_UPGRADE_DMG  );
+	initEntity(device, bufferInit, instanceInit, supply,       6, 100, ENTITY_UPGRADE_PRJSP);
+	initEntity(device, bufferInit, instanceInit, supply,       6, 100, ENTITY_UPGRADE_RANGE);
 
 	initFullScreenQuad(device, bufferInit);
 }
@@ -84,7 +140,7 @@ void GeometryManager::applyBuffer(ID3D11DeviceContext *dc, int ID, D3D_PRIMITIVE
 	dc->IASetPrimitiveTopology(topology);
 }
 
-void GeometryManager::updateBuffer(ID3D11DeviceContext *dc, std::vector<RenderData*> data, int index)
+void GeometryManager::updateBuffer(ID3D11DeviceContext *dc, std::vector<RenderData*> data, int index , int nrOfInstances)
 {
 	D3D11_MAPPED_SUBRESOURCE *mappedData = map(dc, vInstanceBuffer[index]);
 
@@ -97,6 +153,8 @@ void GeometryManager::updateBuffer(ID3D11DeviceContext *dc, std::vector<RenderDa
 	}
 
 	unmap(dc, vInstanceBuffer[index]); 
+
+	this->vNrOfInstances.at(index) = nrOfInstances;
 }
 
 void GeometryManager::applyQuadBuffer(ID3D11DeviceContext *dc, int ID)
@@ -113,10 +171,9 @@ void GeometryManager::applyQuadBuffer(ID3D11DeviceContext *dc, int ID)
 int GeometryManager::getNrOfInstances(int index)
 {
 	D3D11_BUFFER_DESC temp;
-	if((int)vInstanceBuffer.size() > index)
+	if((int)vNrOfInstances.size() > index)
 	{
-		vInstanceBuffer[index]->GetDesc(&temp);
-		return temp.ByteWidth / sizeof(INSTANCEDATA);
+		return this->vNrOfInstances.at(index);
 	}
 
 	return -1;
@@ -133,36 +190,29 @@ int GeometryManager::getNrOfVertexPoints(int index)
 
 	return -1;
 }
+
+int GeometryManager::getNrOfBuffer()
+{
+	return this->iNrOfBuffers;
+}
 /*
 ######################################
 ---------Private functions------------
 ######################################
 */
-void GeometryManager::initVertexBuffer(ID3D11Device *device, BUFFER_INIT &bufferInit)
+void GeometryManager::initVertexBuffer(ID3D11Device *device, BUFFER_INIT &bufferInit, int index)
 {
-	vVertexBuffer.push_back(pBufferObj->initBuffer(device, bufferInit));
+	vVertexBuffer.at(index) = pBufferObj->initBuffer(device, bufferInit);
 }
 
-void GeometryManager::initIndexBuffer(ID3D11Device *device, BUFFER_INIT &bufferInit)
+void GeometryManager::initIndexBuffer(ID3D11Device *device, BUFFER_INIT &bufferInit, int index)
 {
-	vIndexBuffer.push_back(pBufferObj->initBuffer(device, bufferInit));
+	vIndexBuffer.at(index) = pBufferObj->initBuffer(device, bufferInit);
 }
 
-void GeometryManager::initInstance(ID3D11Device *device, BUFFER_INIT &bufferInit)
+void GeometryManager::initInstanceBuffer(ID3D11Device *device, BUFFER_INIT &bufferInit, int index)
 {
-	vInstanceBuffer.push_back(pBufferObj->initInstance(device, bufferInit));
-}
-
-void GeometryManager::initGUIFSQ(ID3D11Device *device, BUFFER_INIT &bufferInit)
-{
-	initVertexBuffer(device, bufferInit);
-}
-
-void GeometryManager::initEntityBuffers(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit)
-{
-	initVertexBuffer(device, bufferInit);
-	//initIndexBuffer(device, indexInit);
-	initInstance(device, instanceInit);
+	vInstanceBuffer.at(index) = pBufferObj->initInstance(device, bufferInit);
 }
 
 D3D11_MAPPED_SUBRESOURCE *GeometryManager::map(ID3D11DeviceContext *dc, ID3D11Buffer *buffer)
@@ -204,113 +254,38 @@ void GeometryManager::unmap(ID3D11DeviceContext *dc, ID3D11Buffer *buffer)
 	dc->Unmap(buffer, 0);
 }
 
-void GeometryManager::initMainbuilding(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit)
+void GeometryManager::initEntity(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_PNUV *mesh, int nrOfVertices, int nrOfInstances , ENTITY_FLAGS building)
 {
-	MESH_PNUV mesh[] = {
+	bufferInit.desc.uByteWidth    = sizeof(MESH_PNUV) * nrOfVertices;
+	bufferInit.data.pInitData     = mesh;
+	instanceInit.desc.uByteWidth  = sizeof(INSTANCEDATA) * nrOfInstances;
 
-		MESH_PNUV(Vec3(1.0,0,0), Vec3(0,1,1), Vec2(0,0)),
-		MESH_PNUV(Vec3(-1.0,0,0), Vec3(0,0,1), Vec2(0,0)),
-		MESH_PNUV(Vec3(0,1.0,0), Vec3(1,0,1), Vec2(0,0)),
-			
-	};
-	bufferInit.desc.uByteWidth = sizeof(MESH_PNUV)*3;
-	bufferInit.data.pInitData = mesh;
-	instanceInit.desc.uByteWidth = sizeof(INSTANCEDATA);
-
-	initEntityBuffers(device, bufferInit, instanceInit);
+	initVertexBuffer(device, bufferInit, (int)building);
+	//TODO: initIndexBuffer!
+	initInstanceBuffer(device, instanceInit, (int)building);
 }
 
-void GeometryManager::initSupply(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit)
+void GeometryManager::initEntity(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_PUV *mesh, int nrOfVertices, int nrOfInstances , ENTITY_FLAGS building)
 {
-	MESH_PNUV diamond[] ={
-		MESH_PNUV(Vec3(1.0,0,0), Vec3(1,0,0), Vec2(1,1)),
-		MESH_PNUV(Vec3(-1.0,0,0), Vec3(0,0,1), Vec2(-1,0)),
-		MESH_PNUV(Vec3(0,1.0,0), Vec3(0,1,0), Vec2(1,0)),
+	bufferInit.desc.uByteWidth    = sizeof(MESH_PUV) * nrOfVertices;
+	bufferInit.data.pInitData     = mesh;
 
-		MESH_PNUV(Vec3(1,0,0), Vec3(0,0,1), Vec2(0,0)),
-		MESH_PNUV(Vec3(-1,0,0), Vec3(0,1,0), Vec2(0,-1)),
-		MESH_PNUV(Vec3(0,-1.0,0), Vec3(1,0,0), Vec2(1,1)),
-	};
+	instanceInit.desc.uByteWidth  = sizeof(INSTANCEDATA) * nrOfInstances;
 
-	bufferInit.desc.uByteWidth = sizeof(MESH_PNUV)*6;
-	bufferInit.data.pInitData = diamond;
-	instanceInit.desc.uByteWidth = sizeof(INSTANCEDATA)*200;
-
-	initEntityBuffers(device, bufferInit, instanceInit);
+	initVertexBuffer(device, bufferInit, (int)building);
+	//TODO: initIndexBuffer!
+	initInstanceBuffer(device, instanceInit, (int)building);
 }
 
-void GeometryManager::initTower(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit)
+void GeometryManager::initEntity(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_P *mesh, int nrOfVertices, int nrOfInstances , ENTITY_FLAGS building)
 {
-	MESH_PNUV quad[] ={
-		MESH_PNUV(Vec3(-1,1,0), Vec3(1,0,1), Vec2(1,1)),
-		MESH_PNUV(Vec3(1,1,0), Vec3(1,0,1), Vec2(-1,0)),
-		MESH_PNUV(Vec3(1,0,0), Vec3(0,1,0), Vec2(1,0)),
+	bufferInit.desc.uByteWidth    = sizeof(MESH_P) * nrOfVertices;
+	bufferInit.data.pInitData     = mesh;
+	instanceInit.desc.uByteWidth  = sizeof(INSTANCEDATA) * nrOfInstances;
 
-		MESH_PNUV(Vec3(-1,1,0), Vec3(1,0,1), Vec2(0,0)),
-		MESH_PNUV(Vec3(-1,0,0), Vec3(0,1,1), Vec2(0,-1)),
-		MESH_PNUV(Vec3(1,0,0), Vec3(1,1,0), Vec2(1,1)),
-	};
-
-	bufferInit.desc.uByteWidth = sizeof(MESH_PNUV)*6;
-	bufferInit.data.pInitData = quad;
-	instanceInit.desc.uByteWidth = sizeof(INSTANCEDATA)*150;
-
-	initEntityBuffers(device, bufferInit, instanceInit);
-}
-
-void GeometryManager::initNode(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit)
-{
-	MESH_PNUV node[] = {
-
-		MESH_PNUV(Vec3(0,0.5,0), Vec3(1,1,0), Vec2(0,0)),
-		MESH_PNUV(Vec3(0,0,0.5), Vec3(1,0,1), Vec2(0,0)),
-		MESH_PNUV(Vec3(0,-0.5,0), Vec3(1,0,0), Vec2(0,0)),
-	};
-	bufferInit.desc.uByteWidth = sizeof(MESH_PNUV)*3;
-	bufferInit.data.pInitData = node;
-	instanceInit.desc.uByteWidth = sizeof(INSTANCEDATA)*700;
-
-	initEntityBuffers(device, bufferInit, instanceInit);
-}
-
-void GeometryManager::initEnemy(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit)
-{
-	initEntityBuffers(device, bufferInit, instanceInit);
-}
-
-void GeometryManager::initParticleSystem(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit)
-{
-	initEntityBuffers(device, bufferInit, instanceInit);
-}
-
-void GeometryManager::initUpgradeHP(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit)
-{
-	initEntityBuffers(device, bufferInit, instanceInit);
-}
-
-void GeometryManager::initUpgradeATKSP(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit)
-{
-	initEntityBuffers(device, bufferInit, instanceInit);
-}
-
-void GeometryManager::initUpgradeDMG(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit)
-{
-	initEntityBuffers(device, bufferInit, instanceInit);
-}
-
-void GeometryManager::initUpgradePRJSP(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit)
-{
-	initEntityBuffers(device, bufferInit, instanceInit);
-}
-
-void GeometryManager::initUpgradeRANGE(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit)
-{
-	initEntityBuffers(device, bufferInit, instanceInit);
-}
-
-void GeometryManager::initGUI(ID3D11Device *device, BUFFER_INIT &bufferInit)
-{
-	initGUIFSQ(device, bufferInit);
+	initVertexBuffer(device, bufferInit, (int)building);
+	//TODO: initIndexBuffer!
+	initInstanceBuffer(device, instanceInit, (int)building);
 }
 
 void GeometryManager::initFullScreenQuad(ID3D11Device *device, BUFFER_INIT &bufferInit)
@@ -326,5 +301,5 @@ void GeometryManager::initFullScreenQuad(ID3D11Device *device, BUFFER_INIT &buff
 	bufferInit.desc.uByteWidth = sizeof(MESH_P)*6;
 	bufferInit.data.pInitData = p;
 
-	initGUIFSQ(device, bufferInit);
+	initVertexBuffer(device, bufferInit, this->iNrOfBuffers);
 }

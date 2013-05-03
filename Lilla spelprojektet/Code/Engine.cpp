@@ -1,32 +1,17 @@
 #include "Engine.h"
 
-
 Engine::Engine(void)
 {
 	d3d = new D3D11Handler();
 	win32 = new WinHandler();
+	pGeoManager = new GeometryManager();
 }
 
 Engine::~Engine(void)
 {
 	SAFE_DELETE(d3d);
 	SAFE_DELETE(win32);
-	SAFE_DELETE(shader);
-	SAFE_DELETE(particleShader);
-
-	vbs[0]->Release();
-	vbs[1]->Release();
-	indexBuffer->Release();
-
-	vbs2[0]->Release();
-	vbs2[1]->Release();
-	indexBuffer2->Release();
-
-	vbs3[0]->Release();
-	vbs3[1]->Release();
-	indexBuffer3->Release();
-
-	particleBuffer->Release();
+	SAFE_DELETE(pGeoManager);
 }
 
 bool Engine::init(HINSTANCE hInstance, int cmdShow)
@@ -37,299 +22,140 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 		return false;
 	}
 
-	hr = d3d->InitDirect3D(win32->getHWND()); // initierar directX
-	if(FAILED(hr))
+	// initierar directX
+	if(!d3d->initDirect3D(win32->getHWND()))
 	{
 		return false;
 	}
 
-	//shader
-	D3D11_INPUT_ELEMENT_DESC inputDesc[] = {
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "WORLD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "WORLD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "WORLD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "WORLD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-	};
-
-	shader = new Shader();
-	shader->Init(d3d->device, d3d->deviceContext, "../Shaders/instanced.fx", inputDesc, 5);
-
-	D3D11_INPUT_ELEMENT_DESC inputDesc2[] = {
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	};
-
-	particleShader = new Shader();
-	particleShader->Init(d3d->device, d3d->deviceContext, "../Shaders/particleColor.fx", inputDesc2, 3);
-
-	size1 = size2 = size3 = 0;
-
-	//Skapa nodernas buffrar
-	Vertex vertices[3];
-	vertices[0].pos = D3DXVECTOR3(-1, 0, -1);
-	vertices[1].pos = D3DXVECTOR3(0, 0, 1);
-	vertices[2].pos = D3DXVECTOR3(1, 0, -1);
-
-	int indices[3];
-	indices[0] = 0;
-	indices[1] = 1;
-	indices[2] = 2;
-
-	//Vertex buffer
-	D3D11_BUFFER_DESC vbd;
-	vbd.Usage = D3D11_USAGE_IMMUTABLE;
-	vbd.ByteWidth = sizeof(Vertex) * 3;
-	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vbd.CPUAccessFlags = 0;
-	vbd.MiscFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA initDataVB;
-	initDataVB.pSysMem = vertices;
-	d3d->device->CreateBuffer(&vbd, &initDataVB, &vbs[0]);
-	
-	//instanced buffer
-	D3D11_BUFFER_DESC vbd2;
-	vbd2.Usage = D3D11_USAGE_DYNAMIC;
-	vbd2.ByteWidth = sizeof(InstancedData) * 100000;
-	vbd2.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vbd2.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	vbd2.MiscFlags = 0;
-
-	d3d->device->CreateBuffer(&vbd2, NULL, &vbs[1]);
-
-	//index buffer
-	D3D11_BUFFER_DESC ibd;
-	ibd.Usage = D3D11_USAGE_IMMUTABLE;
-	ibd.ByteWidth = sizeof(int) * 3;
-	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	ibd.CPUAccessFlags = 0;
-	ibd.MiscFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA initDataIB;
-	initDataIB.pSysMem = indices;
-	d3d->device->CreateBuffer(&ibd, &initDataIB, &indexBuffer);
-
-
-
-	//Skapa strukturernas buffrar
-	Vertex vertices2[4];
-	vertices2[0].pos = D3DXVECTOR3(-1, 0, -1);
-	vertices2[1].pos = D3DXVECTOR3(-1, 0, 1);
-	vertices2[2].pos = D3DXVECTOR3(1, 0, 1);
-	vertices2[3].pos = D3DXVECTOR3(1, 0, -1);
-
-	int indices2[6];
-	indices2[0] = 0;
-	indices2[1] = 1;
-	indices2[2] = 2;
-	indices2[3] = 0;
-	indices2[4] = 3;
-	indices2[5] = 2;
-
-	//Vertex buffer
-	D3D11_BUFFER_DESC vbd3;
-	vbd3.Usage = D3D11_USAGE_IMMUTABLE;
-	vbd3.ByteWidth = sizeof(Vertex) * 4;
-	vbd3.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vbd3.CPUAccessFlags = 0;
-	vbd3.MiscFlags = 0;
-	
-	D3D11_SUBRESOURCE_DATA initDataVB2;
-	initDataVB2.pSysMem = vertices2;
-	d3d->device->CreateBuffer(&vbd3, &initDataVB2, &vbs2[0]);
-	
-	//instanced buffer
-	D3D11_BUFFER_DESC vbd4;
-	vbd4.Usage = D3D11_USAGE_DYNAMIC;
-	vbd4.ByteWidth = sizeof(InstancedData) * 100000;
-	vbd4.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vbd4.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	vbd4.MiscFlags = 0;
-
-	d3d->device->CreateBuffer(&vbd4, NULL, &vbs2[1]);
-
-	//index buffer
-	D3D11_BUFFER_DESC ibd2;
-	ibd2.Usage = D3D11_USAGE_IMMUTABLE;
-	ibd2.ByteWidth = sizeof(int) * 6;
-	ibd2.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	ibd2.CPUAccessFlags = 0;
-	ibd2.MiscFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA initDataIB2;
-	initDataIB2.pSysMem = indices2;
-	d3d->device->CreateBuffer(&ibd2, &initDataIB2, &indexBuffer2);
-
-
-
-	//Skapa fiendernas buffrar
-	Vertex vertices3[4];
-	vertices3[0].pos = D3DXVECTOR3(-1, 0, -1);
-	vertices3[1].pos = D3DXVECTOR3(-1, 0, 1);
-	vertices3[2].pos = D3DXVECTOR3(1, 0, 1);
-	vertices3[3].pos = D3DXVECTOR3(1, 0, -1);
-
-	int indices3[6];
-	indices3[0] = 0;
-	indices3[1] = 1;
-	indices3[2] = 2;
-	indices3[3] = 0;
-	indices3[4] = 3;
-	indices3[5] = 2;
-
-	//Vertex buffer
-	D3D11_BUFFER_DESC vbd5;
-	vbd5.Usage = D3D11_USAGE_IMMUTABLE;
-	vbd5.ByteWidth = sizeof(Vertex) * 4;
-	vbd5.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vbd5.CPUAccessFlags = 0;
-	vbd5.MiscFlags = 0;
-	
-	D3D11_SUBRESOURCE_DATA initDataVB3;
-	initDataVB3.pSysMem = vertices3;
-	d3d->device->CreateBuffer(&vbd5, &initDataVB3, &vbs3[0]);
-	
-	//instanced buffer
-	D3D11_BUFFER_DESC vbd6;
-	vbd6.Usage = D3D11_USAGE_DYNAMIC;
-	vbd6.ByteWidth = sizeof(InstancedData) * 100000;
-	vbd6.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vbd6.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	vbd6.MiscFlags = 0;
-
-	d3d->device->CreateBuffer(&vbd6, NULL, &vbs3[1]);
-
-	//index buffer
-	D3D11_BUFFER_DESC ibd3;
-	ibd3.Usage = D3D11_USAGE_IMMUTABLE;
-	ibd3.ByteWidth = sizeof(int) * 6;
-	ibd3.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	ibd3.CPUAccessFlags = 0;
-	ibd3.MiscFlags = 0;
-	
-	D3D11_SUBRESOURCE_DATA initDataIB3;
-	initDataIB3.pSysMem = indices3;
-	d3d->device->CreateBuffer(&ibd2, &initDataIB3, &indexBuffer3);
-
-
-	//Particles
-	D3D11_BUFFER_DESC particleVertexBufferDesc;
-	particleVertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	particleVertexBufferDesc.ByteWidth = sizeof(VertexColor) * 1000000;
-	particleVertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	particleVertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	particleVertexBufferDesc.MiscFlags = 0;
-
-	d3d->device->CreateBuffer(&particleVertexBufferDesc, NULL, &particleBuffer);
-	particleNum = 0;
+	pGeoManager->init(d3d->pDevice);
 
 	return true; // allt gick bra
 }
 
-void Engine::render(D3DXMATRIX& vp)
+void Engine::render(Matrix& vp)
 {
-	static float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	d3d->clearAndBindRenderTarget();
 
-	d3d->deviceContext->ClearRenderTargetView( d3d->renderTargetView, ClearColor );
+	int index = 0;
+	PRIMITIVE_TOPOLOGIES topology = TOPOLOGY_UNDEFINED;
 	
-    //clear depth info
-	d3d->deviceContext->ClearDepthStencilView(d3d->depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0 );
+	static float rot = 0;
+	//rot += deltaTime;
+	D3DXMATRIX world, world2, world3, view, proj, wvp, wvp2;
+	D3DXMatrixRotationY(&world, rot);
+	D3DXMatrixTranslation(&world2, 3, sin(rot), 0);
+	D3DXMatrixTranslation(&world3, -3, -sin(rot), 0);
+	D3DXMatrixLookAtLH(&view, &D3DXVECTOR3(0,0,-10), &D3DXVECTOR3(0,0, 1), &D3DXVECTOR3(0,1,0));
+	D3DXMatrixPerspectiveFovLH(&proj, (float)D3DX_PI * 0.45f, SCREEN_WIDTH / SCREEN_HEIGHT, 1.0f, 100.0f);
 
-	//set topology
-	d3d->deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//std::vector<std::vector<RenderData*>> temp3;
+	//std::vector<RenderData*> temp1, temp2, tem3, tem4;
+	//RenderData dtemp1[1], dtemp2[1], dtemp3[1], dtemp4[1];
+	//dtemp1[0].iEntityID = (int)ENTITY_MAINBUILDING;
+	//dtemp1[0].iLightID = LIGHT_NONE;
+	//dtemp1[0].worldTex.iTextureID = 0;
+	//dtemp1[0].worldTex.mWorld = world;
+	//temp2.push_back(&dtemp1[0]);
+	//temp3.push_back(temp2);
 
-	shader->SetMatrix("gVP", vp);
-	shader->Apply(0);
+	//dtemp2[0].iEntityID = (int)ENTITY_SUPPLY;
+	//dtemp2[0].iLightID = LIGHT_NONE;
+	//dtemp2[0].worldTex.iTextureID = 0;
+	//dtemp2[0].worldTex.mWorld = world2;
+	//temp1.push_back(&dtemp2[0]);
+	//temp3.push_back(temp1);
 
-	UINT stride[2] = {sizeof(Vertex), sizeof(InstancedData)};
-	UINT offset[2] = {0, 0};
+	//dtemp3[0].iEntityID = (int)ENTITY_TOWER;
+	//dtemp3[0].iLightID = LIGHT_NONE;
+	//dtemp3[0].worldTex.iTextureID = 0;
+	//dtemp3[0].worldTex.mWorld = world3;
+	//tem3.push_back(&dtemp3[0]);
+	//temp3.push_back(tem3);
 
-	if(size1 > 0)
+	//dtemp4[0].iEntityID = (int)ENTITY_NODE;
+	//dtemp4[0].iLightID = LIGHT_NONE;
+	//dtemp4[0].worldTex.iTextureID = 0;
+	//dtemp4[0].worldTex.mWorld = world3;
+	//tem4.push_back(&dtemp4[0]);
+	//temp3.push_back(tem4);
+
+
+
+	Shader* temp;
+
+	temp = this->d3d->setPass(PASS_GEOMETRY);
+	temp->SetMatrix("view", vp);
+	temp->SetMatrix("proj", proj);
+	temp->Apply(0);
+
+	for(int i = 0; i < this->pGeoManager->getNrOfBuffer(); i++)
 	{
-		d3d->deviceContext->IASetVertexBuffers(0, 2, vbs, stride, offset);
-		d3d->deviceContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
-		d3d->deviceContext->DrawIndexedInstanced(3, size1, 0, 0, 0);
+		if(pGeoManager->getNrOfInstances(i) > 0)
+		{
+			pGeoManager->applyBuffer(d3d->pDeviceContext, i, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 0);
+			d3d->pDeviceContext->DrawInstanced(pGeoManager->getNrOfVertexPoints(i), pGeoManager->getNrOfInstances(i), 0, 0);
+		}
 	}
 
-	if(size2 > 0)
-	{
-		d3d->deviceContext->IASetVertexBuffers(0, 2, vbs2, stride, offset);
-		d3d->deviceContext->IASetIndexBuffer(indexBuffer2, DXGI_FORMAT_R32_UINT, 0);
+	//pGeoManager->applyBuffer(d3d->pDeviceContext, test[1][0], D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 0);
 
-		d3d->deviceContext->DrawIndexedInstanced(6, size2, 0, 0, 0);
+	/*
+	while(index < (int)data.size())
+	{
+		topology = changeTopology(data[index][0]->iEntityID);
+
+		pGeoManager->updateBuffer(d3d->pDeviceContext, data[index], index);
+		
+		pGeoManager->applyBuffer(d3d->pDeviceContext, data[index][0], (D3D11_PRIMITIVE_TOPOLOGY)topology);
+
+		index++;
 	}
 
-	if(size3 > 0)
+	index = 0;
+	this->d3d->setPass(PASS_LIGHT);
+	while(index < (int)data.size())
 	{
-		d3d->deviceContext->IASetVertexBuffers(0, 2, vbs3, stride, offset);
-		d3d->deviceContext->IASetIndexBuffer(indexBuffer3, DXGI_FORMAT_R32_UINT, 0);
+		if(data[index][0]->iLightID > -1)
+		{
+			if(topology != PASS_LIGHT) topology = changeTopology(data[index][0]->iEntityID);		
 
-		d3d->deviceContext->DrawIndexedInstanced(6, size3, 0, 0, 0);
+			pGeoManager->applyBuffer(d3d->pDeviceContext, data[index][0], (D3D11_PRIMITIVE_TOPOLOGY)topology);
+		}
+		index++;
 	}
+	*/
 
-	//Particles
-	if(particleNum > 0)
-	{
-		d3d->deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
-	
-		particleShader->SetMatrix("gWVP", vp);
-		particleShader->Apply(0);
+	temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
+	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, this->pGeoManager->getNrOfBuffer());//this->nrOfBuffers);
 
-		UINT stri[1] = { sizeof(VertexColor) };
-		UINT off[1] = {0};
-		d3d->deviceContext->IASetVertexBuffers(0, 1, &particleBuffer, stri, off);
+	temp->Apply(0);
+	this->d3d->pDeviceContext->Draw(6, 0);
 
-		d3d->deviceContext->Draw(particleNum, 0);
-	}
-
-	//cout << particleNum << endl;
-
-	if(FAILED(d3d->swapChain->Present( 0, 0 )))
+	if(FAILED(d3d->pSwapChain->Present( 0, 0 )))
 	{
 		return;
 	}
 }
 
-void Engine::setRenderData(vector<vector<RenderData*>>& renderData)
+PRIMITIVE_TOPOLOGIES Engine::changeTopology(int ID)
 {
-	D3D11_MAPPED_SUBRESOURCE mappedData, mappedData2, mappedData3;
-	d3d->deviceContext->Map(vbs[1], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData);
-	d3d->deviceContext->Map(vbs2[1], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData2);
-	d3d->deviceContext->Map(vbs3[1], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData3);
-
- 	InstancedData* dataView = reinterpret_cast<InstancedData*>(mappedData.pData);
-	InstancedData* dataView2= reinterpret_cast<InstancedData*>(mappedData2.pData);
-	InstancedData* dataView3 = reinterpret_cast<InstancedData*>(mappedData3.pData);
-
-	int a = 0, b = 0, c = 0;
-	for(int j = 0; j < (int)renderData.size(); j++)
-	{
-		for(int i = 0; i < (int)renderData.at(j).size(); i++)
-		{
-			if(renderData.at(j).at(i)->meshID == ENTITY_NODE || renderData.at(j).at(i)->meshID == ENTITY_TOWER)
-				dataView[a++].matrix = renderData[j][i]->worldMat;
-			else if(renderData.at(j).at(i)->meshID == ENTITY_TOWER)
-				dataView2[b++].matrix = renderData[j][i]->worldMat;
-			else if(renderData.at(j).at(i)->meshID == ENTITY_ENEMY || renderData.at(j).at(i)->meshID == ENTITY_MAINBUILDING || renderData.at(j).at(i)->meshID == ENTITY_SUPPLY)
-				dataView3[c++].matrix = renderData[j][i]->worldMat;
-		}
-	}
-
-	size1 = a;
-	size2 = b;
-	size3 = c;
-
-	d3d->deviceContext->Unmap(vbs[1], 0);
-	d3d->deviceContext->Unmap(vbs2[1], 0);
-	d3d->deviceContext->Unmap(vbs3[1], 0);
+	if(ID != (int)ENTITY_PARTICLESYSTEM) return TOPOLOGY_TRIANGLELIST;
+	else return TOPOLOGY_POINTLIST;
 }
 
-void Engine::setRenderData(vector<vector<VertexColor>>& renderData)
+void Engine::setRenderData(vector<vector<RenderData*>> renderData)
 {
-	D3D11_MAPPED_SUBRESOURCE mappedData;
+	for(int i = 0; i < (int)renderData.size(); i++)
+	{
+		if((int)renderData[i].size() > 0) 
+			pGeoManager->updateBuffer(d3d->pDeviceContext, renderData[i], i , renderData[i].size());
+	}
+}
+
+void Engine::setRenderData(vector<vector<VertexColor>> renderData)
+{
+	/*D3D11_MAPPED_SUBRESOURCE mappedData;
 	d3d->deviceContext->Map(particleBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData);
 
 	VertexColor* dataView = reinterpret_cast<VertexColor*>(mappedData.pData);
@@ -345,7 +171,7 @@ void Engine::setRenderData(vector<vector<VertexColor>>& renderData)
 		particleNum += renderData.at(j).size();
 	}
 
-	d3d->deviceContext->Unmap(particleBuffer, 0);
+	d3d->deviceContext->Unmap(particleBuffer, 0);*/
 }
 
 MouseState* Engine::getMouseState()
