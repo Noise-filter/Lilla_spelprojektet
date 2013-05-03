@@ -135,7 +135,7 @@ void GeometryManager::init(ID3D11Device *device)
 	initEntity(device, bufferInit, instanceInit, supply,       6, 100, ENTITY_UPGRADE_RANGE);
 
 	initFullScreenQuad(device, bufferInit);
-	initParticleBuffer(device, bufferInit);
+	initParticleBuffer(device, instanceInit);
 }
 
 void GeometryManager::applyBuffer(ID3D11DeviceContext *dc, int ID, D3D_PRIMITIVE_TOPOLOGY topology, UINT32 misc)
@@ -186,7 +186,7 @@ void GeometryManager::updateParticles(ID3D11DeviceContext *dc, std::vector<MESH_
 	}
 
 	unmap(dc, vVertexBuffer[this->iNrOfBuffers+1]);
-	this->iNrOfParticles = data.size();
+	this->iNrOfParticles = nrOfVertices;
 }
 
 
@@ -201,6 +201,13 @@ void GeometryManager::applyQuadBuffer(ID3D11DeviceContext *dc, int ID , D3D_PRIM
 
 }
 
+void GeometryManager::applyParticleBuffer(ID3D11DeviceContext *dc , D3D_PRIMITIVE_TOPOLOGY topology)
+{
+	UINT strides = sizeof(MESH_PNC);
+	UINT offset = 0;
+	dc->IAGetVertexBuffers(0 , 1 , &vVertexBuffer[this->iNrOfBuffers+1] , &strides, &offset);
+	dc->IASetPrimitiveTopology(topology);
+}
 
 int GeometryManager::getNrOfInstances(int index)
 {
@@ -345,5 +352,5 @@ void GeometryManager::initFullScreenQuad(ID3D11Device *device, BUFFER_INIT &buff
 void GeometryManager::initParticleBuffer(ID3D11Device *device, BUFFER_INIT &bufferInit)
 {
 	bufferInit.desc.uByteWidth = sizeof(MESH_PNC) * 100000;
-	this->vVertexBuffer.at(this->iNrOfBuffers+1) =  this->pBufferObj->initInstance(device, bufferInit);
+	this->vVertexBuffer.at(this->iNrOfBuffers +1 ) =  this->pBufferObj->initInstance(device, bufferInit);
 }

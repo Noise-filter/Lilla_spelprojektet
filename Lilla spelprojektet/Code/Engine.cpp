@@ -98,7 +98,7 @@ void Engine::render(Matrix& vp)
 		}
 	}
 
-	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, pGeoManager->getNrOfBuffer()+1, D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
+	pGeoManager->applyParticleBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 	d3d->pDeviceContext->Draw(pGeoManager->getNrOfParticles(), 0);
 	//pGeoManager->applyBuffer(d3d->pDeviceContext, test[1][0], D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 0);
 
@@ -152,7 +152,10 @@ void Engine::setRenderData(vector<vector<MESH_PNC>> renderData)
 {
 	for(int i = 0; i < (int)renderData.size(); i++)
 	{
-		pGeoManager->updateParticles(d3d->pDeviceContext, renderData[i], renderData.size());
+		if(renderData[i].size() > 0)
+		{
+			pGeoManager->updateParticles(d3d->pDeviceContext, renderData[i], renderData.size());
+		}
 	}
 }
 

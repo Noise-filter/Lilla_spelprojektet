@@ -50,6 +50,7 @@ class GeometryManager
 		void updateBuffer(ID3D11DeviceContext *dc, std::vector<RenderData*> data, int index, int nrOfInstances);
 		void updateParticles(ID3D11DeviceContext *dc, std::vector<MESH_PNC> data, int nrOfInstances);
 		void applyQuadBuffer(ID3D11DeviceContext *dc, int ID , D3D_PRIMITIVE_TOPOLOGY topology);
+		void applyParticleBuffer(ID3D11DeviceContext *dc , D3D_PRIMITIVE_TOPOLOGY topology);
 
 		int getNrOfInstances(int index);
 		int getNrOfVertexPoints(int index);
