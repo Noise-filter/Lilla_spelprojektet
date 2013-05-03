@@ -25,7 +25,7 @@ ParticlePolicy::~ParticlePolicy()
 	SAFE_DELETE(emitter);
 }
 
-vector<VertexColor>& ParticlePolicy::getVertexData()
+vector<MESH_PNC>& ParticlePolicy::getVertexData()
 {
 	return vertices;
 }
@@ -38,7 +38,7 @@ void ParticlePolicy::createVertices()
 
 		for(ListNode<BaseParticle>* walker = particles.getFirst(); walker != NULL; walker = walker->next)
 		{
-			VertexColor vert1;
+			MESH_PNC vert1;
 
 			vert1.normal = D3DXVECTOR3(0,0,-1);
 			vert1.pos = walker->value.getPosition();

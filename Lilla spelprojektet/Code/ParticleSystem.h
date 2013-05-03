@@ -13,7 +13,7 @@ public:
 	void shutdown();
 
 	void update(float dt);
-	vector<vector<VertexColor>> getVertexData();
+	vector<vector<MESH_PNC>> getVertexData();
 
 	Trail* addTrail(D3DXVECTOR3 color, D3DXVECTOR3 position , int intensity, float timeToLive, float velocity, float lengthX, float lengthY, float lengthZ); //kompletera med hur ett cloud ska defineras
 	void addDeathExplosion(D3DXVECTOR3 color, D3DXVECTOR3 position , int intensity, float timeToLive, float velocity);
