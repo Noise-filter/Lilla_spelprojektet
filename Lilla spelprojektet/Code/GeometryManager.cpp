@@ -3,7 +3,7 @@
 GeometryManager::GeometryManager()
 {
 	this->pBufferObj = new Buffer();
-	this->iNrOfBuffers = 12;
+	this->iNrOfBuffers = NROFDIFFERENTMESHES;
 	this->vVertexBuffer.resize(iNrOfBuffers + 1, NULL);
 	this->vInstanceBuffer.resize(iNrOfBuffers, NULL);
 	this->vNrOfInstances.resize(iNrOfBuffers, NULL);

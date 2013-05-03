@@ -16,7 +16,7 @@ public:
 	PRIMITIVE_TOPOLOGIES changeTopology(int ID);
 
 	void setRenderData(vector<vector<RenderData*>> renderData);
-	void setRenderData(vector<vector<VertexColor>> renderData);
+	void setRenderData(vector<vector<MESH_PNC>> renderData);
 	MouseState* getMouseState();
 	HWND getHWND();
 

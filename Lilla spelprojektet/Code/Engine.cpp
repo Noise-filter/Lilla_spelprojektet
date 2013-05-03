@@ -138,12 +138,6 @@ void Engine::render(Matrix& vp)
 	}
 }
 
-PRIMITIVE_TOPOLOGIES Engine::changeTopology(int ID)
-{
-	if(ID != (int)ENTITY_PARTICLESYSTEM) return TOPOLOGY_TRIANGLELIST;
-	else return TOPOLOGY_POINTLIST;
-}
-
 void Engine::setRenderData(vector<vector<RenderData*>> renderData)
 {
 	for(int i = 0; i < (int)renderData.size(); i++)
@@ -153,8 +147,13 @@ void Engine::setRenderData(vector<vector<RenderData*>> renderData)
 	}
 }
 
-void Engine::setRenderData(vector<vector<VertexColor>> renderData)
+void Engine::setRenderData(vector<vector<MESH_PNC>> renderData)
 {
+
+}
+
+//void Engine::setRenderData(vector<vector<VertexColor>> renderData)
+//{
 	/*D3D11_MAPPED_SUBRESOURCE mappedData;
 	d3d->deviceContext->Map(particleBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData);
 
@@ -172,7 +171,7 @@ void Engine::setRenderData(vector<vector<VertexColor>> renderData)
 	}
 
 	d3d->deviceContext->Unmap(particleBuffer, 0);*/
-}
+//}
 
 MouseState* Engine::getMouseState()
 {

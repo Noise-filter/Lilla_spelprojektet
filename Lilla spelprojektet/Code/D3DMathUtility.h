@@ -10,6 +10,7 @@
 
 #define PI (3.14159265358979323846f)
 
+int NROFDIFFERENTMESHES = 12;
 
 struct MESH_P
 {
@@ -25,6 +26,27 @@ struct MESH_P
 	{
 		this->pos = pos;
 		pad = 9;
+	};
+};
+
+struct MESH_PNC
+{
+	Vec3 pos;
+	Vec3 normal;
+	Vec3 color;
+
+	MESH_PNC()
+	{
+		this->pos    = Vec3(0.0f, 0.0f, 0.0f);
+		this->normal = Vec3(0.0f, 0.0f, 0.0f);
+		this->color  = Vec3(0.0f, 0.0f, 0.0f);
+	};
+
+	MESH_PNC(Vec3 pos, Vec3 normal , Vec3 color)
+	{
+		this->pos    = pos;
+		this->normal = normal;
+		this->color  = color;
 	};
 };
 
