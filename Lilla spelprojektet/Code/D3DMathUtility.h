@@ -208,24 +208,6 @@ struct UpgradeStats
 	int range;
 };
 
-struct VertexColor
-{
-	D3DXVECTOR3 pos;
-	D3DXVECTOR3 normal;
-	D3DXVECTOR3 color;
-
-	VertexColor(D3DXVECTOR3 pos, D3DXVECTOR3 normal, D3DXVECTOR3 color)
-	{
-		this->pos = pos;
-		this->normal = normal;
-		this->color = color;
-	}
-	VertexColor()
-	{
-	}
-
-};
-
 struct RenderData
 {
 	int meshID;

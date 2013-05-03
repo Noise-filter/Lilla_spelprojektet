@@ -8,6 +8,10 @@ Tower::Tower() : Structure()
 	this->range = 0;
 	this->projectileSpeed = 0;
 	this->cooldown = 0;
+
+	D3DXMATRIX world;
+	D3DXMatrixTranslation(&world, 0, 70, 0);
+	topTower = new RenderData(ENTITY_TOWERTOP, 0, world, 0);
 }
 
 Tower::Tower(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, float damage, float attackSpeed, float range, float projectileSpeed)
@@ -21,6 +25,11 @@ Tower::Tower(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, 
 	this->cooldown = 0;
 
 	sound = SoundSystem::Getinstance()->createSound("plop.mp3");
+
+	D3DXMATRIX world;
+	D3DXMatrixTranslation(&world, pos.x, 0.0, pos.z);
+	topTower = new RenderData(ENTITY_TOWERTOP, 0, world, 0);
+	temp = world;
 }
 
 void Tower::giveUpgrade(UpgradeStats &stats)
@@ -73,6 +82,7 @@ int Tower::update(float dt)
 	cooldown -= dt;
 	if(target != NULL)
 	{
+		rotateTop();
 		if(cooldown <= 0)
 		{
 			if(range > D3DXVec3Length(&(target->getPosition() - getPosition())))
@@ -124,11 +134,86 @@ void Tower::aquireTarget(vector<Enemy*>* enemies)
 vector<RenderData*> Tower::getRenderData()
 {
 	vector<RenderData*> renderData;
-	renderData.reserve(projectiles.size()+1);
+	renderData.reserve(projectiles.size()+2);
 
 	renderData.push_back(&this->renderData);
+	renderData.push_back(topTower);
 	for(int i = 0; i < (int)projectiles.size(); i++)
 		renderData.push_back(&projectiles.at(i)->getRenderData());
 
 	return renderData;
+}
+
+void Tower::rotateTop()
+{
+	D3DXMATRIX rotation;/*
+	D3DXMatrixIdentity(&rotation);
+	D3DXMatrixRotationY(&rotation, PI/2);
+	topTower->worldMat = temp;
+	topTower->worldMat = rotation * topTower->worldMat;
+	*/
+
+	D3DXVECTOR3 pos = getPosition();
+	look = target->getPosition() - pos;
+
+	up = D3DXVECTOR3(0, 1, 0);
+	right = D3DXVECTOR3(0, 0, 1);
+
+	D3DXVec3Normalize(&look, &look);
+
+	float dot = D3DXVec3Dot(&look, &D3DXVECTOR3(-1, 0, 0));
+	float yaw = acos(dot);
+	topTower->worldMat = temp;
+
+	if(dot > 0)
+		D3DXMatrixRotationY(&rotation, yaw);
+	else
+		D3DXMatrixRotationY(&rotation, -yaw);
+
+
+	topTower->worldMat = rotation * topTower->worldMat;
+
+
+	/*
+
+	D3DXVECTOR3 direction = target->getPosition() - getPosition();
+	D3DXVec3Normalize(&direction, &direction);
+	D3DXMatrixRotationAxis(&rotation, &direction, 1);
+	*/
+
+	/*
+	D3DXVec3Normalize(&this->look, &this->look);
+	D3DXVec3Normalize(&this->up, &this->up);
+	D3DXVec3Cross(&this->right, &this->up, &this->look);
+	D3DXVec3Cross(&this->up, &this->look, &this->right);
+	
+
+	float x = -D3DXVec3Dot(&pos, &right);
+	float y = -D3DXVec3Dot(&pos, &up);
+	float z = -D3DXVec3Dot(&pos, &look);
+
+	rotation(0, 0) = this->right.x;
+	rotation(1, 0) = this->right.y;
+	rotation(2, 0) = this->right.z;
+	rotation(3, 0) = pos.x;
+
+	rotation(0, 1) = this->up.x;
+	rotation(1, 1) = this->up.y;
+	rotation(2, 1) = this->up.z;
+	rotation(3, 1) = pos.y;
+
+	rotation(0, 2) = this->look.x;
+	rotation(1, 2) = this->look.y;
+	rotation(2, 2) = this->look.z;
+	rotation(3, 2) = pos.z;
+
+	rotation(0, 3) = 0.0f;
+	rotation(1, 3) = 0.0f;
+	rotation(2, 3) = 0.0f;
+	rotation(3, 3) = 1.0f;
+	
+	D3DXMatrixTranslation(&topTower->worldMat, pos.x, pos.y, pos.z);
+
+	//topTower->worldMat = temp;
+	topTower->worldMat *= rotation;*/
 }

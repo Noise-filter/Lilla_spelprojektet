@@ -99,19 +99,13 @@ void GeometryManager::init(ID3D11Device *device)
 	nrOfVerts = 0;
 	MESH_PNUV* supply2 = importer->getOBJfromFile("Meshar/Power Building part 1.obj", nrOfVerts);
 	initEntity(device, bufferInit, instanceInit, supply2, nrOfVerts, 100, ENTITY_SUPPLY );
-
-	MESH_PNUV tower[] ={
-		MESH_PNUV(Vec3(-1,1,0), Vec3(1,0,1), Vec2(1,1)),
-		MESH_PNUV(Vec3(1,1,0), Vec3(1,0,1), Vec2(-1,0)),
-		MESH_PNUV(Vec3(1,0,0), Vec3(0,1,0), Vec2(1,0)),
-
-		MESH_PNUV(Vec3(-1,1,0), Vec3(1,0,1), Vec2(0,0)),
-		MESH_PNUV(Vec3(-1,0,0), Vec3(0,1,1), Vec2(0,-1)),
-		MESH_PNUV(Vec3(1,0,0), Vec3(1,1,0), Vec2(1,1)),
-	};
+	
+	nrOfVerts = 0;
+	MESH_PNUV* tower = importer->getOBJfromFile("Meshar/Tower Part 1.obj", nrOfVerts);
+	initEntity(device, bufferInit, instanceInit, tower, nrOfVerts, 100, ENTITY_TOWERTOP );
 
 	nrOfVerts = 0;
-	MESH_PNUV* tower2 = importer->getOBJfromFile("Meshar/Tower Part 1.obj", nrOfVerts);
+	MESH_PNUV* tower2 = importer->getOBJfromFile("Meshar/Tower Part 2.obj", nrOfVerts);
 	initEntity(device, bufferInit, instanceInit, tower2, nrOfVerts, 100, ENTITY_TOWERBASE );
 
 	MESH_PNUV node[] = {
@@ -130,7 +124,7 @@ void GeometryManager::init(ID3D11Device *device)
 	//initEntity(device, bufferInit, instanceInit, mainBuilding, 3, 100, ENTITY_MAINBUILDING );
 	//initEntity(device, bufferInit, instanceInit, supply,       6, 100, ENTITY_SUPPLY       );
 	//initEntity(device, bufferInit, instanceInit, tower,        6, 100, ENTITY_TOWERBASE    );
-	initEntity(device, bufferInit, instanceInit, tower,        6, 100, ENTITY_TOWERTOP     );
+	//initEntity(device, bufferInit, instanceInit, tower,        6, 100, ENTITY_TOWERTOP     );
 	//initEntity(device, bufferInit, instanceInit, node,         3, 400, ENTITY_NODE         );
 	initEntity(device, bufferInit, instanceInit, node,         3, 100, ENTITY_ENEMY        );
 	initEntity(device, bufferInit, instanceInit, mainBuilding, 3, 200, ENTITY_PROJECTILE   );

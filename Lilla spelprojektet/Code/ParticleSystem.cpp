@@ -44,9 +44,9 @@ void ParticleSystem::update(float dt)
 	}
 }
 
-vector<vector<VertexColor>> ParticleSystem::getVertexData()
+vector<vector<MESH_PNC>> ParticleSystem::getVertexData()
 {
-	vector<vector<VertexColor>> vertexData;
+	vector<vector<MESH_PNC>> vertexData;
 
 	//fyll med all vertexdata från particlePolicies
 	for(int i = 0; i < (int)particlePolicies.size(); i++)
