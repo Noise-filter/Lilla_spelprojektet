@@ -35,7 +35,7 @@ float4 PSScene(PSIn input) : SV_Target
 
 	return float4(diffuse, 1.0f);
 	return float4(normal, 1.0f);
-	return float4( position, 1.0f);
+	//return float4( position, 1.0f);
 }
 
 

@@ -64,7 +64,6 @@ PSOut PSScene(PSIn input)
 
 	float3 diffuseAlbedo = float3(0.5, 0.5, 0.5);//textures.Sample( anisoSampler , float3(input.uv.x, input.uv.y , input.textureID)).rgb;
 
-
 	float4 normalW = normalize(input.normalW);
 
 	output.position = input.posW;

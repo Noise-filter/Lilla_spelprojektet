@@ -25,6 +25,18 @@
 
 #define SAFE_RELEASE(x) if( x ) { (x)->Release(); (x) = NULL; }
 
+struct FaceType
+{
+		int vIndex1, vIndex2, vIndex3;
+		int tIndex1, tIndex2, tIndex3;
+		int nIndex1, nIndex2, nIndex3;
+
+		FaceType()
+		{
+		}
+
+};
+
 enum PRIMITIVE_TOPOLOGIES
 {
 	TOPOLOGY_UNDEFINED		= 0,

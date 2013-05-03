@@ -42,12 +42,12 @@ void Engine::render(Matrix& vp)
 	
 	static float rot = 0;
 	//rot += deltaTime;
-	D3DXMATRIX world, world2, world3, view, proj, wvp, wvp2;
-	D3DXMatrixRotationY(&world, rot);
-	D3DXMatrixTranslation(&world2, 3, sin(rot), 0);
-	D3DXMatrixTranslation(&world3, -3, -sin(rot), 0);
-	D3DXMatrixLookAtLH(&view, &D3DXVECTOR3(0,0,-10), &D3DXVECTOR3(0,0, 1), &D3DXVECTOR3(0,1,0));
-	D3DXMatrixPerspectiveFovLH(&proj, (float)D3DX_PI * 0.45f, SCREEN_WIDTH / SCREEN_HEIGHT, 1.0f, 100.0f);
+	//D3DXMATRIX world, world2, world3, view, proj, wvp, wvp2;
+	//D3DXMatrixRotationY(&world, rot);
+	//D3DXMatrixTranslation(&world2, 3, sin(rot), 0);
+	//D3DXMatrixTranslation(&world3, -3, -sin(rot), 0);
+	//D3DXMatrixLookAtLH(&view, &D3DXVECTOR3(0,0,-10), &D3DXVECTOR3(0,0, 1), &D3DXVECTOR3(0,1,0));
+	//D3DXMatrixPerspectiveFovLH(&proj, (float)D3DX_PI * 0.45f, SCREEN_WIDTH / SCREEN_HEIGHT, 1.0f, 100.0f);
 
 	//std::vector<std::vector<RenderData*>> temp3;
 	//std::vector<RenderData*> temp1, temp2, tem3, tem4;
@@ -86,7 +86,7 @@ void Engine::render(Matrix& vp)
 
 	temp = this->d3d->setPass(PASS_GEOMETRY);
 	temp->SetMatrix("view", vp);
-	temp->SetMatrix("proj", proj);
+	//temp->SetMatrix("proj", proj);
 	temp->Apply(0);
 
 	for(int i = 0; i < this->pGeoManager->getNrOfBuffer(); i++)
@@ -98,6 +98,8 @@ void Engine::render(Matrix& vp)
 		}
 	}
 
+	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, pGeoManager->getNrOfBuffer()+1, D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
+	d3d->pDeviceContext->Draw(pGeoManager->getNrOfParticles(), 0);
 	//pGeoManager->applyBuffer(d3d->pDeviceContext, test[1][0], D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 0);
 
 	/*
@@ -127,7 +129,7 @@ void Engine::render(Matrix& vp)
 	*/
 
 	temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
-	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, this->pGeoManager->getNrOfBuffer());//this->nrOfBuffers);
+	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, this->pGeoManager->getNrOfBuffer() , D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);
@@ -138,7 +140,7 @@ void Engine::render(Matrix& vp)
 	}
 }
 
-void Engine::setRenderData(vector<vector<RenderData*>> renderData)
+void Engine::setRenderData(vector<vector<RenderData*>>& renderData)
 {
 	for(int i = 0; i < (int)renderData.size(); i++)
 	{
@@ -148,7 +150,10 @@ void Engine::setRenderData(vector<vector<RenderData*>> renderData)
 
 void Engine::setRenderData(vector<vector<MESH_PNC>> renderData)
 {
-
+	for(int i = 0; i < (int)renderData.size(); i++)
+	{
+		pGeoManager->updateParticles(d3d->pDeviceContext, renderData[i], renderData.size());
+	}
 }
 
 //void Engine::setRenderData(vector<vector<VertexColor>> renderData)

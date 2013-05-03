@@ -47,7 +47,7 @@ void Game::render()
 	//build engines renderContent with addRenderData then do render to execute those renders
 	engine->setRenderData(gameLogic->getRenderData());
 
-	//engine->setRenderData(pSystem->getVertexData());
+	engine->setRenderData(pSystem->getVertexData());
 
 	engine->render(camera->ViewsProj());
 }
