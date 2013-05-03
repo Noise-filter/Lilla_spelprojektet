@@ -7,6 +7,8 @@ Enemy::Enemy() : Entity()
 	this->currentWP = 0;
 
 	waypoints.push_back(Waypoint(0, 0));
+
+	target = NULL;
 }
 
 Enemy::Enemy(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, float speed, float damage)
@@ -16,13 +18,18 @@ Enemy::Enemy(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, 
 	this->damage = damage;
 	this->currentWP = 0;
 
-	waypoints.push_back(Waypoint((int)pos.x/10, (int)pos.z/10));
-	trail = ParticleSystem::Getinstance()->addTrail(D3DXVECTOR3(1, 1, 1),this->getPosition(), 10, 0.1f, 1, 1, 1, 1);
+	waypoints.push_back(Waypoint((int)pos.x, (int)pos.z));
+	trail = ParticleSystem::Getinstance()->addTrail(D3DXVECTOR3(1, 1, 1),this->getPosition(), 1, 0.1f, 0, 1, 1, 1);
+
+	target = NULL;
+	attackSpeed = 1;
+	cooldown = attackSpeed;
 }
 
 Enemy::~Enemy()
 {
 	ParticleSystem::Getinstance()->removePolicy(trail);
+	ParticleSystem::Getinstance()->addDeathExplosion(D3DXVECTOR3(1,0,0), getPosition(), 100, 0.5, 30);
 }
 
 int Enemy::update(float dt)
@@ -41,10 +48,13 @@ int Enemy::update(float dt)
 
 int Enemy::move(float dt)
 {
-	if((int)waypoints.size()-1 > currentWP)
+	if(target != NULL && target->isDead())
+		target = NULL;
+
+	if((int)waypoints.size()-1 > currentWP && target != NULL)
 	{
 		D3DXVECTOR3 pos = this->getPosition();
-		D3DXVECTOR3 target((float)waypoints.at(currentWP+1).x * 10, 0, (float)waypoints.at(currentWP+1).y * 10);
+		D3DXVECTOR3 target((float)waypoints.at(currentWP+1).x, 0, (float)waypoints.at(currentWP+1).y);
 		D3DXVECTOR3 dir = target - pos;
 
 		if(D3DXVec3Length(&dir) < 0.8)
@@ -60,7 +70,22 @@ int Enemy::move(float dt)
 	}
 	else
 	{
-		return 2;
+		cooldown -= dt;
+		if(target != NULL)
+		{
+			if(cooldown <= 0)	//Fienden slår ett slag 
+			{
+				target->doDamage(damage);
+				cooldown = attackSpeed;
+				D3DXVECTOR3 dir = target->getPosition() - getPosition();
+				D3DXVec3Normalize(&dir, &dir);
+				ParticleSystem::Getinstance()->addAttackParticlePolicy(D3DXVECTOR3(1, 1, 1), getPosition(), 60, 1, 10, dir);
+			}
+		}
+		else	//Fienden har inget target
+		{
+			return 2;
+		}
 	}
 	return 1;
 }
@@ -76,7 +101,7 @@ Waypoint Enemy::getCurrentWaypoint()
 	return waypoints.at(currentWP);
 }
 
-int Enemy::getCurrentWaypoint1D()
+void Enemy::setTarget(Structure* t)
 {
-	return waypoints.at(currentWP).x + (waypoints.at(currentWP).y * 10);
+	target = t;
 }

@@ -15,7 +15,7 @@ public:
 	void render();
 	int update(float dt);
 	bool init(HINSTANCE hInstance, int cmdShow);
-
+	void handleInput(float dt);
 
 private:
 	Engine* engine;
@@ -25,6 +25,8 @@ private:
 	SoundSystem* soundSystem;
 	ParticleSystem* pSystem;
 	Sound* playlist;
+
+	int gameState;
 
 };
 

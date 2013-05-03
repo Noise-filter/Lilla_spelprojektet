@@ -4,6 +4,7 @@ Level::Level(void)
 {
 	this->mapSize = 0;
 	this->nodes = NULL;
+	this->nrOfSupplyStructures = 0;
 }
 
 bool Level::init(int mapSize, int quadSize)
@@ -46,10 +47,10 @@ bool Level::init(int mapSize, int quadSize)
 		for(int j = 0; j < mapSize-1; j++)
 		{
 			structures[i][j] = NULL;
-		}	
+		}
 	}
 
-	structures[2][8] = new Headquarter(D3DXVECTOR3(25, 0, 85), ENTITY_MAINBUILDING, 0, 2, 0);
+	//structures[2][8] = new Headquarter(D3DXVECTOR3((float)2*quadSize + (quadSize/2),0,(float)8*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 2, 0);
 
 	this->availibleUpgrades = new UpgradeStats[5];
 	this->availibleUpgrades[0] = (UpgradeStats(BUILDABLE_UPGRADE_HP,10,0,0,0,0));
@@ -126,40 +127,74 @@ Level::~Level(void)
 int Level::update(float dt, vector<Enemy*>& enemies)
 {
 	int supply = 0;
+	bool buildingDestroyed = false;
+
 	for(int i = 0; i < mapSize-1; i++)
 	{
 		for(int j = 0; j < mapSize-1; j++)
 		{
 			if(structures[i][j] != NULL)
 			{
-				int id = structures[i][j]->update(dt);
-				if(id == 0)
+				if(structures[i][j]->isDead())
 				{
 					//En byggnad förstörs
-					if(typeid(structures[i][j]) == typeid(Tower*))
+					if(typeid(*structures[i][j]) == typeid(Tower))
 						supply += 20;
-					else if(typeid(structures[i][j]) == typeid(Supply*))
+					else if(typeid(*structures[i][j]) == typeid(Supply))
 						supply -= 20;
-					else if(typeid(structures[i][j]) == typeid(Upgrade*))
+					else if(typeid(*structures[i][j]) == typeid(Upgrade))
 					{
 						//remove this upgrade from all towers on the map
 						removeUpgrade(dynamic_cast<Upgrade*>(structures[i][j])->getUpgradeID());
+					}
+					else if(typeid(*structures[i][j]) == typeid(Headquarter))
+					{
+						return 5; // mainbuilding died, you lose
 					}
 
 					//Ta bort byggnaden
 					SAFE_DELETE(structures[i][j]);
 
-					//Skapa mängder och hitta de byggnader som inte längre sitter ihop med main byggnaden
-					//räkna ut vilka byggnader som kommer förstöras
-					sets.initSets(structures, mapSize-1);
-					supply += destroyBuildings();
+					buildingDestroyed = true;
 				}
-				else if(id == 2 && typeid(*structures[i][j]) == typeid(Tower))
+				else
 				{
-					dynamic_cast<Tower*>(structures[i][j])->aquireTarget(&enemies);
+					if(structures[i][j])
+					{
+						int id = structures[i][j]->update(dt);
+
+						if(id == 2 && typeid(*structures[i][j]) == typeid(Tower))
+						{
+							dynamic_cast<Tower*>(structures[i][j])->aquireTarget(&enemies);
+						}
+					}
 				}
 			}
 		}
+	}
+	int nrOfStructures = 0;
+	for(int i = 0; i < mapSize-1; i++)
+	{
+		for(int j = 0; j  < mapSize-1; j++)
+		{
+			if(structures[i][j] != NULL)
+			{
+				nrOfStructures++;
+			}
+		}
+	}
+
+	if((float)nrOfStructures/((mapSize-1) * (mapSize-1)) > 0.40f)
+	{
+		return 4; // win
+	}
+
+	if(buildingDestroyed)
+	{
+		//Skapa mängder och hitta de byggnader som inte längre sitter ihop med main byggnaden
+		//räkna ut vilka byggnader som kommer förstöras
+		sets.initSets(structures, mapSize-1);
+		supply += destroyBuildings();
 	}
 
 	return supply;
@@ -193,6 +228,11 @@ void Level::removeUpgrade(int selectedUpgrade)
 			}
 		}	
 	}
+}
+
+int Level::getNrOfSupplyStructures()
+{
+	return this->nrOfSupplyStructures;
 }
 
 bool Level::isAdjecent(int xPos, int yPos)
@@ -259,14 +299,21 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 	int yPos = (int)(mouseClickPos.z/quadSize);
 
 	if(xPos >= 0 && xPos < mapSize-1 && yPos >= 0 && yPos < mapSize-1)
-	{
-		if(structures[xPos][yPos] == NULL && isAdjecent(xPos,yPos) && isLocationBuildable(xPos, yPos))
+	{	
+
+		if(selectedStructure == BUILDABLE_MAINBUILDING && structures[xPos][yPos] == NULL && isLocationBuildable(xPos, yPos))
+		{ 
+			structures[xPos][yPos] = new Headquarter(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 30, 0);
+			return true;
+		
+		}
+		else if(structures[xPos][yPos] == NULL && isAdjecent(xPos,yPos) && isLocationBuildable(xPos, yPos))
 		{
 			bool builtUpgrade = false;
 			switch(selectedStructure)
 			{
 			case BUILDABLE_TOWER:
-				structures[xPos][yPos] = new Tower(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWER,0,10,0, 1, 1, 50, 100);
+				structures[xPos][yPos] = new Tower(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWER,0,1,0, 1, 1, 50, 100);
 				for(int i = 0; i < (int)this->upgradesInUse.size();i++)
 				{
 					dynamic_cast<Tower*>(structures[xPos][yPos])->giveUpgrade(upgradesInUse[i]);
@@ -274,6 +321,7 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 				break;
 			case BUILDABLE_SUPPLY:
 				structures[xPos][yPos] = new Supply(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_SUPPLY,0,100,0);
+				this->nrOfSupplyStructures++;
 				break;
 			case BUILDABLE_UPGRADE_HP:
 				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
@@ -327,7 +375,7 @@ void Level::getRenderData(vector<vector<RenderData*>>& rData)
 	{
 		for(int j = 0; j < mapSize; j++)
 		{
-			rData.at(nodes[i][j].getRenderData().meshID).push_back(&nodes[i][j].getRenderData());
+			rData[nodes[i][j].getRenderData().meshID].push_back(&nodes[i][j].getRenderData());
 		}
 	}
 	
@@ -367,7 +415,7 @@ void Level::getRenderData(vector<vector<RenderData*>>& rData)
 int Level::destroyBuildings()
 {
 	int supply = 0;
-	int mainBuilding = 0;
+	int mainBuilding = -1;
 
 	for(int i = 0; i < mapSize-1; i++)
 	{
@@ -393,14 +441,17 @@ int Level::destroyBuildings()
 					if(typeid(*structures[i][j]) == typeid(Tower))
 						supply += COST_TOWER;
 					else if(typeid(*structures[i][j]) == typeid(Supply))
-						supply -= COST_SUPPLY;
-					else if(typeid(structures[i][j]) == typeid(Upgrade*))
+					{
+						nrOfSupplyStructures--;
+					}
+			
+					else if(typeid(*structures[i][j]) == typeid(Upgrade))
 					{
 						//remove this upgrade from all towers on the map
 						removeUpgrade(dynamic_cast<Upgrade*>(structures[i][j])->getUpgradeID());
 					}
 
-					SAFE_DELETE(structures[i][j]);
+					structures[i][j]->setDead(true);
 				}
 			}
 		}

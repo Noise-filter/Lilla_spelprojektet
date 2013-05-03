@@ -2,6 +2,7 @@
 #define STRUCTURE_H
 
 #include "Entity.h"
+#include "ParticleSystem.h"
 
 class Structure : public Entity
 {

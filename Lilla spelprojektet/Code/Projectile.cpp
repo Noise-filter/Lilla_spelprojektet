@@ -14,7 +14,7 @@ Projectile::Projectile(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int
 	this->speed = speed;
 	this->damage = damage;
 
-	trail = ParticleSystem::Getinstance()->addTrail(D3DXVECTOR3(1, 1, 1),this->getPosition(), 10, 0.05f, 1, 1, 1, 1);
+	trail = ParticleSystem::Getinstance()->addTrail(D3DXVECTOR3(1, 1, 1),this->getPosition(), 10, 0.05f, 0, 1, 1, 1);
 }
 
 Projectile::~Projectile()

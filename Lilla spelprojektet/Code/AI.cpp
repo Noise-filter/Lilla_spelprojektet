@@ -62,14 +62,14 @@ bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize
 	return true;
 }
 
-vector<Waypoint> AI::findPath(int start, int goal, int enemyType)
+vector<Waypoint> AI::findPath(Waypoint start, Waypoint goal, int enemyType)
 {
 	vector<Waypoint> wayPoints;
 
 	lua_getglobal(pathScript, "astar");
 
-	lua_pushnumber(pathScript, start);
-	lua_pushnumber(pathScript, goal);
+	lua_pushnumber(pathScript, (start.x/quadSize) + ((start.y/quadSize) * mapSize));
+	lua_pushnumber(pathScript, goal.x + (goal.y*mapSize));
 	lua_pushnumber(pathScript, enemyType);
 
 	lua_pcall(pathScript, 3, 2, 0); //kalla på funktionen
@@ -78,6 +78,8 @@ vector<Waypoint> AI::findPath(int start, int goal, int enemyType)
 	int a = (int)lua_tonumber(pathScript, -1);
 	lua_pop(pathScript, 1);
 
+	wayPoints.reserve(a);
+
 	if(a > 0)
 	{
 		//Hämta ut tabellen
@@ -85,8 +87,7 @@ vector<Waypoint> AI::findPath(int start, int goal, int enemyType)
 		while(lua_next(pathScript, -2) != 0)
 		{
 			int temp = (int)lua_tonumber(pathScript, -1);
-			wayPoints.push_back(Waypoint(((int)temp % mapSize), ((int)temp / mapSize)));
-			//cout << "A*: " << temp << endl;
+			wayPoints.push_back(Waypoint(((int)temp % mapSize) * quadSize, ((int)temp / mapSize) * quadSize));
 			lua_pop(pathScript, 1);
 		}
 		lua_pop(pathScript, 1);
@@ -102,10 +103,10 @@ vector<float> AI::findTarget(Waypoint pos, int type)
 	lua_getglobal(targetScript, "findTarget");
 	convertStructuresToInt();
 	sendArray(structuresInt, mapSize-1, targetScript);
-	lua_pushnumber(targetScript, pos.x);
-	lua_pushnumber(targetScript, pos.y);
+	lua_pushnumber(targetScript, pos.x/quadSize);
+	lua_pushnumber(targetScript, pos.y/quadSize);
 	lua_pushnumber(targetScript, type);
-	
+
 	lua_pcall(targetScript, 4, 2, 0); //kalla på funktionen
 	
 	float targetY = (float)lua_tonumber(targetScript, -1);
@@ -151,18 +152,18 @@ vector<Enemy*> AI::spawnEnemies(float dt, int nrOfEnemies)
 				retVals[counter++] = (int)lua_tonumber(spawnScript, -1);
 				cout << lua_typename(spawnScript, lua_type(spawnScript, -2)) << ": value"<< lua_tonumber(spawnScript, -1) << endl;
 			}
-			lua_pop(spawnScript, 1);	
+			lua_pop(spawnScript, 1);
 		}
 		if(spawnedEnemies > 0)
 		{
-			Enemy* tempE = new Enemy(D3DXVECTOR3((float)retVals[0],0,(float)retVals[1]),ENTITY_ENEMY,0,5,0,30,0);
+			Enemy* tempE = new Enemy(D3DXVECTOR3((float)retVals[0],0,(float)retVals[1]),ENTITY_ENEMY,0,10,0,30,1);
 			enemies.push_back(tempE);
 		}
 
 		lua_pop(spawnScript, 1);
 	}
 	lua_pop(spawnScript, 2);
-	
+
 	return enemies;
 }
 
@@ -252,7 +253,7 @@ void AI::convertNodesToInt()
 	{
 		for(int j = 0; j < mapSize; j++)
 		{
-				nodesInt[i][j] = nodes[i][j].getColor();
+			nodesInt[i][j] = nodes[i][j].getColor();
 		}
 	}
 }
@@ -298,4 +299,9 @@ void AI::sendArray(int** arr, int mapSize, lua_State* script)
 	lua_pushliteral( script, "q" );
 	lua_pushnumber( script, quadSize);
 	lua_rawset( script, -3 );
+}
+
+Structure* AI::getStrucutre(int x, int y)
+{
+	return structures[x][y];
 }
