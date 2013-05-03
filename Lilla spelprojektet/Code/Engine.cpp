@@ -94,6 +94,7 @@ void Engine::render(Matrix& vp)
 		if(pGeoManager->getNrOfInstances(i) > 0)
 		{
 			pGeoManager->applyBuffer(d3d->pDeviceContext, i, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 0);
+			int a = pGeoManager->getNrOfInstances(i);
 			d3d->pDeviceContext->DrawInstanced(pGeoManager->getNrOfVertexPoints(i), pGeoManager->getNrOfInstances(i), 0, 0);
 		}
 	}
@@ -138,12 +139,11 @@ void Engine::render(Matrix& vp)
 	}
 }
 
-void Engine::setRenderData(vector<vector<RenderData*>> renderData)
+void Engine::setRenderData(vector<vector<RenderData*>>& renderData)
 {
 	for(int i = 0; i < (int)renderData.size(); i++)
 	{
-		if((int)renderData[i].size() > 0) 
-			pGeoManager->updateBuffer(d3d->pDeviceContext, renderData[i], i , renderData[i].size());
+		pGeoManager->updateBuffer(d3d->pDeviceContext, renderData[i], i , renderData[i].size());
 	}
 }
 
