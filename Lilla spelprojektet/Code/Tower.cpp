@@ -146,12 +146,7 @@ vector<RenderData*> Tower::getRenderData()
 
 void Tower::rotateTop()
 {
-	D3DXMATRIX rotation;/*
-	D3DXMatrixIdentity(&rotation);
-	D3DXMatrixRotationY(&rotation, PI/2);
-	topTower->worldMat = temp;
-	topTower->worldMat = rotation * topTower->worldMat;
-	*/
+	D3DXMATRIX rotation;
 
 	D3DXVECTOR3 pos = getPosition();
 	look = target->getPosition() - pos;
@@ -165,55 +160,10 @@ void Tower::rotateTop()
 	float yaw = acos(dot);
 	topTower->worldMat = temp;
 
-	if(dot > 0)
+	if(look.z > 0)
 		D3DXMatrixRotationY(&rotation, yaw);
 	else
 		D3DXMatrixRotationY(&rotation, -yaw);
 
-
 	topTower->worldMat = rotation * topTower->worldMat;
-
-
-	/*
-
-	D3DXVECTOR3 direction = target->getPosition() - getPosition();
-	D3DXVec3Normalize(&direction, &direction);
-	D3DXMatrixRotationAxis(&rotation, &direction, 1);
-	*/
-
-	/*
-	D3DXVec3Normalize(&this->look, &this->look);
-	D3DXVec3Normalize(&this->up, &this->up);
-	D3DXVec3Cross(&this->right, &this->up, &this->look);
-	D3DXVec3Cross(&this->up, &this->look, &this->right);
-	
-
-	float x = -D3DXVec3Dot(&pos, &right);
-	float y = -D3DXVec3Dot(&pos, &up);
-	float z = -D3DXVec3Dot(&pos, &look);
-
-	rotation(0, 0) = this->right.x;
-	rotation(1, 0) = this->right.y;
-	rotation(2, 0) = this->right.z;
-	rotation(3, 0) = pos.x;
-
-	rotation(0, 1) = this->up.x;
-	rotation(1, 1) = this->up.y;
-	rotation(2, 1) = this->up.z;
-	rotation(3, 1) = pos.y;
-
-	rotation(0, 2) = this->look.x;
-	rotation(1, 2) = this->look.y;
-	rotation(2, 2) = this->look.z;
-	rotation(3, 2) = pos.z;
-
-	rotation(0, 3) = 0.0f;
-	rotation(1, 3) = 0.0f;
-	rotation(2, 3) = 0.0f;
-	rotation(3, 3) = 1.0f;
-	
-	D3DXMatrixTranslation(&topTower->worldMat, pos.x, pos.y, pos.z);
-
-	//topTower->worldMat = temp;
-	topTower->worldMat *= rotation;*/
 }
