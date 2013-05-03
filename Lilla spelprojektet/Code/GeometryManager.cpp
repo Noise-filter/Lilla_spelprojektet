@@ -180,17 +180,15 @@ void GeometryManager::updateParticles(ID3D11DeviceContext *dc, std::vector<MESH_
 
 	for(int i = 0; i < (int)data.size(); i++)
 	{
-		mesh[i].pos     = data[i].pos;
-		mesh[i].normal  = data[i].normal;
-		mesh[i].color   = data[i].color;
+		mesh[i + this->iNrOfParticles].pos     = data[i].pos;
+		mesh[i + this->iNrOfParticles].normal  = data[i].normal;
+		mesh[i + this->iNrOfParticles].color   = data[i].color;
 	}
 
 	unmap(dc, vVertexBuffer[this->iNrOfBuffers+1]);
-	this->iNrOfParticles = nrOfVertices;
+	this->iNrOfParticles += data.size();
 }
 
-
-//används även till att apply particle buffern
 void GeometryManager::applyQuadBuffer(ID3D11DeviceContext *dc, int ID , D3D_PRIMITIVE_TOPOLOGY topology)
 {
 	UINT strides = sizeof(MESH_P);
@@ -205,7 +203,7 @@ void GeometryManager::applyParticleBuffer(ID3D11DeviceContext *dc , D3D_PRIMITIV
 {
 	UINT strides = sizeof(MESH_PNC);
 	UINT offset = 0;
-	dc->IAGetVertexBuffers(0 , 1 , &vVertexBuffer[this->iNrOfBuffers+1] , &strides, &offset);
+	dc->IASetVertexBuffers(0 , 1 , &vVertexBuffer[this->iNrOfBuffers+1] , &strides, &offset);
 	dc->IASetPrimitiveTopology(topology);
 }
 
@@ -239,6 +237,11 @@ int GeometryManager::getNrOfBuffer()
 int GeometryManager::getNrOfParticles()
 {
 	return this->iNrOfParticles;
+}
+
+void GeometryManager::setNrOfParticles(int value)
+{
+	this->iNrOfParticles = value;
 }
 /*
 ######################################

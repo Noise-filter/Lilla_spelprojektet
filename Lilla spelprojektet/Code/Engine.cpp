@@ -150,6 +150,8 @@ void Engine::setRenderData(vector<vector<RenderData*>>& renderData)
 
 void Engine::setRenderData(vector<vector<MESH_PNC>> renderData)
 {
+	this->pGeoManager->setNrOfParticles(0);
+
 	for(int i = 0; i < (int)renderData.size(); i++)
 	{
 		if(renderData[i].size() > 0)
@@ -157,6 +159,8 @@ void Engine::setRenderData(vector<vector<MESH_PNC>> renderData)
 			pGeoManager->updateParticles(d3d->pDeviceContext, renderData[i], renderData.size());
 		}
 	}
+
+
 }
 
 //void Engine::setRenderData(vector<vector<VertexColor>> renderData)

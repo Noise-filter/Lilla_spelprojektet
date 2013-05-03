@@ -56,6 +56,9 @@ class GeometryManager
 		int getNrOfVertexPoints(int index);
 		int getNrOfBuffer();
 		int getNrOfParticles();
+
+		void setNrOfParticles(int values);
+
 };
 
 #endif
