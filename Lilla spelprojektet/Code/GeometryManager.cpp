@@ -3,13 +3,12 @@
 GeometryManager::GeometryManager()
 {
 	this->pBufferObj = new Buffer();
-	this->iNrOfBuffers = 4;
+	this->iNrOfBuffers = 12;
 	this->vVertexBuffer.resize(iNrOfBuffers + 1, NULL);
 	this->vInstanceBuffer.resize(iNrOfBuffers, NULL);
 	this->vNrOfInstances.resize(iNrOfBuffers, NULL);
 
 }
-
 GeometryManager::~GeometryManager()
 {
 	SAFE_RELEASE(buffers[0]);
@@ -42,14 +41,14 @@ void GeometryManager::init(ID3D11Device *device)
 	BUFFER_INIT indexInit		= BUFFER_INIT(); //TBA
 
 	//Vertex buffer init
-	bufferInit.desc.eUsage = D3D11_USAGE_DEFAULT;
-	bufferInit.desc.uBindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bufferInit.desc.uCPUAccessFlags = 0;
-	bufferInit.desc.uMiscFlags = 0;
+	bufferInit.desc.eUsage               = D3D11_USAGE_DEFAULT;
+	bufferInit.desc.uBindFlags           = D3D11_BIND_VERTEX_BUFFER;
+	bufferInit.desc.uCPUAccessFlags      = 0;
+	bufferInit.desc.uMiscFlags           = 0;
 	bufferInit.desc.uStructureByteStride = 0;
 
-	bufferInit.data.uSysMemPitch = 0;
-	bufferInit.data.uSysMemSlicePitch = 0;
+	bufferInit.data.uSysMemPitch         = 0;
+	bufferInit.data.uSysMemSlicePitch    = 0;
 	//---------------------------------------------------------------
 
 	//Index buffer init
@@ -105,13 +104,21 @@ void GeometryManager::init(ID3D11Device *device)
 		MESH_PNUV(Vec3(0,0,0.5), Vec3(1,0,1), Vec2(0,0)),
 		MESH_PNUV(Vec3(0,-0.5,0), Vec3(1,0,0), Vec2(0,0)),
 	};
+
 	//-----------------------------------------------------------------
 
-	initEntity(device, bufferInit, instanceInit, mainBuilding, 3, 100, ENTITY_MAINBUILDING);
-	initEntity(device, bufferInit, instanceInit, supply, 6, 100 , ENTITY_SUPPLY);
-	initEntity(device, bufferInit, instanceInit, tower, 6, 100 , ENTITY_TOWER);
-	//initEntity(device, bufferInit, instanceInit, tower, 6, 100 , ENTITY_TOWERTOP);
-	initEntity(device, bufferInit, instanceInit, node, 3, 400, ENTITY_NODE);
+	initEntity(device, bufferInit, instanceInit, mainBuilding, 3, 100, ENTITY_MAINBUILDING );
+	initEntity(device, bufferInit, instanceInit, supply,       6, 100, ENTITY_SUPPLY       );
+	initEntity(device, bufferInit, instanceInit, tower,        6, 100, ENTITY_TOWERBASE    );
+	initEntity(device, bufferInit, instanceInit, tower,        6, 100, ENTITY_TOWERTOP     );
+	initEntity(device, bufferInit, instanceInit, node,         3, 400, ENTITY_NODE         );
+	initEntity(device, bufferInit, instanceInit, node,         3, 100, ENTITY_ENEMY        );
+	initEntity(device, bufferInit, instanceInit, mainBuilding, 3, 200, ENTITY_PROJECTILE   );
+	initEntity(device, bufferInit, instanceInit, supply,       6, 100, ENTITY_UPGRADE_HP   );
+	initEntity(device, bufferInit, instanceInit, supply,       6, 100, ENTITY_UPGRADE_ATKSP);
+	initEntity(device, bufferInit, instanceInit, supply,       6, 100, ENTITY_UPGRADE_DMG  );
+	initEntity(device, bufferInit, instanceInit, supply,       6, 100, ENTITY_UPGRADE_PRJSP);
+	initEntity(device, bufferInit, instanceInit, supply,       6, 100, ENTITY_UPGRADE_RANGE);
 
 	initFullScreenQuad(device, bufferInit);
 }
