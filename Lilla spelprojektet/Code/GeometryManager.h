@@ -2,6 +2,7 @@
 #define GEOMETRYMANAGER_H
 
 #include "Buffer.h"
+#include "OBJReader.h"
 
 class GeometryManager
 {
@@ -24,6 +25,7 @@ class GeometryManager
 
 	private:
 		Buffer *pBufferObj;
+		OBJReader *importer;
 		//Importer *importer, lägg till om/när vi får godkänt på
 		//scriptprojektets förslaget
 		std::vector<ID3D11Buffer*>	vIndexBuffer;

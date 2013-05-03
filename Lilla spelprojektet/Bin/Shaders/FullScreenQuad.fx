@@ -33,9 +33,11 @@ float4 PSScene(PSIn input) : SV_Target
 	float3 diffuse = diffuseAlbedoMap.Load(sampleIndices).xyz;
 	float3 normal = normalMap.Load(sampleIndices).xyz;
 
+	//normal = float3(0.5,0.5,0.5);
+	//return float4(0.5,0.5,0.5,1);
 	//return float4(diffuse, 1.0f);
 	return float4(normal, 1.0f);
-	return float4( position, 1.0f);
+	//return float4( position, 1.0f);
 }
 
 
