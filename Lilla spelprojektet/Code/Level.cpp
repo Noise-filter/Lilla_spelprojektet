@@ -313,7 +313,7 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 			switch(selectedStructure)
 			{
 			case BUILDABLE_TOWER:
-				structures[xPos][yPos] = new Tower(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWER,0,1,0, 1, 1, 50, 100);
+				structures[xPos][yPos] = new Tower(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWERBASE,0,1,0, 1, 1, 50, 100);
 				for(int i = 0; i < (int)this->upgradesInUse.size();i++)
 				{
 					dynamic_cast<Tower*>(structures[xPos][yPos])->giveUpgrade(upgradesInUse[i]);
@@ -397,7 +397,7 @@ void Level::getRenderData(vector<vector<RenderData*>>& rData)
 					vector<RenderData*> rD = dynamic_cast<Tower*>(structures[i][j])->getRenderData();
 
 					//Lägg till tornets övre del
-					//rData.at(4).push_back(rD.at(0));
+					rData.at(ENTITY_TOWERTOP).push_back(rD.at(0));
 
 					//lägg till tornets undre del och alla projektiler
 					for(int k = 0; k < (int)rD.size(); k++)
