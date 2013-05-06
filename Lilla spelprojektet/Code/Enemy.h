@@ -8,6 +8,11 @@
 
 struct Waypoint
 {
+	Waypoint()
+	{
+		x = y = 0;
+	}
+
 	Waypoint(int X, int Y)
 	{
 		x = X;
@@ -31,7 +36,8 @@ public:
 	int move(float dt);
 
 	Waypoint getCurrentWaypoint();
-	int getCurrentWaypoint1D();
+
+	void setTarget(Structure* t);
 
 	
 private:
@@ -41,11 +47,11 @@ private:
 	int currentWP;
 
 	Structure* target;
+	float cooldown;
 
 	float speed;
 	float damage;
-
-
+	float attackSpeed;
 
 };
 

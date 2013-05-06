@@ -10,6 +10,18 @@
 
 #define PI (3.14159265358979323846f)
 
+#define NROFDIFFERENTMESHES (12)
+
+struct GameSettings
+{
+	int enemiesPerMin;
+	int ScreenHeight;
+	int ScreenWidth;
+	int mapSize;
+	int quadSize;
+
+	//add more if needed
+};
 
 struct MESH_P
 {
@@ -25,6 +37,27 @@ struct MESH_P
 	{
 		this->pos = pos;
 		pad = 9;
+	};
+};
+
+struct MESH_PNC
+{
+	Vec3 pos;
+	Vec3 normal;
+	Vec3 color;
+
+	MESH_PNC()
+	{
+		this->pos    = Vec3(0.0f, 0.0f, 0.0f);
+		this->normal = Vec3(0.0f, 0.0f, 0.0f);
+		this->color  = Vec3(0.0f, 0.0f, 0.0f);
+	};
+
+	MESH_PNC(Vec3 pos, Vec3 normal , Vec3 color)
+	{
+		this->pos    = pos;
+		this->normal = normal;
+		this->color  = color;
 	};
 };
 
@@ -92,17 +125,28 @@ enum ENTITY_FLAGS
 {
 	ENTITY_MAINBUILDING,
 	ENTITY_SUPPLY,
-	ENTITY_TOWER,
+	ENTITY_TOWERBASE,
+	ENTITY_TOWERTOP,
 	ENTITY_NODE,
 	ENTITY_ENEMY,
-	ENTITY_PARTICLESYSTEM,
-	ENTITY_GAMEFIELD,
+	ENTITY_PROJECTILE,
 	ENTITY_UPGRADE_HP,
 	ENTITY_UPGRADE_ATKSP,
 	ENTITY_UPGRADE_DMG,
 	ENTITY_UPGRADE_PRJSP,
 	ENTITY_UPGRADE_RANGE,
 	ENTITY_GUI,
+};
+
+enum GAMESTATES
+{
+   STATE_MENU,
+   STATE_SETTINGS,
+   STATE_GAMESTART,
+   STATE_PLAYING,
+   STATE_PAUSED, 
+   STATE_WIN,
+   STATE_LOSE
 };
 
 enum BUILDABLE_ENTITY_FLAGS
@@ -173,24 +217,6 @@ struct UpgradeStats
 	int atkSpeed;
 	int prjSpeed;
 	int range;
-};
-
-struct VertexColor
-{
-	D3DXVECTOR3 pos;
-	D3DXVECTOR3 normal;
-	D3DXVECTOR3 color;
-
-	VertexColor(D3DXVECTOR3 pos, D3DXVECTOR3 normal, D3DXVECTOR3 color)
-	{
-		this->pos = pos;
-		this->normal = normal;
-		this->color = color;
-	}
-	VertexColor()
-	{
-	}
-
 };
 
 struct RenderData

@@ -15,8 +15,8 @@ public:
 	bool init(HINSTANCE hInstance, int cmdShow);
 	PRIMITIVE_TOPOLOGIES changeTopology(int ID);
 
-	void setRenderData(vector<vector<RenderData*>> renderData);
-	void setRenderData(vector<vector<VertexColor>> renderData);
+	void setRenderData(vector<vector<RenderData*>>& renderData);
+	void setRenderData(vector<vector<MESH_PNC>> renderData);
 	MouseState* getMouseState();
 	HWND getHWND();
 
@@ -24,7 +24,6 @@ private:
 	D3D11Handler* d3d;
 	WinHandler* win32;
 	GeometryManager *pGeoManager;
-	int nrOfBuffers;
 
 };
 

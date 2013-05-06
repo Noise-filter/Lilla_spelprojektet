@@ -34,6 +34,7 @@ ID3D11Buffer *Buffer::initBuffer(ID3D11Device *device, BUFFER_INIT &bufferInit)
 	subData.SysMemPitch			= bufferInit.data.uSysMemPitch;
 	subData.SysMemSlicePitch	= bufferInit.data.uSysMemSlicePitch;
 
+
 	hr = device->CreateBuffer(&bufferDesc, &subData, &pBuffer);
 
 	if(FAILED(hr))

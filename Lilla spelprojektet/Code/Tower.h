@@ -23,6 +23,8 @@ public:
 	void giveUpgrade(UpgradeStats &stats);
 	void removeUpgrade(UpgradeStats &stats);
 
+	void rotateTop();
+
 private:
 	float damage;
 	float attackSpeed;
@@ -32,6 +34,11 @@ private:
 	Enemy* target;
 
 	vector<Projectile*> projectiles;
+	D3DXMATRIX temp;
+	RenderData* topTower;
+	D3DXVECTOR3 look, up, right;
+
+
 
 	Sound* sound;
 

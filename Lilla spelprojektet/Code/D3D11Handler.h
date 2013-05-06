@@ -2,6 +2,7 @@
 #define D3D11HANDLER_H
 
 #include "D3DGraphicUtility.h"
+#include "D3DMathUtility.h"
 #include "WindowsUtility.h"
 #include "Shader.h"
 
@@ -10,7 +11,7 @@ class D3D11Handler
 	private:
 		D3D11_VIEWPORT			viewPort;
 		ID3D11RenderTargetView	*pRenderTargetView;
-		
+
 		ID3D11Texture2D			*pDepthStencil;
 		ID3D11DepthStencilView	*pDepthStencilView;
 
@@ -35,7 +36,7 @@ class D3D11Handler
 		bool bindResources(D3D11_TEXTURE2D_DESC &texDesc);
 		//--------------
 
-		
+
 
 	public:
 		ID3D11Device		*pDevice;
@@ -51,7 +52,7 @@ class D3D11Handler
 		Shader *setPass(PASS_STATE pass);
 
 		void clearAndBindRenderTarget();
-	
+
 };
 
 #endif

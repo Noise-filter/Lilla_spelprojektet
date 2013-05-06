@@ -6,26 +6,34 @@
 #include "BaseParticle.h"
 #include "List.h"
 #include <vector>
-
 using namespace std;
+
 class ParticlePolicy
 {
 	protected:
 		int nrOfVertsPerParticle;
 		int intensity;
+		D3DXVECTOR3 color;
 		
 		BaseParticle *emitter;
 		List<BaseParticle> particles;
+		std::vector<MESH_PNC> vertices;
+
+		bool recreateVertices;
 
 		virtual void emitt() = 0;
-		virtual void createVertices() = 0;
+		virtual void createVertices();
 
 	public:
-		virtual void update(float dt) = 0;
+		ParticlePolicy();
+		ParticlePolicy(D3DXVECTOR3 color, D3DXVECTOR3 position, int intensity, float timeToLive, float velocity);
 
-		virtual ~ParticlePolicy(){};
-		
-		virtual vector<VertexColor> getVertexData() = 0;
+		virtual int update(float dt) = 0;
+
+		virtual ~ParticlePolicy();
+
+		virtual vector<MESH_PNC>& getVertexData();
+		virtual void updatePosition(D3DXVECTOR3 pos);
 };
 
 #endif

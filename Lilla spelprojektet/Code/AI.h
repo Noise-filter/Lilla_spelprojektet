@@ -27,7 +27,7 @@ public:
 	~AI(void);
 
 	bool init(Structure*** structures, Node** nodes ,string* scripts, int mapSize, int quadSize);
-	vector<Waypoint> findPath(int start, int goal, int enemyType); // hanterar pathScript
+	vector<Waypoint> findPath(Waypoint start, Waypoint goal, int enemyType); // hanterar pathScript
 	vector<float> findTarget(Waypoint pos, int type); // hanterar targetScript
 	vector<Enemy*> spawnEnemies(float dt, int nrOfEnemies); // hanterar spawnScript
 
@@ -39,6 +39,8 @@ public:
 
 	void convertNodesToInt();
 	void convertStructuresToInt();
+
+	Structure* getStrucutre(int x, int y);
 
 	static void OpenLuaLibs(lua_State* l);
 

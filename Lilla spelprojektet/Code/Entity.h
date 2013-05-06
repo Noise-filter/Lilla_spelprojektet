@@ -21,6 +21,8 @@ public:
 
 	bool isDead();
 
+	void setDead(bool dead);
+
 	RenderData& getRenderData();
 
 	D3DXVECTOR3 getPosition();
@@ -30,6 +32,8 @@ protected:
 	float hp, maxHp;
 	bool dead;
 
+	D3DXMATRIX scale;
+	float scaleFactor;
 };
 
 #endif

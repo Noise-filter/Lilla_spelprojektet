@@ -21,6 +21,7 @@
 *.pdb
 *.vcxproj
 *.vcxproj.filters
+*.vcxproj.user
 
 # Mappar
 Lilla spelprojektet/Obj/**/

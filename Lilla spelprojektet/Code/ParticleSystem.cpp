@@ -7,7 +7,7 @@ ParticleSystem::ParticleSystem(void)
 
 ParticleSystem::~ParticleSystem(void)
 {
-	for(int i = 0; i < this->particlePolicies.size(); i++)
+	for(int i = 0; i < (int)this->particlePolicies.size(); i++)
 	{
 		delete particlePolicies.at(i);
 	}
@@ -31,34 +31,31 @@ ParticleSystem* ParticleSystem::Getinstance()
 void ParticleSystem::update(float dt)
 {
 	//update all policies
-	for(int i = 0; i < particlePolicies.size(); i++)
+	for(int i = 0; i < (int)particlePolicies.size(); i++)
 	{
-		if(particlePolicies.at(i) == NULL)
+		int id = particlePolicies.at(i)->update(dt);
+
+		if(id == 2)
 		{
+			SAFE_DELETE(particlePolicies.at(i));
 			particlePolicies.erase(particlePolicies.begin() + i);
 			i--;
-		}
-		else
-		{
-			particlePolicies.at(i)->update(dt);
 		}
 	}
 }
 
-vector<vector<VertexColor>> ParticleSystem::getVertexData()
+vector<vector<MESH_PNC>> ParticleSystem::getVertexData()
 {
-	vector<vector<VertexColor>> vertexData;
+	vector<vector<MESH_PNC>> vertexData;
 
 	//fyll med all vertexdata från particlePolicies
-	for(int i = 0; i < particlePolicies.size(); i++)
+	for(int i = 0; i < (int)particlePolicies.size(); i++)
 	{
 		vertexData.push_back(particlePolicies.at(i)->getVertexData());
 	}
 
-
 	return vertexData;
 }
-
 
 Trail* ParticleSystem::addTrail(D3DXVECTOR3 color, D3DXVECTOR3 position , int intensity, float timeToLive, float velocity, float lengthX, float lengthY, float lengthZ)
 {
@@ -68,9 +65,19 @@ Trail* ParticleSystem::addTrail(D3DXVECTOR3 color, D3DXVECTOR3 position , int in
 	return (Trail*)particlePolicies.at(particlePolicies.size()-1);
 }
 
+void ParticleSystem::addDeathExplosion(D3DXVECTOR3 color, D3DXVECTOR3 position , int intensity, float timeToLive, float velocity)
+{
+	particlePolicies.push_back(new DeathExplosion(color, position, intensity, timeToLive, velocity));
+}
+
+void ParticleSystem::addAttackParticlePolicy(D3DXVECTOR3 color, D3DXVECTOR3 position , int intensity, float timeToLive, float velocity, D3DXVECTOR3 direction)
+{
+	particlePolicies.push_back(new AttackParticlePolicy(color, position, intensity, timeToLive, velocity, direction));
+}
+
 bool ParticleSystem::removePolicy(ParticlePolicy* temp) // kompletera med hur detta ska ske, hur removar man den policy man vill åt?(id? string namn?)
 {
-	for(int i = 0; i < particlePolicies.size(); i++)
+	for(int i = 0; i < (int)particlePolicies.size(); i++)
 	{
 		if(particlePolicies.at(i) == temp)
 		{

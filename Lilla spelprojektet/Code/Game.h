@@ -17,7 +17,10 @@ public:
 	void render();
 	int update(float dt);
 	bool init(HINSTANCE hInstance, int cmdShow);
+	void handleInput(float dt);
 
+private:
+	GameSettings readSettingsFromFile(string fileName);
 
 private:
 	Engine* engine;
@@ -30,6 +33,8 @@ private:
 	GUI* GUI;
 	GAMESTATES state;
 
+
+	int gameState;
 
 };
 

@@ -53,9 +53,6 @@ public:
 	bool getPaused();						// get state of master channel
 	bool getMute();							// get state of master channel
 	
-	int loadPlaylist(string filename);
-	int getNrOfSounds();
-	
 	bool update();
 
 	//Error handling

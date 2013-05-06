@@ -7,7 +7,9 @@ cbuffer EveryFrame
 	matrix view;
 	matrix proj;
 };
-
+//--------------------------
+//input for VSScene
+//--------------------------
 struct VSIn
 {
 	float3 pos : POSITION;
@@ -62,13 +64,12 @@ PSOut PSScene(PSIn input)
 	PSOut output = (PSOut)0;
 	output.position = input.posCS;
 
-	float3 diffuseAlbedo = float3(0.4, 1, 0.7);//textures.Sample( anisoSampler , float3(input.uv.x, input.uv.y , input.textureID)).rgb;
-
+	float3 diffuseAlbedo = float3(0.5, 0.5, 0.5);//textures.Sample( anisoSampler , float3(input.uv.x, input.uv.y , input.textureID)).rgb;
 
 	float4 normalW = normalize(input.normalW);
 
 	output.position = input.posW;
-	output.diffuseAlbedo = float4 ( diffuseAlbedo, 1.0f);
+	output.diffuseAlbedo = float4 (diffuseAlbedo, 1.0f);
 	output.normal = normalW;
 
 	return output;
@@ -97,7 +98,8 @@ technique11 BasicTech
         SetPixelShader( CompileShader( ps_4_0, PSScene() ) );
 	    
 	    SetRasterizerState( NoCulling );
-    } 
+    }
+
 }
 
 

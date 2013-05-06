@@ -9,6 +9,7 @@ Game::Game(void)
 	camera = new Camera();
 	soundSystem = soundSystem->Getinstance();
 	pSystem = pSystem->Getinstance();
+	gameState = STATE_GAMESTART;
 }
 
 Game::~Game(void)
@@ -24,6 +25,14 @@ Game::~Game(void)
 
 bool Game::init(HINSTANCE hInstance, int cmdShow)
 {
+
+	//read settings from file
+	GameSettings settings = readSettingsFromFile("settings.txt");
+
+	//use settings for the game
+	
+
+
 	if(!engine->init(hInstance,cmdShow))
 		return false;
 
@@ -34,8 +43,10 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	if(!gameLogic->init(10,10))
 		return false;
 
-	camera->LookAt(D3DXVECTOR3(45,60,45), D3DXVECTOR3(35, 0, 45), D3DXVECTOR3(-1, 0, 0));
+	camera->LookAt(D3DXVECTOR3(45,75,45), D3DXVECTOR3(35, 0, 45), D3DXVECTOR3(-1, 0, 0));
 	camera->SetLens((float)D3DX_PI * 0.45f, (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
+
+	gameState = STATE_GAMESTART;
 
 	return true; // all initiates went well
 }
@@ -45,19 +56,45 @@ void Game::render()
 	//build engines renderContent with addRenderData then do render to execute those renders
 	engine->setRenderData(gameLogic->getRenderData());
 
-	//engine->setRenderData(pSystem->getVertexData());
+	engine->setRenderData(pSystem->getVertexData());
 
 	engine->render(camera->ViewsProj());
 }
 
 int Game::update(float dt)
 {
+	if(gameState == STATE_PLAYING || gameState == STATE_GAMESTART )
+	{
+		handleInput(dt);
+		camera->UpdateViewMatrix();
+		if(!gameLogic->update(gameState, dt,input->getMs(), camera->View(), camera->Proj(), camera->GetPosition()))
+			return 0; // error
+		
+		pSystem->update(dt);
+	}
+	else if(gameState == STATE_WIN) 
+	{
+		cout << "YOU WON" << endl;
+	}
+	else if(gameState == STATE_LOSE)
+	{
+		//hantera win/lose state
+		cout << "YOU LOSE" << endl;
+	}
+	
+	input->resetBtnState();
+	char title[255];
+	sprintf_s(title, "%f", 1/dt);
+	SetWindowTextA(engine->getHWND(), title);
+
+	return 1;
+}
+
+void Game::handleInput(float dt)
+{
 	static bool pausedMusic = true;
 
 	input->updateMs(engine->getMouseState());
-	
-	//camera->Yaw((float)this->input->mouseRotateY());
-	//camera->Pitch((float)this->input->mousePitch());
 	
 	soundSystem->update();
 	
@@ -79,32 +116,30 @@ int Game::update(float dt)
 		pausedMusic = !pausedMusic;
 	}
 
-	if(input->checkKeyDown(0x45)) // E
+	if(gameState == STATE_PLAYING)
 	{
-		//byt byggnad +1
-		gameLogic->incrementSelectedStructure(1);
+		if(input->checkKeyDown(0x45)) // E
+		{
+			//byt byggnad +1
+			gameLogic->incrementSelectedStructure(1);
+		}
+
+		if(input->checkKeyDown(0x51)) // Q
+		{
+			//byt byggnad -1
+			gameLogic->incrementSelectedStructure(-1);
+		}	
 	}
+}
+GameSettings Game::readSettingsFromFile(string fileName)
+{
+	GameSettings settings;
 
-	if(input->checkKeyDown(0x51)) // Q
-	{
-		//byt byggnad -1
-		gameLogic->incrementSelectedStructure(-1);
-	}
+	settings.enemiesPerMin = 10;
+	settings.mapSize = 20;
+	settings.quadSize = 20;
+	settings.ScreenHeight = 1080;
+	settings.ScreenWidth = 1920;
 
-
-	camera->UpdateViewMatrix();
-
-	if(!gameLogic->update(dt,input->getMs(), camera->View(), camera->Proj(), camera->GetPosition()))
-		return 0; // error
-
-	input->resetBtnState();
-
-	pSystem->update(dt);
-
-	char title[255];
-
-	sprintf_s(title, "%f", 1/dt);
-	SetWindowTextA(engine->getHWND(), title);
-
-	return 1;
+	return settings;
 }
