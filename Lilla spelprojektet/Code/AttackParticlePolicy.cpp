@@ -24,10 +24,14 @@ int AttackParticlePolicy::update(float dt)
 	}
 
 	int i = 0;
-	for(ListNode<BaseParticle>* walker = particles.getFirst(); walker != NULL; walker = walker->next)
+	int j = 0;
+	for(ListNode<BaseParticle>* walker = particles.getFirst(); walker != NULL; walker = walker->next, j++)
 	{
+		if(j == 0)
+			cout << walker->value.getPosition().x << endl;
 		if(!walker->value.update(dt))
 		{
+			
 			i++;
 		}
 	}
@@ -37,7 +41,7 @@ int AttackParticlePolicy::update(float dt)
 
 	particles.remove(i);
 	createVertices();
-	//recreateVertices = false;
+	recreateVertices = false;
 
 	return 1;
 }

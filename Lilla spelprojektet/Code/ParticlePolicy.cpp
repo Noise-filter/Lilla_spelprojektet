@@ -14,7 +14,7 @@ ParticlePolicy::ParticlePolicy(D3DXVECTOR3 color, D3DXVECTOR3 position, int inte
 {
 	this->nrOfVertsPerParticle = 1;
 	this->intensity = intensity;
-	
+
 	this->color = color;
 	this->emitter = new BaseParticle(position, D3DXVECTOR3(0,1,0), timeToLive, velocity);
 	recreateVertices = true;
@@ -47,14 +47,14 @@ void ParticlePolicy::createVertices()
 			vertices.push_back(vert1);
 		}
 	}
-/*	else
+	else
 	{
 		int i = 0;
 		for(ListNode<BaseParticle>* walker = particles.getFirst(); walker != NULL; walker = walker->next, i++)
 		{
 			vertices.at(i).pos = walker->value.getPosition();
 		}
-	}*/
+	}
 }
 
 void ParticlePolicy::updatePosition(D3DXVECTOR3 pos)
