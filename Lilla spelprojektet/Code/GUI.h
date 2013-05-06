@@ -15,7 +15,8 @@ enum GAMESTATES
    STATE_PLAYING,
    STATE_PAUSED, 
    STATE_WIN,
-   STATE_LOSE
+   STATE_LOSE,
+   STATE_QUIT
 };
 
 enum BUTTONTYPE
@@ -32,8 +33,6 @@ struct Button
 		D3DXVECTOR3 size;
 		string text;
 		BUTTONTYPE type;
-
-		
 	};
 
 class GUI
@@ -42,23 +41,21 @@ public:
 	GUI(void);
 	~GUI(void);
 
-	void init();
 	void render();
-	int update(float dt);
+	int update(MouseState *mouse, GAMESTATES state);
 	void createBtns(GAMESTATES state);
 	void clearBtns();
-	Button createBtn(D3DXVECTOR3 pos, BUTTONTYPE type);
+	
 
 private:
 	
 	
-	D3DXVECTOR3 getMouseWorldPos(MouseState *mState, D3DXMATRIX view, D3DXMATRIX proj, D3DXVECTOR3 cameraPos);
-	bool checkBtn(D3DXVECTOR3 mousePos, Button btn);
+	bool checkBtn(MouseState *mousePos, Button btn);
+	GAMESTATES changeState(Button btn);
+	Button createBtn(D3DXVECTOR3 pos, BUTTONTYPE type);
+
 	Button* menuBtns;
 	int nrOfBtns;
-
-
-
-
+	GAMESTATES GUI_STATE;
 
 };

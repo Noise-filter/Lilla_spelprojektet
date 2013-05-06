@@ -3,7 +3,7 @@
 GUI::GUI()
 {
 	
-
+	createBtns(STATE_MENU);
 
 
 }
@@ -13,19 +13,28 @@ GUI::~GUI()
 
 }
 
-void GUI::init()
-{
-
-	
-}
 
 void GUI::render()
 {
 
 }
 
-int GUI::update(float dt)
+int GUI::update(MouseState *mouse, GAMESTATES state)
 {
+	if(GUI_STATE != state)
+	{
+		createBtns(state);
+		GUI_STATE = state;
+	}
+
+	for(int i = 0; i < this->nrOfBtns; i++)
+	{
+		bool check = checkBtn(mouse, this->menuBtns[i]);
+		if(check)
+		{
+			state = changeState(this->menuBtns[i]);
+		}
+	}
 	return 1;
 }
 
@@ -43,9 +52,9 @@ void GUI::createBtns(GAMESTATES state)
 	{
 		this->nrOfBtns = 3;
 		this->menuBtns = new Button[nrOfBtns];
-		this->menuBtns[0] = createBtn(D3DXVECTOR3(midScreenW, 0, midScreenH), STARTGAME);
-		this->menuBtns[1] = createBtn(D3DXVECTOR3(midScreenW, 0, midScreenH + 0.15), SETTINGS);
-		this->menuBtns[2] = createBtn(D3DXVECTOR3(midScreenW, 0, midScreenH + 0.3), QUIT);
+		this->menuBtns[0] = createBtn(D3DXVECTOR3(midScreenW, midScreenH, 0), STARTGAME);
+		this->menuBtns[1] = createBtn(D3DXVECTOR3(midScreenW, midScreenH + 0.15, 0), SETTINGS);
+		this->menuBtns[2] = createBtn(D3DXVECTOR3(midScreenW, midScreenH + 0.3, 0), QUIT);
 	}
 	else if(state == STATE_SETTINGS)
 	{
@@ -55,9 +64,9 @@ void GUI::createBtns(GAMESTATES state)
 	{
 		this->nrOfBtns = 3;
 		this->menuBtns = new Button[nrOfBtns];
-		this->menuBtns[0] = createBtn(D3DXVECTOR3(midScreenW, 0, midScreenH), PAUSED_CONTINUE);
-		this->menuBtns[1] = createBtn(D3DXVECTOR3(midScreenW, 0, midScreenH + 0.15), SETTINGS);
-		this->menuBtns[2] = createBtn(D3DXVECTOR3(midScreenW, 0, midScreenH + 0.3), QUIT);
+		this->menuBtns[0] = createBtn(D3DXVECTOR3(midScreenW, midScreenH, 0), PAUSED_CONTINUE);
+		this->menuBtns[1] = createBtn(D3DXVECTOR3(midScreenW, midScreenH + 0.15, 0), SETTINGS);
+		this->menuBtns[2] = createBtn(D3DXVECTOR3(midScreenW, midScreenH + 0.3, 0), QUIT);
 	}
 
 }
@@ -77,59 +86,65 @@ Button GUI::createBtn(D3DXVECTOR3 pos, BUTTONTYPE type)
 
 	if(type == STARTGAME)
 	{
-		temp.size = D3DXVECTOR3(5, 0, 20);
+		temp.size = D3DXVECTOR3(20, 5, 0);
 		temp.text = "New Game";
 	}
 	if(type == SETTINGS)
 	{
-		temp.size = D3DXVECTOR3(5, 0, 20);
+		temp.size = D3DXVECTOR3(20, 5, 0);
 		temp.text = "Settings";
 	}
 	if(type == QUIT)
 	{
-		temp.size = D3DXVECTOR3(5, 0, 10);
+		temp.size = D3DXVECTOR3(10, 5, 0);
 		temp.text = "Quit";
 	}
 	if(type == PAUSED_CONTINUE)
 	{
-		temp.size = D3DXVECTOR3(5, 0, 20);
+		temp.size = D3DXVECTOR3(20, 5, 0);
 		temp.text = "CONTINUE";
 	}
 	return temp;
 }
 
-bool GUI::checkBtn(D3DXVECTOR3 pos, Button btn)
+bool GUI::checkBtn(MouseState *mousePos, Button btn)
 {
-	return true;
+	if(mousePos->xPos > btn.pos.x - btn.size.x)
+	{
+		if(mousePos->xPos < btn.pos.x + btn.size.x)
+		{
+			if(mousePos->yPos < btn.pos.y + btn.size.y)
+			{
+				if(mousePos->yPos > btn.pos.y - btn.size.y)
+				{
+					return true;
+				}
+			}
+		}
+	}
+	return false;
 }
 
-D3DXVECTOR3 GUI::getMouseWorldPos(MouseState *mState, D3DXMATRIX view, D3DXMATRIX proj, D3DXVECTOR3 cameraPos)
+GAMESTATES GUI::changeState(Button btn)
 {
-	float pointX, pointY, intersect;
-	D3DXMATRIX invView, worldIdentity;
-	D3DXVECTOR3 dir, origin, rayOrigin, rayDir, intersectPos, planeNormal;
-	D3DXMatrixIdentity(&worldIdentity);
+	GAMESTATES state;
 
-	
-	origin = cameraPos;
-	pointX = ((2.0f * (float)mState->xPos) / (float)SCREEN_WIDTH) - 1.0f;
-	pointY = (((2.0f * (float)mState->yPos) / (float)SCREEN_HEIGHT) - 1.0f) * -1.0f;
+	if(btn.type == STARTGAME)
+	{
+		state = STATE_GAMESTART;
+	}
+	else if(btn.type == SETTINGS)
+	{
+		state = STATE_SETTINGS;
+	}
+	else if(btn.type == PAUSED_CONTINUE)
+	{
+		state = STATE_PLAYING;
+	}
+	else if(btn.type == QUIT)
+	{
+		state = STATE_QUIT;
+	}
 
-	pointX = pointX / proj._11;
-	pointY = pointY / proj._22;
-
-	D3DXMatrixInverse(&invView, NULL, &view);
-
-	dir.x = (pointX * invView._11) + (pointY * invView._21) + invView._31;
-	dir.y = (pointX * invView._12) + (pointY * invView._22) + invView._32;
-	dir.z = (pointX * invView._13) + (pointY * invView._23) + invView._33;
-
-	D3DXVec3TransformCoord(&rayOrigin, &origin, &worldIdentity);
-	D3DXVec3TransformNormal(&rayDir, &dir, &worldIdentity);
-
-	D3DXVec3Normalize(&rayDir, &rayDir);
-	planeNormal = D3DXVECTOR3(0,1,0);
-	intersect = (D3DXVec3Dot(&-planeNormal, &rayOrigin))/(D3DXVec3Dot(&planeNormal,&rayDir));
-
-	return intersectPos = rayOrigin + (intersect*rayDir);
+	return state;
 }
