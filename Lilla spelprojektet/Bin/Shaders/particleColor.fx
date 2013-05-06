@@ -1,6 +1,3 @@
-//
-//	Simple texture shader
-//
 
 cbuffer EveryFrame
 {
@@ -21,7 +18,12 @@ struct PSIn
 	float3 color : COLOR2;
 };
 
-SamplerState ss;
+struct PSOut
+{
+	float4 pos            : SV_TARGET0;
+	float4 diffuseAlbedo  : SV_TARGET1;
+	float4 normal         : SV_TARGET2;
+};
 
 RasterizerState NoCulling
 {
@@ -41,9 +43,15 @@ PSIn VSScene(VSIn input)
 	return output;
 }
 
-float4 PSScene(PSIn input) : SV_Target
+PSOut PSScene(PSIn input)
 {
-	return float4(input.color, 1);
+	PSOut output;
+
+	output.pos = input.pos;
+	output.diffuseAlbedo = float4(input.color, 1.0f);
+	output.normal = float4(input.normal , 1.0f);
+
+	return output;
 }
 
 technique11 BasicTech

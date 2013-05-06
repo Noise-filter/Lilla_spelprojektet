@@ -57,6 +57,7 @@ Tower::~Tower()
 {
 	for(int i = 0; i < (int)projectiles.size(); i++)
 		delete projectiles.at(i);
+	SAFE_DELETE(topTower);
 }
 
 int Tower::update(float dt)

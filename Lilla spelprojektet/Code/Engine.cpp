@@ -42,44 +42,13 @@ void Engine::render(Matrix& vp)
 	
 	static float rot = 0;
 	//rot += deltaTime;
-	//D3DXMATRIX world, world2, world3, view, proj, wvp, wvp2;
+	D3DXMATRIX world, world2, world3, view, proj, wvp, wvp2;
+	D3DXMatrixIdentity(&world);
 	//D3DXMatrixRotationY(&world, rot);
 	//D3DXMatrixTranslation(&world2, 3, sin(rot), 0);
 	//D3DXMatrixTranslation(&world3, -3, -sin(rot), 0);
 	//D3DXMatrixLookAtLH(&view, &D3DXVECTOR3(0,0,-10), &D3DXVECTOR3(0,0, 1), &D3DXVECTOR3(0,1,0));
 	//D3DXMatrixPerspectiveFovLH(&proj, (float)D3DX_PI * 0.45f, SCREEN_WIDTH / SCREEN_HEIGHT, 1.0f, 100.0f);
-
-	//std::vector<std::vector<RenderData*>> temp3;
-	//std::vector<RenderData*> temp1, temp2, tem3, tem4;
-	//RenderData dtemp1[1], dtemp2[1], dtemp3[1], dtemp4[1];
-	//dtemp1[0].iEntityID = (int)ENTITY_MAINBUILDING;
-	//dtemp1[0].iLightID = LIGHT_NONE;
-	//dtemp1[0].worldTex.iTextureID = 0;
-	//dtemp1[0].worldTex.mWorld = world;
-	//temp2.push_back(&dtemp1[0]);
-	//temp3.push_back(temp2);
-
-	//dtemp2[0].iEntityID = (int)ENTITY_SUPPLY;
-	//dtemp2[0].iLightID = LIGHT_NONE;
-	//dtemp2[0].worldTex.iTextureID = 0;
-	//dtemp2[0].worldTex.mWorld = world2;
-	//temp1.push_back(&dtemp2[0]);
-	//temp3.push_back(temp1);
-
-	//dtemp3[0].iEntityID = (int)ENTITY_TOWER;
-	//dtemp3[0].iLightID = LIGHT_NONE;
-	//dtemp3[0].worldTex.iTextureID = 0;
-	//dtemp3[0].worldTex.mWorld = world3;
-	//tem3.push_back(&dtemp3[0]);
-	//temp3.push_back(tem3);
-
-	//dtemp4[0].iEntityID = (int)ENTITY_NODE;
-	//dtemp4[0].iLightID = LIGHT_NONE;
-	//dtemp4[0].worldTex.iTextureID = 0;
-	//dtemp4[0].worldTex.mWorld = world3;
-	//tem4.push_back(&dtemp4[0]);
-	//temp3.push_back(tem4);
-
 
 
 	Shader* temp;
@@ -98,6 +67,11 @@ void Engine::render(Matrix& vp)
 		}
 	}
 
+
+	world = world * vp;
+	temp = this->d3d->setPass(PASS_LIGHT);
+	temp->SetMatrix("gWVP" , world);
+	temp->Apply(0);
 	pGeoManager->applyParticleBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 	d3d->pDeviceContext->Draw(pGeoManager->getNrOfParticles(), 0);
 	//pGeoManager->applyBuffer(d3d->pDeviceContext, test[1][0], D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 0);
@@ -130,7 +104,6 @@ void Engine::render(Matrix& vp)
 
 	temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
 	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, this->pGeoManager->getNrOfBuffer() , D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);
 
@@ -151,38 +124,8 @@ void Engine::setRenderData(vector<vector<RenderData*>>& renderData)
 void Engine::setRenderData(vector<vector<MESH_PNC>> renderData)
 {
 	this->pGeoManager->setNrOfParticles(0);
-
-	for(int i = 0; i < (int)renderData.size(); i++)
-	{
-		if(renderData[i].size() > 0)
-		{
-			pGeoManager->updateParticles(d3d->pDeviceContext, renderData[i], renderData.size());
-		}
-	}
-
-
+	pGeoManager->updateParticles(d3d->pDeviceContext, renderData, renderData.size());
 }
-
-//void Engine::setRenderData(vector<vector<VertexColor>> renderData)
-//{
-	/*D3D11_MAPPED_SUBRESOURCE mappedData;
-	d3d->deviceContext->Map(particleBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData);
-
-	VertexColor* dataView = reinterpret_cast<VertexColor*>(mappedData.pData);
-
-	particleNum = 0;
-
-	for(int j = 0; j < (int)renderData.size(); j++)
-	{
-		for(int i = 0; i < (int)renderData.at(j).size(); i++)
-		{
-			dataView[i + particleNum] = renderData.at(j).at(i);
-		}
-		particleNum += renderData.at(j).size();
-	}
-
-	d3d->deviceContext->Unmap(particleBuffer, 0);*/
-//}
 
 MouseState* Engine::getMouseState()
 {
