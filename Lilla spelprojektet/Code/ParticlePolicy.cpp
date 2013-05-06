@@ -32,7 +32,7 @@ vector<MESH_PNC>& ParticlePolicy::getVertexData()
 
 void ParticlePolicy::createVertices()
 {
-	if(recreateVertices)
+	//if(recreateVertices)
 	{
 		this->vertices.clear();
 
@@ -47,14 +47,14 @@ void ParticlePolicy::createVertices()
 			vertices.push_back(vert1);
 		}
 	}
-	else
+/*	else
 	{
 		int i = 0;
 		for(ListNode<BaseParticle>* walker = particles.getFirst(); walker != NULL; walker = walker->next, i++)
 		{
 			vertices.at(i).pos = walker->value.getPosition();
 		}
-	}
+	}*/
 }
 
 void ParticlePolicy::updatePosition(D3DXVECTOR3 pos)

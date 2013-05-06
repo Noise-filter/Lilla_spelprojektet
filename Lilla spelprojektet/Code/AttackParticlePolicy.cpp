@@ -37,7 +37,7 @@ int AttackParticlePolicy::update(float dt)
 
 	particles.remove(i);
 	createVertices();
-	recreateVertices = false;
+	//recreateVertices = false;
 
 	return 1;
 }
