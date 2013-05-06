@@ -42,7 +42,7 @@ void GeometryManager::init(ID3D11Device *device)
 {
 	BUFFER_INIT bufferInit		= BUFFER_INIT();
 	BUFFER_INIT instanceInit	= BUFFER_INIT();
-	BUFFER_INIT indexInit		= BUFFER_INIT(); //TBA
+	BUFFER_INIT indexInit		= BUFFER_INIT();
 	importer = new OBJReader();
 	//Vertex buffer init
 	bufferInit.desc.eUsage               = D3D11_USAGE_DEFAULT;
@@ -177,21 +177,25 @@ void GeometryManager::updateBuffer(ID3D11DeviceContext *dc, std::vector<RenderDa
 	this->vNrOfInstances.at(index) = nrOfInstances;
 }
 
-void GeometryManager::updateParticles(ID3D11DeviceContext *dc, std::vector<MESH_PNC> data , int nrOfVertices)
+void GeometryManager::updateParticles(ID3D11DeviceContext *dc, std::vector<std::vector<MESH_PNC>> data , int nrOfVertices)
 {
 	D3D11_MAPPED_SUBRESOURCE *mappedData = map(dc, this->vVertexBuffer[this->iNrOfBuffers+1]);
 
 	MESH_PNC *mesh = reinterpret_cast<MESH_PNC*>(mappedData->pData);
 
-	for(int i = 0; i < (int)data.size(); i++)
+	for(int j = 0; j < data.size(); j++)
 	{
-		mesh[i + this->iNrOfParticles].pos     = data[i].pos;
-		mesh[i + this->iNrOfParticles].normal  = data[i].normal;
-		mesh[i + this->iNrOfParticles].color   = data[i].color;
+		for(int i = 0; i < (int)data[j].size(); i++)
+		{
+			mesh[i + this->iNrOfParticles].pos     = data[j][i].pos;
+			mesh[i + this->iNrOfParticles].normal  = data[j][i].normal;
+			mesh[i + this->iNrOfParticles].color   = data[j][i].color;
+		}
+		this->iNrOfParticles += data[j].size();
 	}
 
 	unmap(dc, vVertexBuffer[this->iNrOfBuffers+1]);
-	this->iNrOfParticles += data.size();
+	
 }
 
 void GeometryManager::applyQuadBuffer(ID3D11DeviceContext *dc, int ID , D3D_PRIMITIVE_TOPOLOGY topology)
@@ -359,6 +363,6 @@ void GeometryManager::initFullScreenQuad(ID3D11Device *device, BUFFER_INIT &buff
 
 void GeometryManager::initParticleBuffer(ID3D11Device *device, BUFFER_INIT &bufferInit)
 {
-	bufferInit.desc.uByteWidth = sizeof(MESH_PNC) * 100000;
+	bufferInit.desc.uByteWidth = sizeof(MESH_PNC) * 1000;
 	this->vVertexBuffer.at(this->iNrOfBuffers +1 ) =  this->pBufferObj->initInstance(device, bufferInit);
 }
