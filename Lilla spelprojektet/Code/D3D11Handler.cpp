@@ -93,7 +93,7 @@ void D3D11Handler::clearAndBindRenderTarget()
 	pDeviceContext->ClearRenderTargetView(pRenderTargetView, clearColour);
 	pDeviceContext->ClearDepthStencilView(pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-	pDeviceContext->OMSetRenderTargets(this->iNrOfDeferred, pMultipleRTVs, pDSVDeferred);
+	pDeviceContext->PSSetShaderResources(0, this->iNrOfDeferred+1, this->pNullSRVs);
 	pDeviceContext->ClearDepthStencilView(pDSVDeferred, 1, 1.0f, 0);
 
 	for(int i = 0; i < this->iNrOfDeferred; i++) pDeviceContext->ClearRenderTargetView(pMultipleRTVs[i], clearColour);

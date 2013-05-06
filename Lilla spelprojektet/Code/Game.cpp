@@ -42,7 +42,7 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	if(!gameLogic->init(10,10))
 		return false;
 
-	camera->LookAt(D3DXVECTOR3(45,75,45), D3DXVECTOR3(35, 0, 45), D3DXVECTOR3(-1, 0, 0));
+	camera->LookAt(D3DXVECTOR3(45,45,45), D3DXVECTOR3(35, 0, 45), D3DXVECTOR3(-1, 0, 0));
 	camera->SetLens((float)D3DX_PI * 0.45f, (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
 
 	gameState = STATE_GAMESTART;

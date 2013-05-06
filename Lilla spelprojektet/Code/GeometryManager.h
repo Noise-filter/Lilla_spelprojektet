@@ -48,7 +48,7 @@ class GeometryManager
 		void init(ID3D11Device *device); //TBA more functionality like calls for importing meshes, also fill out the bufferInit for testing purpose
 		void applyBuffer(ID3D11DeviceContext *dc, int ID, D3D_PRIMITIVE_TOPOLOGY topology, UINT32 misc = 0);
 		void updateBuffer(ID3D11DeviceContext *dc, std::vector<RenderData*> data, int index, int nrOfInstances);
-		void updateParticles(ID3D11DeviceContext *dc, std::vector<MESH_PNC> data, int nrOfInstances);
+		void updateParticles(ID3D11DeviceContext *dc, std::vector<std::vector<MESH_PNC>> data, int nrOfInstances);
 		void applyQuadBuffer(ID3D11DeviceContext *dc, int ID , D3D_PRIMITIVE_TOPOLOGY topology);
 		void applyParticleBuffer(ID3D11DeviceContext *dc , D3D_PRIMITIVE_TOPOLOGY topology);
 
