@@ -218,7 +218,6 @@ void GeometryManager::applyParticleBuffer(ID3D11DeviceContext *dc , D3D_PRIMITIV
 
 int GeometryManager::getNrOfInstances(int index)
 {
-	D3D11_BUFFER_DESC temp;
 	if((int)vNrOfInstances.size() > index)
 	{
 		return this->vNrOfInstances.at(index);
