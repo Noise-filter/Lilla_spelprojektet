@@ -42,7 +42,8 @@ void Engine::render(Matrix& vp)
 	
 	static float rot = 0;
 	//rot += deltaTime;
-	//D3DXMATRIX world, world2, world3, view, proj, wvp, wvp2;
+	D3DXMATRIX world, world2, world3, view, proj, wvp, wvp2;
+	D3DXMatrixIdentity(&world);
 	//D3DXMatrixRotationY(&world, rot);
 	//D3DXMatrixTranslation(&world2, 3, sin(rot), 0);
 	//D3DXMatrixTranslation(&world3, -3, -sin(rot), 0);
@@ -98,6 +99,10 @@ void Engine::render(Matrix& vp)
 		}
 	}
 
+
+	world = world * vp;
+	temp = this->d3d->setPass(PASS_LIGHT);
+	temp->SetMatrix("gWVP" , world);
 	pGeoManager->applyParticleBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 	d3d->pDeviceContext->Draw(pGeoManager->getNrOfParticles(), 0);
 	//pGeoManager->applyBuffer(d3d->pDeviceContext, test[1][0], D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 0);
@@ -154,7 +159,7 @@ void Engine::setRenderData(vector<vector<MESH_PNC>> renderData)
 
 	for(int i = 0; i < (int)renderData.size(); i++)
 	{
-		if(renderData[i].size() > 0)
+		if(renderData[i].size() > 0);
 		{
 			pGeoManager->updateParticles(d3d->pDeviceContext, renderData[i], renderData.size());
 		}

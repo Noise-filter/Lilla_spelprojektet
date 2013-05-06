@@ -21,7 +21,7 @@ struct GameSettings
 	int quadSize;
 
 	//add more if needed
-}
+};
 
 struct MESH_P
 {

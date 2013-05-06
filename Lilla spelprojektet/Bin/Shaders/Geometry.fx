@@ -7,7 +7,9 @@ cbuffer EveryFrame
 	matrix view;
 	matrix proj;
 };
-
+//--------------------------
+//input for VSScene
+//--------------------------
 struct VSIn
 {
 	float3 pos : POSITION;
@@ -96,7 +98,8 @@ technique11 BasicTech
         SetPixelShader( CompileShader( ps_4_0, PSScene() ) );
 	    
 	    SetRasterizerState( NoCulling );
-    } 
+    }
+
 }
 
 

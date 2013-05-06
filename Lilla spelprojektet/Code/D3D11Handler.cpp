@@ -251,9 +251,16 @@ bool D3D11Handler::initShaders()
 		return false;
 	}
 
+	D3D11_INPUT_ELEMENT_DESC ParticleInput[] = 
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+
 	temp = new Shader();
 	this->vShaders.push_back(temp);
-	//hr = this->vShaders.at(PASS_LIGHT)->Init(this->pDevice, this->pDeviceContext, "../Shaders/Lightning.fx", inputDesc, 3);
+	hr = this->vShaders.at(PASS_LIGHT)->Init(this->pDevice, this->pDeviceContext, "../Shaders/ParticleColor.fx", ParticleInput, 3);
 	if(FAILED(hr))
 	{
 		return false;
