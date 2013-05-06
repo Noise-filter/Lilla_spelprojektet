@@ -24,7 +24,7 @@ int AttackParticlePolicy::update(float dt)
 	}
 
 	int i = 0;
-	for(ListNode<BaseParticle>* walker = particles.getFirst(); walker != NULL; walker = walker->next, j++)
+	for(ListNode<BaseParticle>* walker = particles.getFirst(); walker != NULL; walker = walker->next)
 	{
 		if(!walker->value.update(dt))
 		{
