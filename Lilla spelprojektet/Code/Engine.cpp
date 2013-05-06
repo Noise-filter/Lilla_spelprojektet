@@ -104,7 +104,6 @@ void Engine::render(Matrix& vp)
 
 	temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
 	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, this->pGeoManager->getNrOfBuffer() , D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);
 
@@ -125,11 +124,7 @@ void Engine::setRenderData(vector<vector<RenderData*>>& renderData)
 void Engine::setRenderData(vector<vector<MESH_PNC>> renderData)
 {
 	this->pGeoManager->setNrOfParticles(0);
-
-	for(int i = 0; i < (int)renderData.size(); i++)
-	{
-		pGeoManager->updateParticles(d3d->pDeviceContext, renderData[i], renderData.size());
-	}
+	pGeoManager->updateParticles(d3d->pDeviceContext, renderData, renderData.size());
 }
 
 MouseState* Engine::getMouseState()
