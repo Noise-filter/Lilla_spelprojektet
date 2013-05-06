@@ -32,7 +32,7 @@ vector<MESH_PNC>& ParticlePolicy::getVertexData()
 
 void ParticlePolicy::createVertices()
 {
-	//if(recreateVertices)
+	if(recreateVertices)
 	{
 		this->vertices.clear();
 
