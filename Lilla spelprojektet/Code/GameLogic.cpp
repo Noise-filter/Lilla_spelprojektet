@@ -7,7 +7,7 @@ GameLogic::GameLogic(void)
 	this->selectedStructure = 2;
 	this->availableSupply = 100;
 	this->resource = 100;
-	this->resourceCD = 0;
+	this->maxResCD = 0;
 }
 
 GameLogic::~GameLogic(void)
@@ -27,12 +27,12 @@ void GameLogic::incrementSelectedStructure(int increment)
 
 void GameLogic::giveResource(float dt)
 {
-	resourceCD += dt;
-	if(resourceCD > 5)
+	currentResCD += dt;
+	if(currentResCD > maxResCD)
 	{
-		this->resource += 10 + level->getNrOfSupplyStructures();
+		this->resource += resPerTick + level->getNrOfSupplyStructures();
 		cout << "gained resources: " << 10 + level->getNrOfSupplyStructures() << endl;
-		resourceCD = 0;
+		currentResCD = 0;
 	}
 }
 
@@ -177,11 +177,14 @@ int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX v
 	return 1;//all went good
 }
 
-bool GameLogic::init(int mapSize, int quadSize)
+bool GameLogic::init(int mapSize, int quadSize, GameSettings &settings)
 {
+	this->resPerTick = settings.resPerTick;
+	this->maxResCD = settings.resCD;
+
 	this->level->init(mapSize,quadSize);
 
-	this->eHandler->init(level->getStructures(), level->getNodes(), level->getMapSize(), quadSize);
+	this->eHandler->init(level->getStructures(), level->getNodes(), level->getMapSize(), quadSize,settings.enemiesPerMin,settings.difficulty);
 
 	vector<RenderData*> renderData;
 

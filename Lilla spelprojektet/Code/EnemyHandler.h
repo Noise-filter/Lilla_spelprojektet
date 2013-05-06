@@ -11,7 +11,7 @@ public:
 	EnemyHandler(void);
 	~EnemyHandler(void);
 	
-	bool init(Structure*** structures, Node** nodes, int mapSize, int quadSize);
+	bool init(Structure*** structures, Node** nodes, int mapSize, int quadSize, int enemiesPerMin, int difficulty);
 
 	void getRenderData(vector<vector<RenderData*>>& rData);
 	int update(float dt);

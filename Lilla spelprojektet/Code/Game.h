@@ -6,8 +6,11 @@
 #include "SoundSystem.h"
 #include "ParticleSystem.h"
 #include "GUI.h"
+#include <fstream>
 
 
+
+using namespace std;
 class Game
 {
 public:
