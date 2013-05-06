@@ -31,13 +31,16 @@ AI::~AI(void)
 	lua_close(spawnScript);
 }
 
-bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize, int quadSize)
+bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize, int quadSize, int enemiesPerMin, int difficulty)
 {
 	int rv = 0;
 	this->structures = structures;
 	this->nodes = nodes;
 	this->mapSize = mapSize;
 	this->quadSize = quadSize;
+	this->enemiesPerMin = enemiesPerMin;
+	this->difficulty = difficulty;
+
 
 	structuresInt = new int*[mapSize-1];
 	for(int i= 0; i < mapSize-1; i++)
@@ -187,9 +190,6 @@ bool AI::initFindPath(string scriptName)
 
 bool AI::initSpawnEnemies(string scriptName)
 {
-	int enemiesPerMin = 10;
-
-
 	spawnScript = lua_open();
 	OpenLuaLibs(spawnScript);
 	if(luaL_dofile(spawnScript, scriptName.c_str())) //spawning

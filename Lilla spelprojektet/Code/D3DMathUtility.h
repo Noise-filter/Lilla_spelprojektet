@@ -14,13 +14,17 @@
 
 struct GameSettings
 {
+	int resCD;
 	int enemiesPerMin;
-	int ScreenHeight;
-	int ScreenWidth;
-	int mapSize;
-	int quadSize;
-
+	int resPerTick;
+	int difficulty; //send to the script
 	//add more if needed
+};
+enum DIFFICULTIES
+{
+	DIFF_EASY,
+	DIFF_MEDIUM,
+	DIFF_HARD
 };
 
 struct MESH_P
