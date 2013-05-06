@@ -21,6 +21,12 @@ Entity::Entity(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID
 	maxHp = hp;
 	this->hp = hp;
 	dead = false;
+
+	scaleFactor = 3;
+/*
+	renderData.worldMat._11 = scaleFactor;
+	renderData.worldMat._22 = scaleFactor;
+	renderData.worldMat._33 = scaleFactor;*/
 }
 
 Entity::~Entity()
