@@ -53,6 +53,8 @@ private:
 	float damage;
 	float attackSpeed;
 
+	float targetUpdateTime;
+
 };
 
 #endif

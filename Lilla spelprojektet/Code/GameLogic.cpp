@@ -181,6 +181,7 @@ bool GameLogic::init(int mapSize, int quadSize, GameSettings &settings)
 {
 	this->resPerTick = settings.resPerTick;
 	this->maxResCD = settings.resCD;
+	this->currentResCD = 0;
 
 	this->level->init(mapSize,quadSize);
 

@@ -24,6 +24,7 @@ Enemy::Enemy(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, 
 	target = NULL;
 	attackSpeed = 1;
 	cooldown = attackSpeed;
+	targetUpdateTime = 3;
 }
 
 Enemy::~Enemy()
@@ -34,6 +35,7 @@ Enemy::~Enemy()
 
 int Enemy::update(float dt)
 {
+	targetUpdateTime -= dt;
 	trail->updatePosition(this->getPosition());
 	int id = Entity::update(dt);
 	if(id == 0)
@@ -43,6 +45,13 @@ int Enemy::update(float dt)
 	if(id == 2)		// kommit fram till målet/vill köra pathFind igen
 		return 2;
 	
+	if(targetUpdateTime <= 0 && (int)waypoints.size()-1 > currentWP)
+	{
+		targetUpdateTime = 3;
+		cout << "UPDATE" << endl;
+		return 2;
+	}
+
 	return 1;
 }
 

@@ -87,7 +87,7 @@ int Tower::update(float dt)
 		{
 			if(range > D3DXVec3Length(&(target->getPosition() - getPosition())))
 			{
-				projectiles.push_back(new Projectile(getPosition(), ENTITY_PROJECTILE, 0, 0, 0, target, projectileSpeed, damage));
+				projectiles.push_back(new Projectile(D3DXVECTOR3(getPosition().x-2, 6, getPosition().z), ENTITY_PROJECTILE, 0, 0, 0, target, projectileSpeed, damage));
 				cooldown = attackSpeed;
 				SoundSystem::Getinstance()->playSound(sound);
 			}
@@ -147,10 +147,12 @@ vector<RenderData*> Tower::getRenderData()
 void Tower::rotateTop()
 {
 	D3DXMATRIX rotation;
-	D3DXVECTOR3 pos = getPosition();
 	D3DXMATRIX translation;
 	D3DXMATRIX scale;
 	D3DXMATRIX translation2;
+
+	D3DXVECTOR3 pos = getPosition();
+
 	D3DXMatrixTranslation(&translation, 3, 0, 0);
 	D3DXMatrixTranslation(&translation2, pos.x-2, pos.y, pos.z);
 	D3DXMatrixScaling(&scale, 2, 2, 2);
@@ -173,6 +175,4 @@ void Tower::rotateTop()
 		D3DXMatrixRotationY(&rotation, -yaw);
 
 	topTower->worldMat = scale * translation * rotation * translation2;
-
-	//topTower->worldMat = rotation * topTower->worldMat;
 }
