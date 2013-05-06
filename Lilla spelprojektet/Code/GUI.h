@@ -7,17 +7,6 @@
 
 using namespace std;
 
-enum GAMESTATES
-{
-   STATE_MENU,
-   STATE_SETTINGS,
-   STATE_GAMESTART,
-   STATE_PLAYING,
-   STATE_PAUSED, 
-   STATE_WIN,
-   STATE_LOSE,
-   STATE_QUIT
-};
 
 enum BUTTONTYPE
 {
