@@ -328,36 +328,36 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 				}
 				break;
 			case BUILDABLE_SUPPLY:
-				structures[xPos][yPos] = new Supply(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_SUPPLY,0,100,0);
+				structures[xPos][yPos] = new Supply(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_SUPPLYBASE,0,100,0);
 				this->nrOfSupplyStructures++;
 				break;
 			case BUILDABLE_UPGRADE_HP:
 				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
-					ENTITY_SUPPLY,0,100,0,BUILDABLE_UPGRADE_HP);
+					ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_HP);
 				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_HP)-2]);
 				builtUpgrade = true;
 				break;
 			case BUILDABLE_UPGRADE_ATKSP:
 				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
-					ENTITY_SUPPLY,0,100,0,BUILDABLE_UPGRADE_ATKSP);
+					ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_ATKSP);
 				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_ATKSP)-2]);
 				builtUpgrade = true;
 				break;
 			case BUILDABLE_UPGRADE_DMG:
 				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
-					ENTITY_SUPPLY,0,100,0,BUILDABLE_UPGRADE_DMG);
+					ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_DMG);
 				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_DMG)-2]);
 				builtUpgrade = true;
 				break;
 			case BUILDABLE_UPGRADE_PRJSP:
 				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
-					ENTITY_SUPPLY,0,100,0,BUILDABLE_UPGRADE_PRJSP);
+					ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_PRJSP);
 				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_PRJSP)-2]);
 				builtUpgrade = true;
 				break;
 			case BUILDABLE_UPGRADE_RANGE:
 				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
-					ENTITY_SUPPLY,0,100,0,BUILDABLE_UPGRADE_RANGE);
+					ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_RANGE);
 				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_RANGE)-2]);
 				builtUpgrade = true;
 				break;
@@ -405,6 +405,13 @@ void Level::getRenderData(vector<vector<RenderData*>>& rData)
 					vector<RenderData*> rD = dynamic_cast<Tower*>(structures[i][j])->getRenderData();
 
 					//lägg till tornets undre del, övre del och alla projektiler
+					for(int k = 0; k < (int)rD.size(); k++)
+						rData.at(rD.at(k)->meshID).push_back(rD.at(k));
+				}
+				else if(typeid(*structures[i][j]) == typeid(Supply))
+				{
+					vector<RenderData*> rD = dynamic_cast<Supply*>(structures[i][j])->getRenderData();
+
 					for(int k = 0; k < (int)rD.size(); k++)
 						rData.at(rD.at(k)->meshID).push_back(rD.at(k));
 				}

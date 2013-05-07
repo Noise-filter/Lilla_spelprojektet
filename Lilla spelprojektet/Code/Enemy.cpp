@@ -25,6 +25,9 @@ Enemy::Enemy(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, 
 	attackSpeed = 1;
 	cooldown = attackSpeed;
 	targetUpdateTime = 3;
+
+	scaleFactor = 0.3;
+	D3DXMatrixScaling(&scale, scaleFactor, scaleFactor, scaleFactor);
 }
 
 Enemy::~Enemy()
