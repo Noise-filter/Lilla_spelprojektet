@@ -134,9 +134,9 @@ int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX v
 				cout << "mainstruct buildt" << endl;
 			}
 		}
-			
 	}
-		
+
+	int ret = level->update(dt, eHandler->getEnemies()); // returnera 4 om vinst 5 om förlust
 	if(gameState == STATE_PLAYING)
 	{
 		switch(mState->btnState)
@@ -155,7 +155,7 @@ int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX v
 		}
 
 		giveResource(dt);
-		int ret = level->update(dt, eHandler->getEnemies()); // returnera 4 om vinst 5 om förlust
+		
 		if(ret == 4) //win
 		{
 			gameState = STATE_WIN;
@@ -173,14 +173,14 @@ int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX v
 	{
 		//ska något göras här?
 	}
-	
+
 	return 1;//all went good
 }
 
 bool GameLogic::init(int mapSize, int quadSize, GameSettings &settings)
 {
 	this->resPerTick = settings.resPerTick;
-	this->maxResCD = settings.resCD;
+	this->maxResCD = (float)settings.resCD;
 	this->currentResCD = 0;
 
 	this->level->init(mapSize,quadSize);

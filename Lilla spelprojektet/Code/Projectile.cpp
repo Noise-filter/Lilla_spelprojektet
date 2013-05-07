@@ -22,9 +22,6 @@ Projectile::~Projectile()
 	ParticleSystem::Getinstance()->removePolicy(trail);
 }
 
-#include <iostream>
-using namespace std;
-
 int Projectile::update(float dt)
 {
 	if(target->isDead())

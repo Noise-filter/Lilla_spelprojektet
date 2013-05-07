@@ -122,8 +122,13 @@ void GeometryManager::init(ID3D11Device *device)
 	nrOfVerts = 0;
 	MESH_PNUV* node2 = importer->getOBJfromFile("Meshar/Green node.obj", nrOfVerts);
 	initEntity(device, bufferInit, instanceInit, node2, nrOfVerts, 400, ENTITY_NODE );
-
 	delete [] node2;
+
+	nrOfVerts = 0;
+	MESH_PNUV* enemy = importer->getOBJfromFile("Meshar/Enemy (broken node).obj", nrOfVerts);
+	initEntity(device, bufferInit, instanceInit, enemy, nrOfVerts, 400, ENTITY_ENEMY );
+	delete [] enemy;
+
 	//-----------------------------------------------------------------
 
 	//initEntity(device, bufferInit, instanceInit, mainBuilding, 3, 100, ENTITY_MAINBUILDING );
@@ -131,7 +136,7 @@ void GeometryManager::init(ID3D11Device *device)
 	//initEntity(device, bufferInit, instanceInit, tower,        6, 100, ENTITY_TOWERBASE    );
 	//initEntity(device, bufferInit, instanceInit, tower,        6, 100, ENTITY_TOWERTOP     );
 	//initEntity(device, bufferInit, instanceInit, node,         3, 400, ENTITY_NODE         );
-	initEntity(device, bufferInit, instanceInit, node,         3, 100, ENTITY_ENEMY        );
+	//initEntity(device, bufferInit, instanceInit, node,         3, 100, ENTITY_ENEMY        );
 	initEntity(device, bufferInit, instanceInit, mainBuilding, 3, 200, ENTITY_PROJECTILE   );
 	initEntity(device, bufferInit, instanceInit, supply,       6, 100, ENTITY_UPGRADE_HP   );
 	initEntity(device, bufferInit, instanceInit, supply,       6, 100, ENTITY_UPGRADE_ATKSP);

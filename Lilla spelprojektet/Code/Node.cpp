@@ -6,13 +6,12 @@ Node::Node() : Entity()
 }
 
 Node::Node(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, int color) 
-	: Entity(pos, meshID, textureID, hp, lightID)
+	: Entity(D3DXVECTOR3(pos.x, pos.y, pos.z), meshID, textureID, hp, lightID)
 {
 	this->color = color;
 
-	renderData.worldMat._11 = 0.3;
-	renderData.worldMat._22 = 0.3;
-	renderData.worldMat._33 = 0.3;
+	scaleFactor = 0.3;
+	D3DXMatrixScaling(&scale, scaleFactor, scaleFactor, scaleFactor);
 }
 
 Node::~Node()
@@ -20,6 +19,7 @@ Node::~Node()
 
 int Node::update(float dt)
 {
+	renderData.worldMat = scale * pointTranslate * rotation * translate;
 	return 1;
 }
 

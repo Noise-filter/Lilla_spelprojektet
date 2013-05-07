@@ -48,7 +48,6 @@ int Enemy::update(float dt)
 	if(targetUpdateTime <= 0 && (int)waypoints.size()-1 > currentWP)
 	{
 		targetUpdateTime = 3;
-		cout << "UPDATE" << endl;
 		return 2;
 	}
 
@@ -88,7 +87,7 @@ int Enemy::move(float dt)
 				cooldown = attackSpeed;
 				D3DXVECTOR3 dir = target->getPosition() - getPosition();
 				D3DXVec3Normalize(&dir, &dir);
-				ParticleSystem::Getinstance()->addAttackParticlePolicy(D3DXVECTOR3(1, 1, 1), getPosition(), 60, 1, 10, dir);
+				ParticleSystem::Getinstance()->addAttackParticlePolicy(D3DXVECTOR3(1, 1, 1), getPosition(), 60, 0.8f, 10, dir);
 			}
 		}
 		else	//Fienden har inget target

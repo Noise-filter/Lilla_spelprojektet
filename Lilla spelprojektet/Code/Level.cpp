@@ -184,6 +184,14 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 		}
 	}
 
+	for(int i = 0; i < mapSize; i++)
+	{
+		for(int j = 0; j < mapSize; j++)
+		{
+			nodes[i][j].update(dt);
+		}
+	}
+
 	if((float)nrOfStructures/((mapSize-1) * (mapSize-1)) > 0.40f)
 	{
 		return 4; // win

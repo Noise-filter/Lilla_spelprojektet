@@ -26,10 +26,13 @@ Tower::Tower(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, 
 
 	sound = SoundSystem::Getinstance()->createSound("plop.mp3");
 
-	D3DXMATRIX world = this->renderData.worldMat;
-	topTower = new RenderData(ENTITY_TOWERTOP, 0, world, 0);
+	topTower = new RenderData(ENTITY_TOWERTOP, 0, this->renderData.worldMat, 0);
 
-	temp = topTower->worldMat;
+	//Top part
+	D3DXMatrixTranslation(&topPointTrans, 1.5f, 0, 0);
+	D3DXMatrixTranslation(&topTrans, pos.x-2.5f, pos.y, pos.z-0.5f);
+	D3DXMatrixIdentity(&topRotation);
+	topPointTrans = scale * topPointTrans;
 }
 
 void Tower::giveUpgrade(UpgradeStats &stats)
@@ -56,6 +59,7 @@ Tower::~Tower()
 {
 	for(int i = 0; i < (int)projectiles.size(); i++)
 		delete projectiles.at(i);
+
 	SAFE_DELETE(topTower);
 }
 
@@ -78,6 +82,8 @@ int Tower::update(float dt)
 			delete temp;
 		}
 	}
+
+	topTower->worldMat = topPointTrans * topRotation * topTrans;
 
 	cooldown -= dt;
 	if(target != NULL)
@@ -144,35 +150,20 @@ vector<RenderData*> Tower::getRenderData()
 	return renderData;
 }
 
+//Rotates towards target
 void Tower::rotateTop()
 {
-	D3DXMATRIX rotation;
-	D3DXMATRIX translation;
-	D3DXMATRIX scale;
-	D3DXMATRIX translation2;
-
 	D3DXVECTOR3 pos = getPosition();
-
-	D3DXMatrixTranslation(&translation, 3, 0, 0);
-	D3DXMatrixTranslation(&translation2, pos.x-2, pos.y, pos.z);
-	D3DXMatrixScaling(&scale, 2, 2, 2);
-	D3DXMatrixTranslation(&rotation, 0, 0, 0);
-
 	pos.y = 0;
-	look = D3DXVECTOR3(target->getPosition().x, 0, target->getPosition().z) - pos;
+	D3DXVECTOR3 look = D3DXVECTOR3(target->getPosition().x, 0, target->getPosition().z) - pos;
 
-	up = D3DXVECTOR3(0, 1, 0);
-	right = D3DXVECTOR3(0, 0, 1);
 	D3DXVec3Normalize(&look, &look);
 
 	float dot = D3DXVec3Dot(&look, &D3DXVECTOR3(-1, 0, 0));
 	float yaw = acos(dot);
-	topTower->worldMat = temp;
 
 	if(look.z > 0)
-		D3DXMatrixRotationY(&rotation, yaw);
+		D3DXMatrixRotationY(&topRotation, yaw);
 	else
-		D3DXMatrixRotationY(&rotation, -yaw);
-
-	topTower->worldMat = scale * translation * rotation * translation2;
+		D3DXMatrixRotationY(&topRotation, -yaw);
 }

@@ -32,7 +32,7 @@ protected:
 	float hp, maxHp;
 	bool dead;
 
-	D3DXMATRIX scale;
+	D3DXMATRIX scale, pointTranslate, rotation, translate;
 	float scaleFactor;
 };
 
