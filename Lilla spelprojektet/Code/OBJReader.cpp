@@ -51,6 +51,10 @@ bool OBJReader::ReadFileCounts(string fileName, int& vertexCount, int& textureCo
 			fin.get(input);
 			if(input == ' ') { faceCount++; }
 		}
+		if(input == 't')
+		{
+			fin.get(input);
+		}
 		
 		// Otherwise read in the remainder of the line.
 		while(input != '\n')
@@ -68,7 +72,7 @@ bool OBJReader::ReadFileCounts(string fileName, int& vertexCount, int& textureCo
 	return true;
 }
 
-MESH_PNUV* OBJReader::LoadDataStructures(string fileName, int vertexCount, int textureCount, int normalCount, int faceCount)
+MESH_PNUV* OBJReader::LoadDataStructures(string fileName, int vertexCount, int textureCount, int normalCount, int faceCount,vector<string> &textureNames, vector<string> &textureGlowNames)
 {
 	MESH_PNUV* mesh;
 	D3DXVECTOR3 *vertices, *normals;
@@ -78,7 +82,6 @@ MESH_PNUV* OBJReader::LoadDataStructures(string fileName, int vertexCount, int t
 	int vertexIndex, texcoordIndex, normalIndex, faceIndex, vIndex, tIndex, nIndex;
 	char input, input2;
 	ofstream fout;
-
 
 	// Initialize the four data structures.
 	vertices = new D3DXVECTOR3[vertexCount];
@@ -174,6 +177,26 @@ MESH_PNUV* OBJReader::LoadDataStructures(string fileName, int vertexCount, int t
 			}
 		}
 
+		if(input == 't')
+		{
+			string name;
+			fin.get(input);
+			if(input == 'n')
+			{
+				fin.get();
+				getline(fin,name);
+				cout << name << endl;
+				textureNames.push_back(name);
+			}
+			if(input == 'g')
+			{
+				fin.get();
+				getline(fin,name);
+				cout << name << endl;
+				textureNames.push_back(name);
+			}
+		}
+
 		// Read in the remainder of the line.
 		while(input != '\n')
 		{
@@ -238,7 +261,7 @@ MESH_PNUV* OBJReader::LoadDataStructures(string fileName, int vertexCount, int t
 
 
 
-MESH_PNUV* OBJReader::getOBJfromFile(string fileName, int &nrOfVerts)
+MESH_PNUV* OBJReader::getOBJfromFile(string fileName, int &nrOfVerts, vector<string> &textureNames, vector<string> &textureGlowNames)
 {
 	MESH_PNUV* mesh;
 
@@ -249,7 +272,7 @@ MESH_PNUV* OBJReader::getOBJfromFile(string fileName, int &nrOfVerts)
 
 	//get all the counts to ease reading all the data
 	ReadFileCounts(fileName,vertexCount,textureCount,normalCount,faceCount);
-	mesh = LoadDataStructures(fileName, vertexCount, textureCount, normalCount, faceCount);
+	mesh = LoadDataStructures(fileName, vertexCount, textureCount, normalCount, faceCount,textureNames, textureGlowNames);
 
 	nrOfVerts = faceCount*3;
 	return mesh;
