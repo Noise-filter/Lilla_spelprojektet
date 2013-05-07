@@ -26,11 +26,14 @@ bool Level::init(int mapSize, int quadSize)
 		}
 	}
 
-	nodes[3][3] = Node(D3DXVECTOR3((float)3*quadSize,0,(float)3*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
-	nodes[3][4] = Node(D3DXVECTOR3((float)3*quadSize,0,(float)4*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
-	nodes[3][5] = Node(D3DXVECTOR3((float)3*quadSize,0,(float)5*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
-	nodes[3][6] = Node(D3DXVECTOR3((float)3*quadSize,0,(float)6*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
-	nodes[3][7] = Node(D3DXVECTOR3((float)3*quadSize,0,(float)7*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
+	//nodes[0][0] = Node(D3DXVECTOR3((float)0*quadSize,0,(float)0*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
+	//nodes[1][0] = Node(D3DXVECTOR3((float)1*quadSize,0,(float)0*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
+	//nodes[2][0] = Node(D3DXVECTOR3((float)2*quadSize,0,(float)0*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
+	//nodes[3][0] = Node(D3DXVECTOR3((float)3*quadSize,0,(float)0*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
+	//nodes[4][0] = Node(D3DXVECTOR3((float)4*quadSize,0,(float)0*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
+	//nodes[5][0] = Node(D3DXVECTOR3((float)5*quadSize,0,(float)0*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
+	//nodes[6][0] = Node(D3DXVECTOR3((float)6*quadSize,0,(float)0*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
+	//nodes[7][0] = Node(D3DXVECTOR3((float)7*quadSize,0,(float)0*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
 
 	nodes[4][4] = Node(D3DXVECTOR3((float)4*quadSize,0,(float)4*quadSize),ENTITY_NODE,0,0,0,COLOR_GREY);
 	nodes[4][5] = Node(D3DXVECTOR3((float)4*quadSize,0,(float)5*quadSize),ENTITY_NODE,0,0,0,COLOR_GREY);
@@ -321,7 +324,7 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 			switch(selectedStructure)
 			{
 			case BUILDABLE_TOWER:
-				structures[xPos][yPos] = new Tower(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWERBASE,0,1,0, 1, 1, 50, 100);
+				structures[xPos][yPos] = new Tower(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWERBASE,0,100,0, 10, 1, 50, 100);
 				for(int i = 0; i < (int)this->upgradesInUse.size();i++)
 				{
 					dynamic_cast<Tower*>(structures[xPos][yPos])->giveUpgrade(upgradesInUse[i]);

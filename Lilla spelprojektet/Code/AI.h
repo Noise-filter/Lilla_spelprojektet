@@ -15,6 +15,7 @@ static const luaL_reg lualibs[] =
 	{ "base",       luaopen_base },
 	{ "math",       luaopen_math },
 	{ "table",		luaopen_table },
+	{ "os",          luaopen_os    },
 	{ NULL,         NULL }
 };
 
