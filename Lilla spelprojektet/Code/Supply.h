@@ -11,10 +11,12 @@ public:
 	virtual ~Supply();
 
 	virtual int update(float dt);
-
+	
+	vector<RenderData*> getRenderData();
 
 private:
-
+	RenderData* topSupply;
+	D3DXMATRIX topPointTrans, topRotation, topTrans;
 
 };
 

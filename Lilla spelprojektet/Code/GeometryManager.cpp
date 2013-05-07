@@ -99,8 +99,13 @@ void GeometryManager::init(ID3D11Device *device)
 
 	nrOfVerts = 0;
 	MESH_PNUV* supply2 = importer->getOBJfromFile("Meshar/Power Building part 1.obj", nrOfVerts);
-	initEntity(device, bufferInit, instanceInit, supply2, nrOfVerts, 100, ENTITY_SUPPLY );
+	initEntity(device, bufferInit, instanceInit, supply2, nrOfVerts, 100, ENTITY_SUPPLYBASE);
 	delete[] supply2;
+
+	nrOfVerts = 0;
+	MESH_PNUV* supply3 = importer->getOBJfromFile("Meshar/Power Building part 2.obj", nrOfVerts);
+	initEntity(device, bufferInit, instanceInit, supply3, nrOfVerts, 100, ENTITY_SUPPLYTOP);
+	delete[] supply3;
 	
 	nrOfVerts = 0;
 	MESH_PNUV* tower = importer->getOBJfromFile("Meshar/Tower Part 1.obj", nrOfVerts);

@@ -18,6 +18,9 @@ private:
 	int color;
 	float rotationSpeed;
 	float translateSpeed;
+	float translatePosMax;
+	bool upTranslate;
+	D3DXVECTOR3 pos;
 
 	/*
 		min, max positioner används för animation att de ska åka upp och ner.
