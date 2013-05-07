@@ -10,11 +10,13 @@ Node::Node(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, in
 {
 	this->color = color;
 
-	scaleFactor = 0.3;
+	scaleFactor = 0.3f;
 	D3DXMatrixScaling(&scale, scaleFactor, scaleFactor, scaleFactor);
 	D3DXMatrixTranslation(&pointTranslate, 1.4f, 0, -0.2);
 
 	rotationSpeed = (float)(rand() % 100 + 1) * 0.0005;
+	translateSpeed = (float)(rand() % 100 + 1) * 0.0005;
+	upTranslate = rand() % 2;
 }
 
 Node::~Node()
@@ -25,6 +27,18 @@ int Node::update(float dt)
 	static float rotY = 0.0f;
 	rotY += (rotationSpeed * dt);
 	D3DXMatrixRotationY(&rotation, rotY);
+
+
+	static D3DXVECTOR3 pos = getPosition();
+
+	if(upTranslate)
+	{
+		D3DXMatrixTranslation(&translate, pos.x, pos.y + (translateSpeed * dt), pos.z);
+	}
+	else
+	{
+		D3DXMatrixTranslation(&translate, pos.x, pos.y - (translateSpeed * dt), pos.z);
+	}
 
 	renderData.worldMat = scale * pointTranslate * rotation * translate;
 	return 1;

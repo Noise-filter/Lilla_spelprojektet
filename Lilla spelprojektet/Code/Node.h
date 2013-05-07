@@ -18,6 +18,7 @@ private:
 	int color;
 	float rotationSpeed;
 	float translateSpeed;
+	bool upTranslate;
 
 	/*
 		min, max positioner används för animation att de ska åka upp och ner.
