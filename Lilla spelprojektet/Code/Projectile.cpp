@@ -44,6 +44,8 @@ int Projectile::update(float dt)
 		return 0;
 	}
 
+	renderData.worldMat = scale * pointTranslate * rotation * translate;
+
 	trail->updatePosition(pos);
 
 	return 1;
