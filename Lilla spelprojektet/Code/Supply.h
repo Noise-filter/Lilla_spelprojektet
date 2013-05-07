@@ -17,6 +17,7 @@ public:
 private:
 	RenderData* topSupply;
 	D3DXMATRIX topPointTrans, topRotation, topTrans;
+	float rotationSpeed;
 
 };
 
