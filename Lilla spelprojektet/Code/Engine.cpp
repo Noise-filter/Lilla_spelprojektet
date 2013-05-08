@@ -41,15 +41,8 @@ void Engine::render(Matrix& vp)
 	PRIMITIVE_TOPOLOGIES topology = TOPOLOGY_UNDEFINED;
 	
 	static float rot = 0;
-	//rot += deltaTime;
-	D3DXMATRIX world, world2, world3, view, proj, wvp, wvp2;
+	D3DXMATRIX world;
 	D3DXMatrixIdentity(&world);
-	//D3DXMatrixRotationY(&world, rot);
-	//D3DXMatrixTranslation(&world2, 3, sin(rot), 0);
-	//D3DXMatrixTranslation(&world3, -3, -sin(rot), 0);
-	//D3DXMatrixLookAtLH(&view, &D3DXVECTOR3(0,0,-10), &D3DXVECTOR3(0,0, 1), &D3DXVECTOR3(0,1,0));
-	//D3DXMatrixPerspectiveFovLH(&proj, (float)D3DX_PI * 0.45f, SCREEN_WIDTH / SCREEN_HEIGHT, 1.0f, 100.0f);
-
 
 	Shader* temp;
 
@@ -58,11 +51,11 @@ void Engine::render(Matrix& vp)
 	//temp->SetMatrix("proj", proj);
 	temp->Apply(0);
 
-	for(int i = 0; i < this->pGeoManager->getNrOfBuffer(); i++)
+	for(int i = 0; i < this->pGeoManager->getNrOfEntities(); i++)
 	{
 		if(pGeoManager->getNrOfInstances(i) > 0)
 		{
-			pGeoManager->applyBuffer(d3d->pDeviceContext, i, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 0);
+			pGeoManager->applyEntityBuffer(d3d->pDeviceContext, i, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 			d3d->pDeviceContext->DrawInstanced(pGeoManager->getNrOfVertexPoints(i), pGeoManager->getNrOfInstances(i), 0, 0);
 		}
 	}
@@ -74,7 +67,6 @@ void Engine::render(Matrix& vp)
 	temp->Apply(0);
 	pGeoManager->applyParticleBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 	d3d->pDeviceContext->Draw(pGeoManager->getNrOfParticles(), 0);
-	//pGeoManager->applyBuffer(d3d->pDeviceContext, test[1][0], D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 0);
 
 	/*
 	while(index < (int)data.size())
@@ -103,7 +95,7 @@ void Engine::render(Matrix& vp)
 	*/
 
 	temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
-	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, this->pGeoManager->getNrOfBuffer() , D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);
 
@@ -117,14 +109,13 @@ void Engine::setRenderData(vector<vector<RenderData*>>& renderData)
 {
 	for(int i = 0; i < (int)renderData.size(); i++)
 	{
-		pGeoManager->updateBuffer(d3d->pDeviceContext, renderData[i], i , renderData[i].size());
+		pGeoManager->updateEntityBuffer(d3d->pDeviceContext, renderData[i], i);
 	}
 }
 
 void Engine::setRenderData(vector<vector<MESH_PNC>> renderData)
 {
-	this->pGeoManager->setNrOfParticles(0);
-	pGeoManager->updateParticles(d3d->pDeviceContext, renderData, renderData.size());
+	pGeoManager->updateParticles(d3d->pDeviceContext, renderData);
 }
 
 MouseState* Engine::getMouseState()
