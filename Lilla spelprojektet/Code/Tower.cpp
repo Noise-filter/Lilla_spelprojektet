@@ -35,7 +35,8 @@ Tower::Tower(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, 
 	D3DXMatrixTranslation(&topPointTrans, 1.5f, 0, 0);
 	D3DXMatrixTranslation(&topTrans, pos.x-2.5f, pos.y, pos.z-0.5f);
 	D3DXMatrixIdentity(&topRotation);
-	topPointTrans = scale * topPointTrans;
+	topScale = scale;
+	//topPointTrans = scale * topPointTrans;
 }
 
 void Tower::giveUpgrade(UpgradeStats &stats)
@@ -96,7 +97,7 @@ int Tower::update(float dt)
 		}
 	}
 
-	topTower->worldMat = topPointTrans * topRotation * topTrans;
+	topTower->worldMat = topScale * topPointTrans * topRotation * topTrans;
 
 	cooldown -= dt;
 	if(target != NULL)
@@ -139,6 +140,7 @@ void Tower::lvlUp()
 {
 	this->scaleFactor++;
 	D3DXMatrixScaling(&scale,scaleFactor,scaleFactor,scaleFactor);
+	D3DXMatrixScaling(&topScale,scaleFactor,scaleFactor,scaleFactor);
 	this->attackSpeed -= 0.1f;
 	this->cooldown -= 0.1f;
 	this->damage += 5;
