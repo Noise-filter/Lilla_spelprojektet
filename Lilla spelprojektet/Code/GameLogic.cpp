@@ -5,8 +5,8 @@ GameLogic::GameLogic(void)
 	this->level = new Level();
 	this->eHandler = new EnemyHandler();
 	this->selectedStructure = 2;
-	this->availableSupply = 100;
-	this->resource = 100;
+	this->availableSupply = 20;
+	this->resource = 20;
 	this->maxResCD = 0;
 }
 
@@ -129,8 +129,6 @@ int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX v
 			if(level->buildStructure(getMouseWorldPos(mState, view, proj, cameraPos), BUILDABLE_MAINBUILDING))
 			{
 				gameState = STATE_PLAYING;
-				structureBuilt();
-					
 				cout << "mainstruct buildt" << endl;
 			}
 		}

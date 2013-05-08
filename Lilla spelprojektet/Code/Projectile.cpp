@@ -41,10 +41,20 @@ int Projectile::update(float dt)
 	if(length <= 1)
 	{
 		target->doDamage(damage);
+		if(target->getHp() <= 0)
+		{
+			return 2; // död, ge xp till tornet
+		}
 		return 0;
 	}
+
+	renderData.worldMat = scale * pointTranslate * rotation * translate;
 
 	trail->updatePosition(pos);
 
 	return 1;
+}
+Enemy* Projectile::getTarget()
+{
+	return this->target;
 }

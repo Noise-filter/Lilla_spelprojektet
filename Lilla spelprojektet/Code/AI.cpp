@@ -159,7 +159,7 @@ vector<Enemy*> AI::spawnEnemies(float dt, int nrOfEnemies)
 		}
 		if(spawnedEnemies > 0)
 		{
-			Enemy* tempE = new Enemy(D3DXVECTOR3((float)retVals[0],0,(float)retVals[1]),ENTITY_ENEMY,TEXTURE_ENEMY1,retVals[2],0,retVals[3],retVals[4]);
+			Enemy* tempE = new Enemy(D3DXVECTOR3((float)retVals[0],0,(float)retVals[1]),ENTITY_ENEMY,TEXTURE_ENEMY1,retVals[2],0,retVals[3],retVals[4],retVals[5]);
 			enemies.push_back(tempE);
 		}
 
@@ -201,9 +201,10 @@ bool AI::initSpawnEnemies(string scriptName)
 	sendArray(nodesInt, mapSize ,spawnScript);
 
 	lua_pushnumber(spawnScript,enemiesPerMin);
+	lua_pushnumber(spawnScript,difficulty);
 
 
-	lua_pcall(spawnScript, 2, 1, 0);
+	lua_pcall(spawnScript, 3, 1, 0);
 	int a = (int)lua_tonumber(spawnScript, -1);
 	
 	

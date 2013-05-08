@@ -11,12 +11,13 @@ Enemy::Enemy() : Entity()
 	target = NULL;
 }
 
-Enemy::Enemy(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, float speed, float damage)
+Enemy::Enemy(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, float speed, float damage, int xp)
 	: Entity(pos, meshID, textureID, hp, lightID)
 {
 	this->speed = speed;
 	this->damage = damage;
 	this->currentWP = 0;
+	this->xp = xp;
 
 	waypoints.push_back(Waypoint((int)pos.x, (int)pos.z));
 	trail = ParticleSystem::Getinstance()->addTrail(D3DXVECTOR3(1, 1, 1),this->getPosition(), 1, 0.1f, 0, 1, 1, 1);
@@ -25,6 +26,9 @@ Enemy::Enemy(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, 
 	attackSpeed = 1;
 	cooldown = attackSpeed;
 	targetUpdateTime = 3;
+
+	scaleFactor = 0.3;
+	D3DXMatrixScaling(&scale, scaleFactor, scaleFactor, scaleFactor);
 }
 
 Enemy::~Enemy()
@@ -102,6 +106,10 @@ void Enemy::setPath(std::vector<Waypoint>& wp)
 {
 	waypoints = wp;
 	currentWP = 0;
+}
+int Enemy::getXp()
+{
+	return this->xp;
 }
 
 Waypoint Enemy::getCurrentWaypoint()
