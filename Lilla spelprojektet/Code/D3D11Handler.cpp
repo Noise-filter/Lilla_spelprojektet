@@ -310,7 +310,7 @@ bool D3D11Handler::initShaders()
 	{
 		return false;
 	}
-
+/*
 	temp = new Shader();
 	this->vShaders.push_back(temp);
 	hr = this->vShaders.at(PASS_HPBAR)->Init(this->pDevice, this->pDeviceContext, "../Shaders/hp bars testing.fx", tempInput, 1);
@@ -318,7 +318,7 @@ bool D3D11Handler::initShaders()
 	{
 		return false;
 	}
-
+*/
 	return true;
 }
 
