@@ -18,6 +18,7 @@ public:
 
 	void setRenderData(vector<vector<RenderData*>>& renderData);
 	void setRenderData(vector<vector<MESH_PNC>> renderData);
+	void setHPBars(vector<HPBarInfo>& bars);
 	MouseState* getMouseState();
 	HWND getHWND();
 

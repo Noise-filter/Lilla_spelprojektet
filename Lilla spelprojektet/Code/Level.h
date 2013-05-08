@@ -30,7 +30,7 @@ public:
 	Structure*** getStructures();
 	Node** getNodes();
 	int getMapSize();
-
+	void getHPBarInfo(vector<HPBarInfo>& hpBars);
 
 private:
 	int destroyBuildings();

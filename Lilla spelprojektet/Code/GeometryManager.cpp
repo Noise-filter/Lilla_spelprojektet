@@ -15,6 +15,7 @@ GeometryManager::GeometryManager()
 	this->Particles = new GameObject();
 	this->FullScreenQuad = new GameObject();
 
+	hpBars = new GameObject();
 
 }
 GeometryManager::~GeometryManager()
@@ -26,6 +27,7 @@ GeometryManager::~GeometryManager()
 
 	SAFE_DELETE(this->Particles);
 	SAFE_DELETE(this->FullScreenQuad);
+	SAFE_DELETE(hpBars);
 
 	SAFE_DELETE(pBufferObj);
 	SAFE_DELETE(this->importer);
@@ -144,6 +146,17 @@ void GeometryManager::init(ID3D11Device *device)
 	};
 
 	this->FullScreenQuad->mInit(device, bufferInit, instanceInit, p, 6, 0 , this->pBufferObj);
+
+	MESH_PUV puv[] = {  MESH_PUV(D3DXVECTOR3(1,-1,0), D3DXVECTOR2(0, 0)),
+						MESH_PUV(D3DXVECTOR3(-1,-1,0), D3DXVECTOR2(0, 0)),
+						MESH_PUV(D3DXVECTOR3(1,1,0), D3DXVECTOR2(0, 0)),
+						MESH_PUV(D3DXVECTOR3(1,1,0), D3DXVECTOR2(0, 0)),
+						MESH_PUV(D3DXVECTOR3(-1,-1,0), D3DXVECTOR2(0, 0)),
+						MESH_PUV(D3DXVECTOR3(-1,1,0), D3DXVECTOR2(0, 0))
+	};
+
+
+	hpBars->mInit(device, bufferInit, instanceInit, puv, 6, 1000, pBufferObj);
 }
 
 void GeometryManager::applyEntityBuffer(ID3D11DeviceContext *dc, int ID, D3D_PRIMITIVE_TOPOLOGY topology)

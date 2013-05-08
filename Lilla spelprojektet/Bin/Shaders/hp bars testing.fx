@@ -1,4 +1,3 @@
-
 cbuffer EveryFrame
 {
 	matrix gWVP;
@@ -6,7 +5,10 @@ cbuffer EveryFrame
 
 struct VSIn
 {
-	float4 pos : POSITION;
+	float3 pos : POSITION;
+	float2 uv : UV;
+	row_major float4x4 world : WORLD;
+	uint instanceID : SV_InstanceID;
 };
 
 struct PSIn
@@ -24,6 +26,7 @@ PSIn VSScene(VSIn input)
 {
 	PSIn output;
 
+	output.pos = mul(float4(input.pos, 1), input.world);
 	output.pos = input.pos;
 
 	return output;

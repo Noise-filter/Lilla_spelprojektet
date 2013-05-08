@@ -13,7 +13,7 @@ public:
 	bool init(int mapSize, int quadSize, GameSettings &settings);
 	int update(int &gameState, float dt, MouseState *mState, D3DXMATRIX view, D3DXMATRIX proj, D3DXVECTOR3 cameraPos);
 	void incrementSelectedStructure(int increment);
-
+	vector<HPBarInfo> getHPBarInfo();
 
 private:
 	vector<vector<RenderData*>> rDataList;

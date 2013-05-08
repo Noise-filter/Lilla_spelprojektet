@@ -263,3 +263,11 @@ D3DXVECTOR3 GameLogic::getMouseWorldPos(MouseState* mState, D3DXMATRIX view, D3D
 	return intersectPos = rayOrigin + (intersect*rayDir);
 }
 
+vector<HPBarInfo> GameLogic::getHPBarInfo()
+{
+	vector<HPBarInfo> hpBars;
+	level->getHPBarInfo(hpBars);
+	eHandler->getHPBarInfo(hpBars);
+
+	return hpBars;
+}

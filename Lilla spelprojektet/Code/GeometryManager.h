@@ -14,6 +14,8 @@ class GeometryManager
 		GameObject* Particles;
 		GameObject* FullScreenQuad;
 
+		GameObject* hpBars;
+
 	public:
 		GeometryManager();
 		virtual~GeometryManager();
