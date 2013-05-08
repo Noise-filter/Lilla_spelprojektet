@@ -45,7 +45,7 @@ private:
 
 	//Top part of tower
 	RenderData* topTower;
-	D3DXMATRIX topPointTrans, topRotation, topTrans;
+	D3DXMATRIX topScale, topPointTrans, topRotation, topTrans;
 
 };
 

@@ -10,6 +10,7 @@ Game::Game(void)
 	soundSystem = soundSystem->Getinstance();
 	pSystem = pSystem->Getinstance();
 	gameState = STATE_GAMESTART;
+	gui = new GUI();
 }
 
 Game::~Game(void)
@@ -40,7 +41,7 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	playlist = soundSystem->createPlaylist("playlist.m3u");
 	//initiate other game resources such as level or whatever
 
-	if(!gameLogic->init(10,10,settings))
+	if(!gameLogic->init(10,settings))
 		return false;
 
 	camera->LookAt(D3DXVECTOR3(45,45,45), D3DXVECTOR3(35, 0, 45), D3DXVECTOR3(-1, 0, 0));
@@ -48,17 +49,28 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 
 	gameState = STATE_GAMESTART;
 
+	ID3D11Device* tempDev = engine->returnDevice();
+	ID3D11DeviceContext* tempDevCon = engine->returnDeviceContext();
+
+	gui->render(tempDev, tempDevCon);
+
 	return true; // all initiates went well
 }
 
 void Game::render()
 {
+	
 	//build engines renderContent with addRenderData then do render to execute those renders
 	engine->setRenderData(gameLogic->getRenderData());
 
 	engine->setRenderData(pSystem->getVertexData());
 
 	engine->render(camera->ViewsProj());
+
+	
+	
+	
+
 }
 
 int Game::update(float dt)
@@ -82,6 +94,8 @@ int Game::update(float dt)
 		cout << "YOU LOSE" << endl;
 	}
 	
+
+
 	input->resetBtnState();
 	char title[255];
 	sprintf_s(title, "%f", 1/dt);
@@ -168,5 +182,6 @@ GameSettings Game::readSettingsFromFile(string fileName)
 
 	//läs från fil istället
 
+	fin.close();
 	return settings;
 }

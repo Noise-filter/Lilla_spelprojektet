@@ -33,7 +33,7 @@ private:
 	SoundSystem* soundSystem;
 	ParticleSystem* pSystem;
 	Sound* playlist;
-	GUI* GUI;
+	GUI* gui;
 	GAMESTATES state;
 
 

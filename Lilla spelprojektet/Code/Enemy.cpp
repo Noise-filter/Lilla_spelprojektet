@@ -69,9 +69,9 @@ int Enemy::move(float dt)
 		D3DXVECTOR3 target((float)waypoints.at(currentWP+1).x, 0, (float)waypoints.at(currentWP+1).y);
 		D3DXVECTOR3 dir = target - pos;
 
-		if(D3DXVec3Length(&dir) < 0.8)
+		if(D3DXVec3Length(&dir) < 1)
 		{
-			this->setPosition(target);
+			//this->setPosition(target);	// Gör så att fienderna hoppar till mitten av noderna när de är en viss längd ifrån dem.
 			currentWP++;
 		}
 		else

@@ -53,6 +53,9 @@ class D3D11Handler
 
 		void clearAndBindRenderTarget();
 
+		ID3D11Device* returnDevice();
+		ID3D11DeviceContext* returnDeviceContext();
+
 };
 
 #endif
