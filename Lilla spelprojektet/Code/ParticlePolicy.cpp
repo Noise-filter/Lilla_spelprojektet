@@ -40,7 +40,7 @@ void ParticlePolicy::createVertices()
 		{
 			MESH_PNC vert1;
 
-			vert1.normal = D3DXVECTOR3(0,0,-1);
+			vert1.normal = D3DXVECTOR3(1,1,1);
 			vert1.pos = walker->value.getPosition();
 			vert1.color = this->color;
 		

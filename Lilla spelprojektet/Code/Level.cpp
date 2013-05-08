@@ -22,23 +22,23 @@ bool Level::init(int mapSize, int quadSize)
 	{
 		for(int j = 0; j < mapSize; j++)
 		{
-			nodes[i][j] = Node(D3DXVECTOR3((float)i*quadSize,0,(float)j*quadSize),ENTITY_NODE,0,0,0,COLOR_GREEN);
+			nodes[i][j] = Node(D3DXVECTOR3((float)i*quadSize,0,(float)j*quadSize),ENTITY_NODE_GREEN,0,0,0,COLOR_GREEN);
 		}
 	}
 
-	//nodes[0][0] = Node(D3DXVECTOR3((float)0*quadSize,0,(float)0*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
-	//nodes[1][0] = Node(D3DXVECTOR3((float)1*quadSize,0,(float)0*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
-	//nodes[2][0] = Node(D3DXVECTOR3((float)2*quadSize,0,(float)0*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
-	//nodes[3][0] = Node(D3DXVECTOR3((float)3*quadSize,0,(float)0*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
+	//nodes[0][0] = Node(D3DXVECTOR3((float)0*quadSize,0,(float)0*quadSize),ENTITY_NODE_RED,0,0,0,COLOR_RED);
+	//nodes[1][0] = Node(D3DXVECTOR3((float)1*quadSize,0,(float)0*quadSize),ENTITY_NODE_RED,0,0,0,COLOR_RED);
+	//nodes[2][0] = Node(D3DXVECTOR3((float)2*quadSize,0,(float)0*quadSize),ENTITY_NODE_RED,0,0,0,COLOR_RED);
+	//nodes[3][0] = Node(D3DXVECTOR3((float)3*quadSize,0,(float)0*quadSize),ENTITY_NODE_RED,0,0,0,COLOR_RED);
 	//nodes[4][0] = Node(D3DXVECTOR3((float)4*quadSize,0,(float)0*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
 	//nodes[5][0] = Node(D3DXVECTOR3((float)5*quadSize,0,(float)0*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
 	//nodes[6][0] = Node(D3DXVECTOR3((float)6*quadSize,0,(float)0*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
 	//nodes[7][0] = Node(D3DXVECTOR3((float)7*quadSize,0,(float)0*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
 
-	nodes[4][4] = Node(D3DXVECTOR3((float)4*quadSize,0,(float)4*quadSize),ENTITY_NODE,0,0,0,COLOR_GREY);
-	nodes[4][5] = Node(D3DXVECTOR3((float)4*quadSize,0,(float)5*quadSize),ENTITY_NODE,0,0,0,COLOR_GREY);
-	nodes[5][4] = Node(D3DXVECTOR3((float)5*quadSize,0,(float)4*quadSize),ENTITY_NODE,0,0,0,COLOR_GREY);
-	nodes[5][5] = Node(D3DXVECTOR3((float)5*quadSize,0,(float)5*quadSize),ENTITY_NODE,0,0,0,COLOR_GREY);
+	nodes[4][4] = Node(D3DXVECTOR3((float)4*quadSize,0,(float)4*quadSize),ENTITY_NODE_GREEN,0,0,0,COLOR_GREY);
+	nodes[4][5] = Node(D3DXVECTOR3((float)4*quadSize,0,(float)5*quadSize),ENTITY_NODE_GREEN,0,0,0,COLOR_GREY);
+	nodes[5][4] = Node(D3DXVECTOR3((float)5*quadSize,0,(float)4*quadSize),ENTITY_NODE_GREEN,0,0,0,COLOR_GREY);
+	nodes[5][5] = Node(D3DXVECTOR3((float)5*quadSize,0,(float)5*quadSize),ENTITY_NODE_GREEN,0,0,0,COLOR_GREY);
 
 	structures = new Structure**[mapSize-1];
 	for(int i = 0; i < mapSize-1; i++)
@@ -459,7 +459,7 @@ int Level::destroyBuildings()
 					{
 						nrOfSupplyStructures--;
 					}
-			
+
 					else if(typeid(*structures[i][j]) == typeid(Upgrade))
 					{
 						//remove this upgrade from all towers on the map
