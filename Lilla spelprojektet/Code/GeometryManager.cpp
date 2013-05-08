@@ -81,9 +81,9 @@ void GeometryManager::init(ID3D11Device *device)
 		MESH_PNUV(Vec3(0,1.0,0), Vec3(1,0,1), Vec2(0,0)),
 			
 	};
-
+	vector<string> temp;
 	int nrOfVerts = 0;
-	MESH_PNUV* mainBuilding2 = importer->getOBJfromFile("Meshar/Main Building.obj", nrOfVerts);
+	MESH_PNUV* mainBuilding2 = importer->getOBJfromFile("Meshar/Main Building.obj", nrOfVerts, temp, temp);
 	initEntity(device, bufferInit, instanceInit, mainBuilding2, nrOfVerts, 100, ENTITY_MAINBUILDING );
 	delete [] mainBuilding2;
 
@@ -98,22 +98,22 @@ void GeometryManager::init(ID3D11Device *device)
 	};
 
 	nrOfVerts = 0;
-	MESH_PNUV* supply2 = importer->getOBJfromFile("Meshar/Power Building part 1.obj", nrOfVerts);
+	MESH_PNUV* supply2 = importer->getOBJfromFile("Meshar/Power Building part 1.obj", nrOfVerts, temp, temp);
 	initEntity(device, bufferInit, instanceInit, supply2, nrOfVerts, 100, ENTITY_SUPPLYBASE);
 	delete[] supply2;
 
 	nrOfVerts = 0;
-	MESH_PNUV* supply3 = importer->getOBJfromFile("Meshar/Power Building part 2.obj", nrOfVerts);
+	MESH_PNUV* supply3 = importer->getOBJfromFile("Meshar/Power Building part 2.obj", nrOfVerts, temp, temp);
 	initEntity(device, bufferInit, instanceInit, supply3, nrOfVerts, 100, ENTITY_SUPPLYTOP);
 	delete[] supply3;
 	
 	nrOfVerts = 0;
-	MESH_PNUV* tower = importer->getOBJfromFile("Meshar/Tower Part 1.obj", nrOfVerts);
+	MESH_PNUV* tower = importer->getOBJfromFile("Meshar/Tower Part 1.obj", nrOfVerts, temp, temp);
 	initEntity(device, bufferInit, instanceInit, tower, nrOfVerts, 100, ENTITY_TOWERTOP );
 	delete [] tower;
 
 	nrOfVerts = 0;
-	MESH_PNUV* tower2 = importer->getOBJfromFile("Meshar/Tower Part 2.obj", nrOfVerts);
+	MESH_PNUV* tower2 = importer->getOBJfromFile("Meshar/Tower Part 2.obj", nrOfVerts, temp, temp);
 	initEntity(device, bufferInit, instanceInit, tower2, nrOfVerts, 100, ENTITY_TOWERBASE );
 	delete [] tower2;
 
@@ -125,22 +125,22 @@ void GeometryManager::init(ID3D11Device *device)
 	};
 
 	nrOfVerts = 0;
-	MESH_PNUV* node2 = importer->getOBJfromFile("Meshar/Green node.obj", nrOfVerts);
+	MESH_PNUV* node2 = importer->getOBJfromFile("Meshar/Green node.obj", nrOfVerts, temp, temp);
 	initEntity(device, bufferInit, instanceInit, node2, nrOfVerts, 400, ENTITY_NODE_GREEN );
 	delete [] node2;
 
 	nrOfVerts = 0;
-	MESH_PNUV* node3 = importer->getOBJfromFile("Meshar/Green node.obj", nrOfVerts);
+	MESH_PNUV* node3 = importer->getOBJfromFile("Meshar/Green node.obj", nrOfVerts, temp, temp);
 	initEntity(device, bufferInit, instanceInit, node3, nrOfVerts, 400, ENTITY_NODE_RED );
 	delete [] node3;
 
 	nrOfVerts = 0;
-	MESH_PNUV* enemy = importer->getOBJfromFile("Meshar/Enemy (broken node).obj", nrOfVerts);
+	MESH_PNUV* enemy = importer->getOBJfromFile("Meshar/Enemy (broken node).obj", nrOfVerts, temp, temp);
 	initEntity(device, bufferInit, instanceInit, enemy, nrOfVerts, 400, ENTITY_ENEMY );
 	delete [] enemy;
 
 	nrOfVerts = 0;
-	MESH_PNUV* proj = importer->getOBJfromFile("Meshar/Very basic disc (projectile).obj", nrOfVerts);
+	MESH_PNUV* proj = importer->getOBJfromFile("Meshar/Very basic disc (projectile).obj", nrOfVerts, temp, temp);
 	initEntity(device, bufferInit, instanceInit, proj, nrOfVerts, 400, ENTITY_PROJECTILE );
 	delete [] proj;
 
