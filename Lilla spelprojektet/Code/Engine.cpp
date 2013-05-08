@@ -109,19 +109,38 @@ void Engine::render(Matrix& vp)
 	*/
 
 	temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
+
 	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, this->pGeoManager->getNrOfBuffer() , D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);
 	
-	pFontWrapper->DrawString(
-		pContext,
-		text,// String
-		size,// Font size
-		pos.x,// X position
-		pos.y,// Y position
-		color,// Text color, 0xAaBbGgRr
-		FW1_CENTER// Flags (for example FW1_RESTORESTATE to keep context states unchanged)
-	);
+	//pFontWrapper->DrawString(
+	//	pContext,
+	//	text,// String
+	//	size,// Font size
+	//	pos.x,// X position
+	//	pos.y,// Y position
+	//	color,// Text color, 0xAaBbGgRr
+	//	FW1_CENTER// Flags (for example FW1_RESTORESTATE to keep context states unchanged)
+	//);
+
+	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	temp->Apply(0);
+	this->d3d->pDeviceContext->Draw(6, 0);
+
+	if(FAILED(d3d->pSwapChain->Present( 0, 0 )))
+	{
+		return;
+	}
+}
+void Engine::renderGui()
+{
+	//temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
+	//pGeoManager->applyQuadBuffer(d3d->pDeviceContext, this->pGeoManager->getNrOfBuffer() , D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//temp->Apply(0);
+	//this->d3d->pDeviceContext->Draw(6, 0);
+	//gö något magiskt här
+
 
 	if(FAILED(d3d->pSwapChain->Present( 0, 0 )))
 	{
