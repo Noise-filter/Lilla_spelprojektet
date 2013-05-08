@@ -101,10 +101,10 @@ void Engine::render(Matrix& vp)
 	this->d3d->pDeviceContext->Draw(6, 0);
 
 	//Provar hp bars
-	temp = this->d3d->setPass(PASS_HPBAR);
-	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, this->pGeoManager->getNrOfBuffer() , D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	temp->Apply(0);
-	this->d3d->pDeviceContext->Draw(6, 0);
+	//temp = this->d3d->setPass(PASS_HPBAR);
+	//pGeoManager->applyQuadBuffer(d3d->pDeviceContext, this->pGeoManager->getNrOfBuffer() , D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//temp->Apply(0);
+	//this->d3d->pDeviceContext->Draw(6, 0);
 	//draw geometry
 
 	if(FAILED(d3d->pSwapChain->Present( 0, 0 )))
@@ -114,11 +114,11 @@ void Engine::render(Matrix& vp)
 }
 void Engine::renderGui()
 {
-	//temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
+	//temp = this->d3d->setPass(PASS_HPBAR);
 	//pGeoManager->applyQuadBuffer(d3d->pDeviceContext, this->pGeoManager->getNrOfBuffer() , D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//temp->Apply(0);
 	//this->d3d->pDeviceContext->Draw(6, 0);
-	//gö något magiskt här
+	//draw geometry
 
 	if(FAILED(d3d->pSwapChain->Present( 0, 0 )))
 	{

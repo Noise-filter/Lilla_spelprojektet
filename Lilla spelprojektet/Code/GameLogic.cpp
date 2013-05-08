@@ -175,13 +175,14 @@ int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX v
 	return 1;//all went good
 }
 
-bool GameLogic::init(int mapSize, int quadSize, GameSettings &settings)
+bool GameLogic::init(int quadSize, GameSettings &settings)
 {
 	this->resPerTick = settings.resPerTick;
 	this->maxResCD = (float)settings.resCD;
 	this->currentResCD = 0;
 
-	this->level->init(mapSize,quadSize);
+	this->level->init(quadSize);
+	this->level->loadLevel("level.txt");
 
 	this->eHandler->init(level->getStructures(), level->getNodes(), level->getMapSize(), quadSize,settings.enemiesPerMin,settings.difficulty);
 

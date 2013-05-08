@@ -40,7 +40,7 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	playlist = soundSystem->createPlaylist("playlist.m3u");
 	//initiate other game resources such as level or whatever
 
-	if(!gameLogic->init(10,10,settings))
+	if(!gameLogic->init(10,settings))
 		return false;
 
 	camera->LookAt(D3DXVECTOR3(45,45,45), D3DXVECTOR3(35, 0, 45), D3DXVECTOR3(-1, 0, 0));
@@ -168,5 +168,6 @@ GameSettings Game::readSettingsFromFile(string fileName)
 
 	//läs från fil istället
 
+	fin.close();
 	return settings;
 }

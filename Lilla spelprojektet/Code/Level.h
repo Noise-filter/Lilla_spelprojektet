@@ -17,7 +17,7 @@ public:
 	Level(void);
 	~Level(void);
 
-	bool init(int mapSize,int quadSize);
+	bool init(int quadSize);
 
 	void getRenderData(vector<vector<RenderData*>>& rData);
 	int update(float dt, vector<Enemy*>& enemies);
@@ -30,7 +30,7 @@ public:
 	Structure*** getStructures();
 	Node** getNodes();
 	int getMapSize();
-
+	bool loadLevel(string fileName);
 
 private:
 	int destroyBuildings();
@@ -38,7 +38,6 @@ private:
 	void upgradeStructures(int selectedUpgrade);
 	void removeUpgrade(int selectedUpgrade);
 	void constructNeutrals();
-
 private:
 	Node** nodes;
 	Structure*** structures;

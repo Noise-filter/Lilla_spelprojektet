@@ -7,54 +7,8 @@ Level::Level(void)
 	this->nrOfSupplyStructures = 0;
 }
 
-bool Level::init(int mapSize, int quadSize)
+bool Level::init(int quadSize)
 {
-	this->mapSize = mapSize;
-	this->quadSize = quadSize;
-
-	nodes = new Node*[mapSize];
-	for(int i = 0; i < mapSize; i++)
-	{
-		nodes[i] = new Node[mapSize];
-	}
-
-	for(int i = 0; i < mapSize; i++)
-	{
-		for(int j = 0; j < mapSize; j++)
-		{
-			nodes[i][j] = Node(D3DXVECTOR3((float)i*quadSize,0,(float)j*quadSize),ENTITY_NODE_GREEN,0,0,0,COLOR_GREEN);
-		}
-	}
-
-	//nodes[0][0] = Node(D3DXVECTOR3((float)0*quadSize,0,(float)0*quadSize),ENTITY_NODE_RED,0,0,0,COLOR_RED);
-	//nodes[1][0] = Node(D3DXVECTOR3((float)1*quadSize,0,(float)0*quadSize),ENTITY_NODE_RED,0,0,0,COLOR_RED);
-	//nodes[2][0] = Node(D3DXVECTOR3((float)2*quadSize,0,(float)0*quadSize),ENTITY_NODE_RED,0,0,0,COLOR_RED);
-	//nodes[3][0] = Node(D3DXVECTOR3((float)3*quadSize,0,(float)0*quadSize),ENTITY_NODE_RED,0,0,0,COLOR_RED);
-	//nodes[4][0] = Node(D3DXVECTOR3((float)4*quadSize,0,(float)0*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
-	//nodes[5][0] = Node(D3DXVECTOR3((float)5*quadSize,0,(float)0*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
-	//nodes[6][0] = Node(D3DXVECTOR3((float)6*quadSize,0,(float)0*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
-	//nodes[7][0] = Node(D3DXVECTOR3((float)7*quadSize,0,(float)0*quadSize),ENTITY_NODE,0,0,0,COLOR_RED);
-
-	nodes[4][4] = Node(D3DXVECTOR3((float)4*quadSize,0,(float)4*quadSize),ENTITY_NODE_GREEN,0,0,0,COLOR_GREY);
-	nodes[4][5] = Node(D3DXVECTOR3((float)4*quadSize,0,(float)5*quadSize),ENTITY_NODE_GREEN,0,0,0,COLOR_GREY);
-	nodes[5][4] = Node(D3DXVECTOR3((float)5*quadSize,0,(float)4*quadSize),ENTITY_NODE_GREEN,0,0,0,COLOR_GREY);
-	nodes[5][5] = Node(D3DXVECTOR3((float)5*quadSize,0,(float)5*quadSize),ENTITY_NODE_GREEN,0,0,0,COLOR_GREY);
-
-	structures = new Structure**[mapSize-1];
-	for(int i = 0; i < mapSize-1; i++)
-	{
-		structures[i] = new Structure*[mapSize-1];
-	}
-	for(int i = 0; i < mapSize-1; i++)
-	{
-		for(int j = 0; j < mapSize-1; j++)
-		{
-			structures[i][j] = NULL;
-		}
-	}
-
-	//structures[2][8] = new Headquarter(D3DXVECTOR3((float)2*quadSize + (quadSize/2),0,(float)8*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 2, 0);
-
 	this->availibleUpgrades = new UpgradeStats[5];
 	this->availibleUpgrades[0] = (UpgradeStats(BUILDABLE_UPGRADE_HP,10,0,0,0,0));
 	this->availibleUpgrades[1] = (UpgradeStats(BUILDABLE_UPGRADE_ATKSP,0,10,0,0,0));
@@ -62,7 +16,8 @@ bool Level::init(int mapSize, int quadSize)
 	this->availibleUpgrades[3] = (UpgradeStats(BUILDABLE_UPGRADE_PRJSP,0,0,0,10,0));
 	this->availibleUpgrades[4] = (UpgradeStats(BUILDABLE_UPGRADE_RANGE,0,0,0,0,10));
 
-	constructNeutrals();
+	//läs in karta från fil här
+	this->quadSize = quadSize;
 
 	return true;
 }
@@ -105,6 +60,98 @@ void Level::constructNeutrals()
 	}
 }
 
+bool Level::loadLevel(string fileName)
+{
+
+	//rensa level och structures om något fanns där innan
+	if(mapSize > 0)
+	{
+		for(int i = 0; i < this->mapSize; i++)
+		{
+			SAFE_DELETE_ARRAY(nodes[i]);
+		}
+		SAFE_DELETE_ARRAY(nodes);
+
+		for(int i = 0; i < this->mapSize-1; i++)
+		{
+			for(int j = 0; j < mapSize-1; j++)
+			{
+				SAFE_DELETE(structures[i][j]);
+			}
+
+			SAFE_DELETE_ARRAY(structures[i]);
+		}
+		SAFE_DELETE_ARRAY(structures);
+	}
+	
+
+	//läs in fil med nivå
+	ifstream fin;
+	fin.open(fileName);
+	string attribute;
+	int value;
+	int entityFlag;
+
+	if(fin.fail() == true)
+	{
+		cout << "FAILED TO READ LEVEL FROM FILE" << endl;
+	}
+
+	//läs in mapSize
+	fin >> value;
+	this->mapSize = value;
+
+	//initiera
+	nodes = new Node*[mapSize];
+	for(int i = 0; i < mapSize; i++)
+	{
+		nodes[i] = new Node[mapSize];
+	}
+	structures = new Structure**[mapSize-1];
+	for(int i = 0; i < mapSize-1; i++)
+	{
+		structures[i] = new Structure*[mapSize-1];
+	}
+	for(int i = 0; i < mapSize-1; i++)
+	{
+		for(int j = 0; j < mapSize-1; j++)
+		{
+			structures[i][j] = NULL;
+		}
+	}
+	//initiera
+
+	char val;
+	fin.ignore();
+	for(int i = 0; i < mapSize; i++)
+	{
+		for(int j = 0; j < mapSize; j++)
+		{
+			fin.get(val);
+			value = ((int)val-48); // konverterar till int
+			if(value == COLOR_GREEN)
+				entityFlag = ENTITY_NODE_GREEN;
+			else if(value == COLOR_RED)
+				entityFlag = ENTITY_NODE_RED;
+					
+			//lägg till kollar för texturer
+
+			nodes[i][j] = Node(D3DXVECTOR3((float)i*quadSize,0,(float)j*quadSize),entityFlag,0,0,0,value);
+			cout << value << " , ";
+		}
+		fin.ignore();
+		cout << endl;
+	}
+	
+	//läs in ytterligare info efter spelplanen
+	//fin >> line; // detta är nästa rad av värde
+
+	fin.close();
+
+	constructNeutrals();
+
+	return true;
+}
 Level::~Level(void)
 {
 	for(int i = 0; i < this->mapSize; i++)
