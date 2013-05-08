@@ -26,7 +26,7 @@ class Enemy : public Entity
 {
 public:
 	Enemy();
-	Enemy(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, float speed, float damage);
+	Enemy(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, float speed, float damage, int xp);
 	~Enemy();
 
 	virtual int update(float dt);
@@ -36,6 +36,7 @@ public:
 	int move(float dt);
 
 	Waypoint getCurrentWaypoint();
+	int getXp();
 
 	void setTarget(Structure* t);
 
@@ -55,6 +56,7 @@ private:
 
 	float targetUpdateTime;
 
+	int xp;
 };
 
 #endif

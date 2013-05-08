@@ -23,7 +23,7 @@ Tower::Tower(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, 
 	this->range = range;
 	this->projectileSpeed = projectileSpeed;
 	this->cooldown = 0;
-	this->xpToNextLvl = 50;
+	this->xpToNextLvl = 100;
 	this->level = 1;
 	this->experience = 0;
 
@@ -87,11 +87,12 @@ int Tower::update(float dt)
 		}
 		else if(ret == 2)
 		{
+			
 			Projectile* temp = projectiles.at(i);
+			giveXp(temp->getTarget()->getXp());
 			projectiles.erase(projectiles.begin() + i);
 			delete temp;
 
-			giveXp();
 		}
 	}
 
@@ -124,9 +125,9 @@ int Tower::update(float dt)
 	return 1;
 }
 
-void Tower::giveXp()
+void Tower::giveXp(int xp)
 {
-	this->experience += 10;
+	this->experience += xp;
 	cout << "xp: " << experience << "/" << xpToNextLvl << endl;
 	if(experience >= xpToNextLvl)
 	{
@@ -144,7 +145,7 @@ void Tower::lvlUp()
 	this->hp += 5;
 	this->maxHp += 5;
 	this->projectileSpeed += 0.1f;
-	this->xpToNextLvl += 10;
+	this->xpToNextLvl += 10*level*2;
 	this->experience = 0;
 	this->level++;
 }
