@@ -30,6 +30,12 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 
 	pGeoManager->init(d3d->pDevice);
 
+
+	HRESULT hResult = FW1CreateFactory(FW1_VERSION, &pFW1Factory);
+	
+	
+	hResult = pFW1Factory->CreateFontWrapper(d3d->pDevice, L"Arial", &pFontWrapper);
+
 	return true; // allt gick bra
 }
 
@@ -106,6 +112,16 @@ void Engine::render(Matrix& vp)
 	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, this->pGeoManager->getNrOfBuffer() , D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);
+	
+	pFontWrapper->DrawString(
+		pContext,
+		text,// String
+		size,// Font size
+		pos.x,// X position
+		pos.y,// Y position
+		color,// Text color, 0xAaBbGgRr
+		FW1_CENTER// Flags (for example FW1_RESTORESTATE to keep context states unchanged)
+	);
 
 	if(FAILED(d3d->pSwapChain->Present( 0, 0 )))
 	{
@@ -135,4 +151,14 @@ MouseState* Engine::getMouseState()
 HWND Engine::getHWND()
 {
 	return win32->getHWND();
+}
+
+ID3D11Device* Engine::returnDevice()
+{
+	return d3d->returnDevice();
+}
+
+ID3D11DeviceContext* Engine::returnDeviceContext()
+{
+	return d3d->returnDeviceContext();
 }

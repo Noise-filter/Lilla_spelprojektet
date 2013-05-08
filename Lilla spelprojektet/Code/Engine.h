@@ -2,6 +2,8 @@
 #include "D3D11Handler.h"
 #include "WinHandler.h"
 #include "GeometryManager.h"
+#include <FW1FontWrapper.h>
+#include "TextObject.h"
 #include <vector>
 using namespace std;
 
@@ -20,10 +22,15 @@ public:
 	MouseState* getMouseState();
 	HWND getHWND();
 
+	ID3D11Device* returnDevice();
+	ID3D11DeviceContext* returnDeviceContext();
+
 private:
 	D3D11Handler* d3d;
 	WinHandler* win32;
 	GeometryManager *pGeoManager;
+	IFW1Factory *pFW1Factory;
+	IFW1FontWrapper *pFontWrapper;
 
 };
 
