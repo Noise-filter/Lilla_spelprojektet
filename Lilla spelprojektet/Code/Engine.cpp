@@ -62,7 +62,7 @@ void Engine::render(Matrix& vp)
 
 
 	world = world * vp;
-	temp = this->d3d->setPass(PASS_LIGHT);
+	temp = this->d3d->setPass(PASS_PARTICLE);
 	temp->SetMatrix("gWVP" , world);
 	temp->Apply(0);
 	pGeoManager->applyParticleBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
@@ -94,24 +94,10 @@ void Engine::render(Matrix& vp)
 	}
 	*/
 
-
 	temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
 	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);
-
-	if(FAILED(d3d->pSwapChain->Present( 0, 0 )))
-	{
-		return;
-	}
-}
-void Engine::renderGui()
-{
-	//temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
-	//pGeoManager->applyQuadBuffer(d3d->pDeviceContext, this->pGeoManager->getNrOfBuffer() , D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//temp->Apply(0);
-	//this->d3d->pDeviceContext->Draw(6, 0);
-	//gö något magiskt här
 
 	if(FAILED(d3d->pSwapChain->Present( 0, 0 )))
 	{
