@@ -203,7 +203,7 @@ void GeometryManager::updateParticles(ID3D11DeviceContext *dc, std::vector<std::
 
 	MESH_PNC *mesh = reinterpret_cast<MESH_PNC*>(mappedData->pData);
 
-	for(int j = 0; j < data.size(); j++)
+	for(int j = 0; j < (int)data.size(); j++)
 	{
 		for(int i = 0; i < (int)data[j].size(); i++)
 		{

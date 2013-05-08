@@ -12,6 +12,7 @@ public:
 	~Engine(void);
 
 	void render(D3DXMATRIX& vp);
+	void renderGui();
 	bool init(HINSTANCE hInstance, int cmdShow);
 	PRIMITIVE_TOPOLOGIES changeTopology(int ID);
 
