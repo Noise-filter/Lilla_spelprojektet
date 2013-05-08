@@ -30,6 +30,12 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 
 	pGeoManager->init(d3d->pDevice);
 
+
+	HRESULT hResult = FW1CreateFactory(FW1_VERSION, &pFW1Factory);
+	
+	
+	hResult = pFW1Factory->CreateFontWrapper(d3d->pDevice, L"Arial", &pFontWrapper);
+
 	return true; // allt gick bra
 }
 
@@ -41,8 +47,15 @@ void Engine::render(Matrix& vp)
 	PRIMITIVE_TOPOLOGIES topology = TOPOLOGY_UNDEFINED;
 	
 	static float rot = 0;
-	D3DXMATRIX world;
+	//rot += deltaTime;
+	D3DXMATRIX world, world2, world3, view, proj, wvp, wvp2;
 	D3DXMatrixIdentity(&world);
+	//D3DXMatrixRotationY(&world, rot);
+	//D3DXMatrixTranslation(&world2, 3, sin(rot), 0);
+	//D3DXMatrixTranslation(&world3, -3, -sin(rot), 0);
+	//D3DXMatrixLookAtLH(&view, &D3DXVECTOR3(0,0,-10), &D3DXVECTOR3(0,0, 1), &D3DXVECTOR3(0,1,0));
+	//D3DXMatrixPerspectiveFovLH(&proj, (float)D3DX_PI * 0.45f, SCREEN_WIDTH / SCREEN_HEIGHT, 1.0f, 100.0f);
+
 
 	Shader* temp;
 
@@ -51,11 +64,11 @@ void Engine::render(Matrix& vp)
 	//temp->SetMatrix("proj", proj);
 	temp->Apply(0);
 
-	for(int i = 0; i < this->pGeoManager->getNrOfEntities(); i++)
+	for(int i = 0; i < this->pGeoManager->getNrOfBuffer(); i++)
 	{
 		if(pGeoManager->getNrOfInstances(i) > 0)
 		{
-			pGeoManager->applyEntityBuffer(d3d->pDeviceContext, i, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			pGeoManager->applyBuffer(d3d->pDeviceContext, i, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 0);
 			d3d->pDeviceContext->DrawInstanced(pGeoManager->getNrOfVertexPoints(i), pGeoManager->getNrOfInstances(i), 0, 0);
 		}
 	}
@@ -67,6 +80,7 @@ void Engine::render(Matrix& vp)
 	temp->Apply(0);
 	pGeoManager->applyParticleBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 	d3d->pDeviceContext->Draw(pGeoManager->getNrOfParticles(), 0);
+	//pGeoManager->applyBuffer(d3d->pDeviceContext, test[1][0], D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 0);
 
 	/*
 	while(index < (int)data.size())
@@ -94,18 +108,25 @@ void Engine::render(Matrix& vp)
 	}
 	*/
 
-
 	temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
+
+	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, this->pGeoManager->getNrOfBuffer() , D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	temp->Apply(0);
+	this->d3d->pDeviceContext->Draw(6, 0);
+	
+	//pFontWrapper->DrawString(
+	//	pContext,
+	//	text,// String
+	//	size,// Font size
+	//	pos.x,// X position
+	//	pos.y,// Y position
+	//	color,// Text color, 0xAaBbGgRr
+	//	FW1_CENTER// Flags (for example FW1_RESTORESTATE to keep context states unchanged)
+	//);
+
 	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);
-
-	//Provar hp bars
-	//temp = this->d3d->setPass(PASS_HPBAR);
-	//pGeoManager->applyQuadBuffer(d3d->pDeviceContext, this->pGeoManager->getNrOfBuffer() , D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//temp->Apply(0);
-	//this->d3d->pDeviceContext->Draw(6, 0);
-	//draw geometry
 
 	if(FAILED(d3d->pSwapChain->Present( 0, 0 )))
 	{
@@ -114,11 +135,12 @@ void Engine::render(Matrix& vp)
 }
 void Engine::renderGui()
 {
-	//temp = this->d3d->setPass(PASS_HPBAR);
+	//temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
 	//pGeoManager->applyQuadBuffer(d3d->pDeviceContext, this->pGeoManager->getNrOfBuffer() , D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//temp->Apply(0);
 	//this->d3d->pDeviceContext->Draw(6, 0);
-	//draw geometry
+	//gö något magiskt här
+
 
 	if(FAILED(d3d->pSwapChain->Present( 0, 0 )))
 	{
@@ -130,13 +152,14 @@ void Engine::setRenderData(vector<vector<RenderData*>>& renderData)
 {
 	for(int i = 0; i < (int)renderData.size(); i++)
 	{
-		pGeoManager->updateEntityBuffer(d3d->pDeviceContext, renderData[i], i);
+		pGeoManager->updateBuffer(d3d->pDeviceContext, renderData[i], i , renderData[i].size());
 	}
 }
 
 void Engine::setRenderData(vector<vector<MESH_PNC>> renderData)
 {
-	pGeoManager->updateParticles(d3d->pDeviceContext, renderData);
+	this->pGeoManager->setNrOfParticles(0);
+	pGeoManager->updateParticles(d3d->pDeviceContext, renderData, renderData.size());
 }
 
 MouseState* Engine::getMouseState()
@@ -147,4 +170,14 @@ MouseState* Engine::getMouseState()
 HWND Engine::getHWND()
 {
 	return win32->getHWND();
+}
+
+ID3D11Device* Engine::returnDevice()
+{
+	return d3d->returnDevice();
+}
+
+ID3D11DeviceContext* Engine::returnDeviceContext()
+{
+	return d3d->returnDeviceContext();
 }

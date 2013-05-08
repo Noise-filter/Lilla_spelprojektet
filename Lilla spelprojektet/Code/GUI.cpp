@@ -2,7 +2,8 @@
 
 GUI::GUI()
 {
-	
+	this->menuBtns = NULL;
+	this->textObjects = NULL;
 	createBtns(STATE_MENU);
 
 
@@ -14,9 +15,12 @@ GUI::~GUI()
 }
 
 
-void GUI::render()
+void GUI::render(ID3D11Device *pDevice, ID3D11DeviceContext *pContext)
 {
-
+	for(int i = 0; i < this->nrOfBtns; i++)
+	{
+		this->textObjects[i].drawText(pDevice, pContext);
+	}
 }
 
 int GUI::update(MouseState *mouse, GAMESTATES state)
@@ -42,6 +46,8 @@ void GUI::createBtns(GAMESTATES state)
 {
 	float midScreenW = (float)SCREEN_WIDTH/2;
 	float midScreenH = (float)SCREEN_HEIGHT/2;
+	int a=5;
+	cout << a<<endl;
 
 	if(this->menuBtns != NULL)
 	{
@@ -52,9 +58,9 @@ void GUI::createBtns(GAMESTATES state)
 	{
 		this->nrOfBtns = 3;
 		this->menuBtns = new Button[nrOfBtns];
-		this->menuBtns[0] = createBtn(D3DXVECTOR3(midScreenW, midScreenH, 0), STARTGAME);
-		this->menuBtns[1] = createBtn(D3DXVECTOR3(midScreenW, midScreenH + 0.15, 0), SETTINGS);
-		this->menuBtns[2] = createBtn(D3DXVECTOR3(midScreenW, midScreenH + 0.3, 0), QUIT);
+		this->menuBtns[0] = createBtn(D3DXVECTOR2(midScreenW, midScreenH), STARTGAME);
+		this->menuBtns[1] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 0.15), SETTINGS);
+		this->menuBtns[2] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 0.3), QUIT);
 	}
 	else if(state == STATE_SETTINGS)
 	{
@@ -64,11 +70,18 @@ void GUI::createBtns(GAMESTATES state)
 	{
 		this->nrOfBtns = 3;
 		this->menuBtns = new Button[nrOfBtns];
-		this->menuBtns[0] = createBtn(D3DXVECTOR3(midScreenW, midScreenH, 0), PAUSED_CONTINUE);
-		this->menuBtns[1] = createBtn(D3DXVECTOR3(midScreenW, midScreenH + 0.15, 0), SETTINGS);
-		this->menuBtns[2] = createBtn(D3DXVECTOR3(midScreenW, midScreenH + 0.3, 0), QUIT);
+		this->menuBtns[0] = createBtn(D3DXVECTOR2(midScreenW, midScreenH), PAUSED_CONTINUE);
+		this->menuBtns[1] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 0.15), SETTINGS);
+		this->menuBtns[2] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 0.3), QUIT);
 	}
-
+	if(this->nrOfBtns != 0)
+	{
+		this->textObjects = new TextObject[nrOfBtns];
+		for(int i = 0; i < this->nrOfBtns; i++)
+		{
+			this->textObjects[i] = TextObject(menuBtns[i].text, 20, menuBtns[i].pos, menuBtns[i].textColor);
+		}
+	}
 }
 
 void GUI::clearBtns()
@@ -77,32 +90,33 @@ void GUI::clearBtns()
 	this->menuBtns = NULL;
 }
 
-Button GUI::createBtn(D3DXVECTOR3 pos, BUTTONTYPE type)
+Button GUI::createBtn(D3DXVECTOR2 pos, BUTTONTYPE type)
 {
 	Button temp;
 	
 	temp.pos = pos;
 	temp.type = type;
+	temp.textColor = 0xffffffff;
 
 	if(type == STARTGAME)
 	{
-		temp.size = D3DXVECTOR3(20, 5, 0);
-		temp.text = "New Game";
+		temp.size = D3DXVECTOR2(20, 5);
+		temp.text = L"New Game";
 	}
 	if(type == SETTINGS)
 	{
-		temp.size = D3DXVECTOR3(20, 5, 0);
-		temp.text = "Settings";
+		temp.size = D3DXVECTOR2(20, 5);
+		temp.text = L"Settings";
 	}
 	if(type == QUIT)
 	{
-		temp.size = D3DXVECTOR3(10, 5, 0);
-		temp.text = "Quit";
+		temp.size = D3DXVECTOR2(10, 5);
+		temp.text = L"Quit";
 	}
 	if(type == PAUSED_CONTINUE)
 	{
-		temp.size = D3DXVECTOR3(20, 5, 0);
-		temp.text = "CONTINUE";
+		temp.size = D3DXVECTOR2(20, 5);
+		temp.text = L"CONTINUE";
 	}
 	return temp;
 }

@@ -104,7 +104,15 @@ void D3D11Handler::clearAndBindRenderTarget()
 	for(int i = 0; i < this->iNrOfDeferred; i++) pDeviceContext->ClearRenderTargetView(pMultipleRTVs[i], clearColour);
 }
 
+ID3D11Device* D3D11Handler::returnDevice()
+{
+	return this->pDevice;
+}
 
+ID3D11DeviceContext* D3D11Handler::returnDeviceContext()
+{
+	return this->pDeviceContext;
+}
 /*
 #########################################
 		Private functions
