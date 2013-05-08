@@ -23,9 +23,6 @@ public:
 	MouseState* getMouseState();
 	HWND getHWND();
 
-	ID3D11Device* returnDevice();
-	ID3D11DeviceContext* returnDeviceContext();
-
 private:
 	D3D11Handler* d3d;
 	WinHandler* win32;

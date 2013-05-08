@@ -49,10 +49,9 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 
 	gameState = STATE_GAMESTART;
 
-	ID3D11Device* tempDev = engine->returnDevice();
-	ID3D11DeviceContext* tempDevCon = engine->returnDeviceContext();
 
-	gui->render(tempDev, tempDevCon);
+
+
 
 	return true; // all initiates went well
 }
