@@ -83,6 +83,11 @@ Shader *D3D11Handler::setPass(PASS_STATE pass)
 			this->vShaders.at(PASS_FULLSCREENQUAD)->SetResource("normalMap" , this->pMultipleSRVs[2]);
 
 			return this->vShaders.at(PASS_FULLSCREENQUAD);
+
+		case PASS_HPBAR:
+			this->pDeviceContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);
+			return this->vShaders.at(PASS_HPBAR);
+
 			break;
 	}
 }
@@ -276,6 +281,14 @@ bool D3D11Handler::initShaders()
 	temp = new Shader();
 	this->vShaders.push_back(temp);
 	hr = this->vShaders.at(PASS_FULLSCREENQUAD)->Init(this->pDevice, this->pDeviceContext, "../Shaders/FullScreenQuad.fx", tempInput, 1);
+	if(FAILED(hr))
+	{
+		return false;
+	}
+
+	temp = new Shader();
+	this->vShaders.push_back(temp);
+	hr = this->vShaders.at(PASS_HPBAR)->Init(this->pDevice, this->pDeviceContext, "../Shaders/hp bars testing.fx", tempInput, 1);
 	if(FAILED(hr))
 	{
 		return false;
