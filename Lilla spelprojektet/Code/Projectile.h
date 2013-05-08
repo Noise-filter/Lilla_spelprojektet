@@ -14,6 +14,8 @@ public:
 
 	virtual int update(float dt);
 
+	Enemy* getTarget();
+
 private:
 	Enemy* target;
 	float speed;

@@ -10,7 +10,7 @@ bool EnemyHandler::init(Structure*** structures, Node** nodes, int mapSize, int 
 	string scripts[3];
 	scripts[0] = "astar.lua";
 	scripts[1] = "targetFind.lua";
-	scripts[2] = "spawning.lua";
+	scripts[2] = "spawningBosses.lua";
 
 	ai->init(structures, nodes, scripts, mapSize, quadSize, enemiesPerMin, difficulty);
 
@@ -27,7 +27,7 @@ EnemyHandler::~EnemyHandler(void)
 
 int EnemyHandler::update(float dt)
 {
-	vector<Enemy*> spawnedEnemies = ai->spawnEnemies(dt,0);
+	vector<Enemy*> spawnedEnemies = ai->spawnEnemies(dt,enemies.size());
 
 	for(int i = 0; i < (int)spawnedEnemies.size(); i++)
 		enemies.push_back(spawnedEnemies.at(i));
