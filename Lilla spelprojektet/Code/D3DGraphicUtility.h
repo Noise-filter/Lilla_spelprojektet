@@ -25,6 +25,8 @@
 
 #define SAFE_RELEASE(x) if( x ) { (x)->Release(); (x) = NULL; }
 
+#define NROFSHADERS (6)
+
 struct FaceType
 {
 		int vIndex1, vIndex2, vIndex3;
@@ -55,7 +57,11 @@ enum PASS_STATE
 	PASS_GEOMETRY,
 	PASS_LIGHT,
 	PASS_FULLSCREENQUAD,
+	PASS_PARTICLE,
+	PASS_HPBARS,
+	PASS_MENY,
 };
+
 
 
 

@@ -62,7 +62,7 @@ void Engine::render(Matrix& vp)
 
 
 	world = world * vp;
-	temp = this->d3d->setPass(PASS_LIGHT);
+	temp = this->d3d->setPass(PASS_PARTICLE);
 	temp->SetMatrix("gWVP" , world);
 	temp->Apply(0);
 	pGeoManager->applyParticleBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_POINTLIST);

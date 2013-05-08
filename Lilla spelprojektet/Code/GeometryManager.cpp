@@ -74,8 +74,6 @@ void GeometryManager::init(ID3D11Device *device)
 		MESH_PNUV(Vec3(0,1.0,0), Vec3(1,0,1), Vec2(0,0)),
 			
 	};
-
-	vector<string> temp;
 	
 	MESH_PNUV supply[] ={
 		MESH_PNUV(Vec3(1.0,0,0), Vec3(1,0,0), Vec2(1,1)),
@@ -93,6 +91,15 @@ void GeometryManager::init(ID3D11Device *device)
 		MESH_PNUV(Vec3(0,0,0.5), Vec3(1,0,1), Vec2(0,0)),
 		MESH_PNUV(Vec3(0,-0.5,0), Vec3(1,0,0), Vec2(0,0)),
 	};
+
+	MESH_P quad[] = {  MESH_P(D3DXVECTOR3(1,-1,0)),
+						MESH_P(D3DXVECTOR3(-1,-1,0)), 
+						MESH_P(D3DXVECTOR3(1,1,0)),
+						MESH_P(D3DXVECTOR3(1,1,0)),  
+						MESH_P(D3DXVECTOR3(-1,-1,0)), 
+						MESH_P(D3DXVECTOR3(-1,1,0)), 
+	};
+
 
 	//import and initilaze buffers
 	string fileName = "Meshar/Main Building.obj";
@@ -113,7 +120,7 @@ void GeometryManager::init(ID3D11Device *device)
 	fileName = "Meshar/Green node.obj";
 	importMesh(device, this->vEntities.at(ENTITY_NODE_GREEN), fileName, bufferInit, instanceInit, 400, this->pBufferObj);
 
-	fileName = "Meshar/Green node.obj";
+	fileName = "Meshar/Enemy (broken node).obj";
 	importMesh(device, this->vEntities.at(ENTITY_NODE_RED), fileName, bufferInit, instanceInit, 400, this->pBufferObj);
 
 	fileName = "Meshar/Enemy (broken node).obj";
@@ -134,16 +141,7 @@ void GeometryManager::init(ID3D11Device *device)
 
 
 	this->Particles->mInit(device, instanceInit, 1000, this->pBufferObj);
-
-	MESH_P p[] = {  MESH_P(D3DXVECTOR3(1,-1,0)),
-						MESH_P(D3DXVECTOR3(-1,-1,0)), 
-						MESH_P(D3DXVECTOR3(1,1,0)),
-						MESH_P(D3DXVECTOR3(1,1,0)),  
-						MESH_P(D3DXVECTOR3(-1,-1,0)), 
-						MESH_P(D3DXVECTOR3(-1,1,0)), 
-	};
-
-	this->FullScreenQuad->mInit(device, bufferInit, instanceInit, p, 6, 0 , this->pBufferObj);
+	this->FullScreenQuad->mInit(device, bufferInit, instanceInit, quad, 6, 0 , this->pBufferObj);
 }
 
 void GeometryManager::applyEntityBuffer(ID3D11DeviceContext *dc, int ID, D3D_PRIMITIVE_TOPOLOGY topology)

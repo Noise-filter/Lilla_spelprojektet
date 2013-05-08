@@ -13,6 +13,8 @@ D3D11Handler::D3D11Handler()
 	pNullSRVs			= NULL;
 	pDSVDeferred		= NULL; 
 	iNrOfDeferred		= 3;
+
+	this->vShaders.resize(NROFSHADERS);
 }
 
 D3D11Handler::~D3D11Handler()
@@ -75,6 +77,13 @@ Shader *D3D11Handler::setPass(PASS_STATE pass)
 		case PASS_LIGHT:
 			return this->vShaders.at(PASS_LIGHT);
 			break;
+
+		case PASS_PARTICLE:
+			return this->vShaders.at(PASS_PARTICLE);
+
+		case PASS_MENY:
+			this->pDeviceContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);
+			return this->vShaders.at(PASS_MENY);
 
 		case PASS_FULLSCREENQUAD:
 			this->pDeviceContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);
@@ -244,7 +253,7 @@ bool D3D11Handler::initShaders()
 	};
 
 	Shader* temp = new Shader();
-	this->vShaders.push_back(temp);
+	this->vShaders.at(PASS_GEOMETRY) = temp;
 	hr = this->vShaders.at(PASS_GEOMETRY)->Init(this->pDevice, this->pDeviceContext, "../Shaders/Geometry.fx", inputDesc, 8);
 	if(FAILED(hr))
 	{
@@ -259,8 +268,8 @@ bool D3D11Handler::initShaders()
 	};
 
 	temp = new Shader();
-	this->vShaders.push_back(temp);
-	hr = this->vShaders.at(PASS_LIGHT)->Init(this->pDevice, this->pDeviceContext, "../Shaders/ParticleColor.fx", ParticleInput, 3);
+	this->vShaders.at(PASS_PARTICLE) = temp;
+	hr = this->vShaders.at(PASS_PARTICLE)->Init(this->pDevice, this->pDeviceContext, "../Shaders/ParticleColor.fx", ParticleInput, 3);
 	if(FAILED(hr))
 	{
 		return false;
@@ -272,9 +281,17 @@ bool D3D11Handler::initShaders()
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
+	temp = new Shader();
+	this->vShaders.at(PASS_MENY) = temp;
+	hr = this->vShaders.at(PASS_MENY)->Init(this->pDevice, this->pDeviceContext, "../Shaders/FullScreenQuad.fx", tempInput, 1);
+	if(FAILED(hr))
+	{
+		return false;
+	}
+
 
 	temp = new Shader();
-	this->vShaders.push_back(temp);
+	this->vShaders.at(PASS_FULLSCREENQUAD) = temp;
 	hr = this->vShaders.at(PASS_FULLSCREENQUAD)->Init(this->pDevice, this->pDeviceContext, "../Shaders/FullScreenQuad.fx", tempInput, 1);
 	if(FAILED(hr))
 	{
