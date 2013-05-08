@@ -10,7 +10,7 @@ public:
 	~GameLogic(void);
 
 	vector<vector<RenderData*>>& getRenderData();
-	bool init(int mapSize, int quadSize);
+	bool init(int mapSize, int quadSize, GameSettings &settings);
 	int update(int &gameState, float dt, MouseState *mState, D3DXMATRIX view, D3DXMATRIX proj, D3DXVECTOR3 cameraPos);
 	void incrementSelectedStructure(int increment);
 
@@ -18,7 +18,6 @@ public:
 private:
 	vector<vector<RenderData*>> rDataList;
 	Level* level;
-	float resourceCD;
 	EnemyHandler* eHandler;
 	int selectedStructure;
 	bool canAfford();
@@ -34,6 +33,9 @@ private:
 	int availableSupply;
 	int resource;
 	int nrOfSupplyStructures;
+	int resPerTick;
+	float maxResCD;
+	float currentResCD;
 	//resurser
 };
 

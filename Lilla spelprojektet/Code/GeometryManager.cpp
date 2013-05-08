@@ -33,10 +33,10 @@ GeometryManager::~GeometryManager()
 
 void GeometryManager::init(ID3D11Device *device)
 {
+	importer = new OBJReader();
 	BUFFER_INIT bufferInit		= BUFFER_INIT();
 	BUFFER_INIT instanceInit	= BUFFER_INIT();
 	BUFFER_INIT indexInit		= BUFFER_INIT();
-	importer = new OBJReader();
 	//Vertex buffer init
 	bufferInit.desc.eUsage               = D3D11_USAGE_DEFAULT;
 	bufferInit.desc.uBindFlags           = D3D11_BIND_VERTEX_BUFFER;
@@ -75,6 +75,8 @@ void GeometryManager::init(ID3D11Device *device)
 			
 	};
 
+	vector<string> temp;
+	
 	MESH_PNUV supply[] ={
 		MESH_PNUV(Vec3(1.0,0,0), Vec3(1,0,0), Vec2(1,1)),
 		MESH_PNUV(Vec3(-1.0,0,0), Vec3(0,0,1), Vec2(-1,0)),
@@ -92,14 +94,15 @@ void GeometryManager::init(ID3D11Device *device)
 		MESH_PNUV(Vec3(0,-0.5,0), Vec3(1,0,0), Vec2(0,0)),
 	};
 
-
-
 	//import and initilaze buffers
 	string fileName = "Meshar/Main Building.obj";
 	importMesh(device, this->vEntities.at(ENTITY_MAINBUILDING), fileName, bufferInit, instanceInit, 1, this->pBufferObj);
 
 	fileName = "Meshar/Power Building part 1.obj";
-	importMesh(device, this->vEntities.at(ENTITY_SUPPLY), fileName, bufferInit, instanceInit, 100, this->pBufferObj);
+	importMesh(device, this->vEntities.at(ENTITY_SUPPLYBASE), fileName, bufferInit, instanceInit, 100, this->pBufferObj);
+	
+	fileName = "Meshar/Power Building part 2.obj";
+	importMesh(device, this->vEntities.at(ENTITY_SUPPLYTOP), fileName, bufferInit, instanceInit, 100, this->pBufferObj);
 
 	fileName = "Meshar/Tower Part 1.obj";
 	importMesh(device, this->vEntities.at(ENTITY_TOWERTOP), fileName, bufferInit, instanceInit, 100, this->pBufferObj);
@@ -108,12 +111,20 @@ void GeometryManager::init(ID3D11Device *device)
 	importMesh(device, this->vEntities.at(ENTITY_TOWERBASE), fileName, bufferInit, instanceInit, 100, this->pBufferObj);
 	
 	fileName = "Meshar/Green node.obj";
-	importMesh(device, this->vEntities.at(ENTITY_NODE), fileName, bufferInit, instanceInit, 400, this->pBufferObj);
+	importMesh(device, this->vEntities.at(ENTITY_NODE_GREEN), fileName, bufferInit, instanceInit, 400, this->pBufferObj);
+
+	fileName = "Meshar/Green node.obj";
+	importMesh(device, this->vEntities.at(ENTITY_NODE_RED), fileName, bufferInit, instanceInit, 400, this->pBufferObj);
+
+	fileName = "Meshar/Enemy (broken node).obj";
+	importMesh(device, this->vEntities.at(ENTITY_ENEMY), fileName, bufferInit, instanceInit, 400, this->pBufferObj);
+
+	fileName = "Meshar/Very basic disc (projectile).obj";
+	importMesh(device, this->vEntities.at(ENTITY_PROJECTILE), fileName, bufferInit, instanceInit, 400, this->pBufferObj);
 
 
 	//temp buffer init
-	this->vEntities.at(ENTITY_ENEMY)->mInit(device, bufferInit, instanceInit, node, 3, 100, this->pBufferObj);
-	this->vEntities.at(ENTITY_PROJECTILE)->mInit(device, bufferInit, instanceInit, mainBuilding, 3, 200, this->pBufferObj);
+	
 	this->vEntities.at(ENTITY_UPGRADE_HP)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj);
 	this->vEntities.at(ENTITY_UPGRADE_ATKSP)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj);
 	this->vEntities.at(ENTITY_UPGRADE_DMG)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj);
@@ -122,10 +133,7 @@ void GeometryManager::init(ID3D11Device *device)
 
 
 
-
-
 	this->Particles->mInit(device, instanceInit, 1000, this->pBufferObj);
-
 
 	MESH_P p[] = {  MESH_P(D3DXVECTOR3(1,-1,0)),
 						MESH_P(D3DXVECTOR3(-1,-1,0)), 
@@ -136,7 +144,6 @@ void GeometryManager::init(ID3D11Device *device)
 	};
 
 	this->FullScreenQuad->mInit(device, bufferInit, instanceInit, p, 6, 0 , this->pBufferObj);
-
 }
 
 void GeometryManager::applyEntityBuffer(ID3D11DeviceContext *dc, int ID, D3D_PRIMITIVE_TOPOLOGY topology)
@@ -189,8 +196,10 @@ void GeometryManager::importMesh(ID3D11Device *device,
 								 Buffer* bufferObj)
 {
 	int nrOfVertices = 0;
+	std::vector<string> textures;
+	std::vector<string> glowMaps;
 
-	MESH_PNUV *temp = this->importer->getOBJfromFile(fileName, nrOfVertices);
+	MESH_PNUV *temp = this->importer->getOBJfromFile(fileName, nrOfVertices, textures, glowMaps);
 
 	object->mInit(device, bufferInit, instanceInit, temp, nrOfVertices, nrOfInstances, bufferObj);
 

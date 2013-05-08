@@ -31,13 +31,16 @@ AI::~AI(void)
 	lua_close(spawnScript);
 }
 
-bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize, int quadSize)
+bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize, int quadSize, int enemiesPerMin, int difficulty)
 {
 	int rv = 0;
 	this->structures = structures;
 	this->nodes = nodes;
 	this->mapSize = mapSize;
 	this->quadSize = quadSize;
+	this->enemiesPerMin = enemiesPerMin;
+	this->difficulty = difficulty;
+
 
 	structuresInt = new int*[mapSize-1];
 	for(int i= 0; i < mapSize-1; i++)
@@ -125,7 +128,7 @@ vector<float> AI::findTarget(Waypoint pos, int type)
 vector<Enemy*> AI::spawnEnemies(float dt, int nrOfEnemies)
 {
 	vector<Enemy*> enemies;
-	int retVals[6];
+	int retVals[5];
 	int counter = 0;
 	lua_getglobal(spawnScript, "spawning");
 	lua_pushnumber(spawnScript,dt);
@@ -156,7 +159,7 @@ vector<Enemy*> AI::spawnEnemies(float dt, int nrOfEnemies)
 		}
 		if(spawnedEnemies > 0)
 		{
-			Enemy* tempE = new Enemy(D3DXVECTOR3((float)retVals[0],0,(float)retVals[1]),ENTITY_ENEMY,TEXTURE_ENEMY1,retVals[3],0,retVals[4],retVals[5]);
+			Enemy* tempE = new Enemy(D3DXVECTOR3((float)retVals[0],0,(float)retVals[1]),ENTITY_ENEMY,TEXTURE_ENEMY1,retVals[2],0,retVals[3],retVals[4]);
 			enemies.push_back(tempE);
 		}
 
@@ -187,9 +190,6 @@ bool AI::initFindPath(string scriptName)
 
 bool AI::initSpawnEnemies(string scriptName)
 {
-	int enemiesPerMin = 10;
-
-
 	spawnScript = lua_open();
 	OpenLuaLibs(spawnScript);
 	if(luaL_dofile(spawnScript, scriptName.c_str())) //spawning
@@ -201,9 +201,10 @@ bool AI::initSpawnEnemies(string scriptName)
 	sendArray(nodesInt, mapSize ,spawnScript);
 
 	lua_pushnumber(spawnScript,enemiesPerMin);
+	lua_pushnumber(spawnScript,difficulty);
 
 
-	lua_pcall(spawnScript, 2, 1, 0);
+	lua_pcall(spawnScript, 3, 1, 0);
 	int a = (int)lua_tonumber(spawnScript, -1);
 	
 	

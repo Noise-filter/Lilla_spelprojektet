@@ -5,9 +5,9 @@ GameLogic::GameLogic(void)
 	this->level = new Level();
 	this->eHandler = new EnemyHandler();
 	this->selectedStructure = 2;
-	this->availableSupply = 100;
-	this->resource = 100;
-	this->resourceCD = 0;
+	this->availableSupply = 20;
+	this->resource = 20;
+	this->maxResCD = 0;
 }
 
 GameLogic::~GameLogic(void)
@@ -27,12 +27,12 @@ void GameLogic::incrementSelectedStructure(int increment)
 
 void GameLogic::giveResource(float dt)
 {
-	resourceCD += dt;
-	if(resourceCD > 5)
+	currentResCD += dt;
+	if(currentResCD > maxResCD)
 	{
-		this->resource += 10 + level->getNrOfSupplyStructures();
+		this->resource += resPerTick + level->getNrOfSupplyStructures();
 		cout << "gained resources: " << 10 + level->getNrOfSupplyStructures() << endl;
-		resourceCD = 0;
+		currentResCD = 0;
 	}
 }
 
@@ -129,14 +129,12 @@ int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX v
 			if(level->buildStructure(getMouseWorldPos(mState, view, proj, cameraPos), BUILDABLE_MAINBUILDING))
 			{
 				gameState = STATE_PLAYING;
-				structureBuilt();
-					
 				cout << "mainstruct buildt" << endl;
 			}
 		}
-			
 	}
-		
+
+	int ret = level->update(dt, eHandler->getEnemies()); // returnera 4 om vinst 5 om förlust
 	if(gameState == STATE_PLAYING)
 	{
 		switch(mState->btnState)
@@ -155,7 +153,7 @@ int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX v
 		}
 
 		giveResource(dt);
-		int ret = level->update(dt, eHandler->getEnemies()); // returnera 4 om vinst 5 om förlust
+		
 		if(ret == 4) //win
 		{
 			gameState = STATE_WIN;
@@ -173,15 +171,19 @@ int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX v
 	{
 		//ska något göras här?
 	}
-	
+
 	return 1;//all went good
 }
 
-bool GameLogic::init(int mapSize, int quadSize)
+bool GameLogic::init(int mapSize, int quadSize, GameSettings &settings)
 {
+	this->resPerTick = settings.resPerTick;
+	this->maxResCD = (float)settings.resCD;
+	this->currentResCD = 0;
+
 	this->level->init(mapSize,quadSize);
 
-	this->eHandler->init(level->getStructures(), level->getNodes(), level->getMapSize(), quadSize);
+	this->eHandler->init(level->getStructures(), level->getNodes(), level->getMapSize(), quadSize,settings.enemiesPerMin,settings.difficulty);
 
 	vector<RenderData*> renderData;
 

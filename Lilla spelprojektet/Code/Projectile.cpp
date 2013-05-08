@@ -22,9 +22,6 @@ Projectile::~Projectile()
 	ParticleSystem::Getinstance()->removePolicy(trail);
 }
 
-#include <iostream>
-using namespace std;
-
 int Projectile::update(float dt)
 {
 	if(target->isDead())
@@ -44,8 +41,14 @@ int Projectile::update(float dt)
 	if(length <= 1)
 	{
 		target->doDamage(damage);
+		if(target->getHp() <= 0)
+		{
+			return 2; // död, ge xp till tornet
+		}
 		return 0;
 	}
+
+	renderData.worldMat = scale * pointTranslate * rotation * translate;
 
 	trail->updatePosition(pos);
 

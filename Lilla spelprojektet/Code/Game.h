@@ -5,7 +5,12 @@
 #include "Camera.h"
 #include "SoundSystem.h"
 #include "ParticleSystem.h"
+#include "GUI.h"
+#include <fstream>
 
+
+
+using namespace std;
 class Game
 {
 public:
@@ -28,6 +33,9 @@ private:
 	SoundSystem* soundSystem;
 	ParticleSystem* pSystem;
 	Sound* playlist;
+	GUI* GUI;
+	GAMESTATES state;
+
 
 	int gameState;
 

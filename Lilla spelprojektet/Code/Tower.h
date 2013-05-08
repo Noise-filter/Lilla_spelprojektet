@@ -31,16 +31,21 @@ private:
 	float range;
 	float projectileSpeed;
 	float cooldown;
+	int experience;
+	int level;
+	int xpToNextLvl;
 	Enemy* target;
 
+	void giveXp();
+	void lvlUp();
+
 	vector<Projectile*> projectiles;
-	D3DXMATRIX temp;
-	RenderData* topTower;
-	D3DXVECTOR3 look, up, right;
-
-
-
+	
 	Sound* sound;
+
+	//Top part of tower
+	RenderData* topTower;
+	D3DXMATRIX topPointTrans, topRotation, topTrans;
 
 };
 

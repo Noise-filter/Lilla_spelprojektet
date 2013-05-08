@@ -10,17 +10,21 @@
 
 #define PI (3.14159265358979323846f)
 
-#define NROFDIFFERENTMESHES (12)
+#define NROFDIFFERENTMESHES (14)
 
 struct GameSettings
 {
+	int resCD;
 	int enemiesPerMin;
-	int ScreenHeight;
-	int ScreenWidth;
-	int mapSize;
-	int quadSize;
-
+	int resPerTick;
+	int difficulty; //send to the script
 	//add more if needed
+};
+enum DIFFICULTIES
+{
+	DIFF_EASY,
+	DIFF_MEDIUM,
+	DIFF_HARD
 };
 
 struct MESH_P
@@ -124,10 +128,12 @@ struct INSTANCEDATA
 enum ENTITY_FLAGS
 {
 	ENTITY_MAINBUILDING,
-	ENTITY_SUPPLY,
+	ENTITY_SUPPLYBASE,
+	ENTITY_SUPPLYTOP,
 	ENTITY_TOWERBASE,
 	ENTITY_TOWERTOP,
-	ENTITY_NODE,
+	ENTITY_NODE_GREEN,
+	ENTITY_NODE_RED,
 	ENTITY_ENEMY,
 	ENTITY_PROJECTILE,
 	ENTITY_UPGRADE_HP,
@@ -146,7 +152,8 @@ enum GAMESTATES
    STATE_PLAYING,
    STATE_PAUSED, 
    STATE_WIN,
-   STATE_LOSE
+   STATE_LOSE,
+   STATE_QUIT
 };
 
 enum BUILDABLE_ENTITY_FLAGS

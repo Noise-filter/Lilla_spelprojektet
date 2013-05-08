@@ -2,6 +2,7 @@
 
 Game::Game(void)
 {
+	state = STATE_MENU;
 	engine = new Engine();
 	gameLogic = new GameLogic();
 	input = new Input();
@@ -39,7 +40,7 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	playlist = soundSystem->createPlaylist("playlist.m3u");
 	//initiate other game resources such as level or whatever
 
-	if(!gameLogic->init(10,10))
+	if(!gameLogic->init(10,10,settings))
 		return false;
 
 	camera->LookAt(D3DXVECTOR3(45,45,45), D3DXVECTOR3(35, 0, 45), D3DXVECTOR3(-1, 0, 0));
@@ -133,12 +134,39 @@ void Game::handleInput(float dt)
 GameSettings Game::readSettingsFromFile(string fileName)
 {
 	GameSettings settings;
+	ifstream fin;
+	fin.open(fileName);
+	string attribute;
+	int value;
 
-	settings.enemiesPerMin = 10;
-	settings.mapSize = 20;
-	settings.quadSize = 20;
-	settings.ScreenHeight = 1080;
-	settings.ScreenWidth = 1920;
+	if(fin.fail() == true)
+	{
+		cout << "FAILED TO READ SETTINGS FROM FILE" << endl;
+	}
+
+	while(!fin.eof())
+	{
+		fin >> attribute >> value;
+		
+		if(attribute == "enemiesPerMin")	
+		{
+			settings.enemiesPerMin = value;
+		}
+		if(attribute == "difficulty")	
+		{
+			settings.difficulty = value;
+		}
+		if(attribute == "resPerTick")	
+		{
+			settings.resPerTick = value;
+		}
+		if(attribute == "resCD")	
+		{
+			settings.resCD = value;
+		}
+	}
+
+	//läs från fil istället
 
 	return settings;
 }

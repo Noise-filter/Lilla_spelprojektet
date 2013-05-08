@@ -15,6 +15,7 @@ static const luaL_reg lualibs[] =
 	{ "base",       luaopen_base },
 	{ "math",       luaopen_math },
 	{ "table",		luaopen_table },
+	{ "os",          luaopen_os    },
 	{ NULL,         NULL }
 };
 
@@ -26,7 +27,7 @@ public:
 	AI(void);
 	~AI(void);
 
-	bool init(Structure*** structures, Node** nodes ,string* scripts, int mapSize, int quadSize);
+	bool init(Structure*** structures, Node** nodes ,string* scripts, int mapSize, int quadSize, int enemiesPerMin, int difficulty);
 	vector<Waypoint> findPath(Waypoint start, Waypoint goal, int enemyType); // hanterar pathScript
 	vector<float> findTarget(Waypoint pos, int type); // hanterar targetScript
 	vector<Enemy*> spawnEnemies(float dt, int nrOfEnemies); // hanterar spawnScript
@@ -49,6 +50,9 @@ private:
 	int** nodesInt;
 	int mapSize;
 	int quadSize;
+
+	int difficulty;
+	int enemiesPerMin;
 
 	Structure*** structures;
 	Node** nodes;

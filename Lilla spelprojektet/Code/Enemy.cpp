@@ -24,6 +24,10 @@ Enemy::Enemy(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, 
 	target = NULL;
 	attackSpeed = 1;
 	cooldown = attackSpeed;
+	targetUpdateTime = 3;
+
+	scaleFactor = 0.3;
+	D3DXMatrixScaling(&scale, scaleFactor, scaleFactor, scaleFactor);
 }
 
 Enemy::~Enemy()
@@ -34,6 +38,7 @@ Enemy::~Enemy()
 
 int Enemy::update(float dt)
 {
+	targetUpdateTime -= dt;
 	trail->updatePosition(this->getPosition());
 	int id = Entity::update(dt);
 	if(id == 0)
@@ -43,6 +48,12 @@ int Enemy::update(float dt)
 	if(id == 2)		// kommit fram till målet/vill köra pathFind igen
 		return 2;
 	
+	if(targetUpdateTime <= 0 && (int)waypoints.size()-1 > currentWP)
+	{
+		targetUpdateTime = 3;
+		return 2;
+	}
+
 	return 1;
 }
 
@@ -79,7 +90,7 @@ int Enemy::move(float dt)
 				cooldown = attackSpeed;
 				D3DXVECTOR3 dir = target->getPosition() - getPosition();
 				D3DXVec3Normalize(&dir, &dir);
-				ParticleSystem::Getinstance()->addAttackParticlePolicy(D3DXVECTOR3(1, 1, 1), getPosition(), 60, 1, 10, dir);
+				ParticleSystem::Getinstance()->addAttackParticlePolicy(D3DXVECTOR3(1, 1, 1), getPosition(), 60, 0.8f, 10, dir);
 			}
 		}
 		else	//Fienden har inget target
