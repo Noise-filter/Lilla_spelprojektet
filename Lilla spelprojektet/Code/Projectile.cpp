@@ -54,3 +54,7 @@ int Projectile::update(float dt)
 
 	return 1;
 }
+Enemy* Projectile::getTarget()
+{
+	return this->target;
+}

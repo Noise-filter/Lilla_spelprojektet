@@ -36,7 +36,7 @@ private:
 	int xpToNextLvl;
 	Enemy* target;
 
-	void giveXp();
+	void giveXp(int xp);
 	void lvlUp();
 
 	vector<Projectile*> projectiles;

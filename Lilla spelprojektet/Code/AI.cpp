@@ -128,7 +128,7 @@ vector<float> AI::findTarget(Waypoint pos, int type)
 vector<Enemy*> AI::spawnEnemies(float dt, int nrOfEnemies)
 {
 	vector<Enemy*> enemies;
-	int retVals[5];
+	int retVals[6];
 	int counter = 0;
 	lua_getglobal(spawnScript, "spawning");
 	lua_pushnumber(spawnScript,dt);
@@ -159,7 +159,7 @@ vector<Enemy*> AI::spawnEnemies(float dt, int nrOfEnemies)
 		}
 		if(spawnedEnemies > 0)
 		{
-			Enemy* tempE = new Enemy(D3DXVECTOR3((float)retVals[0],0,(float)retVals[1]),ENTITY_ENEMY,TEXTURE_ENEMY1,retVals[2],0,retVals[3],retVals[4]);
+			Enemy* tempE = new Enemy(D3DXVECTOR3((float)retVals[0],0,(float)retVals[1]),ENTITY_ENEMY,TEXTURE_ENEMY1,retVals[2],0,retVals[3],retVals[4],retVals[5]);
 			enemies.push_back(tempE);
 		}
 
