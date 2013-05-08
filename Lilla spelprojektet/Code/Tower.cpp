@@ -23,6 +23,9 @@ Tower::Tower(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, 
 	this->range = range;
 	this->projectileSpeed = projectileSpeed;
 	this->cooldown = 0;
+	this->xpToNextLvl = 50;
+	this->level = 1;
+	this->experience = 0;
 
 	sound = SoundSystem::Getinstance()->createSound("plop.mp3");
 
@@ -75,11 +78,20 @@ int Tower::update(float dt)
 	//Uppdatera projektilerna
 	for(int i = 0; i < (int)projectiles.size(); i++)
 	{
-		if(projectiles.at(i)->update(dt) == 0)
+		int ret = projectiles.at(i)->update(dt);
+		if(ret == 0)
 		{
 			Projectile* temp = projectiles.at(i);
 			projectiles.erase(projectiles.begin() + i);
 			delete temp;
+		}
+		else if(ret == 2)
+		{
+			Projectile* temp = projectiles.at(i);
+			projectiles.erase(projectiles.begin() + i);
+			delete temp;
+
+			giveXp();
 		}
 	}
 
@@ -110,6 +122,31 @@ int Tower::update(float dt)
 	}
 
 	return 1;
+}
+
+void Tower::giveXp()
+{
+	this->experience += 10;
+	cout << "xp: " << experience << "/" << xpToNextLvl << endl;
+	if(experience >= xpToNextLvl)
+	{
+		cout << "lvlup!!!!!" << endl;
+		lvlUp();
+	}
+}
+void Tower::lvlUp()
+{
+	this->scaleFactor++;
+	D3DXMatrixScaling(&scale,scaleFactor,scaleFactor,scaleFactor);
+	this->attackSpeed -= 0.1f;
+	this->cooldown -= 0.1f;
+	this->damage += 5;
+	this->hp += 5;
+	this->maxHp += 5;
+	this->projectileSpeed += 0.1f;
+	this->xpToNextLvl += 10;
+	this->experience = 0;
+	this->level++;
 }
 
 void Tower::aquireTarget(vector<Enemy*>* enemies)

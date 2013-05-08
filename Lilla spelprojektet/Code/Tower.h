@@ -31,7 +31,13 @@ private:
 	float range;
 	float projectileSpeed;
 	float cooldown;
+	int experience;
+	int level;
+	int xpToNextLvl;
 	Enemy* target;
+
+	void giveXp();
+	void lvlUp();
 
 	vector<Projectile*> projectiles;
 	
