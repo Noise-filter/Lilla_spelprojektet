@@ -12,10 +12,10 @@ Node::Node(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, in
 
 	scaleFactor = 0.4f;
 	D3DXMatrixScaling(&scale, scaleFactor, scaleFactor, scaleFactor);
-	D3DXMatrixTranslation(&pointTranslate, 1.8f, 0, -0.2);
+	D3DXMatrixTranslation(&pointTranslate, 1.8f, 0, -0.2f);
 
-	rotationSpeed = (float)(rand() % 100 + 1) * 0.0005;
-	translateSpeed = 0.1;
+	rotationSpeed = (float)(rand() % 100 + 1) * 0.0005f;
+	translateSpeed = 0.1f;
 	upTranslate = rand() % 2;
 	this->pos = pos;
 	translatePosMax = 0.5;

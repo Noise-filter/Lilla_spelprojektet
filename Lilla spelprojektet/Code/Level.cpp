@@ -26,7 +26,7 @@ void Level::constructNeutrals()
 {
 	//kolla igenom nodes och leta efter quads av neutrala noder
 	//placera sedan en neutral byggnad
-	int nrOfBuildings = 0;
+	
 	D3DXVECTOR3 pos = D3DXVECTOR3(0,0,0);
 	int counter = 0;
 	for(int i = 0; i < mapSize-1; i++)
@@ -60,6 +60,7 @@ void Level::constructNeutrals()
 			}
 		}
 	}
+	neutralStructures.push_back(Structure(pos,1,0,100,0));
 }
 
 bool Level::loadLevel(string fileName)
@@ -152,7 +153,7 @@ bool Level::loadLevel(string fileName)
 
 	fin.close();
 
-	//constructNeutrals();
+	constructNeutrals();
 
 	return true;
 }

@@ -79,7 +79,7 @@ MESH_PNUV* OBJReader::LoadDataStructures(string fileName, int vertexCount, int t
 	D3DXVECTOR2 *texcoords;
 	FaceType *faces;
 	ifstream fin;
-	int vertexIndex, texcoordIndex, normalIndex, faceIndex, vIndex, tIndex, nIndex;
+	int vertexIndex, texcoordIndex, normalIndex, faceIndex;
 	char input, input2;
 	ofstream fout;
 
