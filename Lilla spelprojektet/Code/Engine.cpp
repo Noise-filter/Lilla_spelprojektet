@@ -14,7 +14,7 @@ Engine::~Engine(void)
 	SAFE_DELETE(pGeoManager);
 }
 
-bool Engine::init(HINSTANCE hInstance, int cmdShow)
+bool Engine::init(HINSTANCE hInstance, int cmdShow, int mapSize)
 {
 	HRESULT hr = (win32->initWindow(hInstance, cmdShow)); // initierar win32
 	if(FAILED(hr))
@@ -28,7 +28,7 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 		return false;
 	}
 
-	pGeoManager->init(d3d->pDevice);
+	pGeoManager->init(d3d->pDevice,mapSize);
 
 	return true; // allt gick bra
 }

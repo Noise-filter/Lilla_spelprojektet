@@ -24,6 +24,10 @@ void GameLogic::incrementSelectedStructure(int increment)
 		printSelected();
 	}
 }
+int GameLogic::getMapSize()
+{
+	return this->level->getMapSize();
+}
 
 void GameLogic::giveResource(float dt)
 {
