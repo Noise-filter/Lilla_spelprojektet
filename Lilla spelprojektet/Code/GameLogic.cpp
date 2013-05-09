@@ -182,7 +182,7 @@ bool GameLogic::init(int quadSize, GameSettings &settings)
 	this->currentResCD = 0;
 
 	this->level->init(quadSize);
-	this->level->loadLevel("level.txt");
+	this->level->loadLevel("level2.txt");
 
 	this->eHandler->init(level->getStructures(), level->getNodes(), level->getMapSize(), quadSize,settings.enemiesPerMin,settings.difficulty);
 

@@ -25,7 +25,8 @@ bool Level::init(int quadSize)
 void Level::constructNeutrals()
 {
 	//kolla igenom nodes och leta efter quads av neutrala noder
-	//placera sedan en neutral byggnad 
+	//placera sedan en neutral byggnad
+	int nrOfBuildings = 0;
 	D3DXVECTOR3 pos = D3DXVECTOR3(0,0,0);
 	int counter = 0;
 	for(int i = 0; i < mapSize-1; i++)
@@ -52,9 +53,10 @@ void Level::constructNeutrals()
 			}
 			if(counter == 4)
 			{
-				pos = D3DXVECTOR3((float)i*quadSize + (quadSize/2),0,(float)j*quadSize + (quadSize/2));
+			
+					pos = D3DXVECTOR3((float)i*quadSize + (quadSize/2),0,(float)j*quadSize + (quadSize/2));
 
-				neutralStructures.push_back(Structure(pos,0,0,100,0));
+					neutralStructures.push_back(Structure(pos,1,0,100,0));
 			}
 		}
 	}
@@ -133,6 +135,8 @@ bool Level::loadLevel(string fileName)
 				entityFlag = ENTITY_NODE_GREEN;
 			else if(value == COLOR_RED)
 				entityFlag = ENTITY_NODE_RED;
+			else if(value == COLOR_GREY)
+				entityFlag = ENTITY_NODE_GREEN;
 					
 			//lägg till kollar för texturer
 
@@ -148,7 +152,7 @@ bool Level::loadLevel(string fileName)
 
 	fin.close();
 
-	constructNeutrals();
+	//constructNeutrals();
 
 	return true;
 }
@@ -439,14 +443,14 @@ void Level::getRenderData(vector<vector<RenderData*>>& rData)
 	
 	for(int i = 0; i < (int)neutralStructures.size(); i++)
 	{
-		rData.at(1).push_back(&neutralStructures.at(i).getRenderData());
+		rData.at(2).push_back(&neutralStructures.at(i).getRenderData());
 	}
 
 	//Lägg till alla byggnader i renderData
 	for(int i = 0; i < mapSize-1; i++)
 	{
 		for(int j = 0; j < mapSize-1; j++)
-		{
+		{	
 			if(structures[i][j] != NULL)
 			{
 				//Om det är ett torn lägg till övre delen och alla projektiler
