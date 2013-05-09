@@ -274,7 +274,7 @@ void Level::upgradeStructures(int selectedUpgrade)
 			if(structures[i][j] != NULL && typeid(*structures[i][j]) == typeid(Tower))
 			{
 				//cout << "hp before: "<< dynamic_cast<Tower*>(structures[i][j])->getHp() << endl;
-				dynamic_cast<Tower*>(structures[i][j])->giveUpgrade(availibleUpgrades[selectedUpgrade-2]);
+				dynamic_cast<Tower*>(structures[i][j])->giveUpgrade(availibleUpgrades[selectedUpgrade-3]);
 				//cout << "hp after: "<< dynamic_cast<Tower*>(structures[i][j])->getHp() << endl;
 			}
 		}	
@@ -289,7 +289,7 @@ void Level::removeUpgrade(int selectedUpgrade)
 		{
 			if(structures[i][j] != NULL && typeid(*structures[i][j]) == typeid(Tower))
 			{
-				dynamic_cast<Tower*>(structures[i][j])->removeUpgrade(availibleUpgrades[selectedUpgrade-2]);
+				dynamic_cast<Tower*>(structures[i][j])->removeUpgrade(availibleUpgrades[selectedUpgrade-3]);
 			}
 		}	
 	}
