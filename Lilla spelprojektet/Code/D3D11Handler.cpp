@@ -93,9 +93,9 @@ Shader *D3D11Handler::setPass(PASS_STATE pass)
 
 			return this->vShaders.at(PASS_FULLSCREENQUAD);
 
-		case PASS_HPBAR:
+		case PASS_HPBARS:
 			this->pDeviceContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);
-			return this->vShaders.at(PASS_HPBAR);
+			return this->vShaders.at(PASS_HPBARS);
 
 			break;
 	}
@@ -310,15 +310,26 @@ bool D3D11Handler::initShaders()
 	{
 		return false;
 	}
-/*
+
+	D3D11_INPUT_ELEMENT_DESC inputDescHP[] = 
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+
+		{ "WORLD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "WORLD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "WORLD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "WORLD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+	};
+
 	temp = new Shader();
-	this->vShaders.push_back(temp);
-	hr = this->vShaders.at(PASS_HPBAR)->Init(this->pDevice, this->pDeviceContext, "../Shaders/hp bars testing.fx", tempInput, 1);
+	this->vShaders.at(PASS_HPBARS) = temp;
+	hr = this->vShaders.at(PASS_HPBARS)->Init(this->pDevice, this->pDeviceContext, "../Shaders/HealthBars.fx", inputDescHP, 6);
 	if(FAILED(hr))
 	{
 		return false;
 	}
-*/
+
 	return true;
 }
 

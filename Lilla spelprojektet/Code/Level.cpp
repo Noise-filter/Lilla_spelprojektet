@@ -554,9 +554,9 @@ int Level::getMapSize()
 
 void Level::getHPBarInfo(vector<HPBarInfo>& hpBars)
 {
-	for(int i = 0; i < mapSize; i++)
+	for(int i = 0; i < mapSize-1; i++)
 	{
-		for(int j = 0; j < mapSize; j++)
+		for(int j = 0; j < mapSize-1; j++)
 		{
 			if(structures[i][j])
 			{

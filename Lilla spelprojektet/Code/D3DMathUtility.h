@@ -272,6 +272,10 @@ struct HPBarInfo
 	}
 };
 
+struct MatrixInstance
+{
+	Matrix world;
+};
 
 
 #endif

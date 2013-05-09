@@ -94,6 +94,12 @@ void Engine::render(Matrix& vp)
 	}
 	*/
 
+	//Draw hp bars
+	temp = this->d3d->setPass(PASS_HPBARS);
+	pGeoManager->applyHpBarBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	temp->Apply(0);
+	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfHPBars(), 0, 0);
+	
 	temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
 	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	temp->Apply(0);
@@ -121,6 +127,7 @@ void Engine::setRenderData(vector<vector<MESH_PNC>> renderData)
 void Engine::setHPBars(vector<HPBarInfo>& bars)
 {
 	//set hp bars
+	pGeoManager->updateHPBars(d3d->pDeviceContext, bars);
 }
 
 MouseState* Engine::getMouseState()

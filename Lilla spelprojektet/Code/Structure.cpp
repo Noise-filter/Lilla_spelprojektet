@@ -23,5 +23,6 @@ int Structure::update(float dt)
 HPBarInfo Structure::getHPBarInfo()
 {
 	HPBarInfo info(translate, hp/maxHp);
+	info.translate._41 -= scale._11*3;
 	return info;
 }

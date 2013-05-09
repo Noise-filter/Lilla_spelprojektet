@@ -69,17 +69,17 @@ void GameObject::mUpdate(ID3D11DeviceContext *dc, std::vector<std::vector<MESH_P
 
 void GameObject::mUpdate(ID3D11DeviceContext *dc , std::vector<HPBarInfo>& data)
 {
-	this->iNrOfVertices = 0;
-
 	D3D11_MAPPED_SUBRESOURCE *mappedData = mMap(dc, this->pInstanceBuffer);
 
-	HPBarInfo *mesh = reinterpret_cast<HPBarInfo*>(mappedData->pData);
+	MatrixInstance *mesh = reinterpret_cast<MatrixInstance*>(mappedData->pData);
 
 	for(int j = 0; j < data.size(); j++)
 	{
-		//mesh[j].translate = 
+		D3DXMatrixIdentity(&mesh[j].world);
+		D3DXMatrixScaling(&mesh[j].world, data[j].hpPercent * 0.05, 0.005, 1);
+		mesh[j].world = mesh[j].world * data[j].translate;
 	}
-	this->iNrOfVertices = data.size();
+	this->iNrOfinstances = data.size();
 
 	mUnmap(dc, this->pVertexBuffer);
 }
@@ -141,6 +141,20 @@ void GameObject::mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INI
 	if(nrOfInstances > 0)
 	{
 		instanceInit.desc.uByteWidth = sizeof(INSTANCEDATA) * nrOfInstances;
+		this->pInstanceBuffer = bufferObj->initInstance(device, instanceInit);
+	}
+
+	this->pVertexBuffer = bufferObj->initBuffer(device, bufferInit);
+	this->iNrOfVertices = nrOfVertices;
+}
+void GameObject::mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_PUV *mesh, int nrOfVertices, int nrOfInstances, Buffer* bufferObj, bool asd)
+{
+	bufferInit.desc.uByteWidth    = sizeof(MESH_PUV) * nrOfVertices;
+	bufferInit.data.pInitData     = mesh;
+
+	if(nrOfInstances > 0)
+	{
+		instanceInit.desc.uByteWidth = sizeof(MatrixInstance) * nrOfInstances;
 		this->pInstanceBuffer = bufferObj->initInstance(device, instanceInit);
 	}
 

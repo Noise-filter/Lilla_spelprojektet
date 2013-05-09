@@ -163,7 +163,7 @@ void GeometryManager::init(ID3D11Device *device)
 	};
 
 
-	hpBars->mInit(device, bufferInit, instanceInit, puv, 6, 1000, pBufferObj);
+	hpBars->mInit(device, bufferInit, instanceInit, puv, 6, 1000, pBufferObj, true);
 }
 
 void GeometryManager::applyEntityBuffer(ID3D11DeviceContext *dc, int ID, D3D_PRIMITIVE_TOPOLOGY topology)
@@ -180,6 +180,11 @@ void GeometryManager::applyParticleBuffer(ID3D11DeviceContext *dc , D3D_PRIMITIV
 	UINT stride = sizeof(MESH_PNC);
 	this->Particles->mApply(dc, topology, stride);
 }
+void GeometryManager::applyHpBarBuffer(ID3D11DeviceContext *dc , D3D_PRIMITIVE_TOPOLOGY topology)
+{
+	UINT stride[2] = {sizeof(MESH_PUV), sizeof(MatrixInstance)};
+	this->hpBars->mApply(dc, topology, stride);
+}
 
 void GeometryManager::updateEntityBuffer(ID3D11DeviceContext *dc, std::vector<RenderData*> data, int ID)
 {
@@ -188,6 +193,10 @@ void GeometryManager::updateEntityBuffer(ID3D11DeviceContext *dc, std::vector<Re
 void GeometryManager::updateParticles(ID3D11DeviceContext *dc, std::vector<std::vector<MESH_PNC>> data)
 {
 	this->Particles->mUpdate(dc, data);
+}
+void GeometryManager::updateHPBars(ID3D11DeviceContext *dc, std::vector<HPBarInfo>& data)
+{
+	this->hpBars->mUpdate(dc, data);
 }
 
 int GeometryManager::getNrOfInstances(int ID)
@@ -205,6 +214,10 @@ int GeometryManager::getNrOfEntities()
 int GeometryManager::getNrOfParticles()
 {
 	return this->Particles->mGetNrOfVertices();
+}
+int GeometryManager::getNrOfHPBars()
+{
+	return this->hpBars->mGetNrOfInstances();
 }
 
 void GeometryManager::importMesh(ID3D11Device *device,
