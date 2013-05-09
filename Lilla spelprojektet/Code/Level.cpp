@@ -56,11 +56,10 @@ void Level::constructNeutrals()
 			
 					pos = D3DXVECTOR3((float)i*quadSize + (quadSize/2),0,(float)j*quadSize + (quadSize/2));
 
-					neutralStructures.push_back(Structure(pos,1,0,100,0));
+					neutralStructures.push_back(new Structure(pos,1,0,100,0));
 			}
 		}
 	}
-	neutralStructures.push_back(Structure(pos,1,0,100,0));
 }
 
 bool Level::loadLevel(string fileName)
@@ -85,6 +84,7 @@ bool Level::loadLevel(string fileName)
 			SAFE_DELETE_ARRAY(structures[i]);
 		}
 		SAFE_DELETE_ARRAY(structures);
+		neutralStructures.clear();
 	}
 	
 
@@ -325,26 +325,50 @@ bool Level::isAdjecent(int xPos, int yPos)
 
 bool Level::isLocationBuildable(int xPos, int yPos)
 {
-	int counter = 0;
+	int greenCounter = 0;
+	int greyCounter = 0;
 
 	if(nodes[xPos][yPos].getColor() == COLOR_GREEN)
 	{
-		counter++;
+		greenCounter++;
 	}
+	else if(nodes[xPos][yPos].getColor() == COLOR_GREY)
+	{
+		greyCounter++;
+	}
+
 	if(nodes[xPos+1][yPos].getColor() == COLOR_GREEN)
 	{
-		counter++;
+		greenCounter++;
 	}
+	else if(nodes[xPos+1][yPos].getColor() == COLOR_GREY)
+	{
+		greyCounter++;
+	}
+
 	if(nodes[xPos][yPos+1].getColor() == COLOR_GREEN)
 	{
-		counter++;
+		greenCounter++;
 	}
+	else if(nodes[xPos][yPos+1].getColor() == COLOR_GREY)
+	{
+		greenCounter++;
+	}
+
 	if(nodes[xPos+1][yPos+1].getColor() == COLOR_GREEN)
 	{
-		counter++;
+		greenCounter++;
+	}
+	else if(nodes[xPos+1][yPos+1].getColor() == COLOR_GREY)
+	{
+		greenCounter++;
 	}
 	
-	if(counter == 4)
+	if(greenCounter == 4)
+	{
+		return true;
+	}
+	else if((greenCounter + greyCounter) == 4 && greenCounter > 0)
 	{
 		return true;
 	}
@@ -444,7 +468,7 @@ void Level::getRenderData(vector<vector<RenderData*>>& rData)
 	
 	for(int i = 0; i < (int)neutralStructures.size(); i++)
 	{
-		rData.at(2).push_back(&neutralStructures.at(i).getRenderData());
+		rData.at(2).push_back(&neutralStructures.at(i)->getRenderData());
 	}
 
 	//Lägg till alla byggnader i renderData

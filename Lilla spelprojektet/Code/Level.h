@@ -43,7 +43,7 @@ private:
 	Node** nodes;
 	Structure*** structures;
 	int nrOfSupplyStructures;
-	vector<Structure> neutralStructures;
+	vector<Structure*> neutralStructures;
 
 	
 
