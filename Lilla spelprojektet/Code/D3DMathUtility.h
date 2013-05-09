@@ -253,6 +253,25 @@ struct RenderData
 	};
 };
 
+struct HPBarInfo
+{
+	float hpPercent;
+	Matrix translate;
+
+	HPBarInfo()
+	{
+		D3DXMatrixIdentity(&translate);
+		hpPercent = 0;
+
+	}
+
+	HPBarInfo(Matrix trans, float hpPercent)
+	{
+		translate = trans;
+		this->hpPercent = hpPercent;
+	}
+};
+
 
 
 #endif

@@ -30,6 +30,7 @@ public:
 	Structure*** getStructures();
 	Node** getNodes();
 	int getMapSize();
+	void getHPBarInfo(vector<HPBarInfo>& hpBars);
 	bool loadLevel(string fileName);
 
 private:

@@ -67,6 +67,23 @@ void GameObject::mUpdate(ID3D11DeviceContext *dc, std::vector<std::vector<MESH_P
 	mUnmap(dc, this->pVertexBuffer);
 }
 
+void GameObject::mUpdate(ID3D11DeviceContext *dc , std::vector<HPBarInfo>& data)
+{
+	this->iNrOfVertices = 0;
+
+	D3D11_MAPPED_SUBRESOURCE *mappedData = mMap(dc, this->pInstanceBuffer);
+
+	HPBarInfo *mesh = reinterpret_cast<HPBarInfo*>(mappedData->pData);
+
+	for(int j = 0; j < data.size(); j++)
+	{
+		//mesh[j].translate = 
+	}
+	this->iNrOfVertices = data.size();
+
+	mUnmap(dc, this->pVertexBuffer);
+}
+
 //////////////////////////////////////////
 //methods for applying buffers to shader//
 //////////////////////////////////////////
@@ -86,6 +103,15 @@ void GameObject::mApply(ID3D11DeviceContext *dc, D3D_PRIMITIVE_TOPOLOGY topology
 {
 	UINT offset = 0;
 	dc->IASetVertexBuffers(0 , 1 , &this->pVertexBuffer, &stride, &offset);
+	dc->IASetPrimitiveTopology(topology);
+}
+
+void GameObject::mApply(ID3D11DeviceContext *dc, D3D_PRIMITIVE_TOPOLOGY topology, UINT strides[2])
+{
+	UINT offset[2] = {0, 0};
+	ID3D11Buffer* buffers[2] = {pVertexBuffer, pInstanceBuffer};
+
+	dc->IASetVertexBuffers(0, 2, buffers, strides, offset);
 	dc->IASetPrimitiveTopology(topology);
 }
 

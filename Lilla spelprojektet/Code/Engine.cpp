@@ -118,6 +118,11 @@ void Engine::setRenderData(vector<vector<MESH_PNC>> renderData)
 	pGeoManager->updateParticles(d3d->pDeviceContext, renderData);
 }
 
+void Engine::setHPBars(vector<HPBarInfo>& bars)
+{
+	//set hp bars
+}
+
 MouseState* Engine::getMouseState()
 {
 	return this->win32->mState;
