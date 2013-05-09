@@ -14,7 +14,7 @@ Tower::Tower() : Structure()
 	topTower = new RenderData(ENTITY_TOWERTOP, 0, world, 0);
 }
 
-Tower::Tower(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, float damage, float attackSpeed, float range, float projectileSpeed)
+Tower::Tower(Vec3 pos, int meshID, int textureID, float hp, int lightID, float damage, float attackSpeed, float range, float projectileSpeed)
 	: Structure(pos, meshID, textureID, hp, lightID)
 {
 	target = NULL;
@@ -107,7 +107,7 @@ int Tower::update(float dt)
 		{
 			if(range > D3DXVec3Length(&(target->getPosition() - getPosition())))
 			{
-				projectiles.push_back(new Projectile(D3DXVECTOR3(getPosition().x-2, 6, getPosition().z), ENTITY_PROJECTILE, 0, 0, 0, target, projectileSpeed, damage));
+				projectiles.push_back(new Projectile(Vec3(getPosition().x-2, 6, getPosition().z), ENTITY_PROJECTILE, 0, 0, 0, target, projectileSpeed, damage));
 				cooldown = attackSpeed;
 				SoundSystem::Getinstance()->playSound(sound);
 			}
@@ -154,7 +154,7 @@ void Tower::lvlUp()
 
 void Tower::aquireTarget(vector<Enemy*>* enemies)
 {
-	D3DXVECTOR3 vec;
+	Vec3 vec;
 	Enemy* t = NULL;
 	float closestLength = 1000;
 	float length;
@@ -193,13 +193,13 @@ vector<RenderData*> Tower::getRenderData()
 //Rotates towards target
 void Tower::rotateTop()
 {
-	D3DXVECTOR3 pos = getPosition();
+	Vec3 pos = getPosition();
 	pos.y = 0;
-	D3DXVECTOR3 look = D3DXVECTOR3(target->getPosition().x, 0, target->getPosition().z) - pos;
+	Vec3 look = Vec3(target->getPosition().x, 0, target->getPosition().z) - pos;
 
 	D3DXVec3Normalize(&look, &look);
 
-	float dot = D3DXVec3Dot(&look, &D3DXVECTOR3(-1, 0, 0));
+	float dot = D3DXVec3Dot(&look, &Vec3(-1, 0, 0));
 	float yaw = acos(dot);
 
 	if(look.z > 0)

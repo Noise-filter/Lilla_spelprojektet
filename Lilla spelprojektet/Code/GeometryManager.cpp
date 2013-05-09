@@ -7,7 +7,7 @@ GeometryManager::GeometryManager()
 	
 	this->vEntities.resize(NROFDIFFERENTMESHES);
 
-	for(int i = 0; i < this->vEntities.size(); i++)
+	for(int i = 0; i < (int)this->vEntities.size(); i++)
 	{
 		this->vEntities[i] = new GameObject();
 	}
@@ -20,7 +20,7 @@ GeometryManager::GeometryManager()
 }
 GeometryManager::~GeometryManager()
 {
-	for(int i = 0; i < this->vEntities.size(); i++)
+	for(int i = 0; i < (int)this->vEntities.size(); i++)
 	{
 		SAFE_DELETE(this->vEntities[i]);
 	}

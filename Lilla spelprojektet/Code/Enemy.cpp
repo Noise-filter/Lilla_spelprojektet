@@ -11,7 +11,7 @@ Enemy::Enemy() : Entity()
 	target = NULL;
 }
 
-Enemy::Enemy(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, float speed, float damage, int xp)
+Enemy::Enemy(Vec3 pos, int meshID, int textureID, float hp, int lightID, float speed, float damage, int xp)
 	: Entity(pos, meshID, textureID, hp, lightID)
 {
 	this->speed = speed;
@@ -20,21 +20,21 @@ Enemy::Enemy(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, 
 	this->xp = xp;
 
 	waypoints.push_back(Waypoint((int)pos.x, (int)pos.z));
-	trail = ParticleSystem::Getinstance()->addTrail(D3DXVECTOR3(1, 1, 1),this->getPosition(), 1, 0.1f, 0, 1, 1, 1);
+	trail = ParticleSystem::Getinstance()->addTrail(Vec3(1, 1, 1),this->getPosition(), 1, 0.1f, 0, 1, 1, 1);
 
 	target = NULL;
 	attackSpeed = 1;
 	cooldown = attackSpeed;
 	targetUpdateTime = 3;
 
-	scaleFactor = 0.3;
+	scaleFactor = 0.3f;
 	D3DXMatrixScaling(&scale, scaleFactor, scaleFactor, scaleFactor);
 }
 
 Enemy::~Enemy()
 {
 	ParticleSystem::Getinstance()->removePolicy(trail);
-	ParticleSystem::Getinstance()->addDeathExplosion(D3DXVECTOR3(1,0,0), getPosition(), 100, 0.5, 30);
+	ParticleSystem::Getinstance()->addDeathExplosion(Vec3(1,0,0), getPosition(), 100, 0.5, 30);
 }
 
 int Enemy::update(float dt)
@@ -65,9 +65,9 @@ int Enemy::move(float dt)
 
 	if((int)waypoints.size()-1 > currentWP && target != NULL)
 	{
-		D3DXVECTOR3 pos = this->getPosition();
-		D3DXVECTOR3 target((float)waypoints.at(currentWP+1).x, 0, (float)waypoints.at(currentWP+1).y);
-		D3DXVECTOR3 dir = target - pos;
+		Vec3 pos = this->getPosition();
+		Vec3 target((float)waypoints.at(currentWP+1).x, 0, (float)waypoints.at(currentWP+1).y);
+		Vec3 dir = target - pos;
 
 		if(D3DXVec3Length(&dir) < 1)
 		{
@@ -89,9 +89,9 @@ int Enemy::move(float dt)
 			{
 				target->doDamage(damage);
 				cooldown = attackSpeed;
-				D3DXVECTOR3 dir = target->getPosition() - getPosition();
+				Vec3 dir = target->getPosition() - getPosition();
 				D3DXVec3Normalize(&dir, &dir);
-				ParticleSystem::Getinstance()->addAttackParticlePolicy(D3DXVECTOR3(1, 1, 1), getPosition(), 60, 0.8f, 10, dir);
+				ParticleSystem::Getinstance()->addAttackParticlePolicy(Vec3(1, 1, 1), getPosition(), 60, 0.8f, 10, dir);
 			}
 		}
 		else	//Fienden har inget target

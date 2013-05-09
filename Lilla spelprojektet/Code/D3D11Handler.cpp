@@ -99,6 +99,7 @@ Shader *D3D11Handler::setPass(PASS_STATE pass)
 
 			break;
 	}
+	return NULL;
 }
 
 void D3D11Handler::clearAndBindRenderTarget()

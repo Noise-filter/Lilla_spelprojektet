@@ -52,7 +52,7 @@ void GameObject::mUpdate(ID3D11DeviceContext *dc, std::vector<std::vector<MESH_P
 
 	MESH_PNC *mesh = reinterpret_cast<MESH_PNC*>(mappedData->pData);
 
-	for(int j = 0; j < data.size(); j++)
+	for(int j = 0; j < (int)data.size(); j++)
 	{
 		for(int i = 0; i < (int)data[j].size(); i++)
 		{
@@ -73,7 +73,7 @@ void GameObject::mUpdate(ID3D11DeviceContext *dc , std::vector<HPBarInfo>& data)
 
 	MatrixInstance *mesh = reinterpret_cast<MatrixInstance*>(mappedData->pData);
 
-	for(int j = 0; j < data.size(); j++)
+	for(int j = 0; j < (int)data.size(); j++)
 	{
 		D3DXMatrixIdentity(&mesh[j].world);
 		D3DXMatrixScaling(&mesh[j].world, data[j].hpPercent * 0.05, 0.005, 1);

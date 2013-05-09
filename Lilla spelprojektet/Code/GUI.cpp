@@ -11,7 +11,8 @@ GUI::GUI()
 
 GUI::~GUI()
 {
-
+	SAFE_DELETE_ARRAY(textObjects);
+	SAFE_DELETE(menuBtns);
 }
 
 
@@ -59,8 +60,8 @@ void GUI::createBtns(GAMESTATES state)
 		this->nrOfBtns = 3;
 		this->menuBtns = new Button[nrOfBtns];
 		this->menuBtns[0] = createBtn(D3DXVECTOR2(midScreenW, midScreenH), STARTGAME);
-		this->menuBtns[1] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 0.15), SETTINGS);
-		this->menuBtns[2] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 0.3), QUIT);
+		this->menuBtns[1] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 0.15f), SETTINGS);
+		this->menuBtns[2] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 0.3f), QUIT);
 	}
 	else if(state == STATE_SETTINGS)
 	{
@@ -71,8 +72,8 @@ void GUI::createBtns(GAMESTATES state)
 		this->nrOfBtns = 3;
 		this->menuBtns = new Button[nrOfBtns];
 		this->menuBtns[0] = createBtn(D3DXVECTOR2(midScreenW, midScreenH), PAUSED_CONTINUE);
-		this->menuBtns[1] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 0.15), SETTINGS);
-		this->menuBtns[2] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 0.3), QUIT);
+		this->menuBtns[1] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 0.15f), SETTINGS);
+		this->menuBtns[2] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 0.3f), QUIT);
 	}
 	if(this->nrOfBtns != 0)
 	{
