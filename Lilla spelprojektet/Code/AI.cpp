@@ -159,7 +159,7 @@ vector<Enemy*> AI::spawnEnemies(float dt, int nrOfEnemies)
 		}
 		if(spawnedEnemies > 0)
 		{
-			Enemy* tempE = new Enemy(D3DXVECTOR3(retVals[0],0,retVals[1]),ENTITY_ENEMY,TEXTURE_ENEMY1,retVals[2],0,retVals[3],retVals[4],(int)retVals[5]);
+			Enemy* tempE = new Enemy(Vec3(retVals[0],0,retVals[1]),ENTITY_ENEMY,TEXTURE_ENEMY1,retVals[2],0,retVals[3],retVals[4],(int)retVals[5]);
 			enemies.push_back(tempE);
 		}
 

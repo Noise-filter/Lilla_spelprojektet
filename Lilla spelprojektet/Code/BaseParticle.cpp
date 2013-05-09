@@ -5,7 +5,7 @@ BaseParticle::BaseParticle(void)
 {
 }
 
-BaseParticle::BaseParticle(D3DXVECTOR3 position, D3DXVECTOR3 direction, float timeToLive, float velocity)
+BaseParticle::BaseParticle(Vec3 position, Vec3 direction, float timeToLive, float velocity)
 {
 	this->position = position;
 	this->timeToLive = timeToLive;
@@ -18,7 +18,7 @@ BaseParticle::~BaseParticle(void)
 {
 }
 
-D3DXVECTOR3 BaseParticle::getPosition()
+Vec3 BaseParticle::getPosition()
 {
 	return this->position;
 }
@@ -28,12 +28,12 @@ float BaseParticle::getTimeToLive()
 	return this->timeToLive;
 }
 
-void BaseParticle::setPosition(D3DXVECTOR3 position)
+void BaseParticle::setPosition(Vec3 position)
 {
 	this->position = position;
 }
 
-void BaseParticle::setDirection(D3DXVECTOR3 direction)
+void BaseParticle::setDirection(Vec3 direction)
 {
 	this->direction = direction;	
 }

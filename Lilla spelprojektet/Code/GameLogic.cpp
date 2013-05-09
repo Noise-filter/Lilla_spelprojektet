@@ -119,7 +119,7 @@ void GameLogic::structureBuilt()
 }
 
 
-int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX view, D3DXMATRIX proj, D3DXVECTOR3 cameraPos)
+int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX view, D3DXMATRIX proj, Vec3 cameraPos)
 {
 	if(gameState == STATE_GAMESTART)
 	{
@@ -233,11 +233,11 @@ void GameLogic::printSelected()
 		break;
 	}
 }
-D3DXVECTOR3 GameLogic::getMouseWorldPos(MouseState* mState, D3DXMATRIX view, D3DXMATRIX proj, D3DXVECTOR3 cameraPos)
+Vec3 GameLogic::getMouseWorldPos(MouseState* mState, D3DXMATRIX view, D3DXMATRIX proj, Vec3 cameraPos)
 {
 	float pointX, pointY, intersect;
 	D3DXMATRIX invView, worldIdentity;
-	D3DXVECTOR3 dir, origin, rayOrigin, rayDir, intersectPos, planeNormal;
+	Vec3 dir, origin, rayOrigin, rayDir, intersectPos, planeNormal;
 	D3DXMatrixIdentity(&worldIdentity);
 
 	
@@ -258,7 +258,7 @@ D3DXVECTOR3 GameLogic::getMouseWorldPos(MouseState* mState, D3DXMATRIX view, D3D
 	D3DXVec3TransformNormal(&rayDir, &dir, &worldIdentity);
 
 	D3DXVec3Normalize(&rayDir, &rayDir);
-	planeNormal = D3DXVECTOR3(0,1,0);
+	planeNormal = Vec3(0,1,0);
 	intersect = (D3DXVec3Dot(&-planeNormal, &rayOrigin))/(D3DXVec3Dot(&planeNormal,&rayDir));
 
 	return intersectPos = rayOrigin + (intersect*rayDir);

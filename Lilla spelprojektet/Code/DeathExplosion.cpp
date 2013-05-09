@@ -5,7 +5,7 @@ DeathExplosion::DeathExplosion() : ParticlePolicy()
 
 }
 
-DeathExplosion::DeathExplosion(D3DXVECTOR3 color, D3DXVECTOR3 position, int intensity, float timeToLive, float velocity)
+DeathExplosion::DeathExplosion(Vec3 color, Vec3 position, int intensity, float timeToLive, float velocity)
 	: ParticlePolicy(color, position, intensity, timeToLive, velocity)
 {
 	emitt();
@@ -44,7 +44,7 @@ int DeathExplosion::update(float dt)
 void DeathExplosion::emitt()
 {
 	BaseParticle Particle = *this->emitter;
-	D3DXVECTOR3 origPos = Particle.getPosition();
+	Vec3 origPos = Particle.getPosition();
 
 	float posX = origPos.x;
 	float posY = origPos.y;
@@ -60,8 +60,8 @@ void DeathExplosion::emitt()
 		dirY = (float)rand() / (float)RAND_MAX -0.5f;
 		dirZ = (float)rand() / (float)RAND_MAX -0.5f;
 
-		Particle.setDirection(D3DXVECTOR3(dirX,dirY,dirZ));
-		Particle.setPosition(D3DXVECTOR3(posX,posY,posZ));
+		Particle.setDirection(Vec3(dirX,dirY,dirZ));
+		Particle.setPosition(Vec3(posX,posY,posZ));
 
 		particles.insertLast(Particle);
 	}

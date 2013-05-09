@@ -11,7 +11,8 @@ GUI::GUI()
 
 GUI::~GUI()
 {
-
+	SAFE_DELETE_ARRAY(textObjects);
+	SAFE_DELETE(menuBtns);
 }
 
 

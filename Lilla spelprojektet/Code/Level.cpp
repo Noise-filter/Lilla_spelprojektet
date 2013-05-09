@@ -27,7 +27,7 @@ void Level::constructNeutrals()
 	//kolla igenom nodes och leta efter quads av neutrala noder
 	//placera sedan en neutral byggnad
 	
-	D3DXVECTOR3 pos = D3DXVECTOR3(0,0,0);
+	Vec3 pos = Vec3(0,0,0);
 	int counter = 0;
 	for(int i = 0; i < mapSize-1; i++)
 	{
@@ -53,10 +53,8 @@ void Level::constructNeutrals()
 			}
 			if(counter == 4)
 			{
-			
-					pos = D3DXVECTOR3((float)i*quadSize + (quadSize/2),0,(float)j*quadSize + (quadSize/2));
-
-					neutralStructures.push_back(new Structure(pos,1,0,100,0));
+				pos = Vec3((float)i*quadSize + (quadSize/2),0,(float)j*quadSize + (quadSize/2));
+				neutralStructures.push_back(new Structure(pos,1,0,100,0));
 			}
 		}
 	}
@@ -141,7 +139,7 @@ bool Level::loadLevel(string fileName)
 					
 			//lägg till kollar för texturer
 
-			nodes[i][j] = Node(D3DXVECTOR3((float)i*quadSize,0,(float)j*quadSize),entityFlag,0,0,0,value);
+			nodes[i][j] = Node(Vec3((float)i*quadSize,0,(float)j*quadSize),entityFlag,0,0,0,value);
 			cout << value << " , ";
 		}
 		fin.ignore();
@@ -175,6 +173,10 @@ Level::~Level(void)
 		SAFE_DELETE_ARRAY(structures[i]);
 	}
 	SAFE_DELETE_ARRAY(structures);
+	for(int i = 0; i < neutralStructures.size(); i++)
+	{
+		SAFE_DELETE(neutralStructures.at(i));
+	}
 
 	SAFE_DELETE_ARRAY(availibleUpgrades);
 }
@@ -380,7 +382,7 @@ bool Level::isLocationBuildable(int xPos, int yPos)
 
 }
 
-bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
+bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 {
 	int xPos = (int)(mouseClickPos.x/quadSize);
 	int yPos = (int)(mouseClickPos.z/quadSize);
@@ -390,7 +392,7 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 
 		if(selectedStructure == BUILDABLE_MAINBUILDING && structures[xPos][yPos] == NULL && isLocationBuildable(xPos, yPos))
 		{ 
-			structures[xPos][yPos] = new Headquarter(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 30, 0);
+			structures[xPos][yPos] = new Headquarter(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 30, 0);
 			return true;
 		
 		}
@@ -400,42 +402,42 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 			switch(selectedStructure)
 			{
 			case BUILDABLE_TOWER:
-				structures[xPos][yPos] = new Tower(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWERBASE,0,100,0, 10, 1, 50, 100);
+				structures[xPos][yPos] = new Tower(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWERBASE,0,100,0, 10, 1, 50, 100);
 				for(int i = 0; i < (int)this->upgradesInUse.size();i++)
 				{
 					dynamic_cast<Tower*>(structures[xPos][yPos])->giveUpgrade(upgradesInUse[i]);
 				}
 				break;
 			case BUILDABLE_SUPPLY:
-				structures[xPos][yPos] = new Supply(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_SUPPLYBASE,0,100,0);
+				structures[xPos][yPos] = new Supply(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_SUPPLYBASE,0,100,0);
 				this->nrOfSupplyStructures++;
 				break;
 			case BUILDABLE_UPGRADE_HP:
-				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
+				structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
 					ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_HP);
 				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_HP)-2]);
 				builtUpgrade = true;
 				break;
 			case BUILDABLE_UPGRADE_ATKSP:
-				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
+				structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
 					ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_ATKSP);
 				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_ATKSP)-2]);
 				builtUpgrade = true;
 				break;
 			case BUILDABLE_UPGRADE_DMG:
-				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
+				structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
 					ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_DMG);
 				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_DMG)-2]);
 				builtUpgrade = true;
 				break;
 			case BUILDABLE_UPGRADE_PRJSP:
-				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
+				structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
 					ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_PRJSP);
 				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_PRJSP)-2]);
 				builtUpgrade = true;
 				break;
 			case BUILDABLE_UPGRADE_RANGE:
-				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
+				structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
 					ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_RANGE);
 				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_RANGE)-2]);
 				builtUpgrade = true;

@@ -4,7 +4,7 @@ Supply::Supply() : Structure()
 {
 }
 
-Supply::Supply(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID)
+Supply::Supply(Vec3 pos, int meshID, int textureID, float hp, int lightID)
 	: Structure(pos, meshID, textureID, hp, lightID)
 {
 	topSupply = new RenderData(ENTITY_SUPPLYTOP, 0, renderData.worldMat, 0);

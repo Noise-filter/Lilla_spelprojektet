@@ -22,7 +22,7 @@ public:
 	void getRenderData(vector<vector<RenderData*>>& rData);
 	int update(float dt, vector<Enemy*>& enemies);
 	
-	bool buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure);
+	bool buildStructure(Vec3 mouseClickPos, int selectedStructure);
 	bool isAdjecent(int xPos, int yPos);
 	bool isLocationBuildable(int xPos, int yPos);
 	int getNrOfSupplyStructures();
