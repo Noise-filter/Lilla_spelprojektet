@@ -3,7 +3,7 @@
 #include "WinHandler.h"
 #include "GeometryManager.h"
 #include <FW1FontWrapper.h>
-#include "TextObject.h"
+#include "GUI.h"
 #include <vector>
 using namespace std;
 
@@ -13,8 +13,9 @@ public:
 	Engine(void);
 	~Engine(void);
 
-	void render(D3DXMATRIX& vp);
-	void renderGui();
+	void render(D3DXMATRIX& vp, Text* text, int nrOfText);
+	void renderGui(int state, Text* text);
+	void renderText(Text* text, int nrOfText);
 	bool init(HINSTANCE hInstance, int cmdShow);
 	PRIMITIVE_TOPOLOGIES changeTopology(int ID);
 

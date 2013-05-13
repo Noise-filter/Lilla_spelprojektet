@@ -30,10 +30,15 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 
 	pGeoManager->init(d3d->pDevice);
 
+	HRESULT hResult = FW1CreateFactory(FW1_VERSION, &pFW1Factory);
+	
+	
+	hResult = pFW1Factory->CreateFontWrapper(d3d->pDevice, L"Arial", &pFontWrapper);
+
 	return true; // allt gick bra
 }
 
-void Engine::render(Matrix& vp)
+void Engine::render(Matrix& vp, Text* text, int nrOfText)
 {
 	d3d->clearAndBindRenderTarget();
 
@@ -99,9 +104,35 @@ void Engine::render(Matrix& vp)
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);
 
+	if(text != NULL)
+	{
+		renderText(text, nrOfText);
+	}
+
 	if(FAILED(d3d->pSwapChain->Present( 0, 0 )))
 	{
 		return;
+	}
+}
+
+void Engine::renderGui(int state, Text* text)
+{
+	
+}
+
+void Engine::renderText(Text* text, int nrOfText)
+{
+	for(int i = 0; i < nrOfText; i++)
+	{
+		pFontWrapper->DrawString(
+			d3d->pDeviceContext,
+			text[i].text,// String
+			text[i].textSize,// Font size
+			text[i].pos.x,// X position
+			text[i].pos.y,// Y position
+			text[i].textColor,// Text color, 0xAaBbGgRr
+			FW1_CENTER// Flags (for example FW1_RESTORESTATE to keep context states unchanged)
+		);
 	}
 }
 

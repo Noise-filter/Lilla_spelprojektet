@@ -1,7 +1,6 @@
 #pragma once
-#include "TextObject.h"
-#include "Buffer.h"
-#include "Shader.h"
+#include "D3DMathUtility.h"
+#include "WindowsUtility.h"
 #include <string>
 
 using namespace std;
@@ -11,17 +10,27 @@ enum BUTTONTYPE
 	STARTGAME,
 	SETTINGS,
 	QUIT,
-	PAUSED_CONTINUE
+	PAUSED_CONTINUE,
+	MENU,
+	NEXT,
+	LAST
+};
+
+struct Text
+{
+	D3DXVECTOR2 pos;
+	wchar_t* text;
+	float textSize;
+	UINT32 textColor;
 };
 
 struct Button
-	{
-		D3DXVECTOR2 pos;
-		D3DXVECTOR2 size;
-		wchar_t* text;
-		BUTTONTYPE type;
-		UINT32 textColor;
-	};
+{
+	D3DXVECTOR2 pos;
+	D3DXVECTOR2 size;
+	BUTTONTYPE type;
+	Text text;
+};
 
 class GUI
 {
@@ -29,22 +38,26 @@ public:
 	GUI();
 	~GUI();
 
-	void render(ID3D11Device *pDevice, ID3D11DeviceContext *pContext);
-	int update(MouseState *mouse, GAMESTATES state);
-	void createBtns(GAMESTATES state);
-	void clearBtns();
+	void render(Button*& btn, Text*& text);
+	int update(MouseState *mouse, int& state);
+	void createBtns(int state);
+	int getNrOfBtns()const;
+	int getNrOfText()const;
 	
 
 private:
 	
-	
+	void clear();
 	bool checkBtn(MouseState *mousePos, Button btn);
-	GAMESTATES changeState(Button btn);
+	int changeState(Button btn);
 	Button createBtn(D3DXVECTOR2 pos, BUTTONTYPE type);
+	Text createTextBox(D3DXVECTOR2 pos, wchar_t* text, float size, UINT32 color);
 
 	Button* menuBtns;
 	int nrOfBtns;
-	TextObject* textObjects;
-	GAMESTATES GUI_STATE;
+	Text* textBoxes;
+	int nrOfBoxes;
+
+	int GUI_STATE;
 
 };

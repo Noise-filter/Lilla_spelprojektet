@@ -2,14 +2,14 @@
 
 Game::Game(void)
 {
-	state = STATE_MENU;
+
 	engine = new Engine();
 	gameLogic = new GameLogic();
 	input = new Input();
 	camera = new Camera();
 	soundSystem = soundSystem->Getinstance();
 	pSystem = pSystem->Getinstance();
-	gameState = STATE_GAMESTART;
+	gameState = STATE_MENU;
 	gui = new GUI();
 }
 
@@ -22,6 +22,7 @@ Game::~Game(void)
 	soundSystem->shutdown();
 	SAFE_DELETE(playlist);
 	pSystem->shutdown();
+
 }
 
 bool Game::init(HINSTANCE hInstance, int cmdShow)
@@ -47,7 +48,7 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	camera->LookAt(D3DXVECTOR3(45,45,45), D3DXVECTOR3(35, 0, 45), D3DXVECTOR3(-1, 0, 0));
 	camera->SetLens((float)D3DX_PI * 0.45f, (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
 
-	gameState = STATE_GAMESTART;
+	gameState = STATE_MENU;
 
 
 
@@ -58,32 +59,66 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 
 void Game::render()
 {
-	
+	Button* btns;
+	Text* text;
+	Text* temp;
+	int tempSize;
+	gui->render(btns, text);
+
+	int nrOfBtns = gui->getNrOfBtns();
+	int nrOfBoxes = gui->getNrOfText();
+
+	if(nrOfBtns != 0)
+	{
+		tempSize = nrOfBtns + nrOfBoxes;
+		temp = new Text[tempSize];
+		for(int i = 0; i < nrOfBoxes; i++)
+		{
+			temp[i] = text[i];
+		}
+		for(int i = nrOfBoxes; i < nrOfBtns + nrOfBoxes; i++)
+		{
+			temp[i] = btns[i-nrOfBoxes].text;
+		}
+		
+	}
+	else
+	{ 
+		tempSize = nrOfBoxes;
+		temp = new Text[tempSize];
+		for(int i = nrOfBtns; i < nrOfBoxes; i++)
+		{
+			temp[i] = text[i];
+		}
+	}
+
 	//build engines renderContent with addRenderData then do render to execute those renders
 	engine->setRenderData(gameLogic->getRenderData());
 
 	engine->setRenderData(pSystem->getVertexData());
 
-	engine->render(camera->ViewsProj());
+	engine->render(camera->ViewsProj(), temp, tempSize);
 
+	//engine->renderGui(gameState);
 	
-	
-	
+	delete temp;
+	temp = NULL;
 
 }
 
 int Game::update(float dt)
 {
+	handleInput(dt);
 	if(gameState == STATE_PLAYING || gameState == STATE_GAMESTART )
 	{
-		handleInput(dt);
+		
 		camera->UpdateViewMatrix();
 		if(!gameLogic->update(gameState, dt,input->getMs(), camera->View(), camera->Proj(), camera->GetPosition()))
 			return 0; // error
 		
 		pSystem->update(dt);
 	}
-	else if(gameState == STATE_WIN) 
+	 if(gameState == STATE_WIN) 
 	{
 		cout << "YOU WON" << endl;
 	}
@@ -93,7 +128,7 @@ int Game::update(float dt)
 		cout << "YOU LOSE" << endl;
 	}
 	
-
+	gui->update(input->getMs(), gameState);
 
 	input->resetBtnState();
 	char title[255];
