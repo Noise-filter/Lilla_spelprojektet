@@ -33,7 +33,7 @@ GeometryManager::~GeometryManager()
 	SAFE_DELETE(this->importer);
 }
 
-void GeometryManager::init(ID3D11Device *device)
+void GeometryManager::init(ID3D11Device *device,int mapSize)
 {
 	importer = new OBJReader();
 	BUFFER_INIT bufferInit		= BUFFER_INIT();

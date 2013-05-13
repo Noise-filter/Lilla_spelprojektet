@@ -15,7 +15,7 @@ public:
 
 	void render(D3DXMATRIX& vp);
 	void renderGui();
-	bool init(HINSTANCE hInstance, int cmdShow);
+	bool init(HINSTANCE hInstance, int cmdShow, int mapSize);
 	PRIMITIVE_TOPOLOGIES changeTopology(int ID);
 
 	void setRenderData(vector<vector<RenderData*>>& renderData);

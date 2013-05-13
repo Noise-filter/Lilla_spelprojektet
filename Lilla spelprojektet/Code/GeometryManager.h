@@ -20,7 +20,7 @@ class GeometryManager
 		GeometryManager();
 		virtual~GeometryManager();
 		
-		void init(ID3D11Device *device); //TBA more functionality like calls for importing meshes, also fill out the bufferInit for testing purpose
+		void init(ID3D11Device *device, int mapSize); //TBA more functionality like calls for importing meshes, also fill out the bufferInit for testing purpose
 		void applyEntityBuffer(ID3D11DeviceContext *dc, int ID, D3D_PRIMITIVE_TOPOLOGY topology);
 		void updateEntityBuffer(ID3D11DeviceContext *dc, std::vector<RenderData*> data, int ID);
 		void updateParticles(ID3D11DeviceContext *dc, std::vector<std::vector<MESH_PNC>> data);

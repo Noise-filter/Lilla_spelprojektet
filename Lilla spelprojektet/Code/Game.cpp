@@ -34,16 +34,18 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	//use settings for the game
 	
 
+	if(!gameLogic->init(10,settings))
+		return false;
+	int mapSize = gameLogic->getMapSize();
 
-	if(!engine->init(hInstance,cmdShow))
+	if(!engine->init(hInstance,cmdShow,mapSize))
 		return false;
 
 	soundSystem->init();
 	playlist = soundSystem->createPlaylist("playlist.m3u");
 	//initiate other game resources such as level or whatever
 
-	if(!gameLogic->init(10,settings))
-		return false;
+
 
 	camera->LookAt(Vec3(45,45,45), Vec3(35, 0, 45), Vec3(-1, 0, 0));
 	camera->SetLens((float)D3DX_PI * 0.45f, (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);

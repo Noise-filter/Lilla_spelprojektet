@@ -358,7 +358,7 @@ bool Level::isLocationBuildable(int xPos, int yPos)
 	}
 	else if(nodes[xPos][yPos+1].getColor() == COLOR_GREY)
 	{
-		greenCounter++;
+		greyCounter++;
 	}
 
 	if(nodes[xPos+1][yPos+1].getColor() == COLOR_GREEN)
@@ -367,7 +367,7 @@ bool Level::isLocationBuildable(int xPos, int yPos)
 	}
 	else if(nodes[xPos+1][yPos+1].getColor() == COLOR_GREY)
 	{
-		greenCounter++;
+		greyCounter++;
 	}
 	
 	if(greenCounter == 4)
