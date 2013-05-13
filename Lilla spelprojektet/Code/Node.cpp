@@ -16,7 +16,12 @@ Node::Node(Vec3 pos, int meshID, int textureID, float hp, int lightID, int color
 
 	rotationSpeed = (float)(rand() % 100 + 1) * 0.0005f;
 	translateSpeed = 0.1f;
-	upTranslate = rand() % 2;
+	int temp = rand() % 2;
+	if(temp)
+		upTranslate = true;
+	else
+		upTranslate = false;
+
 	this->pos = pos;
 	translatePosMax = 0.5;
 }

@@ -71,7 +71,7 @@ void Game::render()
 	Matrix vp = camera->ViewsProj();
 	Vec4 pos;
 	pos.w = 1;
-	for(int i = 0; i < hp.size(); i++)
+	for(int i = 0; i < (int)hp.size(); i++)
 	{
 		pos.x = hp[i].translate._41;
 		pos.y = hp[i].translate._42;

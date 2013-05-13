@@ -154,8 +154,8 @@ bool Level::loadLevel(string fileName)
 	constructNeutrals();
 
 	//skapa planet
-	plane = new Entity(Vec3((mapSize-1) * quadSize * 0.5, 0, (mapSize-1) * quadSize * 0.5), ENTITY_PLANE, 0, 0, 0);
-	plane->setScale((mapSize-1)*quadSize);
+	plane = new Entity(Vec3((mapSize-1) * quadSize * 0.5f, 0, (mapSize-1) * quadSize * 0.5f), ENTITY_PLANE, 0, 0, 0);
+	plane->setScale((float)(mapSize-1)*quadSize);
 
 	return true;
 }
@@ -177,12 +177,14 @@ Level::~Level(void)
 		SAFE_DELETE_ARRAY(structures[i]);
 	}
 	SAFE_DELETE_ARRAY(structures);
-	for(int i = 0; i < neutralStructures.size(); i++)
+	for(int i = 0; i < (int)neutralStructures.size(); i++)
 	{
 		SAFE_DELETE(neutralStructures.at(i));
 	}
 
 	SAFE_DELETE_ARRAY(availibleUpgrades);
+
+	SAFE_DELETE(plane);
 }
 
 int Level::update(float dt, vector<Enemy*>& enemies)

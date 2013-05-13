@@ -76,7 +76,7 @@ void GameObject::mUpdate(ID3D11DeviceContext *dc , std::vector<HPBarInfo>& data)
 	for(int j = 0; j < (int)data.size(); j++)
 	{
 		D3DXMatrixIdentity(&mesh[j].world);
-		D3DXMatrixScaling(&mesh[j].world, data[j].hpPercent * 0.05, 0.005, 1);
+		D3DXMatrixScaling(&mesh[j].world, data[j].hpPercent * 0.05f, 0.005f, 1.0f);
 		mesh[j].world = mesh[j].world * data[j].translate;
 	}
 	this->iNrOfinstances = data.size();

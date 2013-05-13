@@ -104,13 +104,13 @@ void GeometryManager::init(ID3D11Device *device,int mapSize)
 	};
 
 	MESH_PNUV plane[] ={
-		MESH_PNUV(Vec3(0.5,0,-0.5), Vec3(0,1,0), Vec2(mapSize,0)),
-		MESH_PNUV(Vec3(-0.5,0,-0.5), Vec3(0,1,0), Vec2(0,0)),
-		MESH_PNUV(Vec3(0.5,0,0.5), Vec3(0,1,0), Vec2(mapSize,mapSize)),
+		MESH_PNUV(Vec3(0.5f,0,-0.5f), Vec3(0,1,0), Vec2((float)mapSize,0)),
+		MESH_PNUV(Vec3(-0.5f,0,-0.5f), Vec3(0,1,0), Vec2(0,0)),
+		MESH_PNUV(Vec3(0.5f,0,0.5f), Vec3(0,1,0), Vec2((float)mapSize,(float)mapSize)),
 
-		MESH_PNUV(Vec3(0.5,0,0.5), Vec3(0,1,0), Vec2(mapSize,mapSize)),
-		MESH_PNUV(Vec3(-0.5,0,-0.5), Vec3(0,1,0), Vec2(0,0)),
-		MESH_PNUV(Vec3(-0.5,0,0.5), Vec3(0,1,0), Vec2(0,mapSize)),
+		MESH_PNUV(Vec3(0.5f,0,0.5f), Vec3(0,1,0), Vec2((float)mapSize,(float)mapSize)),
+		MESH_PNUV(Vec3(-0.5f,0,-0.5f), Vec3(0,1,0), Vec2(0,0)),
+		MESH_PNUV(Vec3(-0.5f,0,0.5f), Vec3(0,1,0), Vec2(0,(float)mapSize)),
 	};
 
 
