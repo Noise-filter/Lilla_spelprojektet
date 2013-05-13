@@ -21,6 +21,7 @@ Game::~Game(void)
 	SAFE_DELETE(input);
 	soundSystem->shutdown();
 	SAFE_DELETE(playlist);
+	SAFE_DELETE(gui);
 	pSystem->shutdown();
 
 }
@@ -34,18 +35,20 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	//use settings for the game
 	
 
+	if(!gameLogic->init(10,settings))
+		return false;
+	int mapSize = gameLogic->getMapSize();
 
-	if(!engine->init(hInstance,cmdShow))
+	if(!engine->init(hInstance,cmdShow,mapSize))
 		return false;
 
 	soundSystem->init();
 	playlist = soundSystem->createPlaylist("playlist.m3u");
 	//initiate other game resources such as level or whatever
 
-	if(!gameLogic->init(10,settings))
-		return false;
 
-	camera->LookAt(D3DXVECTOR3(45,45,45), D3DXVECTOR3(35, 0, 45), D3DXVECTOR3(-1, 0, 0));
+
+	camera->LookAt(Vec3(45,45,45), Vec3(35, 0, 45), Vec3(-1, 0, 0));
 	camera->SetLens((float)D3DX_PI * 0.45f, (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
 
 	gameState = STATE_MENU;
@@ -59,6 +62,7 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 
 void Game::render()
 {
+
 	Button* btns;
 	Text* text;
 	Text* temp;
@@ -97,13 +101,29 @@ void Game::render()
 
 	engine->setRenderData(pSystem->getVertexData());
 
-	engine->render(camera->ViewsProj(), temp, tempSize);
-
 	//engine->renderGui(gameState);
-	
+
+
+	//Get hp bars and put them in the correct position
+	vector<HPBarInfo> hp = gameLogic->getHPBarInfo();
+	Matrix vp = camera->ViewsProj();
+	Vec4 pos;
+	pos.w = 1;
+	for(int i = 0; i < (int)hp.size(); i++)
+	{
+		pos.x = hp[i].translate._41;
+		pos.y = hp[i].translate._42;
+		pos.z = hp[i].translate._43;
+
+		D3DXVec4Transform(&pos, &pos, &vp);
+		pos /= pos.w;
+		D3DXMatrixTranslation(&hp[i].translate, pos.x, pos.y, 0);
+	}
+	engine->setHPBars(hp);
+
+	engine->render(camera->ViewsProj(), temp, tempSize);	
 	delete temp;
 	temp = NULL;
-
 }
 
 int Game::update(float dt)

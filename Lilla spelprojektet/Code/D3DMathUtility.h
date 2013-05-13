@@ -10,7 +10,7 @@
 
 #define PI (3.14159265358979323846f)
 
-#define NROFDIFFERENTMESHES (14)
+#define NROFDIFFERENTMESHES (15)
 
 struct GameSettings
 {
@@ -141,6 +141,7 @@ enum ENTITY_FLAGS
 	ENTITY_UPGRADE_DMG,
 	ENTITY_UPGRADE_PRJSP,
 	ENTITY_UPGRADE_RANGE,
+	ENTITY_PLANE,
 	ENTITY_GUI,
 };
 
@@ -254,6 +255,29 @@ struct RenderData
 	};
 };
 
+struct HPBarInfo
+{
+	float hpPercent;
+	Matrix translate;
+
+	HPBarInfo()
+	{
+		D3DXMatrixIdentity(&translate);
+		hpPercent = 0;
+
+	}
+
+	HPBarInfo(Matrix trans, float hpPercent)
+	{
+		translate = trans;
+		this->hpPercent = hpPercent;
+	}
+};
+
+struct MatrixInstance
+{
+	Matrix world;
+};
 
 
 #endif

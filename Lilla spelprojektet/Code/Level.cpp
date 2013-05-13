@@ -25,8 +25,9 @@ bool Level::init(int quadSize)
 void Level::constructNeutrals()
 {
 	//kolla igenom nodes och leta efter quads av neutrala noder
-	//placera sedan en neutral byggnad 
-	D3DXVECTOR3 pos = D3DXVECTOR3(0,0,0);
+	//placera sedan en neutral byggnad
+	
+	Vec3 pos = Vec3(0,0,0);
 	int counter = 0;
 	for(int i = 0; i < mapSize-1; i++)
 	{
@@ -52,9 +53,8 @@ void Level::constructNeutrals()
 			}
 			if(counter == 4)
 			{
-				pos = D3DXVECTOR3((float)i*quadSize + (quadSize/2),0,(float)j*quadSize + (quadSize/2));
-
-				neutralStructures.push_back(Structure(pos,0,0,100,0));
+				pos = Vec3((float)i*quadSize + (quadSize/2),0,(float)j*quadSize + (quadSize/2));
+				neutralStructures.push_back(new Structure(pos,1,0,100,0));
 			}
 		}
 	}
@@ -82,6 +82,7 @@ bool Level::loadLevel(string fileName)
 			SAFE_DELETE_ARRAY(structures[i]);
 		}
 		SAFE_DELETE_ARRAY(structures);
+		neutralStructures.clear();
 	}
 	
 
@@ -133,10 +134,12 @@ bool Level::loadLevel(string fileName)
 				entityFlag = ENTITY_NODE_GREEN;
 			else if(value == COLOR_RED)
 				entityFlag = ENTITY_NODE_RED;
+			else if(value == COLOR_GREY)
+				entityFlag = ENTITY_NODE_GREEN;
 					
 			//lägg till kollar för texturer
 
-			nodes[i][j] = Node(D3DXVECTOR3((float)i*quadSize,0,(float)j*quadSize),entityFlag,0,0,0,value);
+			nodes[i][j] = Node(Vec3((float)i*quadSize,0,(float)j*quadSize),entityFlag,0,0,0,value);
 			cout << value << " , ";
 		}
 		fin.ignore();
@@ -149,6 +152,10 @@ bool Level::loadLevel(string fileName)
 	fin.close();
 
 	constructNeutrals();
+
+	//skapa planet
+	plane = new Entity(Vec3((mapSize-1) * quadSize * 0.5f, 0, (mapSize-1) * quadSize * 0.5f), ENTITY_PLANE, 0, 0, 0);
+	plane->setScale((float)(mapSize-1)*quadSize);
 
 	return true;
 }
@@ -170,8 +177,14 @@ Level::~Level(void)
 		SAFE_DELETE_ARRAY(structures[i]);
 	}
 	SAFE_DELETE_ARRAY(structures);
+	for(int i = 0; i < (int)neutralStructures.size(); i++)
+	{
+		SAFE_DELETE(neutralStructures.at(i));
+	}
 
 	SAFE_DELETE_ARRAY(availibleUpgrades);
+
+	SAFE_DELETE(plane);
 }
 
 int Level::update(float dt, vector<Enemy*>& enemies)
@@ -267,7 +280,7 @@ void Level::upgradeStructures(int selectedUpgrade)
 			if(structures[i][j] != NULL && typeid(*structures[i][j]) == typeid(Tower))
 			{
 				//cout << "hp before: "<< dynamic_cast<Tower*>(structures[i][j])->getHp() << endl;
-				dynamic_cast<Tower*>(structures[i][j])->giveUpgrade(availibleUpgrades[selectedUpgrade-2]);
+				dynamic_cast<Tower*>(structures[i][j])->giveUpgrade(availibleUpgrades[selectedUpgrade-3]);
 				//cout << "hp after: "<< dynamic_cast<Tower*>(structures[i][j])->getHp() << endl;
 			}
 		}	
@@ -282,7 +295,7 @@ void Level::removeUpgrade(int selectedUpgrade)
 		{
 			if(structures[i][j] != NULL && typeid(*structures[i][j]) == typeid(Tower))
 			{
-				dynamic_cast<Tower*>(structures[i][j])->removeUpgrade(availibleUpgrades[selectedUpgrade-2]);
+				dynamic_cast<Tower*>(structures[i][j])->removeUpgrade(availibleUpgrades[selectedUpgrade-3]);
 			}
 		}	
 	}
@@ -320,26 +333,50 @@ bool Level::isAdjecent(int xPos, int yPos)
 
 bool Level::isLocationBuildable(int xPos, int yPos)
 {
-	int counter = 0;
+	int greenCounter = 0;
+	int greyCounter = 0;
 
 	if(nodes[xPos][yPos].getColor() == COLOR_GREEN)
 	{
-		counter++;
+		greenCounter++;
 	}
+	else if(nodes[xPos][yPos].getColor() == COLOR_GREY)
+	{
+		greyCounter++;
+	}
+
 	if(nodes[xPos+1][yPos].getColor() == COLOR_GREEN)
 	{
-		counter++;
+		greenCounter++;
 	}
+	else if(nodes[xPos+1][yPos].getColor() == COLOR_GREY)
+	{
+		greyCounter++;
+	}
+
 	if(nodes[xPos][yPos+1].getColor() == COLOR_GREEN)
 	{
-		counter++;
+		greenCounter++;
 	}
+	else if(nodes[xPos][yPos+1].getColor() == COLOR_GREY)
+	{
+		greyCounter++;
+	}
+
 	if(nodes[xPos+1][yPos+1].getColor() == COLOR_GREEN)
 	{
-		counter++;
+		greenCounter++;
+	}
+	else if(nodes[xPos+1][yPos+1].getColor() == COLOR_GREY)
+	{
+		greyCounter++;
 	}
 	
-	if(counter == 4)
+	if(greenCounter == 4)
+	{
+		return true;
+	}
+	else if((greenCounter + greyCounter) == 4 && greenCounter > 0)
 	{
 		return true;
 	}
@@ -351,7 +388,7 @@ bool Level::isLocationBuildable(int xPos, int yPos)
 
 }
 
-bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
+bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 {
 	int xPos = (int)(mouseClickPos.x/quadSize);
 	int yPos = (int)(mouseClickPos.z/quadSize);
@@ -361,7 +398,7 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 
 		if(selectedStructure == BUILDABLE_MAINBUILDING && structures[xPos][yPos] == NULL && isLocationBuildable(xPos, yPos))
 		{ 
-			structures[xPos][yPos] = new Headquarter(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 30, 0);
+			structures[xPos][yPos] = new Headquarter(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 30, 0);
 			return true;
 		
 		}
@@ -371,42 +408,42 @@ bool Level::buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure)
 			switch(selectedStructure)
 			{
 			case BUILDABLE_TOWER:
-				structures[xPos][yPos] = new Tower(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWERBASE,0,100,0, 10, 1, 50, 100);
+				structures[xPos][yPos] = new Tower(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWERBASE,0,100,0, 10, 1, 50, 100);
 				for(int i = 0; i < (int)this->upgradesInUse.size();i++)
 				{
 					dynamic_cast<Tower*>(structures[xPos][yPos])->giveUpgrade(upgradesInUse[i]);
 				}
 				break;
 			case BUILDABLE_SUPPLY:
-				structures[xPos][yPos] = new Supply(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_SUPPLYBASE,0,100,0);
+				structures[xPos][yPos] = new Supply(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_SUPPLYBASE,0,100,0);
 				this->nrOfSupplyStructures++;
 				break;
 			case BUILDABLE_UPGRADE_HP:
-				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
+				structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
 					ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_HP);
 				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_HP)-2]);
 				builtUpgrade = true;
 				break;
 			case BUILDABLE_UPGRADE_ATKSP:
-				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
+				structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
 					ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_ATKSP);
 				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_ATKSP)-2]);
 				builtUpgrade = true;
 				break;
 			case BUILDABLE_UPGRADE_DMG:
-				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
+				structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
 					ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_DMG);
 				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_DMG)-2]);
 				builtUpgrade = true;
 				break;
 			case BUILDABLE_UPGRADE_PRJSP:
-				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
+				structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
 					ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_PRJSP);
 				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_PRJSP)-2]);
 				builtUpgrade = true;
 				break;
 			case BUILDABLE_UPGRADE_RANGE:
-				structures[xPos][yPos] = new Upgrade(D3DXVECTOR3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
+				structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
 					ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_RANGE);
 				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_RANGE)-2]);
 				builtUpgrade = true;
@@ -439,14 +476,14 @@ void Level::getRenderData(vector<vector<RenderData*>>& rData)
 	
 	for(int i = 0; i < (int)neutralStructures.size(); i++)
 	{
-		rData.at(1).push_back(&neutralStructures.at(i).getRenderData());
+		rData.at(2).push_back(&neutralStructures.at(i)->getRenderData());
 	}
 
 	//Lägg till alla byggnader i renderData
 	for(int i = 0; i < mapSize-1; i++)
 	{
 		for(int j = 0; j < mapSize-1; j++)
-		{
+		{	
 			if(structures[i][j] != NULL)
 			{
 				//Om det är ett torn lägg till övre delen och alla projektiler
@@ -472,6 +509,9 @@ void Level::getRenderData(vector<vector<RenderData*>>& rData)
 			}
 		}
 	}
+
+	rData.at(plane->getRenderData().meshID).push_back(&plane->getRenderData());
+
 }
 
 int Level::destroyBuildings()
@@ -550,4 +590,18 @@ Node** Level::getNodes()
 int Level::getMapSize()
 {
 	return mapSize;
+}
+
+void Level::getHPBarInfo(vector<HPBarInfo>& hpBars)
+{
+	for(int i = 0; i < mapSize-1; i++)
+	{
+		for(int j = 0; j < mapSize-1; j++)
+		{
+			if(structures[i][j])
+			{
+				hpBars.push_back(structures[i][j]->getHPBarInfo());
+			}
+		}
+	}
 }

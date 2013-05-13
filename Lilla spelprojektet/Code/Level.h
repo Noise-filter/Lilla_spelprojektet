@@ -22,7 +22,7 @@ public:
 	void getRenderData(vector<vector<RenderData*>>& rData);
 	int update(float dt, vector<Enemy*>& enemies);
 	
-	bool buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure);
+	bool buildStructure(Vec3 mouseClickPos, int selectedStructure);
 	bool isAdjecent(int xPos, int yPos);
 	bool isLocationBuildable(int xPos, int yPos);
 	int getNrOfSupplyStructures();
@@ -30,6 +30,7 @@ public:
 	Structure*** getStructures();
 	Node** getNodes();
 	int getMapSize();
+	void getHPBarInfo(vector<HPBarInfo>& hpBars);
 	bool loadLevel(string fileName);
 
 private:
@@ -42,9 +43,9 @@ private:
 	Node** nodes;
 	Structure*** structures;
 	int nrOfSupplyStructures;
-	vector<Structure> neutralStructures;
+	vector<Structure*> neutralStructures;
 
-	
+	Entity* plane;
 
 	UpgradeStats* availibleUpgrades;
 	vector<UpgradeStats> upgradesInUse;

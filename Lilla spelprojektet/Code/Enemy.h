@@ -40,7 +40,8 @@ public:
 
 	void setTarget(Structure* t);
 
-	
+	HPBarInfo getHPBarInfo();
+
 private:
 	//Waypoints
 	Trail* trail;

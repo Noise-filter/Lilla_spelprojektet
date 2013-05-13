@@ -14,7 +14,7 @@ Engine::~Engine(void)
 	SAFE_DELETE(pGeoManager);
 }
 
-bool Engine::init(HINSTANCE hInstance, int cmdShow)
+bool Engine::init(HINSTANCE hInstance, int cmdShow, int mapSize)
 {
 	HRESULT hr = (win32->initWindow(hInstance, cmdShow)); // initierar win32
 	if(FAILED(hr))
@@ -28,7 +28,7 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 		return false;
 	}
 
-	pGeoManager->init(d3d->pDevice);
+	pGeoManager->init(d3d->pDevice,mapSize);
 
 	HRESULT hResult = FW1CreateFactory(FW1_VERSION, &pFW1Factory);
 	
@@ -99,6 +99,12 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 	}
 	*/
 
+	//Draw hp bars
+	temp = this->d3d->setPass(PASS_HPBARS);
+	pGeoManager->applyHpBarBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	temp->Apply(0);
+	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfHPBars(), 0, 0);
+	
 	temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
 	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	temp->Apply(0);
@@ -147,6 +153,12 @@ void Engine::setRenderData(vector<vector<RenderData*>>& renderData)
 void Engine::setRenderData(vector<vector<MESH_PNC>> renderData)
 {
 	pGeoManager->updateParticles(d3d->pDeviceContext, renderData);
+}
+
+void Engine::setHPBars(vector<HPBarInfo>& bars)
+{
+	//set hp bars
+	pGeoManager->updateHPBars(d3d->pDeviceContext, bars);
 }
 
 MouseState* Engine::getMouseState()

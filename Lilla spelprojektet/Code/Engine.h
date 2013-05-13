@@ -13,14 +13,18 @@ public:
 	Engine(void);
 	~Engine(void);
 
+
 	void render(D3DXMATRIX& vp, Text* text, int nrOfText);
 	void renderGui(int state, Text* text);
 	void renderText(Text* text, int nrOfText);
-	bool init(HINSTANCE hInstance, int cmdShow);
+
+	bool init(HINSTANCE hInstance, int cmdShow, int mapSize);
+
 	PRIMITIVE_TOPOLOGIES changeTopology(int ID);
 
 	void setRenderData(vector<vector<RenderData*>>& renderData);
 	void setRenderData(vector<vector<MESH_PNC>> renderData);
+	void setHPBars(vector<HPBarInfo>& bars);
 	MouseState* getMouseState();
 	HWND getHWND();
 

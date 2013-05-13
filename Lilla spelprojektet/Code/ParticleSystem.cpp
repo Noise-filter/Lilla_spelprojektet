@@ -57,7 +57,7 @@ vector<vector<MESH_PNC>> ParticleSystem::getVertexData()
 	return vertexData;
 }
 
-Trail* ParticleSystem::addTrail(D3DXVECTOR3 color, D3DXVECTOR3 position , int intensity, float timeToLive, float velocity, float lengthX, float lengthY, float lengthZ)
+Trail* ParticleSystem::addTrail(Vec3 color, Vec3 position , int intensity, float timeToLive, float velocity, float lengthX, float lengthY, float lengthZ)
 {
 	Trail* temp = new Trail(color, position, intensity, timeToLive, velocity, lengthX, lengthY, lengthZ);
 	particlePolicies.push_back(temp);
@@ -65,12 +65,12 @@ Trail* ParticleSystem::addTrail(D3DXVECTOR3 color, D3DXVECTOR3 position , int in
 	return (Trail*)particlePolicies.at(particlePolicies.size()-1);
 }
 
-void ParticleSystem::addDeathExplosion(D3DXVECTOR3 color, D3DXVECTOR3 position , int intensity, float timeToLive, float velocity)
+void ParticleSystem::addDeathExplosion(Vec3 color, Vec3 position , int intensity, float timeToLive, float velocity)
 {
 	particlePolicies.push_back(new DeathExplosion(color, position, intensity, timeToLive, velocity));
 }
 
-void ParticleSystem::addAttackParticlePolicy(D3DXVECTOR3 color, D3DXVECTOR3 position , int intensity, float timeToLive, float velocity, D3DXVECTOR3 direction)
+void ParticleSystem::addAttackParticlePolicy(Vec3 color, Vec3 position , int intensity, float timeToLive, float velocity, Vec3 direction)
 {
 	particlePolicies.push_back(new AttackParticlePolicy(color, position, intensity, timeToLive, velocity, direction));
 }

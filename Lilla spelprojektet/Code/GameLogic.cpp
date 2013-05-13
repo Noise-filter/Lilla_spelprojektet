@@ -24,6 +24,10 @@ void GameLogic::incrementSelectedStructure(int increment)
 		printSelected();
 	}
 }
+int GameLogic::getMapSize()
+{
+	return this->level->getMapSize();
+}
 
 void GameLogic::giveResource(float dt)
 {
@@ -119,7 +123,7 @@ void GameLogic::structureBuilt()
 }
 
 
-int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX view, D3DXMATRIX proj, D3DXVECTOR3 cameraPos)
+int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX view, D3DXMATRIX proj, Vec3 cameraPos)
 {
 	if(gameState == STATE_GAMESTART)
 	{
@@ -182,7 +186,7 @@ bool GameLogic::init(int quadSize, GameSettings &settings)
 	this->currentResCD = 0;
 
 	this->level->init(quadSize);
-	this->level->loadLevel("level.txt");
+	this->level->loadLevel("level2.txt");
 
 	this->eHandler->init(level->getStructures(), level->getNodes(), level->getMapSize(), quadSize,settings.enemiesPerMin,settings.difficulty);
 
@@ -233,11 +237,11 @@ void GameLogic::printSelected()
 		break;
 	}
 }
-D3DXVECTOR3 GameLogic::getMouseWorldPos(MouseState* mState, D3DXMATRIX view, D3DXMATRIX proj, D3DXVECTOR3 cameraPos)
+Vec3 GameLogic::getMouseWorldPos(MouseState* mState, D3DXMATRIX view, D3DXMATRIX proj, Vec3 cameraPos)
 {
 	float pointX, pointY, intersect;
 	D3DXMATRIX invView, worldIdentity;
-	D3DXVECTOR3 dir, origin, rayOrigin, rayDir, intersectPos, planeNormal;
+	Vec3 dir, origin, rayOrigin, rayDir, intersectPos, planeNormal;
 	D3DXMatrixIdentity(&worldIdentity);
 
 	
@@ -258,9 +262,17 @@ D3DXVECTOR3 GameLogic::getMouseWorldPos(MouseState* mState, D3DXMATRIX view, D3D
 	D3DXVec3TransformNormal(&rayDir, &dir, &worldIdentity);
 
 	D3DXVec3Normalize(&rayDir, &rayDir);
-	planeNormal = D3DXVECTOR3(0,1,0);
+	planeNormal = Vec3(0,1,0);
 	intersect = (D3DXVec3Dot(&-planeNormal, &rayOrigin))/(D3DXVec3Dot(&planeNormal,&rayDir));
 
 	return intersectPos = rayOrigin + (intersect*rayDir);
 }
 
+vector<HPBarInfo> GameLogic::getHPBarInfo()
+{
+	vector<HPBarInfo> hpBars;
+	level->getHPBarInfo(hpBars);
+	eHandler->getHPBarInfo(hpBars);
+
+	return hpBars;
+}

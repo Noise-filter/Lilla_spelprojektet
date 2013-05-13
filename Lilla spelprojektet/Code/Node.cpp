@@ -5,18 +5,23 @@ Node::Node() : Entity()
 	color = 0;
 }
 
-Node::Node(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, int color) 
-	: Entity(D3DXVECTOR3(pos.x, pos.y, pos.z), meshID, textureID, hp, lightID)
+Node::Node(Vec3 pos, int meshID, int textureID, float hp, int lightID, int color) 
+	: Entity(Vec3(pos.x, pos.y, pos.z), meshID, textureID, hp, lightID)
 {
 	this->color = color;
 
 	scaleFactor = 0.4f;
 	D3DXMatrixScaling(&scale, scaleFactor, scaleFactor, scaleFactor);
-	D3DXMatrixTranslation(&pointTranslate, 1.8f, 0, -0.2);
+	D3DXMatrixTranslation(&pointTranslate, 1.8f, 0, -0.2f);
 
-	rotationSpeed = (float)(rand() % 100 + 1) * 0.0005;
-	translateSpeed = 0.1;
-	upTranslate = rand() % 2;
+	rotationSpeed = (float)(rand() % 100 + 1) * 0.0005f;
+	translateSpeed = 0.1f;
+	int temp = rand() % 2;
+	if(temp)
+		upTranslate = true;
+	else
+		upTranslate = false;
+
 	this->pos = pos;
 	translatePosMax = 0.5;
 }

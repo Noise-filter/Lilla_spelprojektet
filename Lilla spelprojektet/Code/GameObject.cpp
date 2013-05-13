@@ -52,7 +52,7 @@ void GameObject::mUpdate(ID3D11DeviceContext *dc, std::vector<std::vector<MESH_P
 
 	MESH_PNC *mesh = reinterpret_cast<MESH_PNC*>(mappedData->pData);
 
-	for(int j = 0; j < data.size(); j++)
+	for(int j = 0; j < (int)data.size(); j++)
 	{
 		for(int i = 0; i < (int)data[j].size(); i++)
 		{
@@ -63,6 +63,23 @@ void GameObject::mUpdate(ID3D11DeviceContext *dc, std::vector<std::vector<MESH_P
 
 		this->iNrOfVertices += data[j].size();
 	}
+
+	mUnmap(dc, this->pVertexBuffer);
+}
+
+void GameObject::mUpdate(ID3D11DeviceContext *dc , std::vector<HPBarInfo>& data)
+{
+	D3D11_MAPPED_SUBRESOURCE *mappedData = mMap(dc, this->pInstanceBuffer);
+
+	MatrixInstance *mesh = reinterpret_cast<MatrixInstance*>(mappedData->pData);
+
+	for(int j = 0; j < (int)data.size(); j++)
+	{
+		D3DXMatrixIdentity(&mesh[j].world);
+		D3DXMatrixScaling(&mesh[j].world, data[j].hpPercent * 0.05f, 0.005f, 1.0f);
+		mesh[j].world = mesh[j].world * data[j].translate;
+	}
+	this->iNrOfinstances = data.size();
 
 	mUnmap(dc, this->pVertexBuffer);
 }
@@ -86,6 +103,15 @@ void GameObject::mApply(ID3D11DeviceContext *dc, D3D_PRIMITIVE_TOPOLOGY topology
 {
 	UINT offset = 0;
 	dc->IASetVertexBuffers(0 , 1 , &this->pVertexBuffer, &stride, &offset);
+	dc->IASetPrimitiveTopology(topology);
+}
+
+void GameObject::mApply(ID3D11DeviceContext *dc, D3D_PRIMITIVE_TOPOLOGY topology, UINT strides[2])
+{
+	UINT offset[2] = {0, 0};
+	ID3D11Buffer* buffers[2] = {pVertexBuffer, pInstanceBuffer};
+
+	dc->IASetVertexBuffers(0, 2, buffers, strides, offset);
 	dc->IASetPrimitiveTopology(topology);
 }
 
@@ -115,6 +141,20 @@ void GameObject::mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INI
 	if(nrOfInstances > 0)
 	{
 		instanceInit.desc.uByteWidth = sizeof(INSTANCEDATA) * nrOfInstances;
+		this->pInstanceBuffer = bufferObj->initInstance(device, instanceInit);
+	}
+
+	this->pVertexBuffer = bufferObj->initBuffer(device, bufferInit);
+	this->iNrOfVertices = nrOfVertices;
+}
+void GameObject::mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_PUV *mesh, int nrOfVertices, int nrOfInstances, Buffer* bufferObj, bool asd)
+{
+	bufferInit.desc.uByteWidth    = sizeof(MESH_PUV) * nrOfVertices;
+	bufferInit.data.pInitData     = mesh;
+
+	if(nrOfInstances > 0)
+	{
+		instanceInit.desc.uByteWidth = sizeof(MatrixInstance) * nrOfInstances;
 		this->pInstanceBuffer = bufferObj->initInstance(device, instanceInit);
 	}
 

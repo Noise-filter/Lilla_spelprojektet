@@ -1,17 +1,15 @@
-
-cbuffer EveryFrame
-{
-	matrix gWVP;
-};
-
 struct VSIn
 {
-	float4 pos : POSITION;
+	float3 pos : POSITION;
+	float2 uv : UV;
+
+	row_major float4x4 world : WORLD;
+	uint instanceID : SV_InstanceID;
 };
 
 struct PSIn
 {
-	float4 pos : SV_POSITION;
+	float4 pos : SV_Position;
 };
 
 RasterizerState NoCulling
@@ -23,15 +21,13 @@ RasterizerState NoCulling
 PSIn VSScene(VSIn input)
 {
 	PSIn output;
-
-	output.pos = input.pos;
-
+	output.pos = mul(float4(input.pos, 1), input.world);
 	return output;
 }
 
-float4 PSScene(PSIn input) : SV_TARGET
+float4 PSScene(PSIn input) : SV_Target
 {
-	return float4(1, 1, 1, 1);
+	return float4(0, 1, 0, 1);
 }
 
 technique11 BasicTech

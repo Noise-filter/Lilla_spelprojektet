@@ -68,3 +68,9 @@ void EnemyHandler::getRenderData(vector<vector<RenderData*>>& rData)
 	for(int i = 0; i < (int)enemies.size(); i++)
 		rData.at(enemies.at(i)->getRenderData().meshID).push_back(&enemies.at(i)->getRenderData());
 }
+
+void EnemyHandler::getHPBarInfo(vector<HPBarInfo>& hpBars)
+{
+	for(int i = 0; i < (int)enemies.size(); i++)
+		hpBars.push_back(enemies.at(i)->getHPBarInfo());
+}
