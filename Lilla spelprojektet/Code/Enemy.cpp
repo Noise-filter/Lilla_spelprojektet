@@ -48,7 +48,7 @@ int Enemy::update(float dt)
 	id = move(dt);
 	if(id == 2)		// kommit fram till målet/vill köra pathFind igen
 		return 2;
-	
+
 	if(targetUpdateTime <= 0 && (int)waypoints.size()-1 > currentWP)
 	{
 		targetUpdateTime = 3;

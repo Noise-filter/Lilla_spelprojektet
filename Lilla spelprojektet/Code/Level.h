@@ -45,7 +45,7 @@ private:
 	int nrOfSupplyStructures;
 	vector<Structure*> neutralStructures;
 
-	
+	Entity* plane;
 
 	UpgradeStats* availibleUpgrades;
 	vector<UpgradeStats> upgradesInUse;

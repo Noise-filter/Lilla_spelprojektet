@@ -97,10 +97,22 @@ void GeometryManager::init(ID3D11Device *device)
 	MESH_P quad[] = {  MESH_P(D3DXVECTOR3(1,-1,0)),
 						MESH_P(D3DXVECTOR3(-1,-1,0)), 
 						MESH_P(D3DXVECTOR3(1,1,0)),
+
 						MESH_P(D3DXVECTOR3(1,1,0)),  
 						MESH_P(D3DXVECTOR3(-1,-1,0)), 
 						MESH_P(D3DXVECTOR3(-1,1,0)), 
 	};
+
+	MESH_PNUV plane[] ={
+		MESH_PNUV(Vec3(0.5,0,-0.5), Vec3(0,1,0), Vec2(1,0)),
+		MESH_PNUV(Vec3(-0.5,0,-0.5), Vec3(0,1,0), Vec2(0,0)),
+		MESH_PNUV(Vec3(0.5,0,0.5), Vec3(0,1,0), Vec2(1,1)),
+
+		MESH_PNUV(Vec3(0.5,0,0.5), Vec3(0,1,0), Vec2(1,1)),
+		MESH_PNUV(Vec3(-0.5,0,-0.5), Vec3(0,1,0), Vec2(0,0)),
+		MESH_PNUV(Vec3(-0.5,0,0.5), Vec3(0,1,0), Vec2(0,1)),
+	};
+
 
 
 	//import and initilaze buffers
@@ -139,6 +151,7 @@ void GeometryManager::init(ID3D11Device *device)
 	this->vEntities.at(ENTITY_UPGRADE_DMG)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj);
 	this->vEntities.at(ENTITY_UPGRADE_PRJSP)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj);
 	this->vEntities.at(ENTITY_UPGRADE_RANGE)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj);
+	this->vEntities.at(ENTITY_PLANE)->mInit(device, bufferInit, instanceInit, plane, 6, 1, this->pBufferObj);
 
 
 

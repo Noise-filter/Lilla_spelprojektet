@@ -153,6 +153,10 @@ bool Level::loadLevel(string fileName)
 
 	constructNeutrals();
 
+	//skapa planet
+	plane = new Entity(Vec3((mapSize-1) * quadSize * 0.5, 0, (mapSize-1) * quadSize * 0.5), ENTITY_PLANE, 0, 0, 0);
+	plane->setScale((mapSize-1)*quadSize);
+
 	return true;
 }
 Level::~Level(void)
@@ -503,6 +507,9 @@ void Level::getRenderData(vector<vector<RenderData*>>& rData)
 			}
 		}
 	}
+
+	rData.at(plane->getRenderData().meshID).push_back(&plane->getRenderData());
+
 }
 
 int Level::destroyBuildings()
