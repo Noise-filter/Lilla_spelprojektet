@@ -11,8 +11,8 @@ bool Level::init(int quadSize)
 {
 	this->availibleUpgrades = new UpgradeStats[5];
 	this->availibleUpgrades[0] = (UpgradeStats(BUILDABLE_UPGRADE_HP,10,0,0,0,0));
-	this->availibleUpgrades[1] = (UpgradeStats(BUILDABLE_UPGRADE_ATKSP,0,10,0,0,0));
-	this->availibleUpgrades[2] = (UpgradeStats(BUILDABLE_UPGRADE_DMG,0,0,10,0,0));
+	this->availibleUpgrades[1] = (UpgradeStats(BUILDABLE_UPGRADE_ATKSP,0,0,-0.1f,0,0));
+	this->availibleUpgrades[2] = (UpgradeStats(BUILDABLE_UPGRADE_DMG,0,10,0,0,0));
 	this->availibleUpgrades[3] = (UpgradeStats(BUILDABLE_UPGRADE_PRJSP,0,0,0,10,0));
 	this->availibleUpgrades[4] = (UpgradeStats(BUILDABLE_UPGRADE_RANGE,0,0,0,0,10));
 
@@ -421,31 +421,31 @@ bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 			case BUILDABLE_UPGRADE_HP:
 				structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
 					ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_HP);
-				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_HP)-2]);
+				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_HP)-3]);
 				builtUpgrade = true;
 				break;
 			case BUILDABLE_UPGRADE_ATKSP:
 				structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
 					ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_ATKSP);
-				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_ATKSP)-2]);
+				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_ATKSP)-3]);
 				builtUpgrade = true;
 				break;
 			case BUILDABLE_UPGRADE_DMG:
 				structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
 					ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_DMG);
-				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_DMG)-2]);
+				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_DMG)-3]);
 				builtUpgrade = true;
 				break;
 			case BUILDABLE_UPGRADE_PRJSP:
 				structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
 					ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_PRJSP);
-				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_PRJSP)-2]);
+				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_PRJSP)-3]);
 				builtUpgrade = true;
 				break;
 			case BUILDABLE_UPGRADE_RANGE:
 				structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
 					ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_RANGE);
-				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_RANGE)-2]);
+				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_RANGE)-3]);
 				builtUpgrade = true;
 				break;
 			}

@@ -49,7 +49,7 @@ int Enemy::update(float dt)
 	if(id == 2)		// kommit fram till målet/vill köra pathFind igen
 		return 2;
 
-	if(targetUpdateTime <= 0 && (int)waypoints.size()-1 > currentWP)
+	if(targetUpdateTime <= 0 && (int)waypoints.size() > currentWP)
 	{
 		targetUpdateTime = 3;
 		return 2;
@@ -63,10 +63,10 @@ int Enemy::move(float dt)
 	if(target != NULL && target->isDead())
 		target = NULL;
 
-	if((int)waypoints.size()-1 > currentWP && target != NULL)
+	if((int)waypoints.size() > currentWP && target != NULL)
 	{
 		Vec3 pos = this->getPosition();
-		Vec3 target((float)waypoints.at(currentWP+1).x, 0, (float)waypoints.at(currentWP+1).y);
+		Vec3 target((float)waypoints.at(currentWP).x, 0, (float)waypoints.at(currentWP).y);
 		Vec3 dir = target - pos;
 
 		if(D3DXVec3Length(&dir) < 1)
@@ -114,6 +114,8 @@ int Enemy::getXp()
 
 Waypoint Enemy::getCurrentWaypoint()
 {
+	if(currentWP > (int)waypoints.size()-1)
+		return waypoints.at(0);
 	return waypoints.at(currentWP);
 }
 
