@@ -90,13 +90,14 @@ void GUI::createBtns(int state)
 		this->textBoxes = new Text[nrOfBoxes];
 		this->textBoxes[0] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 100), L"Level 1", 36, 0x800000ff);
 		this->textBoxes[1] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 50), L"Easy", 36, 0x800000ff);
-		this->nrOfBtns = 5;
+		this->nrOfBtns = 6;
 		this->menuBtns = new Button[nrOfBtns];
-		this->menuBtns[0] = createBtn(D3DXVECTOR2(textBoxes[0].pos.x - 80, textBoxes[0].pos.y), LAST);
-		this->menuBtns[1] = createBtn(D3DXVECTOR2(textBoxes[0].pos.x + 80, textBoxes[0].pos.y), NEXT);
-		this->menuBtns[2] = createBtn(D3DXVECTOR2(textBoxes[1].pos.x - 80, textBoxes[1].pos.y), LAST);
-		this->menuBtns[3] = createBtn(D3DXVECTOR2(textBoxes[1].pos.x + 80, textBoxes[1].pos.y), NEXT);
+		this->menuBtns[0] = createBtn(D3DXVECTOR2(textBoxes[0].pos.x - 80, textBoxes[0].pos.y + 18), LAST);
+		this->menuBtns[1] = createBtn(D3DXVECTOR2(textBoxes[0].pos.x + 80, textBoxes[0].pos.y + 18), NEXT);
+		this->menuBtns[2] = createBtn(D3DXVECTOR2(textBoxes[1].pos.x - 80, textBoxes[1].pos.y + 18), LAST);
+		this->menuBtns[3] = createBtn(D3DXVECTOR2(textBoxes[1].pos.x + 80, textBoxes[1].pos.y + 18), NEXT);
 		this->menuBtns[4] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 75), STARTGAME);
+		this->menuBtns[5] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 120), QUIT);
 	}
 	
 }
@@ -132,6 +133,7 @@ Button GUI::createBtn(D3DXVECTOR2 pos, BUTTONTYPE type)
 	btn.type = type;
 	text.pos = pos;
 	text.textSize = 36;
+	text.pos.y = pos.y - text.textSize / 2;
 	text.textColor = 0x800000ff;
 
 	if(type == STARTGAME)
@@ -219,6 +221,10 @@ int GUI::changeState(Button btn)
 	else if(btn.type == PAUSED_CONTINUE)
 	{
 		state = STATE_PLAYING;
+	}
+	else if(btn.type == QUIT && (state == STATE_NEWGAME || state == STATE_PAUSED))
+	{
+		state = STATE_MENU;
 	}
 	else if(btn.type == QUIT)
 	{
