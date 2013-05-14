@@ -167,6 +167,11 @@ void Engine::setHPBars(vector<HPBarInfo>& bars)
 	pGeoManager->updateHPBars(d3d->pDeviceContext, bars);
 }
 
+void Engine::setGUI(GUI_Panel* data, int nrOfPanels)
+{
+	pGeoManager->updateGUI(d3d->pDeviceContext, data, nrOfPanels);
+}
+
 MouseState* Engine::getMouseState()
 {
 	return this->win32->mState;

@@ -91,8 +91,10 @@ void Game::render()
 	engine->setRenderData(gameLogic->getRenderData());
 
 	engine->setRenderData(pSystem->getVertexData());
-
-	//engine->renderGui(gameState);
+	if(nrOfPanels != 0)
+	{
+		//engine->setGUI(panels, nrOfPanels);
+	}
 
 
 	//Get hp bars and put them in the correct position

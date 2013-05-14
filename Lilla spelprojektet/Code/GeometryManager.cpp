@@ -216,9 +216,9 @@ void GeometryManager::updateHPBars(ID3D11DeviceContext *dc, std::vector<HPBarInf
 {
 	this->hpBars->mUpdate(dc, data);
 }
-void GeometryManager::updateGUI(ID3D11DeviceContext *dc, std::vector<HPBarInfo>& data)
+void GeometryManager::updateGUI(ID3D11DeviceContext *dc, GUI_Panel* data, int nrOfObjects)
 {
-	this->GUI->mUpdate(dc, data);
+	GUI->mUpdate(dc, data, nrOfObjects);
 }
 
 int GeometryManager::getNrOfInstances(int ID)

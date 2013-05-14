@@ -4,6 +4,7 @@
 #include "Buffer.h"
 #include "OBJReader.h"
 #include "GameObject.h"
+#include "GUI.h"
 
 class GeometryManager
 {
@@ -27,7 +28,7 @@ class GeometryManager
 		void updateParticles(ID3D11DeviceContext *dc, std::vector<std::vector<MESH_PNC>> data);
 		void updateHPBars(ID3D11DeviceContext *dc, std::vector<HPBarInfo>& data);
 
-		void updateGUI(ID3D11DeviceContext *dc, std::vector<HPBarInfo>& data);
+		void updateGUI(ID3D11DeviceContext *dc, GUI_Panel* data, int nrOfObjects);
 
 		void applyEntityBuffer(ID3D11DeviceContext *dc, int ID, D3D_PRIMITIVE_TOPOLOGY topology);
 		void applyQuadBuffer(ID3D11DeviceContext *dc , D3D_PRIMITIVE_TOPOLOGY topology);
