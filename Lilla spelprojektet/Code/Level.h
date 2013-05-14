@@ -13,10 +13,12 @@ using namespace std;
 
 class Level
 {
+
 public:
 	Level(void);
 	~Level(void);
 
+	int getExtraResPerEnemy();
 	bool init(int quadSize);
 
 	void getRenderData(vector<vector<RenderData*>>& rData);
@@ -39,10 +41,10 @@ private:
 	void upgradeStructures(int selectedUpgrade);
 	void removeUpgrade(int selectedUpgrade);
 	void constructNeutrals();
+
 private:
 	Node** nodes;
 	Structure*** structures;
-	int nrOfSupplyStructures;
 	vector<Structure*> neutralStructures;
 
 	Entity* plane;
@@ -52,7 +54,9 @@ private:
 
 	Set<Structure*> sets;
 
+	int nrOfSupplyStructures;
 	int quadSize;
 	int mapSize;
+	int extraResPerEnemy;
 };
 

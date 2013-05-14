@@ -6,7 +6,11 @@ GUI::GUI()
 	this->textBoxes = NULL;
 	this->nrOfBtns = 0;
 	this->nrOfBoxes = 0;
+	this->nrOfPanles = 0;
 	this->GUI_STATE = 0;
+	midScreenW = (float)SCREEN_WIDTH/2;
+	midScreenH = (float)SCREEN_HEIGHT/2;
+
 	createBtns(STATE_MENU);
 
 
@@ -36,7 +40,6 @@ int GUI::update(MouseState *mouse, int& state)
 	{
 		createBtns(state);
 		GUI_STATE = state;
-		//clear();
 	}
 
 	for(int i = 0; i < this->nrOfBtns; i++)
@@ -45,6 +48,7 @@ int GUI::update(MouseState *mouse, int& state)
 		if(check)
 		{
 			state = changeState(this->menuBtns[i]);
+			createPanels(state);
 		}
 	}
 	return state;
@@ -52,9 +56,6 @@ int GUI::update(MouseState *mouse, int& state)
 
 void GUI::createBtns(int state)
 {
-	float midScreenW = (float)SCREEN_WIDTH/2;
-	float midScreenH = (float)SCREEN_HEIGHT/2;
-
 
 	if(this->menuBtns != NULL)
 	{
@@ -97,7 +98,7 @@ void GUI::createBtns(int state)
 		this->menuBtns[2] = createBtn(D3DXVECTOR2(textBoxes[1].pos.x - 80, textBoxes[1].pos.y + 18), LAST);
 		this->menuBtns[3] = createBtn(D3DXVECTOR2(textBoxes[1].pos.x + 80, textBoxes[1].pos.y + 18), NEXT);
 		this->menuBtns[4] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 75), STARTGAME);
-		this->menuBtns[5] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 120), QUIT);
+		this->menuBtns[5] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 120), MAIN_MENU);
 	}
 	
 }
@@ -110,6 +111,16 @@ int GUI::getNrOfBtns()const
 int GUI::getNrOfText()const
 {
 	return this->nrOfBoxes;
+}
+
+GUI_Panel* GUI::getPanels()const
+{
+	return this->panels;
+}
+
+int GUI::getNrOfPanels()const
+{
+	return this->nrOfPanles;
 }
 
 void GUI::clear()
@@ -127,7 +138,6 @@ Button GUI::createBtn(D3DXVECTOR2 pos, BUTTONTYPE type)
 {
 	Button btn;
 	Text text;
-
 	
 	btn.pos = pos;
 	btn.type = type;
@@ -166,6 +176,11 @@ Button GUI::createBtn(D3DXVECTOR2 pos, BUTTONTYPE type)
 		btn.size = D3DXVECTOR2(20, 20);
 		text.text = L"<";
 	}
+	if(type == MAIN_MENU)
+	{
+		btn.size = D3DXVECTOR2(80, 20);
+		text.text = L"Main Menu";
+	}
 
 	btn.text = text;
 
@@ -180,6 +195,28 @@ Text GUI::createTextBox(D3DXVECTOR2 pos, wchar_t* text, float size, UINT32 color
 	temp.textSize = size;
 	temp.textColor = color;
 	return temp;
+}
+
+void GUI::createPanels(int state)
+{
+	if(state == STATE_MENU || state == SETTINGS || state == STATE_NEWGAME)
+	{
+
+	}
+	else if(state == STATE_GAMESTART || state == STATE_PLAYING )
+	{
+		this->nrOfPanles = 5;
+		this->panels = new GUI_Panel[nrOfPanles];
+		this->panels[0] = GUI_Panel(D3DXVECTOR2(0, 0), D3DXVECTOR2(300, 50), TEXTURE_RESOURSE);
+		this->panels[1] = GUI_Panel(D3DXVECTOR2(midScreenW+100, 0), D3DXVECTOR2(midScreenW-100, 50), TEXTURE_GOAL);
+		this->panels[2] = GUI_Panel(D3DXVECTOR2(midScreenW+100, midScreenH+200), D3DXVECTOR2(midScreenW-100, midScreenH-200), TEXTURE_BUILDINGS_HOTKEY);
+		this->panels[3] = GUI_Panel(D3DXVECTOR2(0, midScreenH+200), D3DXVECTOR2(midScreenW-100, midScreenH-200), TEXTURE_INFO);
+		this->panels[4] = GUI_Panel(D3DXVECTOR2(50, midScreenH+220), D3DXVECTOR2(midScreenW-150, midScreenH-300), TEXTURE_BUILDING);
+	}
+	else if(state == STATE_WIN || state == STATE_LOSE)
+	{
+
+	}
 }
 
 bool GUI::checkBtn(MouseState *mousePos, Button btn)
@@ -222,7 +259,7 @@ int GUI::changeState(Button btn)
 	{
 		state = STATE_PLAYING;
 	}
-	else if(btn.type == QUIT && (state == STATE_NEWGAME || state == STATE_PAUSED))
+	else if(btn.type == MAIN_MENU && (state == STATE_NEWGAME || state == STATE_PAUSED))
 	{
 		state = STATE_MENU;
 	}
