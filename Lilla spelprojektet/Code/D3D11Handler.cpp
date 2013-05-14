@@ -93,6 +93,9 @@ Shader *D3D11Handler::setPass(PASS_STATE pass)
 
 			return this->vShaders.at(PASS_FULLSCREENQUAD);
 
+		case PASS_DEBUG:
+			return this->vShaders.at(PASS_DEBUG);
+
 		case PASS_HPBARS:
 			this->pDeviceContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);
 			return this->vShaders.at(PASS_HPBARS);
@@ -332,6 +335,14 @@ bool D3D11Handler::initShaders()
 	temp = new Shader();
 	this->vShaders.at(PASS_HPBARS) = temp;
 	hr = this->vShaders.at(PASS_HPBARS)->Init(this->pDevice, this->pDeviceContext, "../Shaders/HealthBars.fx", inputDescHP, 6);
+	if(FAILED(hr))
+	{
+		return false;
+	}
+
+	temp = new Shader();
+	this->vShaders.at(PASS_DEBUG) = temp;
+	hr = this->vShaders.at(PASS_DEBUG)->Init(this->pDevice, this->pDeviceContext, "../Shaders/Debug.fx", inputDescHP, 1);
 	if(FAILED(hr))
 	{
 		return false;
