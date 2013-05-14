@@ -143,7 +143,7 @@ void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc, int ma
 
 
 	//temp buffer init
-	ID3D11ShaderResourceView *nulls;
+	ID3D11ShaderResourceView *nulls = NULL;
 	this->vEntities.at(ENTITY_UPGRADE_OFFENSE)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls);
 	this->vEntities.at(ENTITY_UPGRADE_DEFENSE)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls);
 	this->vEntities.at(ENTITY_UPGRADE_RES)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls);
