@@ -62,6 +62,13 @@ void Entity::setPosition(D3DXVECTOR3& pos)
 	D3DXMatrixTranslation(&translate, pos.x, pos.y, pos.z);
 }
 
+void Entity::setScale(float scale)
+{
+	scaleFactor = scale;
+	D3DXMatrixScaling(&this->scale, scaleFactor, scaleFactor, scaleFactor);
+	renderData.worldMat = this->scale * pointTranslate * rotation * translate;
+}
+
 void Entity::setRotation(D3DXVECTOR3& dir)
 {
 

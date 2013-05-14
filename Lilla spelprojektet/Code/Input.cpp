@@ -2,7 +2,7 @@
 
 Input::Input()
 {
-	this->prevMousePos = D3DXVECTOR3(0,0,0);
+	this->prevMousePos = Vec3(0,0,0);
 	this->mState = NULL;
 }
 

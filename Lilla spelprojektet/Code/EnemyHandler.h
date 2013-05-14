@@ -14,6 +14,7 @@ public:
 	bool init(Structure*** structures, Node** nodes, int mapSize, int quadSize, int enemiesPerMin, int difficulty);
 
 	void getRenderData(vector<vector<RenderData*>>& rData);
+	void getHPBarInfo(vector<HPBarInfo>& hpBars);
 	int update(float dt);
 
 	vector<Enemy*>& getEnemies();

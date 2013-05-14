@@ -79,7 +79,7 @@ MESH_PNUV* OBJReader::LoadDataStructures(string fileName, int vertexCount, int t
 	D3DXVECTOR2 *texcoords;
 	FaceType *faces;
 	ifstream fin;
-	int vertexIndex, texcoordIndex, normalIndex, faceIndex, vIndex, tIndex, nIndex;
+	int vertexIndex, texcoordIndex, normalIndex, faceIndex;
 	char input, input2;
 	ofstream fout;
 
@@ -177,9 +177,9 @@ MESH_PNUV* OBJReader::LoadDataStructures(string fileName, int vertexCount, int t
 			}
 		}
 
-		if(input == 't')
+		if(input == 'z')
 		{
-			string name;
+			string name = " ";
 			fin.get(input);
 			if(input == 'n')
 			{
@@ -193,7 +193,7 @@ MESH_PNUV* OBJReader::LoadDataStructures(string fileName, int vertexCount, int t
 				fin.get();
 				getline(fin,name);
 				cout << name << endl;
-				textureNames.push_back(name);
+				textureGlowNames.push_back(name);
 			}
 		}
 
@@ -213,10 +213,11 @@ MESH_PNUV* OBJReader::LoadDataStructures(string fileName, int vertexCount, int t
 
 
 	//read this into a vertexMesh and return it
-	mesh = new MESH_PNUV[faceCount*3];
+	faceCount *= 3;
+	mesh = new MESH_PNUV[faceCount];
 	int face = 0;
 
-	for(int i = 0; i < faceCount*3; i+=3)
+	for(int i = 0; i < faceCount; i+=3)
 	{
 		mesh[i].pos = vertices[faces[face].vIndex1-1];
 		mesh[i].normal = normals[faces[face].nIndex1-1];

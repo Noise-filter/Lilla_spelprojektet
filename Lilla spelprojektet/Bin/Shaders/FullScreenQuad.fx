@@ -1,6 +1,11 @@
+//0 = Position
+//1 = DiffuseAlbedo
+//2 = Normal
+
 Texture2D normalMap          : register(t0);
 Texture2D diffuseAlbedoMap   : register(t1);
-Texture2D  positionMap       : register(t2);
+Texture2D positionMap        : register(t2);
+Texture2D blurMap			 : register(t3);
 
 struct VSIn
 {
@@ -25,13 +30,17 @@ float4 PSScene(PSIn input) : SV_Target
 {
 	int3 sampleIndices = int3(input.pos.xyz);
 
-	float4 position = positionMap.Load(sampleIndices);
+	float3 position = positionMap.Load(sampleIndices).xyz;
 	float3 diffuse = diffuseAlbedoMap.Load(sampleIndices).xyz;
 	float3 normal = normalMap.Load(sampleIndices).xyz;
-
+	float3 blur = blurMap.Load(sampleIndices).xyz;
+	//float3 sum = position + diffuse + normal;
 	return float4(diffuse, 1.0f);
-	//return float4(normal, 1.0f);
-	return position;
+
+	
+
+	//return float4(sum, 1.0f);
+	//return float4( position, 1.0f);
 }
 
 

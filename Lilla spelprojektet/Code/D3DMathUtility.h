@@ -10,7 +10,7 @@
 
 #define PI (3.14159265358979323846f)
 
-#define NROFDIFFERENTMESHES (14)
+#define NROFDIFFERENTMESHES (13)
 
 struct GameSettings
 {
@@ -136,11 +136,10 @@ enum ENTITY_FLAGS
 	ENTITY_NODE_RED,
 	ENTITY_ENEMY,
 	ENTITY_PROJECTILE,
-	ENTITY_UPGRADE_HP,
-	ENTITY_UPGRADE_ATKSP,
-	ENTITY_UPGRADE_DMG,
-	ENTITY_UPGRADE_PRJSP,
-	ENTITY_UPGRADE_RANGE,
+	ENTITY_UPGRADE_OFFENSE,
+	ENTITY_UPGRADE_DEFENSE,
+	ENTITY_UPGRADE_RES,
+	ENTITY_PLANE,
 	ENTITY_GUI,
 };
 
@@ -148,6 +147,7 @@ enum GAMESTATES
 {
    STATE_MENU,
    STATE_SETTINGS,
+   STATE_NEWGAME,
    STATE_GAMESTART,
    STATE_PLAYING,
    STATE_PAUSED, 
@@ -156,28 +156,31 @@ enum GAMESTATES
    STATE_QUIT
 };
 
+
 enum BUILDABLE_ENTITY_FLAGS
 {
 	BUILDABLE_MAINBUILDING,
 	BUILDABLE_SUPPLY,
 	BUILDABLE_TOWER,
-	BUILDABLE_UPGRADE_HP,
-	BUILDABLE_UPGRADE_ATKSP,
-	BUILDABLE_UPGRADE_DMG,
-	BUILDABLE_UPGRADE_PRJSP,
-	BUILDABLE_UPGRADE_RANGE,
+	BUILDABLE_UPGRADE_OFFENSE,
+	BUILDABLE_UPGRADE_DEFENSE,
+	BUILDABLE_UPGRADE_RES,
 };
 
 enum TEXTURE_FLAGS
 {
-	TEXTURE_MAINBUILDING1,
-	TEXTURE_SUPPLY1,
-	TEXTURE_TOWER1,
-	TEXTURE_ENEMY1,
-	TEXTURE_NODE1,
-	TEXTURE_PARTICLESYSTEM1,
-	TEXTURE_GAMEFIELD1,
-	TEXTURE_GUI1,
+	TEXTURE_MAIN_MENU,
+	TEXTURE_SETTINGS,
+	TEXTURE_NEWGAME,
+	TEXTURE_PLAYING,
+	TEXTURE_PAUSED,
+	TEXTURE_WIN,
+	TEXTURE_LOSE,
+	TEXTURE_RESOURSE,
+	TEXTURE_GOAL,
+	TEXTURE_BUILDINGS_HOTKEY,
+	TEXTURE_INFO,
+	TEXTURE_BUILDING
 };
 
 enum LIGHT_FLAGS
@@ -208,22 +211,20 @@ struct UpgradeStats
 	{
 	}
 
-	UpgradeStats(int id ,int hp, int dmg, int atkSpeed, int prjSpeed, int range)
+	UpgradeStats(int id, float hp, float dmg, float atkSpeed, float range)
 	{
 		this->id = id;
 		this->hp = hp;
 		this->dmg = dmg;
 		this->atkSpeed = atkSpeed;
-		this->prjSpeed = prjSpeed;
 		this->range = range;
 	}	
 
 	int id;
-	int hp;
-	int dmg;
-	int atkSpeed;
-	int prjSpeed;
-	int range;
+	float hp;
+	float dmg;
+	float atkSpeed;
+	float range;
 };
 
 struct RenderData
@@ -253,6 +254,29 @@ struct RenderData
 	};
 };
 
+struct HPBarInfo
+{
+	float hpPercent;
+	Matrix translate;
+
+	HPBarInfo()
+	{
+		D3DXMatrixIdentity(&translate);
+		hpPercent = 0;
+
+	}
+
+	HPBarInfo(Matrix trans, float hpPercent)
+	{
+		translate = trans;
+		this->hpPercent = hpPercent;
+	}
+};
+
+struct MatrixInstance
+{
+	Matrix world;
+};
 
 
 #endif

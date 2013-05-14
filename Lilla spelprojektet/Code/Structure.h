@@ -13,6 +13,13 @@ public:
 
 	virtual int update(float dt);
 
+	HPBarInfo getHPBarInfo();
+
+	/*
+		HP/MAXHP
+		TRANSLATE MATRIX
+	*/
+
 
 private:
 
