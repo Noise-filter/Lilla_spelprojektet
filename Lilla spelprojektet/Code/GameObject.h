@@ -12,7 +12,8 @@ class GameObject
 		ID3D11Buffer* pIndexBuffer;
 		ID3D11Buffer* pInstanceBuffer;
 
-		ID3D11Texture2D **pTextures;
+		ID3D11ShaderResourceView *texArray;
+		ID3D11ShaderResourceView *glowArray;
 		int iNrOfTextures;
 
 		int iNrOfinstances;
@@ -32,14 +33,18 @@ class GameObject
 
 		void mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_P    *mesh, int nrOfVertices, int nrOfInstances, Buffer* bufferObj);
 		void mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_PUV  *mesh, int nrOfVertices, int nrOfInstances, Buffer* bufferObj);
-		void mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_PNUV *mesh, int nrOfVertices, int nrOfInstances, Buffer* bufferObj);
+		void mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_PNUV *mesh, int nrOfVertices, int nrOfInstances, Buffer* bufferObj, ID3D11ShaderResourceView *textures, ID3D11ShaderResourceView *glowMaps);
 		void mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, int nrOfVertices, Buffer* bufferObj);
 
-		int mGetNrOfInstances();
-		int mGetNrOfVertices();
+		int mGetNrOfInstances() const;
+		int mGetNrOfVertices() const;
+		ID3D11ShaderResourceView *getTexArray() const;
+		ID3D11ShaderResourceView *getGlowArray() const;
 		
 		void mSetNrOfInstances(int value);
 		void mSetNrOfVertices(int value);
+		void setTexArray(ID3D11ShaderResourceView *tArray);
+		void setGlowArray(ID3D11ShaderResourceView *gArray);
 
 		D3D11_MAPPED_SUBRESOURCE* mMap(ID3D11DeviceContext *dc, ID3D11Buffer *buffer);
 		void mUnmap(ID3D11DeviceContext *dc, ID3D11Buffer *buffer);

@@ -16,11 +16,19 @@ class GeometryManager
 
 		GameObject* hpBars;
 
+	private:
+		ID3D11ShaderResourceView *createTextureArray(ID3D11Device *device,
+													 ID3D11DeviceContext *dc,
+													 std::vector<std::string> &filenames,
+													 DXGI_FORMAT format,
+													 UINT filter,
+													 UINT mipFilter);
+
 	public:
 		GeometryManager();
 		virtual~GeometryManager();
 		
-		void init(ID3D11Device *device); //TBA more functionality like calls for importing meshes, also fill out the bufferInit for testing purpose
+		void init(ID3D11Device *device, ID3D11DeviceContext *dc); //TBA more functionality like calls for importing meshes, also fill out the bufferInit for testing purpose
 		void applyEntityBuffer(ID3D11DeviceContext *dc, int ID, D3D_PRIMITIVE_TOPOLOGY topology);
 		void updateEntityBuffer(ID3D11DeviceContext *dc, std::vector<RenderData*> data, int ID);
 		void updateParticles(ID3D11DeviceContext *dc, std::vector<std::vector<MESH_PNC>> data);
@@ -32,8 +40,12 @@ class GeometryManager
 		int getNrOfEntities();
 		int getNrOfParticles();
 
+		ID3D11ShaderResourceView *getTextures(int ID);
+		ID3D11ShaderResourceView *getGlowMaps(int ID);
+
 		//imports the mesh and init the buffer for it
 		void importMesh(ID3D11Device *device,
+						ID3D11DeviceContext *dc,
 						GameObject *object,
 						string fileName,
 						BUFFER_INIT &bufferInit,
