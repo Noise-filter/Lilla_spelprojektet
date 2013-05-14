@@ -1,6 +1,6 @@
-Texture2D normalMap          : register(t0);
-Texture2D diffuseAlbedoMap   : register(t1);
-Texture2D  positionMap       : register(t2);
+Texture2D debugMap          : register(t0);
+matrix world;
+
 
 struct VSIn
 {
@@ -15,7 +15,7 @@ struct PSIn
 PSIn VSScene(VSIn input)
 {	
 	PSIn output =(PSIn)0;
-	output.pos = input.pos;
+	output.pos = mul(input.pos, world);
 
 	return output;
 }
@@ -25,13 +25,9 @@ float4 PSScene(PSIn input) : SV_Target
 {
 	int3 sampleIndices = int3(input.pos.xyz);
 
-	float4 position = positionMap.Load(sampleIndices);
-	float3 diffuse = diffuseAlbedoMap.Load(sampleIndices).xyz;
-	float3 normal = normalMap.Load(sampleIndices).xyz;
+	float4 color = debugMap.Load(sampleIndices);
 
-	return float4(diffuse, 1.0f);
-	//return float4(normal, 1.0f);
-	return position;
+	return color;
 }
 
 

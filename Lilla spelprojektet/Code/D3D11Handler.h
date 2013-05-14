@@ -56,6 +56,7 @@ class D3D11Handler
 		ID3D11Device* returnDevice();
 		ID3D11DeviceContext* returnDeviceContext();
 
+		ID3D11ShaderResourceView* debugGetSRV(int id);
 };
 
 #endif

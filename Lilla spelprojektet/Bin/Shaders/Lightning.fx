@@ -1,15 +1,26 @@
+
+Texture2D normalMap        : register(t0);
+Texture2D diffuseAlbedoMap : register(t1);
+Texture2D depthMap         : register(t2);
+
+float3 cameraPosition;
+float lightIntensity = 1.0f;
+
 cbuffer EveryFrame
 {
-	matrix lightWVP;
-	matrix WVP;
-	matrix W;
+	matrix view;
+	matrix Projection;
+	matrix invertViewProjection;
 };
 
 struct VSIn
 {
-	float3 Pos : POSITION;
-	float3 normal : NORMAL;
-	float2 uv : TEXTCOORD;
+	float3 pos : POSITION;
+
+	row_major float4x4 world  : WORLD;
+	float3 lightPos           : LIGHTPOS;
+	float lightRadius         : LIGHTRADIUS;
+	float3 lightColor         : LIGHTCOLOR;
 };
 
 struct PSSceneIn

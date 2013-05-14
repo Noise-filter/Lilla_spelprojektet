@@ -97,20 +97,28 @@ Shader *D3D11Handler::setPass(PASS_STATE pass)
 			this->pDeviceContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);
 			return this->vShaders.at(PASS_HPBAR);
 
+		case PASS_DEBUG:
+			this->pDeviceContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);
+			return this->vShaders.at(PASS_DEBUG);
+
 			break;
 	}
 }
 
 void D3D11Handler::clearAndBindRenderTarget()
 {
-	static float clearColour[4] = { 0.1f , 0.1f, 0.1f, 0.1f };
-	pDeviceContext->ClearRenderTargetView(pRenderTargetView, clearColour);
+	static float clearNormal[4] = { 0.5f , 0.5f, 0.5f, 0.5f };
+	static float clearDepth[4] = { 1.0f , 1.0f, 1.0f, 1.0f };
+	static float clearColor[4] = { 0.0f , 0.0f, 0.0f, 0.0f };
+	pDeviceContext->ClearRenderTargetView(pRenderTargetView, clearNormal);
 	pDeviceContext->ClearDepthStencilView(pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 	pDeviceContext->PSSetShaderResources(0, this->iNrOfDeferred+1, this->pNullSRVs);
 	pDeviceContext->ClearDepthStencilView(pDSVDeferred, 1, 1.0f, 0);
 
-	for(int i = 0; i < this->iNrOfDeferred; i++) pDeviceContext->ClearRenderTargetView(pMultipleRTVs[i], clearColour);
+	pDeviceContext->ClearRenderTargetView(pMultipleRTVs[0], clearDepth);
+	pDeviceContext->ClearRenderTargetView(pMultipleRTVs[1], clearColor);
+	pDeviceContext->ClearRenderTargetView(pMultipleRTVs[2], clearNormal);
 }
 
 ID3D11Device* D3D11Handler::returnDevice()
@@ -122,6 +130,12 @@ ID3D11DeviceContext* D3D11Handler::returnDeviceContext()
 {
 	return this->pDeviceContext;
 }
+
+ID3D11ShaderResourceView* D3D11Handler::debugGetSRV(int id)
+{
+	return this->pMultipleSRVs[id];
+}
+
 /*
 #########################################
 		Private functions
@@ -273,6 +287,26 @@ bool D3D11Handler::initShaders()
 		return false;
 	}
 
+	hr = S_OK;
+	D3D11_INPUT_ELEMENT_DESC lightInput[] = 
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+
+		{ "WORLD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "WORLD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "WORLD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "WORLD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "LIGHTPOS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 2, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "LIGHTRADIUS", 0, DXGI_FORMAT_R32_FLOAT, 3, 76, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "LIGHTCOLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 2, 80, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		
+	};
+
+	temp = new Shader();
+	this->vShaders.at(PASS_LIGHT) = temp;
+	hr = this->vShaders.at(PASS_LIGHT)->Init(this->pDevice, this->pDeviceContext, "../Shaders/Lightning.fx", lightInput, 8);
+
+
 	D3D11_INPUT_ELEMENT_DESC ParticleInput[] = 
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -311,14 +345,23 @@ bool D3D11Handler::initShaders()
 		return false;
 	}
 
+	
 	temp = new Shader();
-	this->vShaders.push_back(temp);
-	hr = this->vShaders.at(PASS_HPBAR)->Init(this->pDevice, this->pDeviceContext, "../Shaders/hp bars testing.fx", tempInput, 1);
+	this->vShaders.at(PASS_DEBUG) = temp;
+	hr = this->vShaders.at(PASS_DEBUG)->Init(this->pDevice, this->pDeviceContext, "../Shaders/Debug.fx", tempInput, 1);
 	if(FAILED(hr))
 	{
 		return false;
 	}
 
+
+	/*temp = new Shader();
+	hr = this->vShaders.at(PASS_HPBAR)->Init(this->pDevice, this->pDeviceContext, "../Shaders/hp bars testing.fx", tempInput, 1);
+	if(FAILED(hr))
+	{
+		return false;
+	}
+*/
 	return true;
 }
 

@@ -201,5 +201,7 @@ void GeometryManager::importMesh(ID3D11Device *device,
 
 	object->mInit(device, bufferInit, instanceInit, temp, nrOfVertices, nrOfInstances, bufferObj);
 
+
+
 	delete temp;
 }

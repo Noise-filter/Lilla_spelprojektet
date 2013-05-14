@@ -2,6 +2,9 @@
 Texture2DArray textures   : register(t0);
 SamplerState anisoSampler : register(s0);
 
+float specularIntensity = 0.8f;
+float specularPower     = 0.5f;
+
 cbuffer EveryFrame
 {
 	matrix view;
@@ -24,7 +27,6 @@ struct VSIn
 struct PSIn
 {
 	float4 posCS  : SV_Position;
-	float4 posW : worldPos;
 	float4 normalW : TEXTCOORD0;
 	float2 uv : TEXTCOORD1;
 
@@ -47,8 +49,6 @@ PSIn VSScene(VSIn input)
 	PSIn output = (PSIn)0;
 
 	output.posCS = mul(float4(input.pos, 1), mul(input.world, view));
-	output.posW =  mul(float4(input.pos, 1), input.world);
-	
 	output.normalW = normalize(mul(float4(input.normal, 0), input.world));
 	output.uv = input.uv;
 	output.textureID = input.textureID;
@@ -62,14 +62,16 @@ PSIn VSScene(VSIn input)
 PSOut PSScene(PSIn input)
 {
 	PSOut output = (PSOut)0;
-	output.position = input.posCS;
 
-	float3 diffuseAlbedo = textures.Sample( anisoSampler , float3(input.uv.x, input.uv.y , input.textureID)).rgb;
+	float4 diffuseAlbedo = float4(textures.Sample( anisoSampler , float3(input.uv.x , input.uv.y , input.textureID)).rgb , specularIntensity);
 
-	float4 normalW = normalize(input.normalW);
+	float4 normalW = float4(0.5f * (normalize(input.normalW)).rgb + 1.0f , specularPower);
 
-	output.position = input.posW;
-	output.diffuseAlbedo = float4 (diffuseAlbedo, 1.0f);
+	float4 pos = input.posCS;
+	pos.w = input.posCS.z / input.posCS.w;
+
+	output.position = pos;
+	output.diffuseAlbedo = diffuseAlbedo;
 	output.normal = normalW;
 
 	return output;
