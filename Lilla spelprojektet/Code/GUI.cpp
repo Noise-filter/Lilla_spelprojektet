@@ -4,6 +4,7 @@ GUI::GUI()
 {
 	this->menuBtns = NULL;
 	this->textBoxes = NULL;
+	this->panels = NULL; 
 	this->nrOfBtns = 0;
 	this->nrOfBoxes = 0;
 	this->nrOfPanles = 0;
@@ -39,6 +40,7 @@ int GUI::update(MouseState *mouse, int& state)
 	if(GUI_STATE != state)
 	{
 		createBtns(state);
+		createPanels(state);
 		GUI_STATE = state;
 	}
 
@@ -48,7 +50,7 @@ int GUI::update(MouseState *mouse, int& state)
 		if(check)
 		{
 			state = changeState(this->menuBtns[i]);
-			createPanels(state);
+			
 		}
 	}
 	return state;
@@ -125,15 +127,15 @@ int GUI::getNrOfPanels()const
 
 void GUI::clear()
 {
-	delete this->menuBtns;
+	delete []this->menuBtns;
 	this->menuBtns = NULL;
 	this->nrOfBtns = 0;
 
-	delete this->textBoxes;
+	delete []this->textBoxes;
 	this->textBoxes = NULL;
 	this->nrOfBoxes = 0;
 
-	SAFE_DELETE(panels);
+	SAFE_DELETE_ARRAY(panels);
 	this->nrOfPanles = 0;
 }
 
