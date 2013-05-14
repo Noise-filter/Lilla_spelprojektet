@@ -6,9 +6,10 @@ Level::Level(void)
 	this->nodes = NULL;
 	this->nrOfSupplyStructures = 0;
 	this->extraResPerEnemy = 0;
+	this->winPercent = 0;
 }
 
-bool Level::init(int quadSize)
+bool Level::init(int quadSize, int difficulty)
 {
 	this->availibleUpgrades = new UpgradeStats[3];
 	this->availibleUpgrades[0] = (UpgradeStats(BUILDABLE_UPGRADE_OFFENSE,0,10,10,10));
@@ -17,6 +18,14 @@ bool Level::init(int quadSize)
 
 	//läs in karta från fil här
 	this->quadSize = quadSize;
+	this->winPercent = 0.50f;
+
+	if(difficulty == DIFF_EASY)
+		this->winPercent = 0.40f;
+	if(difficulty == DIFF_MEDIUM)
+		this->winPercent = 0.50f;
+	if(difficulty == DIFF_HARD)
+		this->winPercent = 0.60f;
 
 	return true;
 }
@@ -267,7 +276,7 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 		}
 	}
 
-	if((float)nrOfStructures/((mapSize-1) * (mapSize-1)) > 0.40f)
+	if((float)nrOfStructures/((mapSize-1) * (mapSize-1)) > winPercent)
 	{
 		return 4; // win
 	}

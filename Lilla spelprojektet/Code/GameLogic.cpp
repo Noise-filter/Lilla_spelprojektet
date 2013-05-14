@@ -169,8 +169,9 @@ bool GameLogic::init(int quadSize, GameSettings &settings)
 	this->maxResCD = (float)settings.resCD;
 	this->currentResCD = 0;
 
-	this->level->init(quadSize);
+	this->level->init(quadSize, settings.difficulty);
 	this->level->loadLevel("level2.txt");
+
 
 	this->eHandler->init(level->getStructures(), level->getNodes(), level->getMapSize(), quadSize,settings.enemiesPerMin,settings.difficulty);
 
@@ -178,6 +179,7 @@ bool GameLogic::init(int quadSize, GameSettings &settings)
 
 	for(int i = 0; i < NROFDIFFERENTMESHES; i++)	//antal olika mesher
 		rDataList.push_back(renderData);
+
 
 	return true;
 }

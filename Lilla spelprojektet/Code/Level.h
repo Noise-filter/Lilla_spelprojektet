@@ -19,7 +19,7 @@ public:
 	~Level(void);
 
 	int getExtraResPerEnemy();
-	bool init(int quadSize);
+	bool init(int quadSize, int difficulty);
 
 	void getRenderData(vector<vector<RenderData*>>& rData);
 	int update(float dt, vector<Enemy*>& enemies);
@@ -48,10 +48,10 @@ private:
 	vector<Structure*> neutralStructures;
 
 	Entity* plane;
-
+	float winPercent;
 	UpgradeStats* availibleUpgrades;
 	vector<UpgradeStats> upgradesInUse;
-
+	
 	Set<Structure*> sets;
 
 	int nrOfSupplyStructures;

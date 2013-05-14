@@ -42,16 +42,20 @@ Tower::Tower(Vec3 pos, int meshID, int textureID, float hp, int lightID, float d
 void Tower::giveUpgrade(UpgradeStats &stats)
 {
 	this->damage += stats.dmg;
-	this->attackSpeed += stats.atkSpeed;
+	this->attackSpeed -= stats.atkSpeed;
 	this->maxHp += stats.hp;
 	this->hp += stats.hp;
 	this->range += stats.range;
+
+	if(attackSpeed < 0.1f)
+		attackSpeed = 0.1f;
+
 }
 
 void Tower::removeUpgrade(UpgradeStats &stats)
 {
 	this->damage -= stats.dmg;
-	this->attackSpeed -= stats.atkSpeed;
+	this->attackSpeed += stats.atkSpeed;
 	this->maxHp -= stats.hp;
 	this->hp -= stats.hp;
 	this->range -= stats.range;	
@@ -126,13 +130,17 @@ int Tower::update(float dt)
 
 void Tower::giveXp(int xp)
 {
-	this->experience += xp;
-	cout << "xp: " << experience << "/" << xpToNextLvl << endl;
-	if(experience >= xpToNextLvl)
+	if(this->level != 3) //max level 3
 	{
-		cout << "lvlup!!!!!" << endl;
-		lvlUp();
+		this->experience += xp;
+		cout << "xp: " << experience << "/" << xpToNextLvl << endl;
+		if(experience >= xpToNextLvl)
+		{
+			cout << "lvlup!!!!!" << endl;
+			lvlUp();
+		}	
 	}
+	
 }
 void Tower::lvlUp()
 {
@@ -144,7 +152,6 @@ void Tower::lvlUp()
 	this->damage += 5;
 	this->hp += 5;
 	this->maxHp += 5;
-	this->projectileSpeed += 0.1f;
 	this->xpToNextLvl += 10*level*2;
 	this->experience = 0;
 	this->level++;
