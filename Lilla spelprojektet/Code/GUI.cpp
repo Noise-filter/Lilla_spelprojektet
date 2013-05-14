@@ -138,32 +138,32 @@ Button GUI::createBtn(D3DXVECTOR2 pos, BUTTONTYPE type)
 
 	if(type == STARTGAME)
 	{
-		btn.size = D3DXVECTOR2(50, 10);
+		btn.size = D3DXVECTOR2(100, 10);
 		text.text = L"New Game";
 	}
 	if(type == SETTINGS)
 	{
-		btn.size = D3DXVECTOR2(50, 10);
+		btn.size = D3DXVECTOR2(100, 10);
 		text.text = L"Settings";
 	}
 	if(type == QUIT)
 	{
-		btn.size = D3DXVECTOR2(50, 10);
+		btn.size = D3DXVECTOR2(80, 10);
 		text.text = L"Quit";
 	}
 	if(type == PAUSED_CONTINUE)
 	{
-		btn.size = D3DXVECTOR2(50, 20);
+		btn.size = D3DXVECTOR2(100, 20);
 		text.text = L"CONTINUE";
 	}
 	if(type == NEXT)
 	{
-		btn.size = D3DXVECTOR2(10, 10);
+		btn.size = D3DXVECTOR2(20, 20);
 		text.text = L">";
 	}
 	if(type == LAST)
 	{
-		btn.size = D3DXVECTOR2(10, 10);
+		btn.size = D3DXVECTOR2(20, 20);
 		text.text = L"<";
 	}
 
