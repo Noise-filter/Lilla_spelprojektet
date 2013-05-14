@@ -66,7 +66,6 @@ void GameObject::mUpdate(ID3D11DeviceContext *dc, std::vector<std::vector<MESH_P
 
 	mUnmap(dc, this->pVertexBuffer);
 }
-
 void GameObject::mUpdate(ID3D11DeviceContext *dc , std::vector<HPBarInfo>& data)
 {
 	D3D11_MAPPED_SUBRESOURCE *mappedData = mMap(dc, this->pInstanceBuffer);
@@ -80,6 +79,21 @@ void GameObject::mUpdate(ID3D11DeviceContext *dc , std::vector<HPBarInfo>& data)
 		mesh[j].world = mesh[j].world * data[j].translate;
 	}
 	this->iNrOfinstances = data.size();
+
+	mUnmap(dc, this->pVertexBuffer);
+}
+void GameObject::mUpdate(ID3D11DeviceContext *dc, INSTANCEDATA* data, int nrOfInstances)
+{
+	D3D11_MAPPED_SUBRESOURCE *mappedData = mMap(dc, this->pInstanceBuffer);
+
+	INSTANCEDATA *mesh = reinterpret_cast<INSTANCEDATA*>(mappedData->pData);
+
+	for(int j = 0; j < (int)nrOfInstances; j++)
+	{
+		mesh[j].mWorld = data[j].mWorld;
+		mesh[j].iTextureID = data[j].iTextureID;
+	}
+	this->iNrOfinstances = nrOfInstances;
 
 	mUnmap(dc, this->pVertexBuffer);
 }

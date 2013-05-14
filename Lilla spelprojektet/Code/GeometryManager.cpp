@@ -167,16 +167,18 @@ void GeometryManager::init(ID3D11Device *device,int mapSize)
 
 	this->FullScreenQuad->mInit(device, bufferInit, instanceInit, p, 6, 0 , this->pBufferObj);
 
-	MESH_PUV puv[] = {  MESH_PUV(D3DXVECTOR3(1,-1,0), D3DXVECTOR2(0, 0)),
+	MESH_PUV puv[] = {  MESH_PUV(D3DXVECTOR3(1,-1,0), D3DXVECTOR2(1, 0)),
 						MESH_PUV(D3DXVECTOR3(-1,-1,0), D3DXVECTOR2(0, 0)),
-						MESH_PUV(D3DXVECTOR3(1,1,0), D3DXVECTOR2(0, 0)),
-						MESH_PUV(D3DXVECTOR3(1,1,0), D3DXVECTOR2(0, 0)),
+						MESH_PUV(D3DXVECTOR3(1,1,0), D3DXVECTOR2(1, 1)),
+						MESH_PUV(D3DXVECTOR3(1,1,0), D3DXVECTOR2(1, 1)),
 						MESH_PUV(D3DXVECTOR3(-1,-1,0), D3DXVECTOR2(0, 0)),
-						MESH_PUV(D3DXVECTOR3(-1,1,0), D3DXVECTOR2(0, 0))
+						MESH_PUV(D3DXVECTOR3(-1,1,0), D3DXVECTOR2(0, 1))
 	};
 
 
 	hpBars->mInit(device, bufferInit, instanceInit, puv, 6, 1000, pBufferObj, true);
+
+	//GUI->mInit(device, bufferInit, instanceInit, puv, 6, 1000, pBufferObj);
 }
 
 void GeometryManager::applyEntityBuffer(ID3D11DeviceContext *dc, int ID, D3D_PRIMITIVE_TOPOLOGY topology)
@@ -198,6 +200,11 @@ void GeometryManager::applyHpBarBuffer(ID3D11DeviceContext *dc , D3D_PRIMITIVE_T
 	UINT stride[2] = {sizeof(MESH_PUV), sizeof(MatrixInstance)};
 	this->hpBars->mApply(dc, topology, stride);
 }
+void GeometryManager::applyGUIBuffer(ID3D11DeviceContext *dc, D3D_PRIMITIVE_TOPOLOGY topology)
+{
+	UINT stride[2] = {sizeof(MESH_PUV), sizeof(INSTANCEDATA)};
+	this->GUI->mApply(dc, topology, stride);
+}
 
 void GeometryManager::updateEntityBuffer(ID3D11DeviceContext *dc, std::vector<RenderData*> data, int ID)
 {
@@ -210,6 +217,10 @@ void GeometryManager::updateParticles(ID3D11DeviceContext *dc, std::vector<std::
 void GeometryManager::updateHPBars(ID3D11DeviceContext *dc, std::vector<HPBarInfo>& data)
 {
 	this->hpBars->mUpdate(dc, data);
+}
+void GeometryManager::updateGUI(ID3D11DeviceContext *dc, std::vector<HPBarInfo>& data)
+{
+	this->GUI->mUpdate(dc, data);
 }
 
 int GeometryManager::getNrOfInstances(int ID)
@@ -231,6 +242,10 @@ int GeometryManager::getNrOfParticles()
 int GeometryManager::getNrOfHPBars()
 {
 	return this->hpBars->mGetNrOfInstances();
+}
+int GeometryManager::getNrOfGUIObjects()
+{
+	return this->GUI->mGetNrOfInstances();
 }
 
 void GeometryManager::importMesh(ID3D11Device *device,

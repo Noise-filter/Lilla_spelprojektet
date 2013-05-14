@@ -25,6 +25,7 @@ class GameObject
 		void mUpdate(ID3D11DeviceContext *dc ,  std::vector<RenderData*> data);
 		void mUpdate(ID3D11DeviceContext *dc , std::vector<std::vector<MESH_PNC>> data);
 		void mUpdate(ID3D11DeviceContext *dc , std::vector<HPBarInfo>& data);
+		void mUpdate(ID3D11DeviceContext *dc, INSTANCEDATA* data, int nrOfInstances);	//Används till GUI
 
 		void mApply(ID3D11DeviceContext *dc, D3D_PRIMITIVE_TOPOLOGY topology);
 		void mApply(ID3D11DeviceContext *dc, D3D_PRIMITIVE_TOPOLOGY topology, UINT stride);
