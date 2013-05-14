@@ -103,6 +103,8 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 	}
 	*/
 
+	renderDebug(vp);
+
 	//Draw hp bars
 	temp = this->d3d->setPass(PASS_HPBARS);
 	pGeoManager->applyHpBarBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -184,4 +186,56 @@ MouseState* Engine::getMouseState()
 HWND Engine::getHWND()
 {
 	return win32->getHWND();
+}
+
+void Engine::renderDebug(Matrix &vp)
+{
+	Matrix world, scaling, translation;
+	D3DXMatrixIdentity(&world);
+	D3DXMatrixIdentity(&scaling);
+	D3DXMatrixIdentity(&translation);
+
+	D3DXMatrixScaling(&scaling, 0.2f , 0.2f , 0.2f);
+	D3DXMatrixTranslation(&translation, 0.8f , -0.4f , 0);
+	world = scaling * translation;
+
+	this->pGeoManager->applyQuadBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	Shader *temp = this->d3d->setPass(PASS_DEBUG);
+
+	
+	temp->SetResource("debugMap" , this->d3d->debugGetSRV(0));
+	temp->SetMatrix("world", world);
+	
+	temp->Apply(0);
+	this->d3d->pDeviceContext->Draw(6, 0);
+
+
+	D3DXMatrixIdentity(&world);
+	D3DXMatrixIdentity(&scaling);
+	D3DXMatrixIdentity(&translation);
+
+	D3DXMatrixScaling(&scaling, 0.2f , 0.2f , 0.2f);
+	D3DXMatrixTranslation(&translation, 0.8f, -0.6f, 1);
+	world = scaling * translation;
+
+	temp->SetResource("debugMap" , this->d3d->debugGetSRV(1));
+	temp->SetMatrix("world", world);
+
+	temp->Apply(0);
+	this->d3d->pDeviceContext->Draw(6, 0);
+
+	D3DXMatrixIdentity(&world);
+	D3DXMatrixIdentity(&scaling);
+	D3DXMatrixIdentity(&translation);
+
+	D3DXMatrixTranslation(&translation, 0.8f, -0.8f, 0);
+	D3DXMatrixScaling(&scaling, 0.2f , 0.2f , 0.2f);
+	world = scaling * translation;
+
+	ID3D11ShaderResourceView* srv = this->d3d->debugGetSRV(2);
+	temp->SetResource("debugMap" , srv);
+	temp->SetMatrix("world", world);
+
+	temp->Apply(0);
+	this->d3d->pDeviceContext->Draw(6, 0);
 }

@@ -36,6 +36,6 @@ private:
 	GeometryManager *pGeoManager;
 	IFW1Factory *pFW1Factory;
 	IFW1FontWrapper *pFontWrapper;
-
+	void renderDebug(Matrix &vp);
 };
 

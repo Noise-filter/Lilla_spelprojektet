@@ -272,6 +272,8 @@ void GeometryManager::importMesh(ID3D11Device *device,
 	if(textures.size() > 0) texTemp = createTextureArray(device, dc, textures, DXGI_FORMAT_R8G8B8A8_UNORM, D3DX11_FILTER_NONE, D3DX11_FILTER_NONE);
 	object->mInit(device, bufferInit, instanceInit, temp, nrOfVertices, nrOfInstances, bufferObj, texTemp, glowTemp);
 
+
+
 	delete temp;
 }
 

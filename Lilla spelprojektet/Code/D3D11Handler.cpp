@@ -123,6 +123,12 @@ ID3D11DeviceContext* D3D11Handler::returnDeviceContext()
 {
 	return this->pDeviceContext;
 }
+
+ID3D11ShaderResourceView* D3D11Handler::debugGetSRV(int id)
+{
+	return this->pMultipleSRVs[id];
+}
+
 /*
 #########################################
 		Private functions
