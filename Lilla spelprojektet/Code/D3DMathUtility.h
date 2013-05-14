@@ -210,7 +210,7 @@ struct UpgradeStats
 	{
 	}
 
-	UpgradeStats(int id ,int hp, int dmg, int atkSpeed, int prjSpeed, int range)
+	UpgradeStats(int id, float hp, float dmg, float atkSpeed, float prjSpeed, float range)
 	{
 		this->id = id;
 		this->hp = hp;
@@ -221,11 +221,11 @@ struct UpgradeStats
 	}	
 
 	int id;
-	int hp;
-	int dmg;
-	int atkSpeed;
-	int prjSpeed;
-	int range;
+	float hp;
+	float dmg;
+	float atkSpeed;
+	float prjSpeed;
+	float range;
 };
 
 struct RenderData

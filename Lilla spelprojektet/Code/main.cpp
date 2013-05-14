@@ -72,7 +72,8 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 			dt = (currTimeStamp - prevTimeStamp) * secsPerCnt;
 
 			//main logic and draw calls
-			game->update(dt);
+			if(game->update(dt) == 0)
+				break;
 			game->render();
 
 			prevTimeStamp = currTimeStamp;

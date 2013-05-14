@@ -147,6 +147,10 @@ int Game::update(float dt)
 		//hantera win/lose state
 		cout << "YOU LOSE" << endl;
 	}
+	else if(gameState == STATE_QUIT)
+	{
+		return 0;
+	}
 	
 	gui->update(input->getMs(), gameState);
 
