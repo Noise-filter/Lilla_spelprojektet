@@ -133,8 +133,7 @@ void GUI::clear()
 	this->textBoxes = NULL;
 	this->nrOfBoxes = 0;
 
-	delete this->panels;
-	this->panels = NULL;
+	SAFE_DELETE(panels);
 	this->nrOfPanles = 0;
 }
 
