@@ -1,6 +1,6 @@
 #include "Trail.h"
 
-Trail::Trail(D3DXVECTOR3 color, D3DXVECTOR3 position, int intensity, float timeToLive, float velocity, float lengthX, float lengthY, float lengthZ)
+Trail::Trail(Vec3 color, Vec3 position, int intensity, float timeToLive, float velocity, float lengthX, float lengthY, float lengthZ)
 	: ParticlePolicy(color, position, intensity, timeToLive, velocity)
 {
 	this->lengthX = lengthX;
@@ -41,7 +41,7 @@ void Trail::emitt()
 	float halfLengthY = this->lengthY * 0.5f;
 	float halfLengthZ = this->lengthZ * 0.5f;
 
-	D3DXVECTOR3 origPos = Particle.getPosition();
+	Vec3 origPos = Particle.getPosition();
 
 	float posX = origPos.x;
 	float posY = origPos.y;
@@ -56,8 +56,8 @@ void Trail::emitt()
 	float dirZ = (float)rand() / (float)RAND_MAX -0.5f;
 
 	
-	Particle.setDirection(D3DXVECTOR3(dirX,dirY,dirZ));
-	Particle.setPosition(D3DXVECTOR3(posX,posY,posZ));
+	Particle.setDirection(Vec3(dirX,dirY,dirZ));
+	Particle.setPosition(Vec3(posX,posY,posZ));
 
 	particles.insertLast(Particle);
 }

@@ -3,7 +3,7 @@
 #include "WinHandler.h"
 #include "GeometryManager.h"
 #include <FW1FontWrapper.h>
-#include "TextObject.h"
+#include "GUI.h"
 #include <vector>
 using namespace std;
 
@@ -13,14 +13,20 @@ public:
 	Engine(void);
 	~Engine(void);
 
-	void render(D3DXMATRIX& vp);
-	void renderGui();
-	bool init(HINSTANCE hInstance, int cmdShow);
+
+	void render(D3DXMATRIX& vp, Text* text, int nrOfText);
+	void renderGui(int state, Text* text);
+	void renderText(Text* text, int nrOfText);
+
+	bool init(HINSTANCE hInstance, int cmdShow, int mapSize);
+
 	PRIMITIVE_TOPOLOGIES changeTopology(int ID);
 
 	void setRenderData(vector<vector<RenderData*>>& renderData);
 	void setRenderData(vector<vector<MESH_PNC>> renderData);
 	void setHPBars(vector<HPBarInfo>& bars);
+	void setGUI(GUI_Panel* data, int nrOfPanels);
+
 	MouseState* getMouseState();
 	HWND getHWND();
 

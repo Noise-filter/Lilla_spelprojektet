@@ -7,7 +7,7 @@ GeometryManager::GeometryManager()
 	
 	this->vEntities.resize(NROFDIFFERENTMESHES);
 
-	for(int i = 0; i < this->vEntities.size(); i++)
+	for(int i = 0; i < (int)this->vEntities.size(); i++)
 	{
 		this->vEntities[i] = new GameObject();
 	}
@@ -16,10 +16,11 @@ GeometryManager::GeometryManager()
 	this->FullScreenQuad = new GameObject();
 
 	hpBars = new GameObject();
+	GUI = new GameObject();
 }
 GeometryManager::~GeometryManager()
 {
-	for(int i = 0; i < this->vEntities.size(); i++)
+	for(int i = 0; i < (int)this->vEntities.size(); i++)
 	{
 		SAFE_DELETE(this->vEntities[i]);
 	}
@@ -32,7 +33,7 @@ GeometryManager::~GeometryManager()
 	SAFE_DELETE(this->importer);
 }
 
-void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc)
+void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc, int mapSize)
 {
 	importer = new OBJReader();
 	BUFFER_INIT bufferInit		= BUFFER_INIT();
@@ -96,12 +97,22 @@ void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc)
 	MESH_P quad[] = {  MESH_P(D3DXVECTOR3(1,-1,0)),
 						MESH_P(D3DXVECTOR3(-1,-1,0)), 
 						MESH_P(D3DXVECTOR3(1,1,0)),
+
 						MESH_P(D3DXVECTOR3(1,1,0)),  
 						MESH_P(D3DXVECTOR3(-1,-1,0)), 
 						MESH_P(D3DXVECTOR3(-1,1,0)), 
 	};
 
-	
+	MESH_PNUV plane[] ={
+		MESH_PNUV(Vec3(0.5f,0,-0.5f), Vec3(0,1,0), Vec2((float)mapSize,0)),
+		MESH_PNUV(Vec3(-0.5f,0,-0.5f), Vec3(0,1,0), Vec2(0,0)),
+		MESH_PNUV(Vec3(0.5f,0,0.5f), Vec3(0,1,0), Vec2((float)mapSize,(float)mapSize)),
+
+		MESH_PNUV(Vec3(0.5f,0,0.5f), Vec3(0,1,0), Vec2((float)mapSize,(float)mapSize)),
+		MESH_PNUV(Vec3(-0.5f,0,-0.5f), Vec3(0,1,0), Vec2(0,0)),
+		MESH_PNUV(Vec3(-0.5f,0,0.5f), Vec3(0,1,0), Vec2(0,(float)mapSize)),
+	};
+
 	//import and initilaze buffers
 	string fileName = "Meshar/Main Building.obj";
 	importMesh(device, dc, this->vEntities.at(ENTITY_MAINBUILDING), fileName, bufferInit, instanceInit, 1, this->pBufferObj);
@@ -132,14 +143,11 @@ void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc)
 
 
 	//temp buffer init
-	ID3D11ShaderResourceView *nulls = NULL;
-	this->vEntities.at(ENTITY_UPGRADE_HP)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls);
-	this->vEntities.at(ENTITY_UPGRADE_ATKSP)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls);
-	this->vEntities.at(ENTITY_UPGRADE_DMG)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls);
-	this->vEntities.at(ENTITY_UPGRADE_PRJSP)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls);
-	this->vEntities.at(ENTITY_UPGRADE_RANGE)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls);
-
-
+	ID3D11ShaderResourceView *nulls;
+	this->vEntities.at(ENTITY_UPGRADE_OFFENSE)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls);
+	this->vEntities.at(ENTITY_UPGRADE_DEFENSE)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls);
+	this->vEntities.at(ENTITY_UPGRADE_RES)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls);
+	this->vEntities.at(ENTITY_PLANE)->mInit(device, bufferInit, instanceInit, plane, 6, 1, this->pBufferObj, nulls, nulls);
 
 	this->Particles->mInit(device, instanceInit, 1000, this->pBufferObj);
 
@@ -153,16 +161,18 @@ void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc)
 
 	this->FullScreenQuad->mInit(device, bufferInit, instanceInit, p, 6, 0 , this->pBufferObj);
 
-	MESH_PUV puv[] = {  MESH_PUV(D3DXVECTOR3(1,-1,0), D3DXVECTOR2(0, 0)),
+	MESH_PUV puv[] = {  MESH_PUV(D3DXVECTOR3(1,-1,0), D3DXVECTOR2(1, 0)),
 						MESH_PUV(D3DXVECTOR3(-1,-1,0), D3DXVECTOR2(0, 0)),
-						MESH_PUV(D3DXVECTOR3(1,1,0), D3DXVECTOR2(0, 0)),
-						MESH_PUV(D3DXVECTOR3(1,1,0), D3DXVECTOR2(0, 0)),
+						MESH_PUV(D3DXVECTOR3(1,1,0), D3DXVECTOR2(1, 1)),
+						MESH_PUV(D3DXVECTOR3(1,1,0), D3DXVECTOR2(1, 1)),
 						MESH_PUV(D3DXVECTOR3(-1,-1,0), D3DXVECTOR2(0, 0)),
-						MESH_PUV(D3DXVECTOR3(-1,1,0), D3DXVECTOR2(0, 0))
+						MESH_PUV(D3DXVECTOR3(-1,1,0), D3DXVECTOR2(0, 1))
 	};
 
 
-	hpBars->mInit(device, bufferInit, instanceInit, puv, 6, 1000, pBufferObj);
+	hpBars->mInit(device, bufferInit, instanceInit, puv, 6, 1000, pBufferObj, true);
+
+	GUI->mInit(device, bufferInit, instanceInit, puv, 6, 1000, pBufferObj);
 }
 
 void GeometryManager::applyEntityBuffer(ID3D11DeviceContext *dc, int ID, D3D_PRIMITIVE_TOPOLOGY topology)
@@ -179,6 +189,16 @@ void GeometryManager::applyParticleBuffer(ID3D11DeviceContext *dc , D3D_PRIMITIV
 	UINT stride = sizeof(MESH_PNC);
 	this->Particles->mApply(dc, topology, stride);
 }
+void GeometryManager::applyHpBarBuffer(ID3D11DeviceContext *dc , D3D_PRIMITIVE_TOPOLOGY topology)
+{
+	UINT stride[2] = {sizeof(MESH_PUV), sizeof(MatrixInstance)};
+	this->hpBars->mApply(dc, topology, stride);
+}
+void GeometryManager::applyGUIBuffer(ID3D11DeviceContext *dc, D3D_PRIMITIVE_TOPOLOGY topology)
+{
+	UINT stride[2] = {sizeof(MESH_PUV), sizeof(INSTANCEDATA)};
+	this->GUI->mApply(dc, topology, stride);
+}
 
 void GeometryManager::updateEntityBuffer(ID3D11DeviceContext *dc, std::vector<RenderData*> data, int ID)
 {
@@ -187,6 +207,14 @@ void GeometryManager::updateEntityBuffer(ID3D11DeviceContext *dc, std::vector<Re
 void GeometryManager::updateParticles(ID3D11DeviceContext *dc, std::vector<std::vector<MESH_PNC>> data)
 {
 	this->Particles->mUpdate(dc, data);
+}
+void GeometryManager::updateHPBars(ID3D11DeviceContext *dc, std::vector<HPBarInfo>& data)
+{
+	this->hpBars->mUpdate(dc, data);
+}
+void GeometryManager::updateGUI(ID3D11DeviceContext *dc, GUI_Panel* data, int nrOfObjects)
+{
+	GUI->mUpdate(dc, data, nrOfObjects);
 }
 
 int GeometryManager::getNrOfInstances(int ID)
@@ -204,6 +232,14 @@ int GeometryManager::getNrOfEntities()
 int GeometryManager::getNrOfParticles()
 {
 	return this->Particles->mGetNrOfVertices();
+}
+int GeometryManager::getNrOfHPBars()
+{
+	return this->hpBars->mGetNrOfInstances();
+}
+int GeometryManager::getNrOfGUIObjects()
+{
+	return this->GUI->mGetNrOfInstances();
 }
 
 ID3D11ShaderResourceView *GeometryManager::getTextures(int ID)

@@ -14,7 +14,7 @@ Engine::~Engine(void)
 	SAFE_DELETE(pGeoManager);
 }
 
-bool Engine::init(HINSTANCE hInstance, int cmdShow)
+bool Engine::init(HINSTANCE hInstance, int cmdShow, int mapSize)
 {
 	HRESULT hr = (win32->initWindow(hInstance, cmdShow)); // initierar win32
 	if(FAILED(hr))
@@ -28,12 +28,17 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 		return false;
 	}
 
-	pGeoManager->init(d3d->pDevice, d3d->pDeviceContext);
+	pGeoManager->init(d3d->pDevice, d3d->pDeviceContext, mapSize);
+
+
+	HRESULT hResult = FW1CreateFactory(FW1_VERSION, &pFW1Factory);
+	hResult = pFW1Factory->CreateFontWrapper(d3d->pDevice, L"Arial", &pFontWrapper);
+
 
 	return true; // allt gick bra
 }
 
-void Engine::render(Matrix& vp)
+void Engine::render(Matrix& vp, Text* text, int nrOfText)
 {
 	//pGeoManager->myTestFunc(d3d->pDevice);
 	d3d->clearAndBindRenderTarget();
@@ -98,14 +103,52 @@ void Engine::render(Matrix& vp)
 	}
 	*/
 
+	//Draw hp bars
+	temp = this->d3d->setPass(PASS_HPBARS);
+	pGeoManager->applyHpBarBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	temp->Apply(0);
+	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfHPBars(), 0, 0);
+	
+	//Rita ut gui
+	pGeoManager->applyGUIBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	temp->Apply(0);
+	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfGUIObjects(), 0, 0);
+
+
 	temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
 	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);
 
+	if(text != NULL)
+	{
+		renderText(text, nrOfText);
+	}
+
 	if(FAILED(d3d->pSwapChain->Present( 0, 0 )))
 	{
 		return;
+	}
+}
+
+void Engine::renderGui(int state, Text* text)
+{
+	
+}
+
+void Engine::renderText(Text* text, int nrOfText)
+{
+	for(int i = 0; i < nrOfText; i++)
+	{
+		pFontWrapper->DrawString(
+			d3d->pDeviceContext,
+			text[i].text,// String
+			text[i].textSize,// Font size
+			text[i].pos.x,// X position
+			text[i].pos.y,// Y position
+			text[i].textColor,// Text color, 0xAaBbGgRr
+			FW1_CENTER// Flags (for example FW1_RESTORESTATE to keep context states unchanged)
+		);
 	}
 }
 
@@ -125,6 +168,12 @@ void Engine::setRenderData(vector<vector<MESH_PNC>> renderData)
 void Engine::setHPBars(vector<HPBarInfo>& bars)
 {
 	//set hp bars
+	pGeoManager->updateHPBars(d3d->pDeviceContext, bars);
+}
+
+void Engine::setGUI(GUI_Panel* data, int nrOfPanels)
+{
+	pGeoManager->updateGUI(d3d->pDeviceContext, data, nrOfPanels);
 }
 
 MouseState* Engine::getMouseState()

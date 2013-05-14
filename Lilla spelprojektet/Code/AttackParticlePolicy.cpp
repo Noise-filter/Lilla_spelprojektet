@@ -5,7 +5,7 @@ AttackParticlePolicy::AttackParticlePolicy() : ParticlePolicy()
 
 }
 
-AttackParticlePolicy::AttackParticlePolicy(D3DXVECTOR3 color, D3DXVECTOR3 position, int intensity, float timeToLive, float velocity, D3DXVECTOR3 direction)
+AttackParticlePolicy::AttackParticlePolicy(Vec3 color, Vec3 position, int intensity, float timeToLive, float velocity, Vec3 direction)
 	: ParticlePolicy(color, position, intensity, timeToLive, velocity)
 {
 	this->direction = direction;
@@ -45,7 +45,7 @@ int AttackParticlePolicy::update(float dt)
 void AttackParticlePolicy::emitt()
 {
 	BaseParticle Particle = *this->emitter;
-	D3DXVECTOR3 origPos = Particle.getPosition();
+	Vec3 origPos = Particle.getPosition();
 
 	float posX = origPos.x;
 	float posY = origPos.y;
@@ -66,7 +66,7 @@ void AttackParticlePolicy::emitt()
 		D3DXVec3Normalize(&direction, &direction);
 
 		Particle.setDirection(direction);
-		Particle.setPosition(D3DXVECTOR3(posX, posY, posZ));
+		Particle.setPosition(Vec3(posX, posY, posZ));
 
 		particles.insertLast(Particle);
 	}

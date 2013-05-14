@@ -2,37 +2,37 @@
 
 Camera::Camera()
 {
-	this->m_position = D3DXVECTOR3(0, 50, 0);
-	this->mRight = D3DXVECTOR3(1, 0, 0);
-	this->mUp = D3DXVECTOR3(0, 1, 0);
-	this->mLook = D3DXVECTOR3(0, 0, 1);
+	this->m_position = Vec3(0, 50, 0);
+	this->mRight = Vec3(1, 0, 0);
+	this->mUp = Vec3(0, 1, 0);
+	this->mLook = Vec3(0, 0, 1);
 }
 
 Camera::~Camera()
 {
 }
 
-void Camera::SetPosition(const D3DXVECTOR3& v)
+void Camera::SetPosition(const Vec3& v)
 {
 	this->m_position = v;
 }
 
-D3DXVECTOR3 Camera::GetPosition()const
+Vec3 Camera::GetPosition()const
 {
 	return this->m_position;
 }
 
-D3DXVECTOR3 Camera::GetRight()const
+Vec3 Camera::GetRight()const
 {
 	return this->mRight;
 }
 
-D3DXVECTOR3 Camera::GetUp()const
+Vec3 Camera::GetUp()const
 {
 	return this->mUp;
 }
 
-D3DXVECTOR3 Camera::GetLook()const
+Vec3 Camera::GetLook()const
 {
 	return this->mLook;
 }
@@ -52,9 +52,9 @@ float Camera::GetAspect()const
 	return this->mAspect;
 }
 
-D3DXVECTOR3 Camera::CrossMatrix(const D3DXVECTOR3& vector, const D3DXMATRIX& matrix)
+Vec3 Camera::CrossMatrix(const Vec3& vector, const D3DXMATRIX& matrix)
 {
-	D3DXVECTOR3 vec;
+	Vec3 vec;
 	vec.x = matrix._11*vector.x + matrix._12*vector.y + matrix._13*vector.z;
 	vec.y = matrix._21*vector.x + matrix._22*vector.y + matrix._23*vector.z;
 	vec.z = matrix._31*vector.x + matrix._32*vector.y + matrix._33*vector.z;
@@ -77,15 +77,15 @@ void Camera::SetLens(float fovY, float aspect, float zn, float zf)
 					   0, 0, -zn*zf/(zf-zn), 0);
 }
 
-void Camera::LookAt(D3DXVECTOR3 pos, D3DXVECTOR3 target, D3DXVECTOR3 worldUp)
+void Camera::LookAt(Vec3 pos, Vec3 target, Vec3 worldUp)
 {
-	D3DXVECTOR3 L;
+	Vec3 L;
 	D3DXVec3Subtract(&L, &target, &pos);
 	D3DXVec3Normalize(&L, &L);
-	D3DXVECTOR3 R; 
+	Vec3 R; 
 	D3DXVec3Cross(&R, &worldUp, &L);
 	D3DXVec3Normalize(&R, &R);
-	D3DXVECTOR3 U;
+	Vec3 U;
 	D3DXVec3Cross(&U, &L, &R);
 
 	this->m_position = pos;
@@ -113,7 +113,7 @@ D3DXMATRIX Camera::ViewsProj()const
 
 void Camera::Walk(float dist)
 {
-	this->m_position += dist*D3DXVECTOR3(1,0,0);
+	this->m_position += dist*Vec3(1,0,0);
 }
 
 void Camera::Strafe(float dist)
@@ -144,7 +144,7 @@ void Camera::Yaw(float angle)
 							  -sin(radians), 0, cos(radians), 0,
 							  0, 0, 0, 1);*/
 							  
-	D3DXVECTOR3 up(0,1,0);
+	Vec3 up(0,1,0);
 	D3DXMatrixRotationAxis(&R, &-up, radians);
 
 	this->mRight = CrossMatrix(this->mRight, R);

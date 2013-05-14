@@ -5,7 +5,7 @@ Upgrade::Upgrade()
 	this->upgradeID = 0;
 }
 
-Upgrade::Upgrade(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, int upgradeID)
+Upgrade::Upgrade(Vec3 pos, int meshID, int textureID, float hp, int lightID, int upgradeID)
 	: Structure(pos, meshID, textureID, hp, lightID)
 {
 	this->upgradeID = upgradeID;

@@ -23,7 +23,7 @@ Shader::~Shader()
 HRESULT Shader::Init(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* filename,
 		const D3D11_INPUT_ELEMENT_DESC* inputElementDesc, unsigned int numElements)
 {
-	mImmediateContext = deviceContext;
+ 	mImmediateContext = deviceContext;
 	mDevice = device;
 
 	HRESULT hr = S_OK;

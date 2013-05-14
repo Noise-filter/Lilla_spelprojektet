@@ -5,18 +5,18 @@ ParticlePolicy::ParticlePolicy()
 	this->nrOfVertsPerParticle = 1;
 	this->intensity = 0;
 	
-	this->color = D3DXVECTOR3(1, 1, 1);
-	this->emitter = new BaseParticle(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, 1, 0), 0, 0);
+	this->color = Vec3(1, 1, 1);
+	this->emitter = new BaseParticle(Vec3(0, 0, 0), Vec3(0, 1, 0), 0, 0);
 	recreateVertices = true;
 }
 
-ParticlePolicy::ParticlePolicy(D3DXVECTOR3 color, D3DXVECTOR3 position, int intensity, float timeToLive, float velocity)
+ParticlePolicy::ParticlePolicy(Vec3 color, Vec3 position, int intensity, float timeToLive, float velocity)
 {
 	this->nrOfVertsPerParticle = 1;
 	this->intensity = intensity;
 
 	this->color = color;
-	this->emitter = new BaseParticle(position, D3DXVECTOR3(0,1,0), timeToLive, velocity);
+	this->emitter = new BaseParticle(position, Vec3(0,1,0), timeToLive, velocity);
 	recreateVertices = true;
 }
 
@@ -40,7 +40,7 @@ void ParticlePolicy::createVertices()
 		{
 			MESH_PNC vert1;
 
-			vert1.normal = D3DXVECTOR3(1,1,1);
+			vert1.normal = Vec3(1,1,1);
 			vert1.pos = walker->value.getPosition();
 			vert1.color = this->color;
 		
@@ -57,7 +57,7 @@ void ParticlePolicy::createVertices()
 	}
 }
 
-void ParticlePolicy::updatePosition(D3DXVECTOR3 pos)
+void ParticlePolicy::updatePosition(Vec3 pos)
 {
 	emitter->setPosition(pos);
 }

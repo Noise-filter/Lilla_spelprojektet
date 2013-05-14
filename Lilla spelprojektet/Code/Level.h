@@ -13,16 +13,18 @@ using namespace std;
 
 class Level
 {
+
 public:
 	Level(void);
 	~Level(void);
 
+	int getExtraResPerEnemy();
 	bool init(int quadSize);
 
 	void getRenderData(vector<vector<RenderData*>>& rData);
 	int update(float dt, vector<Enemy*>& enemies);
 	
-	bool buildStructure(D3DXVECTOR3 mouseClickPos, int selectedStructure);
+	bool buildStructure(Vec3 mouseClickPos, int selectedStructure);
 	bool isAdjecent(int xPos, int yPos);
 	bool isLocationBuildable(int xPos, int yPos);
 	int getNrOfSupplyStructures();
@@ -39,20 +41,22 @@ private:
 	void upgradeStructures(int selectedUpgrade);
 	void removeUpgrade(int selectedUpgrade);
 	void constructNeutrals();
+
 private:
 	Node** nodes;
 	Structure*** structures;
-	int nrOfSupplyStructures;
-	vector<Structure> neutralStructures;
+	vector<Structure*> neutralStructures;
 
-	
+	Entity* plane;
 
 	UpgradeStats* availibleUpgrades;
 	vector<UpgradeStats> upgradesInUse;
 
 	Set<Structure*> sets;
 
+	int nrOfSupplyStructures;
 	int quadSize;
 	int mapSize;
+	int extraResPerEnemy;
 };
 

@@ -5,7 +5,6 @@
 #include "Camera.h"
 #include "SoundSystem.h"
 #include "ParticleSystem.h"
-#include "GUI.h"
 #include <fstream>
 
 
@@ -34,8 +33,6 @@ private:
 	ParticleSystem* pSystem;
 	Sound* playlist;
 	GUI* gui;
-	GAMESTATES state;
-
 
 	int gameState;
 
