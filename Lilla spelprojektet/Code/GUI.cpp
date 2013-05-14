@@ -132,6 +132,10 @@ void GUI::clear()
 	delete this->textBoxes;
 	this->textBoxes = NULL;
 	this->nrOfBoxes = 0;
+
+	delete this->panels;
+	this->panels = NULL;
+	this->nrOfPanles = 0;
 }
 
 Button GUI::createBtn(D3DXVECTOR2 pos, BUTTONTYPE type)
