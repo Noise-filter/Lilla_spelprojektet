@@ -71,37 +71,30 @@ void Game::render()
 
 	int nrOfBtns = gui->getNrOfBtns();
 	int nrOfBoxes = gui->getNrOfText();
-
-	if(nrOfBtns != 0)
+	
+	tempSize = nrOfBtns + nrOfBoxes;
+	temp = new Text[tempSize];
+	for(int i = 0; i < nrOfBoxes; i++)
 	{
-		tempSize = nrOfBtns + nrOfBoxes;
-		temp = new Text[tempSize];
-		for(int i = 0; i < nrOfBoxes; i++)
-		{
-			temp[i] = text[i];
-		}
-		for(int i = nrOfBoxes; i < nrOfBtns + nrOfBoxes; i++)
-		{
-			temp[i] = btns[i-nrOfBoxes].text;
-		}
-		
+		temp[i] = text[i];
 	}
-	else
-	{ 
-		tempSize = nrOfBoxes;
-		temp = new Text[tempSize];
-		for(int i = nrOfBtns; i < nrOfBoxes; i++)
-		{
-			temp[i] = text[i];
-		}
+	for(int i = nrOfBoxes; i < nrOfBtns + nrOfBoxes; i++)
+	{
+		temp[i] = btns[i-nrOfBoxes].text;
 	}
+	
+	GUI_Panel* panels = gui->getPanels();
+	int nrOfPanels = gui->getNrOfPanels();
+
 
 	//build engines renderContent with addRenderData then do render to execute those renders
 	engine->setRenderData(gameLogic->getRenderData());
 
 	engine->setRenderData(pSystem->getVertexData());
-
-	//engine->renderGui(gameState);
+	if(nrOfPanels != 0)
+	{
+		//engine->setGUI(panels, nrOfPanels);
+	}
 
 
 	//Get hp bars and put them in the correct position

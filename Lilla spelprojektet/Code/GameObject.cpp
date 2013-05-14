@@ -5,8 +5,9 @@ GameObject::GameObject()
 	this->pVertexBuffer   = NULL;
 	this->pIndexBuffer    = NULL;
 	this->pInstanceBuffer = NULL;
-	
-	this->pTextures       = NULL;
+	this->texArray		  = NULL;
+	this->glowArray		  = NULL;
+
 
 	this->iNrOfinstances  = 0;
 	this->iNrOfVertices   = 0;
@@ -16,12 +17,8 @@ GameObject::~GameObject()
 	SAFE_RELEASE(this->pVertexBuffer);
 	SAFE_RELEASE(this->pIndexBuffer);
 	SAFE_RELEASE(this->pInstanceBuffer);
-
-	for(int i = 0; i < this->iNrOfTextures; i++)
-	{
-		SAFE_RELEASE(this->pTextures[i]);
-	}
-	SAFE_DELETE_ARRAY(this->pTextures);
+	//SAFE_RELEASE(this->texArray);
+	//SAFE_RELEASE(this->glowArray);
 }
 
 
@@ -66,7 +63,6 @@ void GameObject::mUpdate(ID3D11DeviceContext *dc, std::vector<std::vector<MESH_P
 
 	mUnmap(dc, this->pVertexBuffer);
 }
-
 void GameObject::mUpdate(ID3D11DeviceContext *dc , std::vector<HPBarInfo>& data)
 {
 	D3D11_MAPPED_SUBRESOURCE *mappedData = mMap(dc, this->pInstanceBuffer);
@@ -80,6 +76,21 @@ void GameObject::mUpdate(ID3D11DeviceContext *dc , std::vector<HPBarInfo>& data)
 		mesh[j].world = mesh[j].world * data[j].translate;
 	}
 	this->iNrOfinstances = data.size();
+
+	mUnmap(dc, this->pVertexBuffer);
+}
+void GameObject::mUpdate(ID3D11DeviceContext *dc, GUI_Panel* data, int nrOfInstances)
+{
+	D3D11_MAPPED_SUBRESOURCE *mappedData = mMap(dc, this->pInstanceBuffer);
+
+	INSTANCEDATA *mesh = reinterpret_cast<INSTANCEDATA*>(mappedData->pData);
+
+	for(int j = 0; j < (int)nrOfInstances; j++)
+	{
+		mesh[j].mWorld = data[j].matrix;
+		mesh[j].iTextureID = data[j].textureID;
+	}
+	this->iNrOfinstances = nrOfInstances;
 
 	mUnmap(dc, this->pVertexBuffer);
 }
@@ -147,6 +158,7 @@ void GameObject::mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INI
 	this->pVertexBuffer = bufferObj->initBuffer(device, bufferInit);
 	this->iNrOfVertices = nrOfVertices;
 }
+
 void GameObject::mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_PUV *mesh, int nrOfVertices, int nrOfInstances, Buffer* bufferObj, bool asd)
 {
 	bufferInit.desc.uByteWidth    = sizeof(MESH_PUV) * nrOfVertices;
@@ -161,7 +173,7 @@ void GameObject::mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INI
 	this->pVertexBuffer = bufferObj->initBuffer(device, bufferInit);
 	this->iNrOfVertices = nrOfVertices;
 }
-void GameObject::mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_PNUV *mesh, int nrOfVertices, int nrOfInstances, Buffer* bufferObj)
+void GameObject::mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_PNUV *mesh, int nrOfVertices, int nrOfInstances, Buffer* bufferObj, ID3D11ShaderResourceView *textures, ID3D11ShaderResourceView *glowMaps)
 {
 	bufferInit.desc.uByteWidth    = sizeof(MESH_PNUV) * nrOfVertices;
 	bufferInit.data.pInitData     = mesh;
@@ -174,6 +186,8 @@ void GameObject::mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INI
 
 	this->pVertexBuffer = bufferObj->initBuffer(device, bufferInit);
 	this->iNrOfVertices = nrOfVertices;
+	this->texArray = textures;
+	this->glowArray = glowMaps; 
 }
 void GameObject::mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, int nrOfVertices, Buffer* bufferObj)
 {
@@ -185,14 +199,25 @@ void GameObject::mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, int nrOfVe
 ///////////////////////
 //Set and Get methods//
 ///////////////////////
-int GameObject::mGetNrOfInstances()
+int GameObject::mGetNrOfInstances() const
 {
 	return this->iNrOfinstances;
 }
-int GameObject::mGetNrOfVertices()
+int GameObject::mGetNrOfVertices() const
 {
 	return this->iNrOfVertices;
 }
+
+ID3D11ShaderResourceView *GameObject::getTexArray() const
+{
+	return this->texArray;
+}
+
+ID3D11ShaderResourceView *GameObject::getGlowArray() const
+{
+	return this->glowArray;
+}
+
 void GameObject::mSetNrOfInstances(int value)
 {
 	this->iNrOfinstances = value;
@@ -200,6 +225,16 @@ void GameObject::mSetNrOfInstances(int value)
 void GameObject::mSetNrOfVertices(int value)
 {
 	this->iNrOfVertices = value;
+}
+
+void GameObject::setTexArray(ID3D11ShaderResourceView *tArray)
+{
+	this->texArray = tArray;
+}
+
+void GameObject::setGlowArray(ID3D11ShaderResourceView *gArray)
+{
+	this->glowArray = gArray;
 }
 
 //////////////////////////////////////////////////

@@ -13,7 +13,8 @@ enum BUTTONTYPE
 	PAUSED_CONTINUE,
 	MENU,
 	NEXT,
-	LAST
+	LAST,
+	MAIN_MENU
 };
 
 struct Text
@@ -32,6 +33,26 @@ struct Button
 	Text text;
 };
 
+struct GUI_Panel
+{
+	D3DXMATRIX matrix;
+	int textureID;
+	GUI_Panel()
+	{
+
+	}
+	GUI_Panel(D3DXVECTOR2 pos, D3DXVECTOR2 scale, int ID)
+	{
+		D3DXMatrixIdentity(&matrix);
+		matrix._11 = scale.x;
+		matrix._33 = scale.y;
+		matrix._41 = pos.x;
+		matrix._43 = pos.y;
+
+		textureID = ID;
+	}
+};
+
 class GUI
 {
 public:
@@ -43,6 +64,8 @@ public:
 	void createBtns(int state);
 	int getNrOfBtns()const;
 	int getNrOfText()const;
+	GUI_Panel* getPanels()const;
+	int getNrOfPanels()const;
 	
 
 private:
@@ -52,12 +75,17 @@ private:
 	int changeState(Button btn);
 	Button createBtn(D3DXVECTOR2 pos, BUTTONTYPE type);
 	Text createTextBox(D3DXVECTOR2 pos, wchar_t* text, float size, UINT32 color);
+	void createPanels(int state);
+
 
 	Button* menuBtns;
 	int nrOfBtns;
 	Text* textBoxes;
 	int nrOfBoxes;
+	GUI_Panel* panels;
+	int nrOfPanles;
 
 	int GUI_STATE;
-
+	float midScreenW;
+	float midScreenH;
 };

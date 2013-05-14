@@ -28,18 +28,19 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow, int mapSize)
 		return false;
 	}
 
-	pGeoManager->init(d3d->pDevice,mapSize);
+	pGeoManager->init(d3d->pDevice, d3d->pDeviceContext, mapSize);
+
 
 	HRESULT hResult = FW1CreateFactory(FW1_VERSION, &pFW1Factory);
-	
-	
 	hResult = pFW1Factory->CreateFontWrapper(d3d->pDevice, L"Arial", &pFontWrapper);
+
 
 	return true; // allt gick bra
 }
 
 void Engine::render(Matrix& vp, Text* text, int nrOfText)
 {
+	//pGeoManager->myTestFunc(d3d->pDevice);
 	d3d->clearAndBindRenderTarget();
 
 	int index = 0;
@@ -54,13 +55,16 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 	temp = this->d3d->setPass(PASS_GEOMETRY);
 	temp->SetMatrix("view", vp);
 	//temp->SetMatrix("proj", proj);
-	temp->Apply(0);
 
 	for(int i = 0; i < this->pGeoManager->getNrOfEntities(); i++)
 	{
 		if(pGeoManager->getNrOfInstances(i) > 0)
 		{
+			temp->SetResource("textures", pGeoManager->getTextures(i));
+			temp->SetResource("glowMaps", pGeoManager->getGlowMaps(i));
+
 			pGeoManager->applyEntityBuffer(d3d->pDeviceContext, i, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			temp->Apply(0);
 			d3d->pDeviceContext->DrawInstanced(pGeoManager->getNrOfVertexPoints(i), pGeoManager->getNrOfInstances(i), 0, 0);
 		}
 	}
@@ -105,6 +109,12 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 	temp->Apply(0);
 	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfHPBars(), 0, 0);
 	
+	//Rita ut gui
+	pGeoManager->applyGUIBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	temp->Apply(0);
+	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfGUIObjects(), 0, 0);
+
+
 	temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
 	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	temp->Apply(0);
@@ -159,6 +169,11 @@ void Engine::setHPBars(vector<HPBarInfo>& bars)
 {
 	//set hp bars
 	pGeoManager->updateHPBars(d3d->pDeviceContext, bars);
+}
+
+void Engine::setGUI(GUI_Panel* data, int nrOfPanels)
+{
+	pGeoManager->updateGUI(d3d->pDeviceContext, data, nrOfPanels);
 }
 
 MouseState* Engine::getMouseState()
