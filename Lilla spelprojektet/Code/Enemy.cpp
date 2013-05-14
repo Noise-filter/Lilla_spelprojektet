@@ -115,7 +115,9 @@ int Enemy::getXp()
 Waypoint Enemy::getCurrentWaypoint()
 {
 	if(currentWP > (int)waypoints.size()-1)
-		return waypoints.at(0);
+	{
+		return waypoints.at(currentWP-1);
+	}
 	return waypoints.at(currentWP);
 }
 
