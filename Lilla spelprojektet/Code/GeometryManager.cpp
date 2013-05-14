@@ -146,11 +146,9 @@ void GeometryManager::init(ID3D11Device *device,int mapSize)
 
 	//temp buffer init
 	
-	this->vEntities.at(ENTITY_UPGRADE_HP)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj);
-	this->vEntities.at(ENTITY_UPGRADE_ATKSP)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj);
-	this->vEntities.at(ENTITY_UPGRADE_DMG)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj);
-	this->vEntities.at(ENTITY_UPGRADE_PRJSP)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj);
-	this->vEntities.at(ENTITY_UPGRADE_RANGE)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj);
+	this->vEntities.at(ENTITY_UPGRADE_OFFENSE)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj);
+	this->vEntities.at(ENTITY_UPGRADE_DEFENSE)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj);
+	this->vEntities.at(ENTITY_UPGRADE_RES)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj);
 	this->vEntities.at(ENTITY_PLANE)->mInit(device, bufferInit, instanceInit, plane, 6, 1, this->pBufferObj);
 
 

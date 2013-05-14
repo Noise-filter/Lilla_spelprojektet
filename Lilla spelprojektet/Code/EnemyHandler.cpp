@@ -28,6 +28,7 @@ EnemyHandler::~EnemyHandler(void)
 int EnemyHandler::update(float dt)
 {
 	vector<Enemy*> spawnedEnemies = ai->spawnEnemies(dt,enemies.size());
+	int nrOfKilledEnemies = 0;
 
 	for(int i = 0; i < (int)spawnedEnemies.size(); i++)
 		enemies.push_back(spawnedEnemies.at(i));
@@ -36,6 +37,7 @@ int EnemyHandler::update(float dt)
 	{
 		if(enemies.at(i)->isDead())
 		{
+			nrOfKilledEnemies++; 
 			SAFE_DELETE(enemies.at(i));
 			enemies.erase(enemies.begin() + i);
 		}
@@ -55,7 +57,7 @@ int EnemyHandler::update(float dt)
 		}
 	}
 
-	return 1;
+	return nrOfKilledEnemies;
 }
 
 vector<Enemy*>& EnemyHandler::getEnemies()

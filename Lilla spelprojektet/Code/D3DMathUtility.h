@@ -10,7 +10,7 @@
 
 #define PI (3.14159265358979323846f)
 
-#define NROFDIFFERENTMESHES (15)
+#define NROFDIFFERENTMESHES (13)
 
 struct GameSettings
 {
@@ -136,11 +136,9 @@ enum ENTITY_FLAGS
 	ENTITY_NODE_RED,
 	ENTITY_ENEMY,
 	ENTITY_PROJECTILE,
-	ENTITY_UPGRADE_HP,
-	ENTITY_UPGRADE_ATKSP,
-	ENTITY_UPGRADE_DMG,
-	ENTITY_UPGRADE_PRJSP,
-	ENTITY_UPGRADE_RANGE,
+	ENTITY_UPGRADE_OFFENSE,
+	ENTITY_UPGRADE_DEFENSE,
+	ENTITY_UPGRADE_RES,
 	ENTITY_PLANE,
 	ENTITY_GUI,
 };
@@ -163,11 +161,9 @@ enum BUILDABLE_ENTITY_FLAGS
 	BUILDABLE_MAINBUILDING,
 	BUILDABLE_SUPPLY,
 	BUILDABLE_TOWER,
-	BUILDABLE_UPGRADE_HP,
-	BUILDABLE_UPGRADE_ATKSP,
-	BUILDABLE_UPGRADE_DMG,
-	BUILDABLE_UPGRADE_PRJSP,
-	BUILDABLE_UPGRADE_RANGE,
+	BUILDABLE_UPGRADE_OFFENSE,
+	BUILDABLE_UPGRADE_DEFENSE,
+	BUILDABLE_UPGRADE_RES,
 };
 
 enum TEXTURE_FLAGS
@@ -210,13 +206,12 @@ struct UpgradeStats
 	{
 	}
 
-	UpgradeStats(int id, float hp, float dmg, float atkSpeed, float prjSpeed, float range)
+	UpgradeStats(int id, float hp, float dmg, float atkSpeed, float range)
 	{
 		this->id = id;
 		this->hp = hp;
 		this->dmg = dmg;
 		this->atkSpeed = atkSpeed;
-		this->prjSpeed = prjSpeed;
 		this->range = range;
 	}	
 
@@ -224,7 +219,6 @@ struct UpgradeStats
 	float hp;
 	float dmg;
 	float atkSpeed;
-	float prjSpeed;
 	float range;
 };
 
