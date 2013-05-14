@@ -16,6 +16,7 @@ GeometryManager::GeometryManager()
 	this->FullScreenQuad = new GameObject();
 
 	hpBars = new GameObject();
+	GUI = new GameObject();
 
 }
 GeometryManager::~GeometryManager()
@@ -176,7 +177,7 @@ void GeometryManager::init(ID3D11Device *device,int mapSize)
 
 	hpBars->mInit(device, bufferInit, instanceInit, puv, 6, 1000, pBufferObj, true);
 
-	//GUI->mInit(device, bufferInit, instanceInit, puv, 6, 1000, pBufferObj);
+	GUI->mInit(device, bufferInit, instanceInit, puv, 6, 1000, pBufferObj);
 }
 
 void GeometryManager::applyEntityBuffer(ID3D11DeviceContext *dc, int ID, D3D_PRIMITIVE_TOPOLOGY topology)
