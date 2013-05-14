@@ -8,6 +8,7 @@ GameLogic::GameLogic(void)
 	this->availableSupply = 20;
 	this->resource = 20;
 	this->maxResCD = 0;
+	this->resPerEnemy = 2;
 }
 
 GameLogic::~GameLogic(void)
@@ -18,7 +19,7 @@ GameLogic::~GameLogic(void)
 
 void GameLogic::incrementSelectedStructure(int increment)
 {
-	if(selectedStructure >= 0 && selectedStructure <= BUILDABLE_UPGRADE_RANGE)
+	if(selectedStructure >= 0 && selectedStructure <= BUILDABLE_UPGRADE_RES)
 	{
 		this->selectedStructure += increment;
 		printSelected();
@@ -29,13 +30,13 @@ int GameLogic::getMapSize()
 	return this->level->getMapSize();
 }
 
-void GameLogic::giveResource(float dt)
+void GameLogic::giveSupply(float dt)
 {
 	currentResCD += dt;
 	if(currentResCD > maxResCD)
 	{
-		this->resource += resPerTick + level->getNrOfSupplyStructures();
-		cout << "gained resources: " << 10 + level->getNrOfSupplyStructures() << endl;
+		this->availableSupply += resPerTick + level->getNrOfSupplyStructures();
+		cout << "gained resources: " << resPerTick + level->getNrOfSupplyStructures() << endl;
 		currentResCD = 0;
 	}
 }
@@ -56,31 +57,19 @@ bool GameLogic::canAfford()
 					return true;
 				}
 				break;
-			case BUILDABLE_UPGRADE_HP:
+			case BUILDABLE_UPGRADE_OFFENSE:
 				if(resource >= COST_UPGRADE)
 				{
 					return true;
 				}
 				break;
-			case BUILDABLE_UPGRADE_ATKSP:
+			case BUILDABLE_UPGRADE_DEFENSE:
 				if(resource >= COST_UPGRADE)
 				{
 					return true;
 				}
 				break;
-				case BUILDABLE_UPGRADE_DMG:
-				if(resource >= COST_UPGRADE)
-				{
-					return true;
-				}
-				break;
-				case BUILDABLE_UPGRADE_PRJSP:
-				if(resource >= COST_UPGRADE)
-				{
-					return true;
-				}
-				break;
-				case BUILDABLE_UPGRADE_RANGE:
+			case BUILDABLE_UPGRADE_RES:
 				if(resource >= COST_UPGRADE)
 				{
 					return true;
@@ -99,23 +88,15 @@ void GameLogic::structureBuilt()
 			availableSupply -= COST_TOWER; 
 			break;
 		case BUILDABLE_SUPPLY:
-			availableSupply += COST_TOWER;
 			resource -= COST_SUPPLY;
-			nrOfSupplyStructures++;
 			break;
-		case BUILDABLE_UPGRADE_HP:
+		case BUILDABLE_UPGRADE_OFFENSE:
 			resource -= COST_UPGRADE;
 			break;
-		case BUILDABLE_UPGRADE_ATKSP:
+		case BUILDABLE_UPGRADE_DEFENSE:
 			resource -= COST_UPGRADE;
 			break;
-		case BUILDABLE_UPGRADE_DMG:
-			resource -= COST_UPGRADE;
-			break;
-		case BUILDABLE_UPGRADE_PRJSP:
-			resource -= COST_UPGRADE;
-			break;
-		case BUILDABLE_UPGRADE_RANGE:
+		case BUILDABLE_UPGRADE_RES:
 			resource -= COST_UPGRADE;
 			break;
 	}
@@ -156,7 +137,7 @@ int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX v
 			break;
 		}
 
-		giveResource(dt);
+		giveSupply(dt);
 		
 		if(ret == 4) //win
 		{
@@ -167,8 +148,11 @@ int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX v
 			gameState = STATE_LOSE;
 		}
 
-		if(!eHandler->update(dt))
-			return 0; //error
+		int nrOfKilledEnemies = eHandler->update(dt);
+		if(nrOfKilledEnemies > 0)
+		{
+			this->resource += resPerEnemy* level->getExtraResPerEnemy()  + resPerEnemy * nrOfKilledEnemies;
+		}
 	}
 	
 	if(gameState == STATE_WIN || gameState == STATE_LOSE)
@@ -220,20 +204,14 @@ void GameLogic::printSelected()
 		case BUILDABLE_TOWER:
 		cout << "TOWER SELECTED" << endl;
 		break;
-		case BUILDABLE_UPGRADE_DMG:
-		cout << "DMG UPGRADE SELECTED" << endl;
+		case BUILDABLE_UPGRADE_OFFENSE:
+		cout << "OFFENSE UPGRADE SELECTED" << endl;
 		break;
-		case BUILDABLE_UPGRADE_ATKSP:
-		cout << "ATKSP UPGRADE SELECTED" << endl;
+		case BUILDABLE_UPGRADE_DEFENSE:
+		cout << "DEFENSE UPGRADE SELECTED" << endl;
 		break;
-		case BUILDABLE_UPGRADE_HP:
-		cout << "HP UPGRADE SELECTED" << endl;
-		break;
-		case BUILDABLE_UPGRADE_PRJSP:
-		cout << "PRJSP UPGRADE SELECTED" << endl;
-		break;
-		case BUILDABLE_UPGRADE_RANGE:
-		cout << "RANGE UPGRADE SELECTED" << endl;
+		case BUILDABLE_UPGRADE_RES:
+		cout << "RES UPGRADE SELECTED" << endl;
 		break;
 	}
 }

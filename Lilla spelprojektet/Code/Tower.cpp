@@ -45,7 +45,6 @@ void Tower::giveUpgrade(UpgradeStats &stats)
 	this->attackSpeed += stats.atkSpeed;
 	this->maxHp += stats.hp;
 	this->hp += stats.hp;
-	this->projectileSpeed += stats.prjSpeed;
 	this->range += stats.range;
 }
 
@@ -55,7 +54,6 @@ void Tower::removeUpgrade(UpgradeStats &stats)
 	this->attackSpeed -= stats.atkSpeed;
 	this->maxHp -= stats.hp;
 	this->hp -= stats.hp;
-	this->projectileSpeed -= stats.prjSpeed;
 	this->range -= stats.range;	
 }
 

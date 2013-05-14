@@ -24,7 +24,7 @@ private:
 	bool canAfford();
 	void structureBuilt();
 	void structureDestroyed();
-	void giveResource(float dt);
+	void giveSupply(float dt);
 	
 
 	void printSelected();
@@ -34,8 +34,8 @@ private:
 	//resurser
 	int availableSupply;
 	int resource;
-	int nrOfSupplyStructures;
 	int resPerTick;
+	int resPerEnemy;
 	float maxResCD;
 	float currentResCD;
 	//resurser
