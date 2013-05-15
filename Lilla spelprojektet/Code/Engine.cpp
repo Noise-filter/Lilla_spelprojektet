@@ -149,7 +149,7 @@ void Engine::renderText(Text* text, int nrOfText)
 			text[i].pos.x,// X position
 			text[i].pos.y,// Y position
 			text[i].textColor,// Text color, 0xAaBbGgRr
-			FW1_CENTER// Flags (for example FW1_RESTORESTATE to keep context states unchanged)
+			FW1_CENTER | FW1_RESTORESTATE// Flags (for example FW1_RESTORESTATE to keep context states unchanged)
 		);
 	}
 }
