@@ -137,7 +137,6 @@ ID3D11ShaderResourceView* D3D11Handler::debugGetSRV(int id)
 		Private functions
 #########################################
 */
-
 bool D3D11Handler::initSwapChainAndDevice(HWND hWnd)
 {
 	bool deviceAndSwapCreated = false;
@@ -342,7 +341,7 @@ bool D3D11Handler::initShaders()
 
 	temp = new Shader();
 	this->vShaders.at(PASS_DEBUG) = temp;
-	hr = this->vShaders.at(PASS_DEBUG)->Init(this->pDevice, this->pDeviceContext, "../Shaders/Debug.fx", inputDescHP, 1);
+	hr = this->vShaders.at(PASS_DEBUG)->Init(this->pDevice, this->pDeviceContext, "../Shaders/Debug.fx", tempInput, 1);
 	if(FAILED(hr))
 	{
 		return false;
