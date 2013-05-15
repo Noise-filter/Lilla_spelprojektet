@@ -103,8 +103,6 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 	}
 	*/
 
-	renderDebug(vp);
-
 	//Draw hp bars
 	temp = this->d3d->setPass(PASS_HPBARS);
 	pGeoManager->applyHpBarBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -115,8 +113,9 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 	pGeoManager->applyGUIBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	temp->Apply(0);
 	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfGUIObjects(), 0, 0);
-
-
+	
+	renderDebug(vp);
+	
 	temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
 	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	temp->Apply(0);
@@ -126,7 +125,7 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 	{
 		renderText(text, nrOfText);
 	}
-
+	
 	if(FAILED(d3d->pSwapChain->Present( 0, 0 )))
 	{
 		return;
@@ -149,7 +148,7 @@ void Engine::renderText(Text* text, int nrOfText)
 			text[i].pos.x,// X position
 			text[i].pos.y,// Y position
 			text[i].textColor,// Text color, 0xAaBbGgRr
-			FW1_CENTER | FW1_RESTORESTATE// Flags (for example FW1_RESTORESTATE to keep context states unchanged)
+			FW1_VCENTER | FW1_CENTER | FW1_RESTORESTATE// Flags (for example FW1_RESTORESTATE to keep context states unchanged)
 		);
 	}
 }

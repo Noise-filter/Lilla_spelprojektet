@@ -119,16 +119,16 @@ void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc, int ma
 	importMesh(device, dc, this->vEntities.at(ENTITY_MAINBUILDING), fileName, bufferInit, instanceInit, 1, this->pBufferObj);
 
 	fileName = "Meshar/Power Building part 1.obj";
-	importMesh(device, dc, this->vEntities.at(ENTITY_SUPPLYBASE), fileName, bufferInit, instanceInit, 100, this->pBufferObj);
+	importMesh(device, dc, this->vEntities.at(ENTITY_SUPPLYBASE), fileName, bufferInit, instanceInit, 1000, this->pBufferObj);
 	
 	fileName = "Meshar/Power Building part 2.obj";
-	importMesh(device, dc, this->vEntities.at(ENTITY_SUPPLYTOP), fileName, bufferInit, instanceInit, 100, this->pBufferObj);
+	importMesh(device, dc, this->vEntities.at(ENTITY_SUPPLYTOP), fileName, bufferInit, instanceInit, 1000, this->pBufferObj);
 
 	fileName = "Meshar/Tower Part 1.obj";
-	importMesh(device, dc, this->vEntities.at(ENTITY_TOWERTOP), fileName, bufferInit, instanceInit, 100, this->pBufferObj);
+	importMesh(device, dc, this->vEntities.at(ENTITY_TOWERTOP), fileName, bufferInit, instanceInit, 1000, this->pBufferObj);
 
 	fileName = "Meshar/Tower Part 2.obj";
-	importMesh(device, dc, this->vEntities.at(ENTITY_TOWERBASE), fileName, bufferInit, instanceInit, 100, this->pBufferObj);
+	importMesh(device, dc, this->vEntities.at(ENTITY_TOWERBASE), fileName, bufferInit, instanceInit, 1000, this->pBufferObj);
 	
 	fileName = "Meshar/Green node.obj";
 	importMesh(device, dc, this->vEntities.at(ENTITY_NODE_GREEN), fileName, bufferInit, instanceInit, 400, this->pBufferObj);

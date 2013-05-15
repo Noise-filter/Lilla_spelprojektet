@@ -148,12 +148,12 @@ Button GUI::createBtn(D3DXVECTOR2 pos, BUTTONTYPE type)
 	btn.type = type;
 	text.pos = pos;
 	text.textSize = 36;
-	text.pos.y = pos.y - text.textSize / 2;
+	//text.pos.y = pos.y;
 	text.textColor = 0x800000ff;
 
 	if(type == STARTGAME)
 	{
-		btn.size = D3DXVECTOR2(100, 10);
+		btn.size = D3DXVECTOR2(100, 18);
 		text.text = L"New Game";
 	}
 	if(type == SETTINGS)
@@ -212,11 +212,11 @@ void GUI::createPanels(int state)
 	{
 		this->nrOfPanles = 5;
 		this->panels = new GUI_Panel[nrOfPanles];
-		this->panels[0] = GUI_Panel(D3DXVECTOR2(0, 0), D3DXVECTOR2(300, 50), TEXTURE_RESOURSE);
-		this->panels[1] = GUI_Panel(D3DXVECTOR2(midScreenW+100, 0), D3DXVECTOR2(midScreenW-100, 50), TEXTURE_GOAL);
-		this->panels[2] = GUI_Panel(D3DXVECTOR2(midScreenW+100, midScreenH+200), D3DXVECTOR2(midScreenW-100, midScreenH-200), TEXTURE_BUILDINGS_HOTKEY);
-		this->panels[3] = GUI_Panel(D3DXVECTOR2(0, midScreenH+200), D3DXVECTOR2(midScreenW-100, midScreenH-200), TEXTURE_INFO);
-		this->panels[4] = GUI_Panel(D3DXVECTOR2(50, midScreenH+220), D3DXVECTOR2(midScreenW-150, midScreenH-300), TEXTURE_BUILDING);
+		this->panels[0] = GUI_Panel(D3DXVECTOR2(-0.8, 0.8), D3DXVECTOR2(0.1, 0.1), TEXTURE_RESOURSE);
+		this->panels[1] = GUI_Panel(D3DXVECTOR2(0.8, 0.8), D3DXVECTOR2(0.1, 0.1), TEXTURE_GOAL);
+		this->panels[2] = GUI_Panel(D3DXVECTOR2(0.8, -0.8), D3DXVECTOR2(0.1, 0.1), TEXTURE_BUILDINGS_HOTKEY);
+		this->panels[3] = GUI_Panel(D3DXVECTOR2(-0.8, -0.8), D3DXVECTOR2(0.1, 0.1), TEXTURE_INFO);
+		this->panels[4] = GUI_Panel(D3DXVECTOR2(-0.9, -0.9), D3DXVECTOR2(0.1, 0.1), TEXTURE_BUILDING);
 	}
 	else if(state == STATE_WIN || state == STATE_LOSE)
 	{

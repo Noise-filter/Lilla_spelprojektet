@@ -62,7 +62,6 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 
 void Game::render()
 {
-
 	Button* btns;
 	Text* text;
 	Text* temp;
@@ -93,7 +92,7 @@ void Game::render()
 	engine->setRenderData(pSystem->getVertexData());
 	if(nrOfPanels != 0)
 	{
-		//engine->setGUI(panels, nrOfPanels);
+		engine->setGUI(panels, nrOfPanels);
 	}
 
 
