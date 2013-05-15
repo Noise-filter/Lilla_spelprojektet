@@ -58,7 +58,7 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 
 	for(int i = 0; i < this->pGeoManager->getNrOfEntities(); i++)
 	{
-		if(pGeoManager->getNrOfInstances(i) > 0)
+		if(pGeoManager->getNrOfInstances(i) > 0 && i != (int)ENTITY_PLANE)
 		{
 			temp->SetResource("textures", pGeoManager->getTextures(i));
 			temp->SetResource("glowMaps", pGeoManager->getGlowMaps(i));
@@ -202,7 +202,6 @@ void Engine::renderDebug(Matrix &vp)
 	this->pGeoManager->applyQuadBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	Shader *temp = this->d3d->setPass(PASS_DEBUG);
 
-	
 	temp->SetResource("debugMap" , this->d3d->debugGetSRV(0));
 	temp->SetMatrix("world", world);
 	
