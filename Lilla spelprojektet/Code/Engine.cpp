@@ -58,7 +58,7 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 
 	for(int i = 0; i < this->pGeoManager->getNrOfEntities(); i++)
 	{
-		if(pGeoManager->getNrOfInstances(i) > 0 && i != (int)ENTITY_PLANE)
+		if(pGeoManager->getNrOfInstances(i) > 0)
 		{
 			temp->SetResource("textures", pGeoManager->getTextures(i));
 			temp->SetResource("glowMaps", pGeoManager->getGlowMaps(i));
