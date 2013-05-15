@@ -220,6 +220,7 @@ void GameLogic::printSelected()
 Vec3 GameLogic::getMouseWorldPos(MouseState* mState, D3DXMATRIX view, D3DXMATRIX proj, Vec3 cameraPos)
 {
 	float pointX, pointY, intersect;
+	
 	D3DXMATRIX invView, worldIdentity;
 	Vec3 dir, origin, rayOrigin, rayDir, intersectPos, planeNormal;
 	D3DXMatrixIdentity(&worldIdentity);
