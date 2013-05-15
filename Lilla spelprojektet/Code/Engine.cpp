@@ -12,6 +12,8 @@ Engine::~Engine(void)
 	SAFE_DELETE(d3d);
 	SAFE_DELETE(win32);
 	SAFE_DELETE(pGeoManager);
+	pFontWrapper->Release();
+	pFW1Factory->Release();
 }
 
 bool Engine::init(HINSTANCE hInstance, int cmdShow, int mapSize)
