@@ -23,7 +23,7 @@ Tower::Tower(Vec3 pos, int meshID, int textureID, float hp, int lightID, float d
 	this->range = range;
 	this->projectileSpeed = projectileSpeed;
 	this->cooldown = 0;
-	this->xpToNextLvl = 100;
+	this->xpToNextLvl = 1000;
 	this->level = 1;
 	this->experience = 0;
 
@@ -47,8 +47,8 @@ void Tower::giveUpgrade(UpgradeStats &stats)
 	this->hp += stats.hp;
 	this->range += stats.range;
 
-	if(attackSpeed < 0.1f)
-		attackSpeed = 0.1f;
+	if(attackSpeed < 0.8f)
+		attackSpeed = 0.8f;
 
 }
 
@@ -152,7 +152,7 @@ void Tower::lvlUp()
 	this->damage += 5;
 	this->hp += 5;
 	this->maxHp += 5;
-	this->xpToNextLvl += 10*level*2;
+	this->xpToNextLvl += xpToNextLvl/2;
 	this->experience = 0;
 	this->level++;
 }

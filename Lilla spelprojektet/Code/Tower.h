@@ -13,17 +13,20 @@ class Tower : public Structure
 public:
 	Tower();
 	Tower(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, float damage, float attackSpeed, float range, float projectileSpeed);
-	virtual ~Tower();
+	~Tower();
 
-	virtual int update(float dt);
+	int update(float dt);
 
 	void aquireTarget(vector<Enemy*>* enemies);
-
-	vector<RenderData*> getRenderData();
 	void giveUpgrade(UpgradeStats &stats);
 	void removeUpgrade(UpgradeStats &stats);
-
 	void rotateTop();
+	
+	vector<RenderData*> getRenderData();
+
+private:
+	void giveXp(int xp);
+	void lvlUp();
 
 private:
 	float damage;
@@ -34,13 +37,9 @@ private:
 	int experience;
 	int level;
 	int xpToNextLvl;
+
 	Enemy* target;
-
-	void giveXp(int xp);
-	void lvlUp();
-
 	vector<Projectile*> projectiles;
-	
 	Sound* sound;
 
 	//Top part of tower

@@ -12,6 +12,8 @@ Engine::~Engine(void)
 	SAFE_DELETE(d3d);
 	SAFE_DELETE(win32);
 	SAFE_DELETE(pGeoManager);
+	pFontWrapper->Release();
+	pFW1Factory->Release();
 }
 
 bool Engine::init(HINSTANCE hInstance, int cmdShow, int mapSize)
@@ -201,7 +203,6 @@ void Engine::renderDebug(Matrix &vp)
 	this->pGeoManager->applyQuadBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	Shader *temp = this->d3d->setPass(PASS_DEBUG);
 
-	
 	temp->SetResource("debugMap" , this->d3d->debugGetSRV(0));
 	temp->SetMatrix("world", world);
 	
