@@ -31,6 +31,7 @@ GeometryManager::~GeometryManager()
 
 	SAFE_DELETE(pBufferObj);
 	SAFE_DELETE(this->importer);
+	SAFE_DELETE(this->GUI);
 }
 
 void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc, int mapSize)

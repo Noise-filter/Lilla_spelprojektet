@@ -428,44 +428,44 @@ bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 			bool builtUpgrade = false;
 			switch(selectedStructure)
 			{
-			case BUILDABLE_TOWER:
-				structures[xPos][yPos] = new Tower(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWERBASE,0,100,0, 10, 1, 50, 100);
-				for(int i = 0; i < (int)this->upgradesInUse.size();i++)
+				case BUILDABLE_TOWER:
+					structures[xPos][yPos] = new Tower(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWERBASE,0,100,0, 10, 1, 50, 100);
+					for(int i = 0; i < (int)this->upgradesInUse.size();i++)
+					{
+						dynamic_cast<Tower*>(structures[xPos][yPos])->giveUpgrade(upgradesInUse[i]);
+					}
+					break;
+				case BUILDABLE_SUPPLY:
+					structures[xPos][yPos] = new Supply(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_SUPPLYBASE,0,100,0);
+					this->nrOfSupplyStructures++;
+					break;
+				case BUILDABLE_UPGRADE_OFFENSE:
+					structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
+						ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_OFFENSE);
+					upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_OFFENSE)-3]);
+					builtUpgrade = true;
+					break;
+				case BUILDABLE_UPGRADE_DEFENSE:
+					structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
+						ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_DEFENSE);
+					upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_DEFENSE)-3]);
+					builtUpgrade = true;
+					break;
+				case BUILDABLE_UPGRADE_RES:
+					structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
+						ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_RES);
+					this->extraResPerEnemy += 2;
+					break;
+				cout << "a structure has been built on the location X:"<< xPos << " Y:" << yPos << endl;
+
+				if(builtUpgrade)
 				{
-					dynamic_cast<Tower*>(structures[xPos][yPos])->giveUpgrade(upgradesInUse[i]);
+					upgradeStructures(selectedStructure);
+					cout << "the structure was an upgrade: " << selectedStructure <<endl;
 				}
-				break;
-			case BUILDABLE_SUPPLY:
-				structures[xPos][yPos] = new Supply(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_SUPPLYBASE,0,100,0);
-				this->nrOfSupplyStructures++;
-				break;
-			case BUILDABLE_UPGRADE_OFFENSE:
-				structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
-					ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_OFFENSE);
-				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_OFFENSE)-3]);
-				builtUpgrade = true;
-				break;
-			case BUILDABLE_UPGRADE_DEFENSE:
-				structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
-					ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_DEFENSE);
-				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_DEFENSE)-3]);
-				builtUpgrade = true;
-				break;
-			case BUILDABLE_UPGRADE_RES:
-				structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
-					ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_RES);
-				this->extraResPerEnemy += 2;
-				break;
-			cout << "a structure has been built on the location X:"<< xPos << " Y:" << yPos << endl;
-
-			if(builtUpgrade)
-			{
-				upgradeStructures(selectedStructure);
-				cout << "the structure was an upgrade: " << selectedStructure <<endl;
+			
 			}
-
 			return true;
-		}
 	}
 	return false;
 	}
