@@ -18,21 +18,23 @@ public:
 	Level(void);
 	~Level(void);
 
-	int getExtraResPerEnemy();
-	bool init(int quadSize, int difficulty);
-
-	void getRenderData(vector<vector<RenderData*>>& rData);
-	int update(float dt, vector<Enemy*>& enemies);
 	
-	bool buildStructure(Vec3 mouseClickPos, int selectedStructure);
-	bool isAdjecent(int xPos, int yPos);
-	bool isLocationBuildable(int xPos, int yPos);
-	int getNrOfSupplyStructures();
+	bool init(int quadSize, int difficulty);
+	int update(float dt, vector<Enemy*>& enemies);
 
+
+	int getExtraResPerEnemy();
+	void getRenderData(vector<vector<RenderData*>>& rData);
+	int getNrOfSupplyStructures();
 	Structure*** getStructures();
 	Node** getNodes();
 	int getMapSize();
 	void getHPBarInfo(vector<HPBarInfo>& hpBars);
+
+	bool buildStructure(Vec3 mouseClickPos, int selectedStructure);
+	bool isAdjecent(int xPos, int yPos);
+	bool isLocationBuildable(int xPos, int yPos);
+	
 	bool loadLevel(string fileName);
 
 private:
@@ -48,12 +50,11 @@ private:
 	vector<Structure*> neutralStructures;
 
 	Entity* plane;
-	float winPercent;
 	UpgradeStats* availibleUpgrades;
 	vector<UpgradeStats> upgradesInUse;
-	
 	Set<Structure*> sets;
 
+	float winPercent;
 	int nrOfSupplyStructures;
 	int quadSize;
 	int mapSize;

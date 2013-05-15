@@ -4,6 +4,7 @@
 #include "Node.h"
 #include "Enemy.h"
 #include <vector>
+
 extern "C"
 {
 	#include <lua.h>
@@ -28,6 +29,7 @@ public:
 	~AI(void);
 
 	bool init(Structure*** structures, Node** nodes ,string* scripts, int mapSize, int quadSize, int enemiesPerMin, int difficulty);
+	
 	vector<Waypoint> findPath(Waypoint start, Waypoint goal, int enemyType); // hanterar pathScript
 	vector<float> findTarget(Waypoint pos, int type); // hanterar targetScript
 	vector<Enemy*> spawnEnemies(float dt, int nrOfEnemies); // hanterar spawnScript
@@ -37,25 +39,25 @@ public:
 	bool initFindTarget(string scriptName);
 
 	void sendArray(int** arr, int mapSize, lua_State* script);
-
 	void convertNodesToInt();
 	void convertStructuresToInt();
 
 	Structure* getStrucutre(int x, int y);
-
 	static void OpenLuaLibs(lua_State* l);
 
 private:
+
+	Node** nodes;
+	Structure*** structures;
+
 	int** structuresInt;
 	int** nodesInt;
+
 	int mapSize;
 	int quadSize;
-
 	int difficulty;
 	int enemiesPerMin;
-
-	Structure*** structures;
-	Node** nodes;
+	
 	lua_State* pathScript;
 	lua_State* targetScript;
 	lua_State* spawnScript;
