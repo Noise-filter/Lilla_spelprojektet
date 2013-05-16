@@ -45,6 +45,10 @@ private:
 	//Top part of tower
 	RenderData* topTower;
 	D3DXMATRIX topScale, topPointTrans, topRotation, topTrans;
+	float rotationSpeed;
+	float rotY;
+	D3DXVECTOR3 look;
+
 
 };
 

@@ -40,6 +40,9 @@ Tower::Tower(Vec3 pos, int meshID, int textureID, float hp, int lightID, float d
 	D3DXMatrixScaling(&scale, scaleFactor, scaleFactor, scaleFactor);
 	topScale = scale;
 	//topPointTrans = scale * topPointTrans;
+
+	rotationSpeed = 0.1f;
+	rotY = 0.0f;
 }
 
 void Tower::giveUpgrade(UpgradeStats &stats)
@@ -209,9 +212,28 @@ void Tower::rotateTop()
 
 	float dot = D3DXVec3Dot(&look, &Vec3(-1, 0, 0));
 	float yaw = acos(dot);
+/*	float asd = rotY - yaw;
+
+	cout << look.z << endl;
 
 	if(look.z > 0)
-		D3DXMatrixRotationY(&topRotation, yaw);
+	{
+		rotY -= rotationSpeed;
+	}
 	else
+	{
+		rotY += asd;
+	}
+
+	D3DXMatrixRotationY(&topRotation, rotY);
+	*/
+	
+	if(look.z > 0)
+	{
+		D3DXMatrixRotationY(&topRotation, yaw);
+	}
+	else
+	{
 		D3DXMatrixRotationY(&topRotation, -yaw);
+	}
 }
