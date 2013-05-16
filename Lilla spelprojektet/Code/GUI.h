@@ -14,7 +14,8 @@ enum BUTTONTYPE
 	MENU,
 	NEXT,
 	LAST,
-	MAIN_MENU
+	MAIN_MENU,
+	MUTE
 };
 
 struct Text
@@ -60,7 +61,7 @@ public:
 	~GUI();
 
 	void render(Button*& btn, Text*& text);
-	int update(MouseState *mouse, int& state);
+	int update(MouseState *mouse, int& state, bool& muted);
 	void createBtns(int state);
 	int getNrOfBtns()const;
 	int getNrOfText()const;
@@ -88,4 +89,5 @@ private:
 	int GUI_STATE;
 	float midScreenW;
 	float midScreenH;
+	bool muted;
 };
