@@ -35,12 +35,13 @@ float4 PSScene(PSIn input) : SV_Target
 	float3 normal = normalMap.Load(sampleIndices).xyz;
 	float3 blur = blurMap.Load(sampleIndices).xyz;
 	//float3 sum = position + diffuse + normal;
+	//return float4(normal, 1.0f);
 	return float4(diffuse, 1.0f);
 
 	
 
 	//return float4(sum, 1.0f);
-	//return float4( position, 1.0f);
+	return float4( position, 1);
 }
 
 

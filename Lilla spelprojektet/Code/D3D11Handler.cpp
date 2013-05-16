@@ -282,6 +282,33 @@ bool D3D11Handler::initShaders()
 		return false;
 	}
 
+
+	D3D11_INPUT_ELEMENT_DESC lightDesc[] = 
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXTCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+
+		{ "WORLD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "WORLD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "WORLD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "WORLD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "LIGHTPOS", 0, DXGI_FORMAT_R32G32B32_UINT, 2, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "LIGHTCOLOR", 0, DXGI_FORMAT_R32G32B32_UINT, 2, 76, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "LIGHTRADIUS", 0, DXGI_FORMAT_R32_UINT, 2, 88, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		
+	};
+
+	temp = new Shader();
+	this->vShaders.at(PASS_LIGHT) = temp;
+	hr = this->vShaders.at(PASS_LIGHT)->Init(this->pDevice, this->pDeviceContext, "../Shaders/PointLight.fx", lightDesc, 10);
+	if(FAILED(hr))
+	{
+		return false;
+	}
+
+
+
 	D3D11_INPUT_ELEMENT_DESC ParticleInput[] = 
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -339,9 +366,15 @@ bool D3D11Handler::initShaders()
 		return false;
 	}
 
+	D3D11_INPUT_ELEMENT_DESC debugInput[] = 
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+
 	temp = new Shader();
 	this->vShaders.at(PASS_DEBUG) = temp;
-	hr = this->vShaders.at(PASS_DEBUG)->Init(this->pDevice, this->pDeviceContext, "../Shaders/Debug.fx", tempInput, 1);
+	hr = this->vShaders.at(PASS_DEBUG)->Init(this->pDevice, this->pDeviceContext, "../Shaders/Debug.fx", debugInput, 2);
 	if(FAILED(hr))
 	{
 		return false;
