@@ -35,7 +35,7 @@ Tower::Tower(Vec3 pos, int meshID, int textureID, float hp, int lightID, float d
 	D3DXMatrixTranslation(&topPointTrans, 1.5f, 0, 0);
 	D3DXMatrixTranslation(&topTrans, pos.x+1, pos.y, pos.z);
 	D3DXMatrixIdentity(&topRotation);
-	D3DXMatrixTranslation(&translate, pos.x+3.5, pos.y, pos.z);
+	D3DXMatrixTranslation(&translate, pos.x+3.5f, pos.y, pos.z);
 	//scaleFactor = 1;
 	D3DXMatrixScaling(&scale, scaleFactor, scaleFactor, scaleFactor);
 	topScale = scale;

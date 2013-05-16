@@ -1,7 +1,11 @@
 
 Texture2DArray textures   : register(t0);
 Texture2DArray glowMaps	  : register(t1);
-SamplerState anisoSampler : register(s0);
+SamplerState anisoSampler
+{
+	AddressU = WRAP;
+	AddressV = WRAP;
+};
 
 float specularIntensity = 0.8f;
 float specularPower     = 0.5f;

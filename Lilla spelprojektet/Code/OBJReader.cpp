@@ -177,23 +177,23 @@ MESH_PNUV* OBJReader::LoadDataStructures(string fileName, int vertexCount, int t
 			}
 		}
 
-		if(input == 'z')
+		if(input == 't')
 		{
 			string name = " ";
 			fin.get(input);
+			
 			if(input == 'n')
 			{
-				fin.get();
-				getline(fin,name);
-				cout << name << endl;
-				textureNames.push_back(name);
-			}
-			if(input == 'g')
-			{
-				fin.get();
-				getline(fin,name);
+				fin >> name;
 				cout << name << endl;
 				textureGlowNames.push_back(name);
+			}
+			
+			if(input == 'g')
+			{
+				fin >> name;
+				cout << name << endl;
+				//textureGlowNames.push_back(name);
 			}
 		}
 
