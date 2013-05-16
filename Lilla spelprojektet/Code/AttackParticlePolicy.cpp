@@ -61,8 +61,24 @@ void AttackParticlePolicy::emitt()
 		dirY = (float)rand() / (float)RAND_MAX -0.5f;
 		dirZ = (float)rand() / (float)RAND_MAX -0.5f;
 
-		direction.x += ((float)rand() / (float)RAND_MAX -0.01f);
-		direction.z += ((float)rand() / (float)RAND_MAX -0.01f);
+		if(direction.x > 0)
+		{
+			direction.x += ((float)rand() / (float)RAND_MAX -0.1f);
+		}
+		else
+		{
+			direction.x -= ((float)rand() / (float)RAND_MAX -0.1f);
+		}
+
+		if(direction.z > 0)
+		{
+			direction.z += ((float)rand() / (float)RAND_MAX -0.1f);
+		}
+		else
+		{
+			direction.z -= ((float)rand() / (float)RAND_MAX -0.1f);
+		}
+
 		D3DXVec3Normalize(&direction, &direction);
 
 		Particle.setDirection(direction);
