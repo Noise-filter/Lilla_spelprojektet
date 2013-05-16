@@ -29,8 +29,6 @@ float4 PSScene(PSIn input) : SV_Target
 {
 	int3 sampleIndices = int3(input.pos.xyz);
 
-	//float4 color = debugMap.Load(sampleIndices);
-	//float4 color = float4(0, 1 , 0 , 1);
 	float4 color = debugMap.Sample(anisoSampler, input.uv);
 
 	return color;

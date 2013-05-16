@@ -217,7 +217,7 @@ void Engine::renderDebug(Matrix &vp)
 	this->pGeoManager->applyQuadBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	Shader *temp = this->d3d->setPass(PASS_DEBUG);
 
-	temp->SetResource("debugMap" , this->d3d->debugGetSRV(0));
+	temp->SetResource("debugMap" , this->d3d->debugGetSRV(5));
 	temp->SetMatrix("world", world);
 	
 	temp->Apply(0);
