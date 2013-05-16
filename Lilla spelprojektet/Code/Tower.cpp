@@ -23,7 +23,7 @@ Tower::Tower(Vec3 pos, int meshID, int textureID, float hp, int lightID, float d
 	this->range = range;
 	this->projectileSpeed = projectileSpeed;
 	this->cooldown = 0;
-	this->xpToNextLvl = 1000;
+	this->xpToNextLvl = 300;
 	this->level = 1;
 	this->experience = 0;
 
