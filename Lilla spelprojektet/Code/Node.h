@@ -17,6 +17,8 @@ public:
 private:
 	int color;
 	float rotationSpeed;
+	float rotY;
+	
 	float translateSpeed;
 	float translatePosMax;
 	bool upTranslate;

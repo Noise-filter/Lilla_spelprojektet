@@ -32,6 +32,7 @@ GeometryManager::~GeometryManager()
 
 	SAFE_DELETE(pBufferObj);
 	SAFE_DELETE(this->importer);
+	SAFE_DELETE(this->GUI);
 }
 
 void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc, int mapSize)
@@ -292,6 +293,8 @@ void GeometryManager::importMesh(ID3D11Device *device,
 	if(glow.size() > 0)	glowTemp = createTextureArray(device, dc, glow, DXGI_FORMAT_R8G8B8A8_UNORM, D3DX11_FILTER_NONE, D3DX11_FILTER_NONE);
 	if(tex.size() > 0) texTemp = createTextureArray(device, dc, tex, DXGI_FORMAT_R8G8B8A8_UNORM, D3DX11_FILTER_NONE, D3DX11_FILTER_NONE);
 	object->mInit(device, bufferInit, instanceInit, temp, nrOfVertices, nrOfInstances, bufferObj, texTemp, glowTemp);
+
+
 
 	delete temp;
 }

@@ -25,7 +25,8 @@
 
 #define SAFE_RELEASE(x) if( x ) { (x)->Release(); (x) = NULL; }
 
-#define NROFSHADERS (7)
+#define NROFSHADERS (8)
+
 
 struct FaceType
 {
@@ -63,6 +64,8 @@ enum PASS_STATE
 	PASS_BLUR,  //Where the shader that's used for blurring is placed
 	PASS_BLURV, //Used to set pMultipleSRVs[3] and pMultipleRTVs[3] to blur the image vertically
 	PASS_BLURH,	//Used to set pMultipleSRVs[3] and pMultipleRTVs[3] to blur the image vertically 
+	PASS_DEBUG,
+
 };
 
 

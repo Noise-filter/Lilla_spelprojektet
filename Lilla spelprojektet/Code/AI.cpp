@@ -153,7 +153,7 @@ vector<Enemy*> AI::spawnEnemies(float dt, int nrOfEnemies)
 			if( lua_tonumber(spawnScript, -1) > -1)
 			{
 				retVals[counter++] = (float)lua_tonumber(spawnScript, -1);
-				cout << lua_typename(spawnScript, lua_type(spawnScript, -2)) << ": value"<< lua_tonumber(spawnScript, -1) << endl;
+				//cout << lua_typename(spawnScript, lua_type(spawnScript, -2)) << ": value"<< lua_tonumber(spawnScript, -1) << endl;
 			}
 			lua_pop(spawnScript, 1);
 		}

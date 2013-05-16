@@ -1,5 +1,8 @@
 #include "D3D11Handler.h"
 
+int SCREEN_WIDTH;
+int SCREEN_HEIGHT;
+
 D3D11Handler::D3D11Handler()
 {
 	pRenderTargetView	= NULL;	
@@ -19,6 +22,17 @@ D3D11Handler::D3D11Handler()
 	pBlurSRV	= NULL;
 
 	this->vShaders.resize(NROFSHADERS);
+
+	RECT desktop;
+	const HWND hDesktop = GetDesktopWindow();
+	GetWindowRect(hDesktop, &desktop);
+
+	SCREEN_WIDTH = desktop.right;
+	SCREEN_HEIGHT = desktop.bottom;
+	//KOM IHÅG ATT ÄNDRA 
+	SCREEN_WIDTH = 800;
+	SCREEN_HEIGHT = 600;
+
 }
 
 D3D11Handler::~D3D11Handler()
@@ -102,6 +116,9 @@ Shader *D3D11Handler::setPass(PASS_STATE pass)
 			return this->vShaders.at(PASS_FULLSCREENQUAD);
 			break;
 
+		case PASS_DEBUG:
+			return this->vShaders.at(PASS_DEBUG);
+
 		case PASS_HPBARS:
 			this->pDeviceContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);
 			return this->vShaders.at(PASS_HPBARS);
@@ -143,12 +160,17 @@ ID3D11DeviceContext* D3D11Handler::returnDeviceContext()
 {
 	return this->pDeviceContext;
 }
+
+ID3D11ShaderResourceView* D3D11Handler::debugGetSRV(int id)
+{
+	return this->pMultipleSRVs[id];
+}
+
 /*
 #########################################
 		Private functions
 #########################################
 */
-
 bool D3D11Handler::initSwapChainAndDevice(HWND hWnd)
 {
 	bool deviceAndSwapCreated = false;
@@ -361,6 +383,14 @@ bool D3D11Handler::initShaders()
 	this->vShaders.at(PASS_BLUR) = temp;
 	hr = this->vShaders.at(PASS_BLUR)->Init(this->pDevice, this->pDeviceContext, "../Shaders/Blur.fx", descBlur, 2);
 	if(FAILED(hr)) return false;
+
+	temp = new Shader();
+	this->vShaders.at(PASS_DEBUG) = temp;
+	hr = this->vShaders.at(PASS_DEBUG)->Init(this->pDevice, this->pDeviceContext, "../Shaders/Debug.fx", tempInput, 1);
+	if(FAILED(hr))
+	{
+		return false;
+	}
 
 	return true;
 }

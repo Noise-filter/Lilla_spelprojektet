@@ -29,17 +29,14 @@ public:
 	Enemy(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, float speed, float damage, int xp);
 	~Enemy();
 
-	virtual int update(float dt);
+	int update(float dt);
+	int move(float dt);
 
 	void setPath(std::vector<Waypoint>& wp);
-
-	int move(float dt);
+	void setTarget(Structure* t);
 
 	Waypoint getCurrentWaypoint();
 	int getXp();
-
-	void setTarget(Structure* t);
-
 	HPBarInfo getHPBarInfo();
 
 private:
@@ -50,13 +47,10 @@ private:
 
 	Structure* target;
 	float cooldown;
-
 	float speed;
 	float damage;
 	float attackSpeed;
-
 	float targetUpdateTime;
-
 	int xp;
 };
 

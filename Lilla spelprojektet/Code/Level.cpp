@@ -6,17 +6,26 @@ Level::Level(void)
 	this->nodes = NULL;
 	this->nrOfSupplyStructures = 0;
 	this->extraResPerEnemy = 0;
+	this->winPercent = 0;
 }
 
-bool Level::init(int quadSize)
+bool Level::init(int quadSize, int difficulty)
 {
 	this->availibleUpgrades = new UpgradeStats[3];
-	this->availibleUpgrades[0] = (UpgradeStats(BUILDABLE_UPGRADE_OFFENSE,0,10,10,10));
+	this->availibleUpgrades[0] = (UpgradeStats(BUILDABLE_UPGRADE_OFFENSE,0,1,1,1));
 	this->availibleUpgrades[1] = (UpgradeStats(BUILDABLE_UPGRADE_DEFENSE,30,0,0,0));
 	this->availibleUpgrades[2] = (UpgradeStats(BUILDABLE_UPGRADE_RES,0,0,0,0));
 
 	//läs in karta från fil här
 	this->quadSize = quadSize;
+	this->winPercent = 0.50f;
+
+	if(difficulty == DIFF_EASY)
+		this->winPercent = 0.40f;
+	if(difficulty == DIFF_MEDIUM)
+		this->winPercent = 0.50f;
+	if(difficulty == DIFF_HARD)
+		this->winPercent = 0.60f;
 
 	return true;
 }
@@ -236,11 +245,22 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 				{
 					if(structures[i][j])
 					{
-						int id = structures[i][j]->update(dt);
-
-						if(id == 2 && typeid(*structures[i][j]) == typeid(Tower))
+						if(!structures[i][j]->isDead())
 						{
-							dynamic_cast<Tower*>(structures[i][j])->aquireTarget(&enemies);
+							int id = structures[i][j]->update(dt);
+
+							if(id == 2 && typeid(*structures[i][j]) == typeid(Tower))
+							{
+								dynamic_cast<Tower*>(structures[i][j])->aquireTarget(&enemies);
+							}
+						}
+						else
+						{
+							cout << "FAIL!!!!!!!!!!!!!" << endl;
+							cout << "FAIL!!!!!!!!!!!!!" << endl;
+							cout << "FAIL!!!!!!!!!!!!!" << endl;
+							cout << "FAIL!!!!!!!!!!!!!" << endl;
+							cout << "FAIL!!!!!!!!!!!!!" << endl;
 						}
 					}
 				}
@@ -267,7 +287,7 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 		}
 	}
 
-	if((float)nrOfStructures/((mapSize-1) * (mapSize-1)) > 0.40f)
+	if((float)nrOfStructures/((mapSize-1) * (mapSize-1)) > winPercent)
 	{
 		return 4; // win
 	}
@@ -396,8 +416,6 @@ bool Level::isLocationBuildable(int xPos, int yPos)
 	{
 		return false;
 	}
-		
-
 }
 
 bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
@@ -410,7 +428,7 @@ bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 
 		if(selectedStructure == BUILDABLE_MAINBUILDING && structures[xPos][yPos] == NULL && isLocationBuildable(xPos, yPos))
 		{ 
-			structures[xPos][yPos] = new Headquarter(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 30, 0);
+			structures[xPos][yPos] = new Headquarter(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 50, 0);
 			return true;
 		
 		}
@@ -419,47 +437,47 @@ bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 			bool builtUpgrade = false;
 			switch(selectedStructure)
 			{
-			case BUILDABLE_TOWER:
-				structures[xPos][yPos] = new Tower(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWERBASE,0,100,0, 10, 1, 50, 100);
-				for(int i = 0; i < (int)this->upgradesInUse.size();i++)
+				case BUILDABLE_TOWER:
+					structures[xPos][yPos] = new Tower(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWERBASE,0,100,0,20, 1, 20, 100);
+					for(int i = 0; i < (int)this->upgradesInUse.size();i++)
+					{
+						dynamic_cast<Tower*>(structures[xPos][yPos])->giveUpgrade(upgradesInUse[i]);
+					}
+					break;
+				case BUILDABLE_SUPPLY:
+					structures[xPos][yPos] = new Supply(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_SUPPLYBASE,0,100,0);
+					this->nrOfSupplyStructures++;
+					break;
+				case BUILDABLE_UPGRADE_OFFENSE:
+					structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
+						ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_OFFENSE);
+					upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_OFFENSE)-3]);
+					builtUpgrade = true;
+					break;
+				case BUILDABLE_UPGRADE_DEFENSE:
+					structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
+						ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_DEFENSE);
+					upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_DEFENSE)-3]);
+					builtUpgrade = true;
+					break;
+				case BUILDABLE_UPGRADE_RES:
+					structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
+						ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_RES);
+					this->extraResPerEnemy += 2;
+					break;
+				cout << "a structure has been built on the location X:"<< xPos << " Y:" << yPos << endl;
+
+				if(builtUpgrade)
 				{
-					dynamic_cast<Tower*>(structures[xPos][yPos])->giveUpgrade(upgradesInUse[i]);
+					upgradeStructures(selectedStructure);
+					cout << "the structure was an upgrade: " << selectedStructure <<endl;
 				}
-				break;
-			case BUILDABLE_SUPPLY:
-				structures[xPos][yPos] = new Supply(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_SUPPLYBASE,0,100,0);
-				this->nrOfSupplyStructures++;
-				break;
-			case BUILDABLE_UPGRADE_OFFENSE:
-				structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
-					ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_OFFENSE);
-				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_OFFENSE)-3]);
-				builtUpgrade = true;
-				break;
-			case BUILDABLE_UPGRADE_DEFENSE:
-				structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
-					ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_DEFENSE);
-				upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_DEFENSE)-3]);
-				builtUpgrade = true;
-				break;
-			case BUILDABLE_UPGRADE_RES:
-				structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
-					ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_RES);
-				this->extraResPerEnemy += 2;
-				break;
-			cout << "a structure has been built on the location X:"<< xPos << " Y:" << yPos << endl;
-
-			if(builtUpgrade)
-			{
-				upgradeStructures(selectedStructure);
-				cout << "the structure was an upgrade: " << selectedStructure <<endl;
+			
 			}
-
 			return true;
 		}
 	}
 	return false;
-	}
 }
 
 void Level::getRenderData(vector<vector<RenderData*>>& rData)

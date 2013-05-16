@@ -14,8 +14,11 @@ Node::Node(Vec3 pos, int meshID, int textureID, float hp, int lightID, int color
 	D3DXMatrixScaling(&scale, scaleFactor, scaleFactor, scaleFactor);
 	D3DXMatrixTranslation(&pointTranslate, 1.8f, 0, -0.2f);
 
-	rotationSpeed = 0;//(float)(rand() % 100 + 1) * 0.00001f;
-	translateSpeed = 0;//0.1f;
+	rotationSpeed = (float)(rand() % 100 + 1) * 0.0001f;
+	rotY = 0.0f;
+
+	translateSpeed = 0.1f;
+
 	int temp = rand() % 2;
 	if(temp)
 		upTranslate = true;
@@ -31,7 +34,6 @@ Node::~Node()
 
 int Node::update(float dt)
 {
-	static float rotY = 0.0f;
 	rotY += (rotationSpeed * dt);
 	D3DXMatrixRotationY(&rotation, rotY);
 

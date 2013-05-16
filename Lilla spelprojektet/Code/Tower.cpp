@@ -23,7 +23,7 @@ Tower::Tower(Vec3 pos, int meshID, int textureID, float hp, int lightID, float d
 	this->range = range;
 	this->projectileSpeed = projectileSpeed;
 	this->cooldown = 0;
-	this->xpToNextLvl = 100;
+	this->xpToNextLvl = 1000;
 	this->level = 1;
 	this->experience = 0;
 
@@ -33,8 +33,11 @@ Tower::Tower(Vec3 pos, int meshID, int textureID, float hp, int lightID, float d
 
 	//Top part
 	D3DXMatrixTranslation(&topPointTrans, 1.5f, 0, 0);
-	D3DXMatrixTranslation(&topTrans, pos.x-2.5f, pos.y, pos.z-0.5f);
+	D3DXMatrixTranslation(&topTrans, pos.x+1, pos.y, pos.z);
 	D3DXMatrixIdentity(&topRotation);
+	D3DXMatrixTranslation(&translate, pos.x+3.5, pos.y, pos.z);
+	//scaleFactor = 1;
+	D3DXMatrixScaling(&scale, scaleFactor, scaleFactor, scaleFactor);
 	topScale = scale;
 	//topPointTrans = scale * topPointTrans;
 }
@@ -42,16 +45,20 @@ Tower::Tower(Vec3 pos, int meshID, int textureID, float hp, int lightID, float d
 void Tower::giveUpgrade(UpgradeStats &stats)
 {
 	this->damage += stats.dmg;
-	this->attackSpeed += stats.atkSpeed;
+	this->attackSpeed -= stats.atkSpeed;
 	this->maxHp += stats.hp;
 	this->hp += stats.hp;
 	this->range += stats.range;
+
+	if(attackSpeed < 0.8f)
+		attackSpeed = 0.8f;
+
 }
 
 void Tower::removeUpgrade(UpgradeStats &stats)
 {
 	this->damage -= stats.dmg;
-	this->attackSpeed -= stats.atkSpeed;
+	this->attackSpeed += stats.atkSpeed;
 	this->maxHp -= stats.hp;
 	this->hp -= stats.hp;
 	this->range -= stats.range;	
@@ -126,13 +133,17 @@ int Tower::update(float dt)
 
 void Tower::giveXp(int xp)
 {
-	this->experience += xp;
-	cout << "xp: " << experience << "/" << xpToNextLvl << endl;
-	if(experience >= xpToNextLvl)
+	if(this->level != 3) //max level 3
 	{
-		cout << "lvlup!!!!!" << endl;
-		lvlUp();
+		this->experience += xp;
+		cout << "xp: " << experience << "/" << xpToNextLvl << endl;
+		if(experience >= xpToNextLvl)
+		{
+			cout << "lvlup!!!!!" << endl;
+			lvlUp();
+		}	
 	}
+	
 }
 void Tower::lvlUp()
 {
@@ -144,8 +155,7 @@ void Tower::lvlUp()
 	this->damage += 5;
 	this->hp += 5;
 	this->maxHp += 5;
-	this->projectileSpeed += 0.1f;
-	this->xpToNextLvl += 10*level*2;
+	this->xpToNextLvl += xpToNextLvl/2;
 	this->experience = 0;
 	this->level++;
 }

@@ -39,5 +39,7 @@ class Engine
 
 	private:
 		void blurTexture(Shader *temp);
+		void renderDebug(Matrix &vp);
+
 };
 
