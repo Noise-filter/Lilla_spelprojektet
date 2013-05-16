@@ -18,6 +18,7 @@ Node::Node(Vec3 pos, int meshID, int textureID, float hp, int lightID, int color
 	rotY = 0.0f;
 
 	translateSpeed = 0.1f;
+
 	int temp = rand() % 2;
 	if(temp)
 		upTranslate = true;

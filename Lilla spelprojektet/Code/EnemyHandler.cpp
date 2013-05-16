@@ -48,7 +48,7 @@ int EnemyHandler::update(float dt)
 				vector<float> target = ai->findTarget(enemies.at(i)->getCurrentWaypoint(), 1);
 				float x = target[0];
 				float y = target[1];
-				enemies.at(i)->setTarget(ai->getStrucutre((int)x, (int)y));
+				enemies.at(i)->setTarget(ai->getStrucutre((int)x, (int)y, target[2]));
 				Waypoint w = enemies.at(i)->getCurrentWaypoint();
 				vector<Waypoint> wp = ai->findPath(enemies.at(i)->getCurrentWaypoint(), Waypoint((int)x, (int)y), 1);
 				if(wp.size() > 0)

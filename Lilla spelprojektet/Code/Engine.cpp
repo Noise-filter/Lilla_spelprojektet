@@ -42,7 +42,6 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow, int mapSize)
 
 void Engine::render(Matrix& vp, Text* text, int nrOfText)
 {
-	//pGeoManager->myTestFunc(d3d->pDevice);
 	d3d->clearAndBindRenderTarget();
 
 	int index = 0;
@@ -57,20 +56,22 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 	temp = this->d3d->setPass(PASS_GEOMETRY);
 	temp->SetMatrix("view", vp);
 	//temp->SetMatrix("proj", proj);
-
-	for(int i = 0; i < this->pGeoManager->getNrOfEntities(); i++)
+	ID3D11ShaderResourceView *nulls;
+	nulls = NULL;
+	for(int i = 0; i < this->pGeoManager->getNrOfEntities()-1; i++)
 	{
 		if(pGeoManager->getNrOfInstances(i) > 0)
 		{
 			temp->SetResource("textures", pGeoManager->getTextures(i));
 			temp->SetResource("glowMaps", pGeoManager->getGlowMaps(i));
-
 			pGeoManager->applyEntityBuffer(d3d->pDeviceContext, i, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 			temp->Apply(0);
 			d3d->pDeviceContext->DrawInstanced(pGeoManager->getNrOfVertexPoints(i), pGeoManager->getNrOfInstances(i), 0, 0);
 		}
 	}
 
+	
+	blurTexture(temp);
 
 	world = world * vp;
 	temp = this->d3d->setPass(PASS_PARTICLE);
@@ -187,6 +188,19 @@ MouseState* Engine::getMouseState()
 HWND Engine::getHWND()
 {
 	return win32->getHWND();
+}
+
+
+void Engine::blurTexture(Shader *temp)
+{
+	temp = d3d->setPass(PASS_BLURH);
+	pGeoManager->applyGUIBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	temp->Apply(0);
+	this->d3d->pDeviceContext->Draw(6, 0);
+
+	temp = d3d->setPass(PASS_BLURV);
+	temp->Apply(1);
+	this->d3d->pDeviceContext->Draw(6, 0);
 }
 
 void Engine::renderDebug(Matrix &vp)

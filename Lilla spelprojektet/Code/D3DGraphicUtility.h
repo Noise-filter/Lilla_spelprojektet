@@ -27,6 +27,7 @@
 
 #define NROFSHADERS (8)
 
+
 struct FaceType
 {
 		int vIndex1, vIndex2, vIndex3;
@@ -61,6 +62,10 @@ enum PASS_STATE
 	PASS_HPBARS,
 	PASS_MENY,
 	PASS_DEBUG,
+	PASS_BLUR,  //Where the shader that's used for blurring is placed, place before this one if new shaders are needed
+	PASS_BLURV, //Used to set pMultipleSRVs[3] and pMultipleRTVs[3] to blur the image vertically
+	PASS_BLURH,	//Used to set pMultipleSRVs[3] and pMultipleRTVs[3] to blur the image vertically 
+
 };
 
 
