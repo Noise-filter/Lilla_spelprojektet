@@ -58,7 +58,7 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 	//temp->SetMatrix("proj", proj);
 	ID3D11ShaderResourceView *nulls;
 	nulls = NULL;
-	for(int i = 0; i < this->pGeoManager->getNrOfEntities()-1; i++)
+	for(int i = 0; i < this->pGeoManager->getNrOfEntities(); i++)
 	{
 		if(pGeoManager->getNrOfInstances(i) > 0)
 		{
