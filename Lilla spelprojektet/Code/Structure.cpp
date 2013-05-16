@@ -6,7 +6,7 @@ Structure::Structure() : Entity()
 Structure::Structure(Vec3 pos, int meshID, int textureID, float hp, int lightID)
 	: Entity(pos, meshID, textureID, hp, lightID)
 {
-	scaleFactor = 1.8f;
+	scaleFactor = 2.8;
 	D3DXMatrixScaling(&scale, scaleFactor, scaleFactor, scaleFactor);
 }
 

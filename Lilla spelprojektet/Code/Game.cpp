@@ -162,17 +162,20 @@ void Game::handleInput(float dt)
 	
 	soundSystem->update();
 	
-	if(input->checkMovement('W'))	//W
-		camera->Walk(-100.0f * dt);
+	if(gameState == STATE_GAMESTART || gameState == STATE_PLAYING) 
+	{
+		if(input->checkMovement('W'))	//W
+			camera->Walk(-100.0f * dt);
 
-	if(input->checkMovement('A'))	//A
-		camera->Strafe(-100.0f * dt);
+		if(input->checkMovement('A'))	//A
+			camera->Strafe(-100.0f * dt);
 
-	if(input->checkMovement('S'))	//S
-		camera->Walk(100.0f * dt);
+		if(input->checkMovement('S'))	//S
+			camera->Walk(100.0f * dt);
 
-	if(input->checkMovement('D'))	//D
-		camera->Strafe(100.0f * dt);
+		if(input->checkMovement('D'))	//D
+			camera->Strafe(100.0f * dt);
+	}
 
 	if(input->checkKeyDown(0x20))	//Space
 	{

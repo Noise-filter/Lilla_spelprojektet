@@ -466,9 +466,9 @@ bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 			
 			}
 			return true;
+		}
 	}
 	return false;
-	}
 }
 
 void Level::getRenderData(vector<vector<RenderData*>>& rData)

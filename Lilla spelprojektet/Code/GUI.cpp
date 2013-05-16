@@ -153,7 +153,7 @@ Button GUI::createBtn(D3DXVECTOR2 pos, BUTTONTYPE type)
 
 	if(type == STARTGAME)
 	{
-		btn.size = D3DXVECTOR2(100, 18);
+		btn.size = D3DXVECTOR2(100, 15);
 		text.text = L"New Game";
 	}
 	if(type == SETTINGS)

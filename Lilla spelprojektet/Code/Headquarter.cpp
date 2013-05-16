@@ -8,6 +8,8 @@ Headquarter::Headquarter(D3DXVECTOR3 pos, int meshID, int textureID, float hp, i
 	: Structure(pos, meshID, textureID, hp, lightID)
 {
 	D3DXMatrixRotationY(&rotation, PI/4);
+	//scaleFactor = 2.8;
+	//D3DXMatrixScaling(&scale, scaleFactor, scaleFactor, scaleFactor);
 }
 
 Headquarter::~Headquarter()
