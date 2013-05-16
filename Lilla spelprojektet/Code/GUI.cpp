@@ -95,10 +95,10 @@ void GUI::createBtns(int state)
 		this->textBoxes[1] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 50), L"Easy", 36, 0x800000ff);
 		this->nrOfBtns = 6;
 		this->menuBtns = new Button[nrOfBtns];
-		this->menuBtns[0] = createBtn(D3DXVECTOR2(textBoxes[0].pos.x - 80, textBoxes[0].pos.y + 18), LAST);
-		this->menuBtns[1] = createBtn(D3DXVECTOR2(textBoxes[0].pos.x + 80, textBoxes[0].pos.y + 18), NEXT);
-		this->menuBtns[2] = createBtn(D3DXVECTOR2(textBoxes[1].pos.x - 80, textBoxes[1].pos.y + 18), LAST);
-		this->menuBtns[3] = createBtn(D3DXVECTOR2(textBoxes[1].pos.x + 80, textBoxes[1].pos.y + 18), NEXT);
+		this->menuBtns[0] = createBtn(D3DXVECTOR2(textBoxes[0].pos.x - 80, textBoxes[0].pos.y), LAST);
+		this->menuBtns[1] = createBtn(D3DXVECTOR2(textBoxes[0].pos.x + 80, textBoxes[0].pos.y), NEXT);
+		this->menuBtns[2] = createBtn(D3DXVECTOR2(textBoxes[1].pos.x - 80, textBoxes[1].pos.y), LAST);
+		this->menuBtns[3] = createBtn(D3DXVECTOR2(textBoxes[1].pos.x + 80, textBoxes[1].pos.y), NEXT);
 		this->menuBtns[4] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 75), STARTGAME);
 		this->menuBtns[5] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 120), MAIN_MENU);
 	}
@@ -158,12 +158,12 @@ Button GUI::createBtn(D3DXVECTOR2 pos, BUTTONTYPE type)
 	}
 	if(type == SETTINGS)
 	{
-		btn.size = D3DXVECTOR2(100, 10);
+		btn.size = D3DXVECTOR2(100, 18);
 		text.text = L"Settings";
 	}
 	if(type == QUIT)
 	{
-		btn.size = D3DXVECTOR2(80, 10);
+		btn.size = D3DXVECTOR2(80, 18);
 		text.text = L"Quit";
 	}
 	if(type == PAUSED_CONTINUE)

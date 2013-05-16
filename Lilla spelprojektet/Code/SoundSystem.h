@@ -45,6 +45,8 @@ public:
 	bool isplaying(Sound* playlist);
 	bool setPaused(Sound* playlist, bool state);
 
+	void stopSound(Sound* s);
+
 	bool setPaused(bool state);				// pauses/resumes all sound
 	bool setMute(bool state);				// mutes/unmutes all sound
 

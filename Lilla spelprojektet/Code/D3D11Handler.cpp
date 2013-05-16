@@ -1,5 +1,8 @@
 #include "D3D11Handler.h"
 
+int SCREEN_WIDTH;
+int SCREEN_HEIGHT;
+
 D3D11Handler::D3D11Handler()
 {
 	pRenderTargetView	= NULL;	
@@ -15,6 +18,17 @@ D3D11Handler::D3D11Handler()
 	iNrOfDeferred		= 3;
 
 	this->vShaders.resize(NROFSHADERS);
+
+	RECT desktop;
+	const HWND hDesktop = GetDesktopWindow();
+	GetWindowRect(hDesktop, &desktop);
+
+	SCREEN_WIDTH = desktop.right;
+	SCREEN_HEIGHT = desktop.bottom;
+	//KOM IHÅG ATT ÄNDRA 
+	SCREEN_WIDTH = 800;
+	SCREEN_HEIGHT = 600;
+
 }
 
 D3D11Handler::~D3D11Handler()
