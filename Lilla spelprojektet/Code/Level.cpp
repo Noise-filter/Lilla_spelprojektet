@@ -245,11 +245,22 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 				{
 					if(structures[i][j])
 					{
-						int id = structures[i][j]->update(dt);
-
-						if(id == 2 && typeid(*structures[i][j]) == typeid(Tower))
+						if(!structures[i][j]->isDead())
 						{
-							dynamic_cast<Tower*>(structures[i][j])->aquireTarget(&enemies);
+							int id = structures[i][j]->update(dt);
+
+							if(id == 2 && typeid(*structures[i][j]) == typeid(Tower))
+							{
+								dynamic_cast<Tower*>(structures[i][j])->aquireTarget(&enemies);
+							}
+						}
+						else
+						{
+							cout << "FAIL!!!!!!!!!!!!!" << endl;
+							cout << "FAIL!!!!!!!!!!!!!" << endl;
+							cout << "FAIL!!!!!!!!!!!!!" << endl;
+							cout << "FAIL!!!!!!!!!!!!!" << endl;
+							cout << "FAIL!!!!!!!!!!!!!" << endl;
 						}
 					}
 				}
@@ -405,8 +416,6 @@ bool Level::isLocationBuildable(int xPos, int yPos)
 	{
 		return false;
 	}
-		
-
 }
 
 bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
@@ -419,7 +428,7 @@ bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 
 		if(selectedStructure == BUILDABLE_MAINBUILDING && structures[xPos][yPos] == NULL && isLocationBuildable(xPos, yPos))
 		{ 
-			structures[xPos][yPos] = new Headquarter(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 30, 0);
+			structures[xPos][yPos] = new Headquarter(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 50, 0);
 			return true;
 		
 		}
