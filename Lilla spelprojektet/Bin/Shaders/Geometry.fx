@@ -95,7 +95,7 @@ PSOut PSScene(PSIn input)
 
 	float3 diffuseAlbedo = textures.Sample( anisoSampler , float3(input.uv.x, input.uv.y, input.textureID)).rgb;
 	float3 glow = CalcBlur(input.posW.xy, input.textureID, input.uv);
-	float4 normalW = float4(0.5f * (normalize(input.normalW)).rgb + 1.0f , specularPower);
+	float4 normalW = float4((normalize(input.normalW)).rgb, specularPower);
 	
 	float4 pos = input.posCS;
 	pos.w = input.posCS.z / input.posCS.w;
