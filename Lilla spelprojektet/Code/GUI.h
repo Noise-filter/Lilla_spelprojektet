@@ -45,9 +45,9 @@ struct GUI_Panel
 	{
 		D3DXMatrixIdentity(&matrix);
 		matrix._11 = scale.x;
-		matrix._33 = scale.y;
+		matrix._22 = scale.y;
 		matrix._41 = pos.x;
-		matrix._43 = pos.y;
+		matrix._42 = pos.y;
 
 		textureID = ID;
 	}

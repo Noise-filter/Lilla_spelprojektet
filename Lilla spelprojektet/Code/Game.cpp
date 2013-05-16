@@ -10,6 +10,7 @@ Game::Game(void)
 	soundSystem = soundSystem->Getinstance();
 	pSystem = pSystem->Getinstance();
 	gameState = STATE_MENU;
+	oldGameState = STATE_MENU;
 	gui = new GUI();
 }
 
@@ -44,6 +45,8 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 
 	soundSystem->init();
 	playlist = soundSystem->createPlaylist("playlist.m3u");
+	menuSound = soundSystem->createStream("SeductressDubstep_Test.mp3");
+	soundSystem->playSound(menuSound);
 	//initiate other game resources such as level or whatever
 
 
@@ -62,7 +65,6 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 
 void Game::render()
 {
-
 	Button* btns;
 	Text* text;
 	Text* temp;
@@ -93,7 +95,7 @@ void Game::render()
 	engine->setRenderData(pSystem->getVertexData());
 	if(nrOfPanels != 0)
 	{
-		//engine->setGUI(panels, nrOfPanels);
+		engine->setGUI(panels, nrOfPanels);
 	}
 
 
@@ -122,6 +124,12 @@ void Game::render()
 int Game::update(float dt)
 {
 	handleInput(dt);
+	soundSystem->update();
+	if(gameState == STATE_MENU || gameState == STATE_NEWGAME)
+	{
+		
+	soundSystem->setPaused(playlist, true);
+	}
 	if(gameState == STATE_PLAYING || gameState == STATE_GAMESTART )
 	{
 		
@@ -130,6 +138,8 @@ int Game::update(float dt)
 			return 0; // error
 		
 		pSystem->update(dt);
+
+		
 	}
 	 if(gameState == STATE_WIN) 
 	{
@@ -146,6 +156,12 @@ int Game::update(float dt)
 	}
 	
 	gui->update(input->getMs(), gameState);
+	if(oldGameState != gameState)
+	{
+		changeState();
+		oldGameState = gameState;
+		
+	}
 
 	input->resetBtnState();
 	char title[255];
@@ -155,25 +171,42 @@ int Game::update(float dt)
 	return 1;
 }
 
+void Game::changeState()
+{
+	if(gameState == STATE_MENU && oldGameState != STATE_NEWGAME)
+	{
+		menuSound = soundSystem->createStream("SeductressDubstep_Test.mp3");
+		soundSystem->playSound(menuSound);
+	}
+	if(gameState == STATE_GAMESTART)
+	{
+		soundSystem->stopSound(menuSound);
+		soundSystem->setPaused(playlist, false);
+	}
+}
+
 void Game::handleInput(float dt)
 {
 	static bool pausedMusic = true;
 
 	input->updateMs(engine->getMouseState());
 	
-	soundSystem->update();
+
 	
-	if(input->checkMovement('W'))	//W
-		camera->Walk(-100.0f * dt);
+	if(gameState == STATE_GAMESTART || gameState == STATE_PLAYING) 
+	{
+		if(input->checkMovement('W'))	//W
+			camera->Walk(-100.0f * dt);
 
-	if(input->checkMovement('A'))	//A
-		camera->Strafe(-100.0f * dt);
+		if(input->checkMovement('A'))	//A
+			camera->Strafe(-100.0f * dt);
 
-	if(input->checkMovement('S'))	//S
-		camera->Walk(100.0f * dt);
+		if(input->checkMovement('S'))	//S
+			camera->Walk(100.0f * dt);
 
-	if(input->checkMovement('D'))	//D
-		camera->Strafe(100.0f * dt);
+		if(input->checkMovement('D'))	//D
+			camera->Strafe(100.0f * dt);
+	}
 
 	if(input->checkKeyDown(0x20))	//Space
 	{

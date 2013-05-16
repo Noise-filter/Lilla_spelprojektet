@@ -12,6 +12,8 @@ Engine::~Engine(void)
 	SAFE_DELETE(d3d);
 	SAFE_DELETE(win32);
 	SAFE_DELETE(pGeoManager);
+	pFontWrapper->Release();
+	pFW1Factory->Release();
 }
 
 bool Engine::init(HINSTANCE hInstance, int cmdShow, int mapSize)
@@ -40,7 +42,6 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow, int mapSize)
 
 void Engine::render(Matrix& vp, Text* text, int nrOfText)
 {
-	//pGeoManager->myTestFunc(d3d->pDevice);
 	d3d->clearAndBindRenderTarget();
 
 	int index = 0;
@@ -55,14 +56,14 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 	temp = this->d3d->setPass(PASS_GEOMETRY);
 	temp->SetMatrix("view", vp);
 	//temp->SetMatrix("proj", proj);
-
-	for(int i = 0; i < this->pGeoManager->getNrOfEntities(); i++)
+	ID3D11ShaderResourceView *nulls;
+	nulls = NULL;
+	for(int i = 0; i < this->pGeoManager->getNrOfEntities()-1; i++)
 	{
 		if(pGeoManager->getNrOfInstances(i) > 0)
 		{
 			temp->SetResource("textures", pGeoManager->getTextures(i));
 			temp->SetResource("glowMaps", pGeoManager->getGlowMaps(i));
-
 			pGeoManager->applyEntityBuffer(d3d->pDeviceContext, i, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 			temp->Apply(0);
 			d3d->pDeviceContext->DrawInstanced(pGeoManager->getNrOfVertexPoints(i), pGeoManager->getNrOfInstances(i), 0, 0);
@@ -71,6 +72,8 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 	
 
 	
+	blurTexture(temp);
+
 	world = world * vp;
 	temp = this->d3d->setPass(PASS_PARTICLE);
 	temp->SetMatrix("gWVP" , world);
@@ -104,8 +107,6 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 	}
 	*/
 
-	
-	
 
 	//Draw hp bars
 	temp = this->d3d->setPass(PASS_HPBARS);
@@ -118,8 +119,9 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 	temp->Apply(0);
 	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfGUIObjects(), 0, 0);
 
+	
 	renderDebug(vp);
-
+	
 	temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
 	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	temp->Apply(0);
@@ -129,7 +131,7 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 	{
 		renderText(text, nrOfText);
 	}
-
+	
 	if(FAILED(d3d->pSwapChain->Present( 0, 0 )))
 	{
 		return;
@@ -152,7 +154,7 @@ void Engine::renderText(Text* text, int nrOfText)
 			text[i].pos.x,// X position
 			text[i].pos.y,// Y position
 			text[i].textColor,// Text color, 0xAaBbGgRr
-			FW1_CENTER | FW1_RESTORESTATE// Flags (for example FW1_RESTORESTATE to keep context states unchanged)
+			FW1_VCENTER | FW1_CENTER | FW1_RESTORESTATE// Flags (for example FW1_RESTORESTATE to keep context states unchanged)
 		);
 	}
 }
@@ -186,6 +188,19 @@ MouseState* Engine::getMouseState()
 HWND Engine::getHWND()
 {
 	return win32->getHWND();
+}
+
+
+void Engine::blurTexture(Shader *temp)
+{
+	temp = d3d->setPass(PASS_BLURH);
+	pGeoManager->applyGUIBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	temp->Apply(0);
+	this->d3d->pDeviceContext->Draw(6, 0);
+
+	temp = d3d->setPass(PASS_BLURV);
+	temp->Apply(1);
+	this->d3d->pDeviceContext->Draw(6, 0);
 }
 
 void Engine::renderDebug(Matrix &vp)

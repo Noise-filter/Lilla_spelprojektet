@@ -5,10 +5,10 @@ GameLogic::GameLogic(void)
 	this->level = new Level();
 	this->eHandler = new EnemyHandler();
 	this->selectedStructure = 2;
-	this->availableSupply = 20;
+	this->availableSupply = 40;
 	this->resource = 20;
 	this->maxResCD = 0;
-	this->resPerEnemy = 2;
+	this->resPerEnemy = 5;
 }
 
 GameLogic::~GameLogic(void)
@@ -35,8 +35,8 @@ void GameLogic::giveSupply(float dt)
 	currentResCD += dt;
 	if(currentResCD > maxResCD)
 	{
-		this->availableSupply += resPerTick + level->getNrOfSupplyStructures();
-		cout << "gained resources: " << resPerTick + level->getNrOfSupplyStructures() << endl;
+		this->availableSupply += resPerTick + level->getNrOfSupplyStructures()/2;
+		cout << "gained resources: " << resPerTick + level->getNrOfSupplyStructures()/2 << " you now have: " << availableSupply << endl;
 		currentResCD = 0;
 	}
 }
@@ -145,7 +145,7 @@ int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX v
 		}
 		else if(ret == 5) //lose
 		{
-			gameState = STATE_LOSE;
+			gameState = STATE_LOSE;	
 		}
 
 		int nrOfKilledEnemies = eHandler->update(dt);
@@ -170,7 +170,7 @@ bool GameLogic::init(int quadSize, GameSettings &settings)
 	this->currentResCD = 0;
 
 	this->level->init(quadSize, settings.difficulty);
-	this->level->loadLevel("level2.txt");
+	this->level->loadLevel("level3.txt");
 
 
 	this->eHandler->init(level->getStructures(), level->getNodes(), level->getMapSize(), quadSize,settings.enemiesPerMin,settings.difficulty);
@@ -220,6 +220,7 @@ void GameLogic::printSelected()
 Vec3 GameLogic::getMouseWorldPos(MouseState* mState, D3DXMATRIX view, D3DXMATRIX proj, Vec3 cameraPos)
 {
 	float pointX, pointY, intersect;
+	
 	D3DXMATRIX invView, worldIdentity;
 	Vec3 dir, origin, rayOrigin, rayDir, intersectPos, planeNormal;
 	D3DXMatrixIdentity(&worldIdentity);

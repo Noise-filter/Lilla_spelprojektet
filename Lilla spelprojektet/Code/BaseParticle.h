@@ -7,10 +7,10 @@ class BaseParticle
 public:
 	BaseParticle(D3DXVECTOR3 position, D3DXVECTOR3 direction, float timeToLive, float velocity);
 	BaseParticle(void);
-
 	~BaseParticle(void);
 
 	bool update(float dt);
+
 	D3DXVECTOR3 getPosition();
 	float getTimeToLive();
 
@@ -20,8 +20,8 @@ public:
 
 private:
 	D3DXVECTOR3 position; //position of emitter or of real particle
-	float timeToLive; // this is the number of frames that the particle is to be alive
 	D3DXVECTOR3 direction; //  if emitter then this is the general direction that particles are fired in, if particle then this is the actual direction
 	float velocity;
+	float timeToLive; // this is the number of frames that the particle is to be alive
 };
 

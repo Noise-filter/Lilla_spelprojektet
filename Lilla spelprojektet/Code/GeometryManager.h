@@ -66,7 +66,9 @@ class GeometryManager
 						BUFFER_INIT &bufferInit,
 						BUFFER_INIT &instanceInit,
 						int nrOfInstances,
-						Buffer* bufferObj);
+						Buffer* bufferObj,
+						vector<string> tex,
+						vector<string> glow);
 
 };
 

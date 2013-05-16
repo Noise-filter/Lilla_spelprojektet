@@ -24,6 +24,11 @@ class D3D11Handler
 		int							 iNrOfDeferred;
 		std::vector<Shader*>         vShaders;
 
+		//Post effects
+		ID3D11RenderTargetView		*pBlurRTV;
+		ID3D11ShaderResourceView	*pBlurSRV;
+		ID3D11Texture2D				*pBlurTargets;
+
 	private:
 		bool initSwapChainAndDevice(HWND hWnd);
 		void initAndSetViewPort();
@@ -36,12 +41,14 @@ class D3D11Handler
 		bool bindResources(D3D11_TEXTURE2D_DESC &texDesc);
 		//--------------
 
-
+		//Blur initiation
+		bool initBlur();
 
 	public:
 		ID3D11Device		*pDevice;
 		ID3D11DeviceContext *pDeviceContext;
 		IDXGISwapChain		*pSwapChain;
+
 
 	public:
 		D3D11Handler();
