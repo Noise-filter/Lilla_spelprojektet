@@ -12,7 +12,11 @@ D3D11Handler::D3D11Handler()
 	pMultipleSRVs		= NULL;
 	pNullSRVs			= NULL;
 	pDSVDeferred		= NULL; 
-	iNrOfDeferred		= 3;
+	iNrOfDeferred		= 5;
+
+	//Blur targets
+	pBlurRTV	= NULL;
+	pBlurSRV	= NULL;
 
 	this->vShaders.resize(NROFSHADERS);
 }
@@ -29,11 +33,11 @@ D3D11Handler::~D3D11Handler()
 	}
 
 	//Deferred targets
-	for(int i = 0; i < this->iNrOfDeferred+1; i++)
+	for(int i = 0; i < this->iNrOfDeferred; i++)
 	{
 		SAFE_RELEASE(this->pDeferredTargets[i]);
 		SAFE_RELEASE(this->pMultipleSRVs[i]);
-		SAFE_RELEASE(this->pNullSRVs[i]);
+		//SAFE_RELEASE(this->pNullSRVs[i]);
 	}
 
 	for(int i = 0; i < this->iNrOfDeferred; i++)
@@ -44,7 +48,7 @@ D3D11Handler::~D3D11Handler()
 	SAFE_DELETE_ARRAY(pDeferredTargets);
 	SAFE_DELETE_ARRAY(pMultipleRTVs);		
 	SAFE_DELETE_ARRAY(pMultipleSRVs);		
-	SAFE_DELETE_ARRAY(pNullSRVs);			
+	//SAFE_DELETE_ARRAY(pNullSRVs);			
 	SAFE_RELEASE(pDSVDeferred);
 }
 
@@ -59,6 +63,8 @@ bool D3D11Handler::initDirect3D(HWND hWnd)
 	if(!initShaders()) return false;
 
 	if(!initDeferred()) return false;
+
+	//if(!initBlur()) return false;
 
 	initAndSetViewPort();
 
@@ -80,23 +86,37 @@ Shader *D3D11Handler::setPass(PASS_STATE pass)
 
 		case PASS_PARTICLE:
 			return this->vShaders.at(PASS_PARTICLE);
+			break;
 
 		case PASS_MENY:
 			this->pDeviceContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);
 			return this->vShaders.at(PASS_MENY);
+			break;
 
 		case PASS_FULLSCREENQUAD:
 			this->pDeviceContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);
 			this->vShaders.at(PASS_FULLSCREENQUAD)->SetResource("positionMap" , this->pMultipleSRVs[0]);
 			this->vShaders.at(PASS_FULLSCREENQUAD)->SetResource("diffuseAlbedoMap" , this->pMultipleSRVs[1]);
 			this->vShaders.at(PASS_FULLSCREENQUAD)->SetResource("normalMap" , this->pMultipleSRVs[2]);
-
+			this->vShaders.at(PASS_FULLSCREENQUAD)->SetResource("glowMap", this->pMultipleSRVs[3]);
 			return this->vShaders.at(PASS_FULLSCREENQUAD);
+			break;
 
 		case PASS_HPBARS:
 			this->pDeviceContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);
 			return this->vShaders.at(PASS_HPBARS);
+			break;
 
+		case PASS_BLURV:
+			this->pDeviceContext->OMSetRenderTargets(1, &pMultipleRTVs[3], NULL);
+			this->vShaders.at(PASS_BLUR)->SetResource("inputTex", this->pMultipleSRVs[4]);
+			return this->vShaders.at(PASS_BLUR);
+			break;
+
+		case PASS_BLURH:
+			this->pDeviceContext->OMSetRenderTargets(1, &pMultipleRTVs[4], NULL);
+			this->vShaders.at(PASS_BLUR)->SetResource("inputTex", this->pMultipleSRVs[3]);
+			return this->vShaders.at(PASS_BLUR);
 			break;
 	}
 	return NULL;
@@ -104,11 +124,11 @@ Shader *D3D11Handler::setPass(PASS_STATE pass)
 
 void D3D11Handler::clearAndBindRenderTarget()
 {
-	static float clearColour[4] = { 0.1f , 0.1f, 0.1f, 0.1f };
+	static float clearColour[4] = { 0.0f , 0.0f, 0.0f, 1.0f };
 	pDeviceContext->ClearRenderTargetView(pRenderTargetView, clearColour);
 	pDeviceContext->ClearDepthStencilView(pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-	pDeviceContext->PSSetShaderResources(0, this->iNrOfDeferred+1, this->pNullSRVs);
+	//pDeviceContext->PSSetShaderResources(0, this->iNrOfDeferred+1, this->pNullSRVs);
 	pDeviceContext->ClearDepthStencilView(pDSVDeferred, 1, 1.0f, 0);
 
 	for(int i = 0; i < this->iNrOfDeferred; i++) pDeviceContext->ClearRenderTargetView(pMultipleRTVs[i], clearColour);
@@ -331,6 +351,17 @@ bool D3D11Handler::initShaders()
 		return false;
 	}
 
+	D3D11_INPUT_ELEMENT_DESC descBlur[] =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+
+	temp = new Shader();
+	this->vShaders.at(PASS_BLUR) = temp;
+	hr = this->vShaders.at(PASS_BLUR)->Init(this->pDevice, this->pDeviceContext, "../Shaders/Blur.fx", descBlur, 2);
+	if(FAILED(hr)) return false;
+
 	return true;
 }
 
@@ -349,10 +380,10 @@ bool D3D11Handler::initDeferred()
 	texDesc.CPUAccessFlags		= 0;
 	texDesc.MiscFlags			= 0;
 
-	pDeferredTargets	= new ID3D11Texture2D *[this->iNrOfDeferred + 1];
+	pDeferredTargets	= new ID3D11Texture2D *[this->iNrOfDeferred];
 	pMultipleRTVs		= new ID3D11RenderTargetView *[this->iNrOfDeferred];
-	pMultipleSRVs		= new ID3D11ShaderResourceView *[this->iNrOfDeferred + 1];
-	pNullSRVs			= new ID3D11ShaderResourceView *[this->iNrOfDeferred + 1];
+	pMultipleSRVs		= new ID3D11ShaderResourceView *[this->iNrOfDeferred];
+	//pNullSRVs			= new ID3D11ShaderResourceView *[this->iNrOfDeferred + 1];
 
 	for(int i = 0; i < this->iNrOfDeferred; i++)
 	{
@@ -362,12 +393,12 @@ bool D3D11Handler::initDeferred()
 
 		if(FAILED(pDevice->CreateShaderResourceView(pDeferredTargets[i], NULL, &pMultipleSRVs[i]))) return false;
 
-		pNullSRVs[i] = NULL;
+		//pNullSRVs[i] = NULL;
 	}
 
-	pNullSRVs[this->iNrOfDeferred] = NULL;
+	//pNullSRVs[this->iNrOfDeferred] = NULL;
 
-	if(!bindResources(texDesc)) return false;
+	//if(!bindResources(texDesc)) return false;
 
 	return true;
 }
@@ -391,6 +422,37 @@ bool D3D11Handler::bindResources(D3D11_TEXTURE2D_DESC &texDesc)
 	SRVDesc.Texture2D.MipLevels			= 1;
 	SRVDesc.Texture2D.MostDetailedMip	= 0;
 	if(FAILED(pDevice->CreateShaderResourceView(pDeferredTargets[this->iNrOfDeferred], &SRVDesc, &pMultipleSRVs[this->iNrOfDeferred]))) return false;
+
+	return true;
+}
+
+bool D3D11Handler::initBlur()
+{
+	D3D11_TEXTURE2D_DESC texDesc;	
+	texDesc.Width				= SCREEN_WIDTH;
+	texDesc.Height				= SCREEN_HEIGHT;
+	texDesc.MipLevels			= 1;
+	texDesc.ArraySize			= 1;
+	texDesc.Format				= DXGI_FORMAT_R32G32B32A32_FLOAT;
+	texDesc.SampleDesc.Count	= 1;
+	texDesc.SampleDesc.Quality	= 0;
+	texDesc.Usage				= D3D11_USAGE_DEFAULT;
+	texDesc.BindFlags			= D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	texDesc.CPUAccessFlags		= 0;
+	texDesc.MiscFlags			= 0;
+
+	/*pBlurRTV = new ID3D11RenderTargetView *[2];
+	pBlurSRV = new ID3D11ShaderResourceView *[2];
+	pBlurTargets = new ID3D11Texture2D *[2];*/
+	
+	for(int i = 0; i < 2; i++)
+	{
+		if(FAILED(pDevice->CreateTexture2D(&texDesc, NULL, &pBlurTargets))) return false;
+
+		if(FAILED(pDevice->CreateRenderTargetView(pBlurTargets, NULL, &pBlurRTV))) return false;
+
+		if(FAILED(pDevice->CreateShaderResourceView(pBlurTargets, NULL, &pBlurSRV))) return false;
+	}
 
 	return true;
 }

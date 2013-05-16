@@ -9,33 +9,35 @@ using namespace std;
 
 class Engine
 {
-public:
-	Engine(void);
-	~Engine(void);
+	public:
+		Engine(void);
+		~Engine(void);
 
 
-	void render(D3DXMATRIX& vp, Text* text, int nrOfText);
-	void renderGui(int state, Text* text);
-	void renderText(Text* text, int nrOfText);
+		void render(D3DXMATRIX& vp, Text* text, int nrOfText);
+		void renderGui(int state, Text* text);
+		void renderText(Text* text, int nrOfText);
 
-	bool init(HINSTANCE hInstance, int cmdShow, int mapSize);
+		bool init(HINSTANCE hInstance, int cmdShow, int mapSize);
 
-	PRIMITIVE_TOPOLOGIES changeTopology(int ID);
+		PRIMITIVE_TOPOLOGIES changeTopology(int ID);
 
-	void setRenderData(vector<vector<RenderData*>>& renderData);
-	void setRenderData(vector<vector<MESH_PNC>> renderData);
-	void setHPBars(vector<HPBarInfo>& bars);
-	void setGUI(GUI_Panel* data, int nrOfPanels);
+		void setRenderData(vector<vector<RenderData*>>& renderData);
+		void setRenderData(vector<vector<MESH_PNC>> renderData);
+		void setHPBars(vector<HPBarInfo>& bars);
+		void setGUI(GUI_Panel* data, int nrOfPanels);
 
-	MouseState* getMouseState();
-	HWND getHWND();
+		MouseState* getMouseState();
+		HWND getHWND();
 
-private:
-	D3D11Handler* d3d;
-	WinHandler* win32;
-	GeometryManager *pGeoManager;
-	IFW1Factory *pFW1Factory;
-	IFW1FontWrapper *pFontWrapper;
+	private:
+		D3D11Handler* d3d;
+		WinHandler* win32;
+		GeometryManager *pGeoManager;
+		IFW1Factory *pFW1Factory;
+		IFW1FontWrapper *pFontWrapper;
 
+	private:
+		void blurTexture(Shader *temp);
 };
 

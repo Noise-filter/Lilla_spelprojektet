@@ -1,4 +1,5 @@
 #include "GeometryManager.h"
+#include "TexAndGlow.h"
 
 GeometryManager::GeometryManager() 
 {
@@ -114,36 +115,55 @@ void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc, int ma
 	};
 
 	//import and initilaze buffers
+	vector<string> tex, glow;
 	string fileName = "Meshar/Main Building.obj";
-	importMesh(device, dc, this->vEntities.at(ENTITY_MAINBUILDING), fileName, bufferInit, instanceInit, 1, this->pBufferObj);
+	tex = TexAndGlow::loadMainBuildingTex();
+	glow = TexAndGlow::loadMainBuildingGlow();
+	importMesh(device, dc, this->vEntities.at(ENTITY_MAINBUILDING), fileName, bufferInit, instanceInit, 1, this->pBufferObj, tex, glow);
 
 	fileName = "Meshar/Power Building part 1.obj";
-	importMesh(device, dc, this->vEntities.at(ENTITY_SUPPLYBASE), fileName, bufferInit, instanceInit, 100, this->pBufferObj);
+	tex = TexAndGlow::loadSupplyLowerTex();
+	glow = TexAndGlow::loadSupplyLowerGlow();
+	importMesh(device, dc, this->vEntities.at(ENTITY_SUPPLYBASE), fileName, bufferInit, instanceInit, 100, this->pBufferObj, tex, glow);
 	
 	fileName = "Meshar/Power Building part 2.obj";
-	importMesh(device, dc, this->vEntities.at(ENTITY_SUPPLYTOP), fileName, bufferInit, instanceInit, 100, this->pBufferObj);
+	tex = TexAndGlow::loadSupplyUpperTex();
+	glow = TexAndGlow::loadSupplyUpperGlow();
+	importMesh(device, dc, this->vEntities.at(ENTITY_SUPPLYTOP), fileName, bufferInit, instanceInit, 100, this->pBufferObj, tex, glow);
 
 	fileName = "Meshar/Tower Part 1.obj";
-	importMesh(device, dc, this->vEntities.at(ENTITY_TOWERTOP), fileName, bufferInit, instanceInit, 100, this->pBufferObj);
+	tex = TexAndGlow::loadTowerLowerTex();
+	glow = TexAndGlow::loadTowerLowerGlow();
+	importMesh(device, dc, this->vEntities.at(ENTITY_TOWERTOP), fileName, bufferInit, instanceInit, 100, this->pBufferObj, tex, glow);
 
 	fileName = "Meshar/Tower Part 2.obj";
-	importMesh(device, dc, this->vEntities.at(ENTITY_TOWERBASE), fileName, bufferInit, instanceInit, 100, this->pBufferObj);
+	tex = TexAndGlow::loadTowerUpperTex();
+	glow = TexAndGlow::loadTowerUpperGlow();
+	importMesh(device, dc, this->vEntities.at(ENTITY_TOWERBASE), fileName, bufferInit, instanceInit, 100, this->pBufferObj, tex, glow);
 	
 	fileName = "Meshar/Green node.obj";
-	importMesh(device, dc, this->vEntities.at(ENTITY_NODE_GREEN), fileName, bufferInit, instanceInit, 400, this->pBufferObj);
+	tex = TexAndGlow::loadFriendlyNodeTex();
+	glow = TexAndGlow::loadFriendlyNodeGlow();
+	importMesh(device, dc, this->vEntities.at(ENTITY_NODE_GREEN), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
 
 	fileName = "Meshar/Enemy (broken node).obj";
-	importMesh(device, dc, this->vEntities.at(ENTITY_NODE_RED), fileName, bufferInit, instanceInit, 400, this->pBufferObj);
+	tex = TexAndGlow::loadHostileNodeTex();
+	glow = TexAndGlow::loadHostileNodeGlow();
+	importMesh(device, dc, this->vEntities.at(ENTITY_NODE_RED), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
 
 	fileName = "Meshar/Enemy (broken node).obj";
-	importMesh(device, dc, this->vEntities.at(ENTITY_ENEMY), fileName, bufferInit, instanceInit, 400, this->pBufferObj);
+	tex = TexAndGlow::loadHostileNodeTex();
+	glow = TexAndGlow::loadHostileNodeGlow();
+	importMesh(device, dc, this->vEntities.at(ENTITY_ENEMY), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
 
 	fileName = "Meshar/Very basic disc (projectile).obj";
-	importMesh(device, dc, this->vEntities.at(ENTITY_PROJECTILE), fileName, bufferInit, instanceInit, 400, this->pBufferObj);
+	tex = TexAndGlow::loadHostileNodeTex();
+	glow = TexAndGlow::loadHostileNodeGlow();
+	importMesh(device, dc, this->vEntities.at(ENTITY_PROJECTILE), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
 
 
 	//temp buffer init
-	ID3D11ShaderResourceView *nulls;
+	ID3D11ShaderResourceView *nulls = NULL;
 	this->vEntities.at(ENTITY_UPGRADE_OFFENSE)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls);
 	this->vEntities.at(ENTITY_UPGRADE_DEFENSE)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls);
 	this->vEntities.at(ENTITY_UPGRADE_RES)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls);
@@ -161,12 +181,12 @@ void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc, int ma
 
 	this->FullScreenQuad->mInit(device, bufferInit, instanceInit, p, 6, 0 , this->pBufferObj);
 
-	MESH_PUV puv[] = {  MESH_PUV(D3DXVECTOR3(1,-1,0), D3DXVECTOR2(1, 0)),
-						MESH_PUV(D3DXVECTOR3(-1,-1,0), D3DXVECTOR2(0, 0)),
-						MESH_PUV(D3DXVECTOR3(1,1,0), D3DXVECTOR2(1, 1)),
-						MESH_PUV(D3DXVECTOR3(1,1,0), D3DXVECTOR2(1, 1)),
-						MESH_PUV(D3DXVECTOR3(-1,-1,0), D3DXVECTOR2(0, 0)),
-						MESH_PUV(D3DXVECTOR3(-1,1,0), D3DXVECTOR2(0, 1))
+	MESH_PUV puv[] = {  MESH_PUV(D3DXVECTOR3(1,-1,0), D3DXVECTOR2(1, 1)),
+						MESH_PUV(D3DXVECTOR3(-1,-1,0), D3DXVECTOR2(0, 1)),
+						MESH_PUV(D3DXVECTOR3(1,1,0), D3DXVECTOR2(1, 0)),
+						MESH_PUV(D3DXVECTOR3(1,1,0), D3DXVECTOR2(1, 0)),
+						MESH_PUV(D3DXVECTOR3(-1,-1,0), D3DXVECTOR2(0, 1)),
+						MESH_PUV(D3DXVECTOR3(-1,1,0), D3DXVECTOR2(0, 0))
 	};
 
 
@@ -259,17 +279,18 @@ void GeometryManager::importMesh(ID3D11Device *device,
 								 BUFFER_INIT &bufferInit,
 								 BUFFER_INIT &instanceInit,
 								 int nrOfInstances,
-								 Buffer* bufferObj)
+								 Buffer* bufferObj,
+								 vector<string> tex,
+								 vector<string> glow)
 {
 	int nrOfVertices = 0;
-	std::vector<string> textures, glowMaps;
 	ID3D11ShaderResourceView *texTemp = NULL;
 	ID3D11ShaderResourceView *glowTemp = NULL;
 
-	MESH_PNUV *temp = this->importer->getOBJfromFile(fileName, nrOfVertices, textures, glowMaps);
+	MESH_PNUV *temp = this->importer->getOBJfromFile(fileName, nrOfVertices, tex, glow);
 	
-	if(glowMaps.size() > 0)	glowTemp = createTextureArray(device, dc, glowMaps, DXGI_FORMAT_R8G8B8A8_UNORM, D3DX11_FILTER_NONE, D3DX11_FILTER_NONE);
-	if(textures.size() > 0) texTemp = createTextureArray(device, dc, textures, DXGI_FORMAT_R8G8B8A8_UNORM, D3DX11_FILTER_NONE, D3DX11_FILTER_NONE);
+	if(glow.size() > 0)	glowTemp = createTextureArray(device, dc, glow, DXGI_FORMAT_R8G8B8A8_UNORM, D3DX11_FILTER_NONE, D3DX11_FILTER_NONE);
+	if(tex.size() > 0) texTemp = createTextureArray(device, dc, tex, DXGI_FORMAT_R8G8B8A8_UNORM, D3DX11_FILTER_NONE, D3DX11_FILTER_NONE);
 	object->mInit(device, bufferInit, instanceInit, temp, nrOfVertices, nrOfInstances, bufferObj, texTemp, glowTemp);
 
 	delete temp;

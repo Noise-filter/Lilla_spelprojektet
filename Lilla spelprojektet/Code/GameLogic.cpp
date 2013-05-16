@@ -5,10 +5,10 @@ GameLogic::GameLogic(void)
 	this->level = new Level();
 	this->eHandler = new EnemyHandler();
 	this->selectedStructure = 2;
-	this->availableSupply = 20;
+	this->availableSupply = 40;
 	this->resource = 20;
 	this->maxResCD = 0;
-	this->resPerEnemy = 2;
+	this->resPerEnemy = 5;
 }
 
 GameLogic::~GameLogic(void)
