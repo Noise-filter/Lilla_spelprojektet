@@ -85,7 +85,7 @@ PSOut PSScene(PSIn input)
 	output.glow = float4(glow, 1.0f);
 	float4 normalW = float4( 0.5f * (normalize(input.normalW).rgb + 1.0f), specularPower);
 	
-	float4 pos = pow(float4(input.depth.x / input.depth.y , input.depth.x / input.depth.y , input.depth.x / input.depth.y , input.depth.x / input.depth.y) , 70);
+	float4 pos = pow(float4(input.depth.x / input.depth.y , input.depth.x / input.depth.y , input.depth.x / input.depth.y , input.depth.x / input.depth.y) , 600);
 	output.position = pos;
 	output.diffuseAlbedo = float4(diffuseAlbedo, 1.0f);
 	output.normal = normalW;
