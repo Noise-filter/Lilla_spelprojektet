@@ -110,16 +110,17 @@ vector<float> AI::findTarget(Waypoint pos, int type)
 	lua_pushnumber(targetScript, pos.y/quadSize);
 	lua_pushnumber(targetScript, type);
 
-	lua_pcall(targetScript, 4, 2, 0); //kalla på funktionen
+	lua_pcall(targetScript, 4, 3, 0); //kalla på funktionen
 	
 	float targetY = (float)lua_tonumber(targetScript, -1);
 	lua_pop(targetScript, 1);
 	float targetX = (float)lua_tonumber(targetScript, -1);
 	lua_pop(targetScript, 1);
-
+	float nodeID = (float)lua_tonumber(targetScript, -1);
 	//hämta värden
 	target.push_back(targetX);
 	target.push_back(targetY);
+	target.push_back(nodeID);
 	//cout<< "X = "<<targetX<<" Y = "<<targetY<<endl;
 
 	return target;
@@ -302,7 +303,22 @@ void AI::sendArray(int** arr, int mapSize, lua_State* script)
 	lua_rawset( script, -3 );
 }
 
-Structure* AI::getStrucutre(int x, int y)
+Structure* AI::getStrucutre(int x, int y, float nodeID)
 {
+	if(nodeID == 1)
+	{
 	return structures[x][y];
+	}
+	else if(nodeID == 2)
+	{
+	return structures[x-1][y];
+	}
+	else if(nodeID == 3)
+	{
+	return structures[x-1][y-1];
+	}
+	else if(nodeID == 4)
+	{
+	return structures[x][y-1];
+	}
 }
