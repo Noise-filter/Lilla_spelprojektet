@@ -78,7 +78,7 @@ PSOut PSScene(PSIn input)
 		glow = diffuseAlbedo;
 	}
 
-	float4 normalW = normalize(input.normalW);
+	//float4 normalW = normalize(input.normalW);
 	output.position = input.posW;
 	output.diffuseAlbedo = float4(diffuseAlbedo, 1.0f);
 	output.glow = float4(glow, 1.0f);

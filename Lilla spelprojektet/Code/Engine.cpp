@@ -201,6 +201,7 @@ void Engine::blurTexture(Shader *temp)
 	temp = d3d->setPass(PASS_BLURV);
 	temp->Apply(1);
 	this->d3d->pDeviceContext->Draw(6, 0);
+}
 
 void Engine::renderDebug(Matrix &vp)
 {
