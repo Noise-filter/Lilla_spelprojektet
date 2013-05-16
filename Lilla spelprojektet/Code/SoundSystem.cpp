@@ -340,6 +340,31 @@ bool SoundSystem::setPaused(Sound* playlist, bool state)
 	return true;
 }
 
+void SoundSystem::stopSound(Sound* s)
+{
+	char name[255];
+	char name2[255];
+	bool found = false;
+	int i = 0;
+	for(i = 0; i < (int)sounds.size(); i++)	//check to se if the sound is already created
+	{
+		sounds.at(i)->sound->getName(name, 255);
+		s->sound->getName(name2, 255);
+
+		if(strstr(name, name2))
+		{
+			found = true;
+			break;
+		}
+	}
+	if(found)
+	{
+		s->sound->release();
+		delete s;		
+		sounds.erase(sounds.begin() + i);
+	}
+}
+
 bool SoundSystem::setPaused(bool state)
 {
 	result = masterChannelGroup->setPaused(state);

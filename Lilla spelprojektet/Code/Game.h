@@ -23,6 +23,7 @@ public:
 
 private:
 	GameSettings readSettingsFromFile(string fileName);
+	void changeState();
 
 private:
 	Engine* engine;
@@ -32,9 +33,10 @@ private:
 	SoundSystem* soundSystem;
 	ParticleSystem* pSystem;
 	Sound* playlist;
+	Sound* menuSound;
 	GUI* gui;
 
 	int gameState;
-
+	int oldGameState;
 };
 

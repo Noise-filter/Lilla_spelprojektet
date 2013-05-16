@@ -11,8 +11,10 @@
 #define SAFE_DELETE(x) if( x ) { delete(x); (x) = NULL; }
 #define SAFE_DELETE_ARRAY(x) if( x ) { delete[](x); (x) = NULL; }
 
-#define SCREEN_WIDTH 1024
-#define SCREEN_HEIGHT 768
+//#define SCREEN_WIDTH 1024
+//#define SCREEN_HEIGHT 768
+extern int SCREEN_WIDTH;
+extern int SCREEN_HEIGHT;
 
 struct MouseState
 {
