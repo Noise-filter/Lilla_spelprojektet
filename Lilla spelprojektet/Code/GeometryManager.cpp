@@ -13,6 +13,13 @@ GeometryManager::GeometryManager()
 		this->vEntities[i] = new GameObject();
 	}
 
+	this->vLightTypes.resize(3);
+
+	for(int i = 0; i < (int)this->vLightTypes.size(); i++)
+	{
+		this->vLightTypes[i] = new GameObject();
+	}
+
 	this->Particles = new GameObject();
 	this->FullScreenQuad = new GameObject();
 
@@ -24,6 +31,11 @@ GeometryManager::~GeometryManager()
 	for(int i = 0; i < (int)this->vEntities.size(); i++)
 	{
 		SAFE_DELETE(this->vEntities[i]);
+	}
+
+	for(int i = 0; i < (int)this->vLightTypes.size(); i++)
+	{
+		SAFE_DELETE(this->vLightTypes[i]);
 	}
 
 	SAFE_DELETE(this->Particles);
@@ -162,6 +174,11 @@ void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc, int ma
 	glow = TexAndGlow::loadHostileNodeGlow();
 	importMesh(device, dc, this->vEntities.at(ENTITY_PROJECTILE), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
 
+	std::vector<string> nullVec;
+	nullVec.resize(0);
+	fileName = "Meshar/Sphere.obj";
+	importMesh(device, dc, this->vLightTypes.at(LIGHT_POINT), fileName, bufferInit, instanceInit, 2000, this->pBufferObj,  nullVec , nullVec);
+
 
 	//temp buffer init
 	ID3D11ShaderResourceView *nulls = NULL;
@@ -188,7 +205,6 @@ void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc, int ma
 						MESH_P(D3DXVECTOR3(-1,1,0)), 
 	};
 
-	this->FullScreenQuad->mInit(device, bufferInit, instanceInit, p, 6, 0 , this->pBufferObj);
 
 	MESH_PUV puv[] = {  MESH_PUV(D3DXVECTOR3(1,-1,0), D3DXVECTOR2(1, 1)),
 						MESH_PUV(D3DXVECTOR3(-1,-1,0), D3DXVECTOR2(0, 1)),
@@ -198,19 +214,31 @@ void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc, int ma
 						MESH_PUV(D3DXVECTOR3(-1,1,0), D3DXVECTOR2(0, 0))
 	};
 
+	UINT byteWidth[2] = {sizeof(MESH_PUV) , 0};
+	this->FullScreenQuad->mInit(device, bufferInit, instanceInit, puv , 6, 0 , this->pBufferObj , byteWidth );
 
-	hpBars->mInit(device, bufferInit, instanceInit, puv, 6, 1000, pBufferObj, true);
+	byteWidth[1] = sizeof(MatrixInstance);
+	hpBars->mInit(device, bufferInit, instanceInit, puv, 6, 1000, pBufferObj , byteWidth);
 
-	GUI->mInit(device, bufferInit, instanceInit, puv, 6, 1000, pBufferObj);
+	byteWidth[1] = sizeof(INSTANCEDATA);
+	GUI->mInit(device, bufferInit, instanceInit, puv, 6, 1000, pBufferObj, byteWidth);
 }
 
 void GeometryManager::applyEntityBuffer(ID3D11DeviceContext *dc, int ID, D3D_PRIMITIVE_TOPOLOGY topology)
 {
-	this->vEntities.at(ID)->mApply(dc, topology);
+	UINT strides[2] = {sizeof(MESH_PNUV) , sizeof(INSTANCEDATA)};
+	this->vEntities.at(ID)->mApply(dc, topology, strides);
 }
+
+void GeometryManager::applyLightBuffer(ID3D11DeviceContext *dc, D3D_PRIMITIVE_TOPOLOGY topology)
+{
+	UINT strides[2] = {sizeof(MESH_PNUV) , sizeof(POINTLIGHTINSTANCE)};
+	this->vLightTypes.at(LIGHT_POINT)->mApply(dc, topology, strides);
+}
+
 void GeometryManager::applyQuadBuffer(ID3D11DeviceContext *dc, D3D_PRIMITIVE_TOPOLOGY topology)
 {
-	UINT stride = sizeof(MESH_P);
+	UINT stride = sizeof(MESH_PUV);
 	this->FullScreenQuad->mApply(dc, topology, stride);
 }
 void GeometryManager::applyParticleBuffer(ID3D11DeviceContext *dc , D3D_PRIMITIVE_TOPOLOGY topology)
@@ -229,9 +257,14 @@ void GeometryManager::applyGUIBuffer(ID3D11DeviceContext *dc, D3D_PRIMITIVE_TOPO
 	this->GUI->mApply(dc, topology, stride);
 }
 
-void GeometryManager::updateEntityBuffer(ID3D11DeviceContext *dc, std::vector<RenderData*> data, int ID)
+void GeometryManager::updateEntityBuffer(ID3D11DeviceContext *dc, std::vector<std::vector<RenderData*>> data)
 {
-	this->vEntities.at(ID)->mUpdate(dc, data);
+	for(int i = 0; i < data.size(); i++)
+	{
+		this->vEntities.at(i)->mUpdate(dc, data[i]);
+	}
+
+	this->vLightTypes.at(LIGHT_POINT)->mUpdate(dc, data);
 }
 void GeometryManager::updateParticles(ID3D11DeviceContext *dc, std::vector<std::vector<MESH_PNC>> data)
 {

@@ -31,10 +31,11 @@ struct VSIn
 
 struct PSIn
 {
-	float4 posCS  : SV_Position;
-	float4 posW   : POSITION;
+	float4 posCS   : SV_Position;
+	float4 posW    : POSITION;
 	float4 normalW : TEXTCOORD0;
-	float2 uv : TEXTCOORD1;
+	float2 uv      : TEXTCOORD1;
+	float2 depth   : DEPTH;
 
 	uint textureID : TEXTUREID;
 };
@@ -54,13 +55,14 @@ struct PSOut
 PSIn VSScene(VSIn input)
 {
 	PSIn output = (PSIn)0;
-
-	output.posCS = mul(float4(input.pos, 1), mul(input.world, view));
-	output.posW  = mul(float4(input.pos, 1), input.world);
-	output.normalW = normalize(mul(float4(input.normal, 0), input.world));
+	output.posCS = mul(float4(input.pos, 1) , input.world);
+	output.posCS = mul(output.posCS, view);
+	output.posW  = mul(float4(input.pos, 1) , input.world);
+	output.normalW = normalize(mul(float4(input.normal, 0) , input.world));
 	output.uv = input.uv;
 	output.textureID = input.textureID;
-	
+	output.depth.x = output.posCS.z;
+	output.depth.y = output.posCS.w;
 	return output;
 }
 
@@ -72,6 +74,7 @@ PSOut PSScene(PSIn input)
 	PSOut output = (PSOut)0;
 
 	float3 diffuseAlbedo = textures.Sample( anisoSampler , float3(input.uv.x, input.uv.y, input.textureID)).rgb;
+
 	float3 glow = glowMaps.Sample(anisoSampler, float3(input.uv.x, input.uv.y, input.textureID)).rgb;
 	if(((glow.x < 1.0f) && (glow.y < 1.0f)) && (glow.z < 1.0f))
 	{
@@ -82,14 +85,12 @@ PSOut PSScene(PSIn input)
 		glow = diffuseAlbedo;
 	}
 
-	//float4 normalW = normalize(input.normalW);
-	output.position = input.posW;
 	output.diffuseAlbedo = float4(diffuseAlbedo, 1.0f);
 	output.glow = float4(glow, 1.0f);
-	float4 normalW = float4((normalize(input.normalW)).rgb, specularPower);
+	float4 normalW = float4( 0.5f * (normalize(input.normalW).rgb + 1.0f), specularPower);
 	
-	float4 pos = input.posCS;
-	pos.w = input.posCS.z / input.posCS.w;
+	float4 pos = pow(float4(input.depth.x / input.depth.y , input.depth.x / input.depth.y , input.depth.x / input.depth.y , input.depth.x / input.depth.y) , 70);
+	output.position = pos;
 	output.diffuseAlbedo = float4(diffuseAlbedo, 1.0f);
 	output.normal = normalW;
 

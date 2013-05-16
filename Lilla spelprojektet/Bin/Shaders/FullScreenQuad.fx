@@ -33,14 +33,14 @@ float4 PSScene(PSIn input) : SV_Target
 	float3 position = positionMap.Load(sampleIndices).xyz;
 	float3 diffuse = diffuseAlbedoMap.Load(sampleIndices).xyz;
 	float3 normal = normalMap.Load(sampleIndices).xyz;
+
 	float3 glow = glowMap.Load(sampleIndices).xyz;
 	float3 sum = saturate(diffuse + (glow*2));
+
+	//return float4(position, 1.0f);
+	//return float4(normal, 1.0f);
 	return float4(sum, 1.0f);
-
-	
-
-	//return float4(sum, 1.0f);
-	//return float4( position, 1.0f);
+	return float4( position, 1);
 }
 
 
