@@ -174,13 +174,16 @@ void Tower::aquireTarget(vector<Enemy*>* enemies)
 
 	for(int i = 0; i < (int)enemies->size(); i++)
 	{
-		vec = enemies->at(i)->getPosition() - getPosition();
-		length = D3DXVec3Length(&vec);
-
-		if(length < closestLength)
+		if(enemies->at(i) && !enemies->at(i)->isDead())
 		{
-			t = enemies->at(i);
-			closestLength = length;
+			vec = enemies->at(i)->getPosition() - getPosition();
+			length = D3DXVec3Length(&vec);
+
+			if(length < closestLength)
+			{
+				t = enemies->at(i);
+				closestLength = length;
+			}
 		}
 	}
 

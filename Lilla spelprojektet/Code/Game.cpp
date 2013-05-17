@@ -107,6 +107,7 @@ void Game::render()
 
 		D3DXVec4Transform(&pos, &pos, &vp);
 		pos /= pos.w;
+
 		D3DXMatrixTranslation(&hp[i].translate, pos.x, pos.y, 0);
 	}
 	engine->setHPBars(hp);

@@ -35,7 +35,7 @@ int EnemyHandler::update(float dt)
 
 	for(int i = 0; i < (int)enemies.size(); i++)
 	{
-		if(enemies.at(i)->isDead())
+		if(enemies.at(i) && enemies.at(i)->isDead())
 		{
 			nrOfKilledEnemies++; 
 			SAFE_DELETE(enemies.at(i));
@@ -74,5 +74,8 @@ void EnemyHandler::getRenderData(vector<vector<RenderData*>>& rData)
 void EnemyHandler::getHPBarInfo(vector<HPBarInfo>& hpBars)
 {
 	for(int i = 0; i < (int)enemies.size(); i++)
-		hpBars.push_back(enemies.at(i)->getHPBarInfo());
+	{
+		if(!enemies.at(i)->isDead())
+			hpBars.push_back(enemies.at(i)->getHPBarInfo());
+	}
 }

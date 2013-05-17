@@ -116,7 +116,7 @@ void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc, int ma
 						MESH_P(D3DXVECTOR3(-1,-1,0)), 
 						MESH_P(D3DXVECTOR3(-1,1,0)), 
 	};
-
+	mapSize--;
 	MESH_PNUV plane[] ={
 		MESH_PNUV(Vec3(0.5f,0,-0.5f), Vec3(0,1,0), Vec2((float)mapSize,0)),
 		MESH_PNUV(Vec3(-0.5f,0,-0.5f), Vec3(0,1,0), Vec2(0,0)),

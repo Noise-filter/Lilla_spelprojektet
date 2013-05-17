@@ -24,7 +24,7 @@ Projectile::~Projectile()
 
 int Projectile::update(float dt)
 {
-	if(target->isDead())
+	if(target && target->isDead())
 		return 0;
 
 	float length;
