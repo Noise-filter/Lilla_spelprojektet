@@ -2,7 +2,6 @@
 
 Game::Game(void)
 {
-
 	engine = new Engine();
 	gameLogic = new GameLogic();
 	input = new Input();
@@ -55,10 +54,6 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	camera->SetLens((float)D3DX_PI * 0.45f, (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
 
 	gameState = STATE_MENU;
-
-
-
-
 
 	return true; // all initiates went well
 }
@@ -123,9 +118,10 @@ void Game::render()
 
 int Game::update(float dt)
 {
+	static bool muted = false;
 	handleInput(dt);
 	soundSystem->update();
-	if(gameState == STATE_MENU || gameState == STATE_NEWGAME)
+	if(gameState == STATE_MENU || gameState == STATE_NEWGAME || gameState == STATE_PAUSED)
 	{
 		
 	soundSystem->setPaused(playlist, true);
@@ -155,14 +151,13 @@ int Game::update(float dt)
 		return 0;
 	}
 	
-	gui->update(input->getMs(), gameState);
+	gui->update(input->getMs(), gameState, muted);
 	if(oldGameState != gameState)
 	{
 		changeState();
 		oldGameState = gameState;
-		
 	}
-
+	soundSystem->setMute(muted);
 	input->resetBtnState();
 	char title[255];
 	sprintf_s(title, "%f", 1/dt);
@@ -173,7 +168,7 @@ int Game::update(float dt)
 
 void Game::changeState()
 {
-	if(gameState == STATE_MENU && oldGameState != STATE_NEWGAME)
+	if((gameState == STATE_MENU || gameState == STATE_PAUSED) && (oldGameState != STATE_NEWGAME && oldGameState != STATE_SETTINGS && oldGameState != STATE_PAUSED))
 	{
 		menuSound = soundSystem->createStream("SeductressDubstep_Test.mp3");
 		soundSystem->playSound(menuSound);
@@ -182,6 +177,14 @@ void Game::changeState()
 	{
 		soundSystem->stopSound(menuSound);
 		soundSystem->setPaused(playlist, false);
+	}
+	if(oldGameState == STATE_PAUSED && (gameState == STATE_PLAYING || gameState == STATE_GAMESTART))
+	{
+		gameState = pausedGameStateSaved;
+	}
+	if(gameState == STATE_MENU && oldGameState == STATE_PAUSED)
+	{
+
 	}
 }
 
@@ -206,6 +209,12 @@ void Game::handleInput(float dt)
 
 		if(input->checkMovement('D'))	//D
 			camera->Strafe(100.0f * dt);
+
+		if(input->checkKeyDown(VK_ESCAPE))
+		{
+			pausedGameStateSaved = gameState;
+			gameState = STATE_PAUSED;
+		}
 	}
 
 	if(input->checkKeyDown(0x20))	//Space

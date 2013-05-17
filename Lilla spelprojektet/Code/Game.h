@@ -38,5 +38,6 @@ private:
 
 	int gameState;
 	int oldGameState;
+	int pausedGameStateSaved;
 };
 

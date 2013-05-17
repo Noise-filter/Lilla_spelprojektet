@@ -12,8 +12,8 @@ class D3D11Handler
 		D3D11_VIEWPORT			viewPort;
 		ID3D11RenderTargetView	*pRenderTargetView;
 
-		ID3D11Texture2D			*pDepthStencil;
-		ID3D11DepthStencilView	*pDepthStencilView;
+		ID3D11Texture2D			 *pDepthStencil;
+		ID3D11DepthStencilView	 *pDepthStencilView;
 
 		//Deferred targets
 		ID3D11Texture2D				**pDeferredTargets;
@@ -21,6 +21,7 @@ class D3D11Handler
 		ID3D11ShaderResourceView	**pMultipleSRVs;
 		ID3D11ShaderResourceView	**pNullSRVs;
 		ID3D11DepthStencilView		*pDSVDeferred;
+
 		int							 iNrOfDeferred;
 		std::vector<Shader*>         vShaders;
 

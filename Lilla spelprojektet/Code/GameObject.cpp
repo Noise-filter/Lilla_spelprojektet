@@ -41,6 +41,39 @@ void GameObject::mUpdate(ID3D11DeviceContext *dc, std::vector<RenderData*> data)
 
 	mUnmap(dc , this->pInstanceBuffer);
 }
+void GameObject::mUpdate(ID3D11DeviceContext *dc ,  std::vector<std::vector<RenderData*>> data)
+{
+	this->iNrOfinstances = 0;
+	D3D11_MAPPED_SUBRESOURCE *mappedData = mMap(dc, this->pInstanceBuffer);
+
+	POINTLIGHTINSTANCE *instance = reinterpret_cast<POINTLIGHTINSTANCE*>(mappedData->pData);
+
+	for(int j = 0; j < (int)data.size(); j++)
+	{
+		for(int i = 0; i < (int)data[j].size(); i++)
+		{
+			if(data[j][i]->lightID != LIGHT_NONE)
+			{
+				instance[i + this->iNrOfinstances].mWorld           = data[j][i]->worldMat;
+				if(i > 0 && j > 0)
+				{
+					instance[i + this->iNrOfinstances].vLightColor      = Vec3(1/j, 1/i, 1/j);
+				}
+
+				else
+				{
+					instance[i + this->iNrOfinstances].vLightColor      = Vec3(0, 1, 0);
+				}
+
+				instance[i + this->iNrOfinstances].fLightRadius     = 50;
+				instance[i + this->iNrOfinstances].vLightPosition = Vec3(1, 1 , 1);
+			}
+		}
+		this->iNrOfinstances += data[j].size();
+	}
+
+	mUnmap(dc , this->pInstanceBuffer);
+}
 void GameObject::mUpdate(ID3D11DeviceContext *dc, std::vector<std::vector<MESH_PNC>> data)
 {
 	this->iNrOfVertices = 0;
@@ -98,25 +131,12 @@ void GameObject::mUpdate(ID3D11DeviceContext *dc, GUI_Panel* data, int nrOfInsta
 //////////////////////////////////////////
 //methods for applying buffers to shader//
 //////////////////////////////////////////
-void GameObject::mApply(ID3D11DeviceContext *dc, D3D_PRIMITIVE_TOPOLOGY topology)
-{
-	ID3D11Buffer *buffers[2];
-
-	UINT strides[2]  = {sizeof(MESH_PNUV) , sizeof(INSTANCEDATA)};
-	UINT offset[2]   = {0 , 0};
-	buffers[0]       = this->pVertexBuffer;
-	buffers[1]       = this->pInstanceBuffer;
-
-	dc->IASetVertexBuffers(0, 2, buffers , strides, offset);
-	dc->IASetPrimitiveTopology(topology);
-}
 void GameObject::mApply(ID3D11DeviceContext *dc, D3D_PRIMITIVE_TOPOLOGY topology, UINT stride)
 {
 	UINT offset = 0;
 	dc->IASetVertexBuffers(0 , 1 , &this->pVertexBuffer, &stride, &offset);
 	dc->IASetPrimitiveTopology(topology);
 }
-
 void GameObject::mApply(ID3D11DeviceContext *dc, D3D_PRIMITIVE_TOPOLOGY topology, UINT strides[2])
 {
 	UINT offset[2] = {0, 0};
@@ -144,6 +164,7 @@ void GameObject::mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INI
 	this->iNrOfVertices = nrOfVertices;
 
 }
+<<<<<<< HEAD
 void GameObject::mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_PUV *mesh, int nrOfVertices, int nrOfInstances,
 					   Buffer* bufferObj)
 {
@@ -160,15 +181,14 @@ void GameObject::mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INI
 	this->iNrOfVertices = nrOfVertices;
 }
 
-void GameObject::mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_PUV *mesh, int nrOfVertices, int nrOfInstances,
-					   Buffer* bufferObj, bool asd)
+void GameObject::mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_PUV *mesh, int nrOfVertices, int nrOfInstances, Buffer* bufferObj , UINT byteWidth[2])
 {
-	bufferInit.desc.uByteWidth    = sizeof(MESH_PUV) * nrOfVertices;
+	bufferInit.desc.uByteWidth    = byteWidth[0] * nrOfVertices;
 	bufferInit.data.pInitData     = mesh;
 
 	if(nrOfInstances > 0)
 	{
-		instanceInit.desc.uByteWidth = sizeof(MatrixInstance) * nrOfInstances;
+		instanceInit.desc.uByteWidth = byteWidth[1] * nrOfInstances;
 		this->pInstanceBuffer = bufferObj->initInstance(device, instanceInit);
 	}
 

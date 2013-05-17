@@ -20,7 +20,7 @@ public:
 	void aquireTarget(vector<Enemy*>* enemies);
 	void giveUpgrade(UpgradeStats &stats);
 	void removeUpgrade(UpgradeStats &stats);
-	void rotateTop();
+	bool rotateTop();
 	
 	vector<RenderData*> getRenderData();
 
@@ -45,6 +45,10 @@ private:
 	//Top part of tower
 	RenderData* topTower;
 	D3DXMATRIX topScale, topPointTrans, topRotation, topTrans;
+	float rotationSpeed;
+	float rotY;
+	D3DXVECTOR3 look;
+
 
 };
 

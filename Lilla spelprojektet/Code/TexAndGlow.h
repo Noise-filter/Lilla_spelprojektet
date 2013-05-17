@@ -11,6 +11,13 @@ class TexAndGlow
 			return t;
 		}
 
+		static std::vector<std::string> loadPlaneTex()
+		{
+			std::vector<std::string> t;
+			t.push_back("Texturer/TileTex.png");
+			return t;
+		}
+
 		static std::vector<std::string> loadSupplyLowerTex()
 		{
 			std::vector<std::string> t;
@@ -79,6 +86,13 @@ class TexAndGlow
 		{
 			std::vector<std::string> t;
 			t.push_back("Glow/Main Building test 1 GLOW.png");
+			return t;
+		}
+
+		static std::vector<std::string> loadPlaneGlow()
+		{
+			std::vector<std::string> t;
+			t.push_back("Glow/TileTexGlow.png");
 			return t;
 		}
 

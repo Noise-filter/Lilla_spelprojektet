@@ -27,18 +27,17 @@ class GameObject
 		~GameObject();
 
 		void mUpdate(ID3D11DeviceContext *dc ,  std::vector<RenderData*> data);
+		void mUpdate(ID3D11DeviceContext *dc ,  std::vector<std::vector<RenderData*>> data); //till varje ljus som tillhör en entitet
 		void mUpdate(ID3D11DeviceContext *dc , std::vector<std::vector<MESH_PNC>> data);
 		void mUpdate(ID3D11DeviceContext *dc , std::vector<HPBarInfo>& data);
 		void mUpdate(ID3D11DeviceContext *dc, GUI_Panel* data, int nrOfInstances);	//Används till GUI
 
-		void mApply(ID3D11DeviceContext *dc, D3D_PRIMITIVE_TOPOLOGY topology);
 		void mApply(ID3D11DeviceContext *dc, D3D_PRIMITIVE_TOPOLOGY topology, UINT stride);
 		void mApply(ID3D11DeviceContext *dc, D3D_PRIMITIVE_TOPOLOGY topology, UINT strides[2]);
 
 		void mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_P    *mesh, int nrOfVertices, int nrOfInstances, Buffer* bufferObj);
-		void mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_PUV  *mesh, int nrOfVertices, int nrOfInstances, Buffer* bufferObj);
-		void mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_PUV *mesh, int nrOfVertices, int nrOfInstances, Buffer* bufferObj, bool asd);	//Används till hp bars
-		void mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_PNUV *mesh, int nrOfVertices, int nrOfInstances, Buffer* bufferObj, ID3D11ShaderResourceView *textures, ID3D11ShaderResourceView *glowMaps, float glowPower = 1.0f, float blurScalar = 1.0f);
+		void mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_PUV  *mesh, int nrOfVertices, int nrOfInstances, Buffer* bufferObj , UINT byteWidth[2]);
+		void mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_PNUV *mesh, int nrOfVertices, int nrOfInstances, Buffer* bufferObj, ID3D11ShaderResourceView *textures, ID3D11ShaderResourceView *glowMaps);
 		void mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, int nrOfVertices, Buffer* bufferObj);
 
 		int mGetNrOfInstances() const;

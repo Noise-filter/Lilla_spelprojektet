@@ -11,7 +11,7 @@ GUI::GUI()
 	this->GUI_STATE = 0;
 	midScreenW = (float)SCREEN_WIDTH/2;
 	midScreenH = (float)SCREEN_HEIGHT/2;
-
+	muted = false;
 	createBtns(STATE_MENU);
 }
 
@@ -25,15 +25,14 @@ GUI::~GUI()
 
 void GUI::render(Button*& btns, Text*& text)
 {
-	if(GUI_STATE != STATE_GAMESTART || GUI_STATE != STATE_PLAYING || GUI_STATE != STATE_WIN || GUI_STATE != STATE_LOSE)
-	{
+	
 		btns = this->menuBtns;
 		text = this->textBoxes;
-	}
+		
 	
 }
 
-int GUI::update(MouseState *mouse, int& state)
+int GUI::update(MouseState *mouse, int& state, bool& muted)
 {
 	if(GUI_STATE != state)
 	{
@@ -51,13 +50,14 @@ int GUI::update(MouseState *mouse, int& state)
 			
 		}
 	}
+	muted = this->muted;
 	return state;
 }
 
 void GUI::createBtns(int state)
 {
 
-	if(this->menuBtns != NULL)
+	//if(this->menuBtns != NULL)
 	{
 		clear();
 	}
@@ -75,15 +75,18 @@ void GUI::createBtns(int state)
 	}
 	else if(state == STATE_SETTINGS)
 	{
-
+		this->nrOfBtns = 2;
+		this->menuBtns = new Button[nrOfBtns];
+		this->menuBtns[0] = createBtn(D3DXVECTOR2(midScreenW, midScreenH - 30), MUTE);
+		this->menuBtns[1] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 120), MAIN_MENU);
 	}
 	else if(state == STATE_PAUSED)
 	{
 		this->nrOfBtns = 3;
 		this->menuBtns = new Button[nrOfBtns];
 		this->menuBtns[0] = createBtn(D3DXVECTOR2(midScreenW, midScreenH), PAUSED_CONTINUE);
-		this->menuBtns[1] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 0.15f), SETTINGS);
-		this->menuBtns[2] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 0.3f), QUIT);
+		this->menuBtns[1] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 30), SETTINGS);
+		this->menuBtns[2] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + +60), MAIN_MENU);
 	}
 	else if(state == STATE_NEWGAME)
 	{
@@ -125,12 +128,10 @@ int GUI::getNrOfPanels()const
 
 void GUI::clear()
 {
-	delete []this->menuBtns;
-	this->menuBtns = NULL;
+	SAFE_DELETE_ARRAY(menuBtns);
 	this->nrOfBtns = 0;
 
-	delete []this->textBoxes;
-	this->textBoxes = NULL;
+	SAFE_DELETE_ARRAY(textBoxes);
 	this->nrOfBoxes = 0;
 
 	SAFE_DELETE_ARRAY(panels);
@@ -184,6 +185,11 @@ Button GUI::createBtn(D3DXVECTOR2 pos, BUTTONTYPE type)
 		btn.size = D3DXVECTOR2(80, 20);
 		text.text = L"Main Menu";
 	}
+	if( type == MUTE)
+	{
+		btn.size = D3DXVECTOR2(80, 20);
+		text.text = L"Mute";
+	}
 
 	btn.text = text;
 
@@ -204,7 +210,9 @@ void GUI::createPanels(int state)
 {
 	if(state == STATE_MENU || state == SETTINGS || state == STATE_NEWGAME)
 	{
-
+		this->nrOfPanles = 1;
+		this->panels = new GUI_Panel[nrOfPanles];
+		this->panels[0] = GUI_Panel(D3DXVECTOR2(0, 0), D3DXVECTOR2(1, 1), TEXTURE_MAIN_MENU);
 	}
 	else if(state == STATE_GAMESTART || state == STATE_PLAYING )
 	{
@@ -262,7 +270,7 @@ int GUI::changeState(Button btn)
 	{
 		state = STATE_PLAYING;
 	}
-	else if(btn.type == MAIN_MENU && (state == STATE_NEWGAME || state == STATE_PAUSED))
+	else if(btn.type == MAIN_MENU)
 	{
 		state = STATE_MENU;
 	}
@@ -270,6 +278,9 @@ int GUI::changeState(Button btn)
 	{
 		state = STATE_QUIT;
 	}
-
+	else if(btn.type == MUTE)
+	{
+		muted = !muted;
+	}
 	return state;
 }

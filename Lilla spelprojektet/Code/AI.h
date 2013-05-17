@@ -42,7 +42,7 @@ public:
 	void convertNodesToInt();
 	void convertStructuresToInt();
 
-	Structure* getStrucutre(int x, int y);
+	Structure* getStrucutre(int x, int y, float nodeID);
 	static void OpenLuaLibs(lua_State* l);
 
 private:

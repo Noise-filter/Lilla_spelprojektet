@@ -10,7 +10,7 @@ Node::Node(Vec3 pos, int meshID, int textureID, float hp, int lightID, int color
 {
 	this->color = color;
 
-	scaleFactor = 0.4f;
+	scaleFactor = 0.7f;
 	D3DXMatrixScaling(&scale, scaleFactor, scaleFactor, scaleFactor);
 	D3DXMatrixTranslation(&pointTranslate, 1.8f, 0, -0.2f);
 

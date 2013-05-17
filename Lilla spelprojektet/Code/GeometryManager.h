@@ -12,6 +12,7 @@ class GeometryManager
 		Buffer *pBufferObj;
 		OBJReader *importer;
 		std::vector<GameObject*> vEntities;
+		std::vector<GameObject*> vLightTypes;
 		GameObject* Particles;
 		GameObject* FullScreenQuad;
 
@@ -33,12 +34,13 @@ class GeometryManager
 
 		void init(ID3D11Device *device, ID3D11DeviceContext *dc, int mapSize); //TBA more functionality like calls for importing meshes, also fill out the bufferInit for testing purpose
 
-		void updateEntityBuffer(ID3D11DeviceContext *dc, std::vector<RenderData*> data, int ID);
+		void updateEntityBuffer(ID3D11DeviceContext *dc, std::vector<std::vector<RenderData*>> data);
 		void updateParticles(ID3D11DeviceContext *dc, std::vector<std::vector<MESH_PNC>> data);
 		void updateHPBars(ID3D11DeviceContext *dc, std::vector<HPBarInfo>& data);
 
 		void updateGUI(ID3D11DeviceContext *dc, GUI_Panel* data, int nrOfObjects);
 
+		void applyLightBuffer(ID3D11DeviceContext *dc, D3D_PRIMITIVE_TOPOLOGY topology);
 		void applyEntityBuffer(ID3D11DeviceContext *dc, int ID, D3D_PRIMITIVE_TOPOLOGY topology);
 		void applyQuadBuffer(ID3D11DeviceContext *dc , D3D_PRIMITIVE_TOPOLOGY topology);
 		void applyParticleBuffer(ID3D11DeviceContext *dc , D3D_PRIMITIVE_TOPOLOGY topology);
@@ -68,9 +70,7 @@ class GeometryManager
 						int nrOfInstances,
 						Buffer* bufferObj,
 						vector<string> tex,
-						vector<string> glow,
-						float glowPower,
-						float blurScalar);
+						vector<string> glow);
 
 };
 
