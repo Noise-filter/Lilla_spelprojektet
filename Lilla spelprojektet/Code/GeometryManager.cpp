@@ -47,7 +47,7 @@ GeometryManager::~GeometryManager()
 	SAFE_DELETE(this->GUI);
 }
 
-void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc, int mapSize)
+void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc)
 {
 	importer = new OBJReader();
 	BUFFER_INIT bufferInit		= BUFFER_INIT();
@@ -78,8 +78,57 @@ void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc, int ma
 	instanceInit.data.uSysMemPitch          = NULL;
 	instanceInit.data.uSysMemSlicePitch     = NULL;
 	//---------------------------------------------------------------
+	
+
+	MESH_PUV puv[] = {  MESH_PUV(D3DXVECTOR3(1,-1,0), D3DXVECTOR2(1, 1)),
+						MESH_PUV(D3DXVECTOR3(-1,-1,0), D3DXVECTOR2(0, 1)),
+						MESH_PUV(D3DXVECTOR3(1,1,0), D3DXVECTOR2(1, 0)),
+						MESH_PUV(D3DXVECTOR3(1,1,0), D3DXVECTOR2(1, 0)),
+						MESH_PUV(D3DXVECTOR3(-1,-1,0), D3DXVECTOR2(0, 1)),
+						MESH_PUV(D3DXVECTOR3(-1,1,0), D3DXVECTOR2(0, 0))
+	};
+
+	UINT byteWidth[2] = {sizeof(MESH_PUV) , 0};
+	this->FullScreenQuad->mInit(device, bufferInit, instanceInit, puv , 6, 0 , this->pBufferObj , byteWidth );
 
 
+	byteWidth[1] = sizeof(INSTANCEDATA);
+	GUI->mInit(device, bufferInit, instanceInit, puv, 6, 1000, pBufferObj, byteWidth);
+}
+
+void GeometryManager::initMeshes(ID3D11Device *device, ID3D11DeviceContext *dc, int mapSize)
+{
+	delete importer;
+	importer = new OBJReader();
+	BUFFER_INIT bufferInit		= BUFFER_INIT();
+	BUFFER_INIT instanceInit	= BUFFER_INIT();
+	BUFFER_INIT indexInit		= BUFFER_INIT();
+	//Vertex buffer init
+	bufferInit.desc.eUsage               = D3D11_USAGE_DEFAULT;
+	bufferInit.desc.uBindFlags           = D3D11_BIND_VERTEX_BUFFER;
+	bufferInit.desc.uCPUAccessFlags      = 0;
+	bufferInit.desc.uMiscFlags           = 0;
+	bufferInit.desc.uStructureByteStride = 0;
+
+	bufferInit.data.uSysMemPitch         = 0;
+	bufferInit.data.uSysMemSlicePitch    = 0;
+	//---------------------------------------------------------------
+
+	//Index buffer init
+	// TBD!!!!!!!
+	//---------------------------------------------------------------
+
+	//Instance buffer init
+	instanceInit.desc.eUsage				= D3D11_USAGE_DYNAMIC;
+	instanceInit.desc.uBindFlags			= D3D11_BIND_VERTEX_BUFFER;
+	instanceInit.desc.uCPUAccessFlags		= D3D11_CPU_ACCESS_WRITE;
+	instanceInit.desc.uMiscFlags			= 0;
+	instanceInit.desc.uStructureByteStride	= 0;
+	instanceInit.data.pInitData             = NULL;
+	instanceInit.data.uSysMemPitch          = NULL;
+	instanceInit.data.uSysMemSlicePitch     = NULL;
+	//---------------------------------------------------------------
+	
 
 	//temp meshes
 	//------------------------------------------------------------------
@@ -161,7 +210,7 @@ void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc, int ma
 	fileName = "Meshar/Sphere.obj";
 	importMesh(device, dc, this->vLightTypes.at(LIGHT_POINT), fileName, bufferInit, instanceInit, 2000, this->pBufferObj,  nullVec , nullVec);
 
-
+	
 	//temp buffer init
 	ID3D11ShaderResourceView *nulls = NULL;
 	this->vEntities.at(ENTITY_UPGRADE_OFFENSE)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls);
@@ -173,9 +222,9 @@ void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc, int ma
 	tex = TexAndGlow::loadPlaneTex();
 	glow = TexAndGlow::loadPlaneGlow();
 	if(glow.size() > 0)	glowTemp = createTextureArray(device, dc, glow, DXGI_FORMAT_R8G8B8A8_UNORM, D3DX11_FILTER_NONE, D3DX11_FILTER_NONE);
-	if(tex.size() > 0) texTemp = createTextureArray(device, dc, tex, DXGI_FORMAT_R8G8B8A8_UNORM, D3DX11_FILTER_NONE, D3DX11_FILTER_NONE);
-	
+	if(tex.size() > 0) texTemp = createTextureArray(device, dc, tex, DXGI_FORMAT_R8G8B8A8_UNORM, D3DX11_FILTER_NONE, D3DX11_FILTER_NONE);	
 	this->vEntities.at(ENTITY_PLANE)->mInit(device, bufferInit, instanceInit, plane, 6, 1, this->pBufferObj, texTemp, glowTemp);
+
 
 	this->Particles->mInit(device, instanceInit, 1000, this->pBufferObj);
 
@@ -187,7 +236,6 @@ void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc, int ma
 						MESH_P(D3DXVECTOR3(-1,1,0)), 
 	};
 
-
 	MESH_PUV puv[] = {  MESH_PUV(D3DXVECTOR3(1,-1,0), D3DXVECTOR2(1, 1)),
 						MESH_PUV(D3DXVECTOR3(-1,-1,0), D3DXVECTOR2(0, 1)),
 						MESH_PUV(D3DXVECTOR3(1,1,0), D3DXVECTOR2(1, 0)),
@@ -197,13 +245,9 @@ void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc, int ma
 	};
 
 	UINT byteWidth[2] = {sizeof(MESH_PUV) , 0};
-	this->FullScreenQuad->mInit(device, bufferInit, instanceInit, puv , 6, 0 , this->pBufferObj , byteWidth );
-
 	byteWidth[1] = sizeof(MatrixInstance);
 	hpBars->mInit(device, bufferInit, instanceInit, puv, 6, 1000, pBufferObj , byteWidth);
-
-	byteWidth[1] = sizeof(INSTANCEDATA);
-	GUI->mInit(device, bufferInit, instanceInit, puv, 6, 1000, pBufferObj, byteWidth);
+	
 }
 
 void GeometryManager::applyEntityBuffer(ID3D11DeviceContext *dc, int ID, D3D_PRIMITIVE_TOPOLOGY topology)

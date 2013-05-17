@@ -55,8 +55,17 @@ void GameObject::mUpdate(ID3D11DeviceContext *dc ,  std::vector<std::vector<Rend
 			if(data[j][i]->lightID != LIGHT_NONE)
 			{
 				instance[i + this->iNrOfinstances].mWorld           = data[j][i]->worldMat;
-				instance[i + this->iNrOfinstances].vLightColor      = Vec3(0 , 1, 0);
-				instance[i + this->iNrOfinstances].fLightRadius     = 1;
+				if(i > 0 && j > 0)
+				{
+					instance[i + this->iNrOfinstances].vLightColor      = Vec3(1/j, 1/i, 1/j);
+				}
+
+				else
+				{
+					instance[i + this->iNrOfinstances].vLightColor      = Vec3(0, 1, 0);
+				}
+
+				instance[i + this->iNrOfinstances].fLightRadius     = 50;
 				instance[i + this->iNrOfinstances].vLightPosition = Vec3(1, 1 , 1);
 			}
 		}
@@ -155,6 +164,23 @@ void GameObject::mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INI
 	this->iNrOfVertices = nrOfVertices;
 
 }
+
+//void GameObject::mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_PUV *mesh, int nrOfVertices, int nrOfInstances,
+//					   Buffer* bufferObj)
+//{
+//	bufferInit.desc.uByteWidth    = sizeof(MESH_PUV) * nrOfVertices;
+//	bufferInit.data.pInitData     = mesh;
+//
+//	if(nrOfInstances > 0)
+//	{
+//		instanceInit.desc.uByteWidth = sizeof(INSTANCEDATA) * nrOfInstances;
+//		this->pInstanceBuffer = bufferObj->initInstance(device, instanceInit);
+//	}
+//
+//	this->pVertexBuffer = bufferObj->initBuffer(device, bufferInit);
+//	this->iNrOfVertices = nrOfVertices;
+//}
+
 void GameObject::mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_PUV *mesh, int nrOfVertices, int nrOfInstances, Buffer* bufferObj , UINT byteWidth[2])
 {
 	bufferInit.desc.uByteWidth    = byteWidth[0] * nrOfVertices;
@@ -169,7 +195,9 @@ void GameObject::mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INI
 	this->pVertexBuffer = bufferObj->initBuffer(device, bufferInit);
 	this->iNrOfVertices = nrOfVertices;
 }
-void GameObject::mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_PNUV *mesh, int nrOfVertices, int nrOfInstances, Buffer* bufferObj, ID3D11ShaderResourceView *textures, ID3D11ShaderResourceView *glowMaps)
+
+void GameObject::mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_PNUV *mesh, int nrOfVertices, int nrOfInstances,
+					   Buffer* bufferObj, ID3D11ShaderResourceView *textures, ID3D11ShaderResourceView *glowMaps)
 {
 	bufferInit.desc.uByteWidth    = sizeof(MESH_PNUV) * nrOfVertices;
 	bufferInit.data.pInitData     = mesh;
@@ -183,8 +211,9 @@ void GameObject::mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INI
 	this->pVertexBuffer = bufferObj->initBuffer(device, bufferInit);
 	this->iNrOfVertices = nrOfVertices;
 	this->texArray = textures;
-	this->glowArray = glowMaps; 
+	this->glowArray = glowMaps;
 }
+
 void GameObject::mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, int nrOfVertices, Buffer* bufferObj)
 {
 	bufferInit.desc.uByteWidth = sizeof(MESH_PNC) * nrOfVertices;

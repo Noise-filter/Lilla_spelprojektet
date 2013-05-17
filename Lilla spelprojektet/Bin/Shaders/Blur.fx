@@ -9,6 +9,11 @@ static const float WEIGHT[9] =
 
 static const int BLURRADIUS = 4;
 
+cbuffer everyCall
+{
+	float blurScalar;
+}
+
 SamplerState blurSampler
 {
 	Filter = MIN_MAG_LINEAR_MIP_POINT;
@@ -59,11 +64,12 @@ PSout PSScene(VSout input, uniform bool blur)
 	}
 
 	[unroll]
-	for(int i = -BLURRADIUS; i < BLURRADIUS; i++)
-	{
-		float2 uv = input.tex + i*texOffset * 1.2f;
-		glowResult += (inputTex.Sample(blurSampler, uv) * WEIGHT[i+BLURRADIUS]);
-	}
+	//for(int j = 0; j < 2; j++)
+		for(int i = -BLURRADIUS; i < BLURRADIUS; i++)
+		{
+			float2 uv = input.tex + i*texOffset * blurScalar;
+			glowResult += (inputTex.Sample(blurSampler, uv) * WEIGHT[i+BLURRADIUS]);
+		}
 
 	output.blur = glowResult;
 

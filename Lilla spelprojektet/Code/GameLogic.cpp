@@ -5,8 +5,8 @@ GameLogic::GameLogic(void)
 	this->level = new Level();
 	this->eHandler = new EnemyHandler();
 	this->selectedStructure = 2;
-	this->availableSupply = 40;
-	this->resource = 20;
+	this->availableSupply = 40000;
+	this->resource = 2000;
 	this->maxResCD = 0;
 	this->resPerEnemy = 5;
 }
@@ -163,14 +163,14 @@ int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX v
 	return 1;//all went good
 }
 
-bool GameLogic::init(int quadSize, GameSettings &settings)
+bool GameLogic::init(int quadSize, GameSettings &settings, string filename, int difficulty)
 {
 	this->resPerTick = settings.resPerTick;
 	this->maxResCD = (float)settings.resCD;
 	this->currentResCD = 0;
 
-	this->level->init(quadSize, settings.difficulty);
-	this->level->loadLevel("level3.txt");
+	this->level->init(quadSize, difficulty);
+	this->level->loadLevel(filename);
 
 
 	this->eHandler->init(level->getStructures(), level->getNodes(), level->getMapSize(), quadSize,settings.enemiesPerMin,settings.difficulty);

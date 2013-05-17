@@ -15,11 +15,11 @@ class Engine
 
 
 		void render(D3DXMATRIX& vp, Text* text, int nrOfText);
-		void renderGui(int state, Text* text);
+		void renderGui(Text* text, int nrOfText);
 		void renderText(Text* text, int nrOfText);
 
-		bool init(HINSTANCE hInstance, int cmdShow, int mapSize);
-
+		bool init(HINSTANCE hInstance, int cmdShow);
+		void start(int mapSize);
 		PRIMITIVE_TOPOLOGIES changeTopology(int ID);
 
 		void setRenderData(vector<vector<RenderData*>>& renderData);

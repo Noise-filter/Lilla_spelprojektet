@@ -3,6 +3,9 @@
 int SCREEN_WIDTH;
 int SCREEN_HEIGHT;
 
+const float GLOWPOWER = 2.0f;
+const float BLURSCALAR = 1.2f;
+
 D3D11Handler::D3D11Handler()
 {
 	pRenderTargetView	= NULL;	
@@ -97,10 +100,15 @@ Shader *D3D11Handler::setPass(PASS_STATE pass)
 			break;
 
 		case PASS_LIGHT:
+			this->pDeviceContext->OMSetRenderTargets(1, &pMultipleRTVs[0], NULL);
+			this->vShaders.at(PASS_LIGHT)->SetResource("normalMap" , this->pMultipleSRVs[2]);
+			this->vShaders.at(PASS_LIGHT)->SetResource("diffuseAlbedoMap" , this->pMultipleSRVs[1]);
+			this->vShaders.at(PASS_LIGHT)->SetResource("depthMap" , this->pMultipleSRVs[5]);
 			return this->vShaders.at(PASS_LIGHT);
 			break;
 
 		case PASS_PARTICLE:
+			this->pDeviceContext->OMSetRenderTargets(this->iNrOfDeferred, pMultipleRTVs, pDSVDeferred);
 			return this->vShaders.at(PASS_PARTICLE);
 			break;
 
@@ -111,10 +119,11 @@ Shader *D3D11Handler::setPass(PASS_STATE pass)
 
 		case PASS_FULLSCREENQUAD:
 			this->pDeviceContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);
-			this->vShaders.at(PASS_FULLSCREENQUAD)->SetResource("positionMap" , this->pMultipleSRVs[0]);
+			this->vShaders.at(PASS_FULLSCREENQUAD)->SetResource("lightMap" , this->pMultipleSRVs[0]);
 			this->vShaders.at(PASS_FULLSCREENQUAD)->SetResource("diffuseAlbedoMap" , this->pMultipleSRVs[1]);
 			this->vShaders.at(PASS_FULLSCREENQUAD)->SetResource("normalMap" , this->pMultipleSRVs[2]);
 			this->vShaders.at(PASS_FULLSCREENQUAD)->SetResource("glowMap", this->pMultipleSRVs[3]);
+			this->vShaders.at(PASS_FULLSCREENQUAD)->SetFloat("glowPower", GLOWPOWER);
 			return this->vShaders.at(PASS_FULLSCREENQUAD);
 			break;
 
@@ -129,12 +138,14 @@ Shader *D3D11Handler::setPass(PASS_STATE pass)
 		case PASS_BLURV:
 			this->pDeviceContext->OMSetRenderTargets(1, &pMultipleRTVs[3], NULL);
 			this->vShaders.at(PASS_BLUR)->SetResource("inputTex", this->pMultipleSRVs[4]);
+			//this->vShaders.at(PASS_BLUR)->SetFloat("blurScalar", BLURSCALAR);
 			return this->vShaders.at(PASS_BLUR);
 			break;
 
 		case PASS_BLURH:
 			this->pDeviceContext->OMSetRenderTargets(1, &pMultipleRTVs[4], NULL);
 			this->vShaders.at(PASS_BLUR)->SetResource("inputTex", this->pMultipleSRVs[3]);
+			this->vShaders.at(PASS_BLUR)->SetFloat("blurScalar", BLURSCALAR);
 			return this->vShaders.at(PASS_BLUR);
 			break;
 	}
@@ -153,7 +164,7 @@ void D3D11Handler::clearAndBindRenderTarget()
 	//pDeviceContext->PSSetShaderResources(0, this->iNrOfDeferred+1, this->pNullSRVs);
 	pDeviceContext->ClearDepthStencilView(pDSVDeferred, 1, 1.0f, 0);
 
-	pDeviceContext->ClearRenderTargetView(pMultipleRTVs[0], depthClear);
+	pDeviceContext->ClearRenderTargetView(pMultipleRTVs[0], colorClear);
 	pDeviceContext->ClearRenderTargetView(pMultipleRTVs[1], colorClear);
 	pDeviceContext->ClearRenderTargetView(pMultipleRTVs[2], normalClear);
 	pDeviceContext->ClearRenderTargetView(pMultipleRTVs[3], colorClear);
@@ -338,9 +349,9 @@ bool D3D11Handler::initShaders()
 		{ "WORLD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		{ "WORLD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		{ "WORLD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "LIGHTPOS", 0, DXGI_FORMAT_R32G32B32_UINT, 2, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "LIGHTCOLOR", 0, DXGI_FORMAT_R32G32B32_UINT, 2, 76, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "LIGHTRADIUS", 0, DXGI_FORMAT_R32_UINT, 2, 88, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "LIGHTPOS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 2, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "LIGHTCOLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 2, 76, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "LIGHTRADIUS", 0, DXGI_FORMAT_R32_FLOAT, 2, 88, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		
 	};
 
@@ -479,6 +490,7 @@ bool D3D11Handler::bindResources(D3D11_TEXTURE2D_DESC &texDesc)
 {
 	texDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
 	texDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
+
 	if(FAILED(pDevice->CreateTexture2D(&texDesc, NULL, &pDeferredTargets[this->iNrOfDeferred]))) return false;
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC desc;

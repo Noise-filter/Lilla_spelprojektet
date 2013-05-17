@@ -16,7 +16,6 @@ class GameObject
 		ID3D11ShaderResourceView *texArray;
 		ID3D11ShaderResourceView *glowArray;
 		int iNrOfTextures;
-
 		int iNrOfinstances;
 		int iNrOfVertices;
 

@@ -1,4 +1,3 @@
-
 cbuffer EveryFrame
 {
 	matrix gWVP;
