@@ -14,7 +14,7 @@ class TexAndGlow
 		static std::vector<std::string> loadPlaneTex()
 		{
 			std::vector<std::string> t;
-			t.push_back("Texturer/Tile test 1.png");
+			t.push_back("Texturer/TileTex.png");
 			return t;
 		}
 
@@ -92,7 +92,7 @@ class TexAndGlow
 		static std::vector<std::string> loadPlaneGlow()
 		{
 			std::vector<std::string> t;
-			t.push_back("Glow/Tile test 1 GLOW.png");
+			t.push_back("Glow/TileTexGlow.png");
 			return t;
 		}
 

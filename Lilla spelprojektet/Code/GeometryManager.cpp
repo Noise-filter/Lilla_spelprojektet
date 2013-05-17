@@ -130,48 +130,30 @@ void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc, int ma
 	//import and initilaze buffers
 	vector<string> tex, glow;
 	string fileName = "Meshar/Main Building.obj";
-	tex = TexAndGlow::loadMainBuildingTex();
-	glow = TexAndGlow::loadMainBuildingGlow();
 	importMesh(device, dc, this->vEntities.at(ENTITY_MAINBUILDING), fileName, bufferInit, instanceInit, 1, this->pBufferObj, tex, glow);
 
 	fileName = "Meshar/Power Building part 1.obj";
-	tex = TexAndGlow::loadSupplyLowerTex();
-	glow = TexAndGlow::loadSupplyLowerGlow();
 	importMesh(device, dc, this->vEntities.at(ENTITY_SUPPLYBASE), fileName, bufferInit, instanceInit, 100, this->pBufferObj, tex, glow);
 	
 	fileName = "Meshar/Power Building part 2.obj";
-	tex = TexAndGlow::loadSupplyUpperTex();
-	glow = TexAndGlow::loadSupplyUpperGlow();
 	importMesh(device, dc, this->vEntities.at(ENTITY_SUPPLYTOP), fileName, bufferInit, instanceInit, 100, this->pBufferObj, tex, glow);
 
 	fileName = "Meshar/Tower Part 1.obj";
-	tex = TexAndGlow::loadTowerLowerTex();
-	glow = TexAndGlow::loadTowerLowerGlow();
 	importMesh(device, dc, this->vEntities.at(ENTITY_TOWERTOP), fileName, bufferInit, instanceInit, 100, this->pBufferObj, tex, glow);
 
 	fileName = "Meshar/Tower Part 2.obj";
-	tex = TexAndGlow::loadTowerUpperTex();
-	glow = TexAndGlow::loadTowerUpperGlow();
 	importMesh(device, dc, this->vEntities.at(ENTITY_TOWERBASE), fileName, bufferInit, instanceInit, 100, this->pBufferObj, tex, glow);
 	
 	fileName = "Meshar/Green node.obj";
-	tex = TexAndGlow::loadFriendlyNodeTex();
-	glow = TexAndGlow::loadFriendlyNodeGlow();
 	importMesh(device, dc, this->vEntities.at(ENTITY_NODE_GREEN), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
 
 	fileName = "Meshar/Enemy (broken node).obj";
-	tex = TexAndGlow::loadHostileNodeTex();
-	glow = TexAndGlow::loadHostileNodeGlow();
 	importMesh(device, dc, this->vEntities.at(ENTITY_NODE_RED), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
 
 	fileName = "Meshar/Enemy (broken node).obj";
-	tex = TexAndGlow::loadHostileNodeTex();
-	glow = TexAndGlow::loadHostileNodeGlow();
 	importMesh(device, dc, this->vEntities.at(ENTITY_ENEMY), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
 
 	fileName = "Meshar/Very basic disc (projectile).obj";
-	tex = TexAndGlow::loadHostileNodeTex();
-	glow = TexAndGlow::loadHostileNodeGlow();
 	importMesh(device, dc, this->vEntities.at(ENTITY_PROJECTILE), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
 
 	std::vector<string> nullVec;
@@ -259,7 +241,7 @@ void GeometryManager::applyGUIBuffer(ID3D11DeviceContext *dc, D3D_PRIMITIVE_TOPO
 
 void GeometryManager::updateEntityBuffer(ID3D11DeviceContext *dc, std::vector<std::vector<RenderData*>> data)
 {
-	for(int i = 0; i < data.size(); i++)
+	for(int i = 0; i < (int)data.size(); i++)
 	{
 		this->vEntities.at(i)->mUpdate(dc, data[i]);
 	}
