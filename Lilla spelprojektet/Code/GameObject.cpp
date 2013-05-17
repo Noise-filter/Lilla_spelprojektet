@@ -55,8 +55,17 @@ void GameObject::mUpdate(ID3D11DeviceContext *dc ,  std::vector<std::vector<Rend
 			if(data[j][i]->lightID != LIGHT_NONE)
 			{
 				instance[i + this->iNrOfinstances].mWorld           = data[j][i]->worldMat;
-				instance[i + this->iNrOfinstances].vLightColor      = Vec3(0 , 1, 0);
-				instance[i + this->iNrOfinstances].fLightRadius     = 1;
+				if(i > 0 && j > 0)
+				{
+					instance[i + this->iNrOfinstances].vLightColor      = Vec3(1/j, 1/i, 1/j);
+				}
+
+				else
+				{
+					instance[i + this->iNrOfinstances].vLightColor      = Vec3(0, 1, 0);
+				}
+
+				instance[i + this->iNrOfinstances].fLightRadius     = 50;
 				instance[i + this->iNrOfinstances].vLightPosition = Vec3(1, 1 , 1);
 			}
 		}
