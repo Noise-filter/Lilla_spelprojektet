@@ -20,7 +20,7 @@ public:
 	void aquireTarget(vector<Enemy*>* enemies);
 	void giveUpgrade(UpgradeStats &stats);
 	void removeUpgrade(UpgradeStats &stats);
-	void rotateTop();
+	bool rotateTop();
 	
 	vector<RenderData*> getRenderData();
 
