@@ -12,7 +12,7 @@ Level::Level(void)
 bool Level::init(int quadSize, int difficulty)
 {
 	this->availibleUpgrades = new UpgradeStats[3];
-	this->availibleUpgrades[0] = (UpgradeStats(BUILDABLE_UPGRADE_OFFENSE,0,1,-0.1,1));
+	this->availibleUpgrades[0] = (UpgradeStats(BUILDABLE_UPGRADE_OFFENSE,0,1,0.1f,1));
 	this->availibleUpgrades[1] = (UpgradeStats(BUILDABLE_UPGRADE_DEFENSE,30,0,0,0));
 	this->availibleUpgrades[2] = (UpgradeStats(BUILDABLE_UPGRADE_RES,0,0,0,0));
 

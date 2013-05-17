@@ -19,7 +19,7 @@ struct Waypoint
 		y = Y;
 	}
 
-	int x, y;
+	short x, y;
 };
 
 class Enemy : public Entity

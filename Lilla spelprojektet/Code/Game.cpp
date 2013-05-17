@@ -68,7 +68,7 @@ void Game::render()
 
 	int nrOfBtns = gui->getNrOfBtns();
 	int nrOfBoxes = gui->getNrOfText();
-	
+
 	tempSize = nrOfBtns + nrOfBoxes;
 	temp = new Text[tempSize];
 	for(int i = 0; i < nrOfBoxes; i++)
@@ -82,7 +82,7 @@ void Game::render()
 	
 	GUI_Panel* panels = gui->getPanels();
 	int nrOfPanels = gui->getNrOfPanels();
-
+	
 
 	//build engines renderContent with addRenderData then do render to execute those renders
 	
@@ -113,13 +113,13 @@ void Game::render()
 		}
 		engine->setHPBars(hp);
 
-		engine->render(camera->ViewsProj(), temp, tempSize);	
+		engine->render(camera->ViewsProj(), temp, tempSize);
 	}
 	else if(gameState == STATE_MENU || gameState == STATE_SETTINGS || gameState == STATE_NEWGAME || gameState == STATE_PAUSED)
 	{
 		engine->renderGui(temp, tempSize);
 	}
-	delete temp;
+	delete[] temp;
 	temp = NULL;
 }
 

@@ -106,7 +106,7 @@ int Tower::update(float dt)
 	}
 
 	topTower->worldMat = topScale * topPointTrans * topRotation * topTrans;
-	
+
 	cooldown -= dt;
 	if(target != NULL)
 	{
@@ -156,7 +156,7 @@ void Tower::lvlUp()
 	D3DXMatrixScaling(&scale,scaleFactor,scaleFactor,scaleFactor);
 	D3DXMatrixScaling(&topScale,scaleFactor,scaleFactor,scaleFactor);
 	this->attackSpeed -= 0.1f;
-	this->cooldown -= 0.1f;
+	//this->cooldown -= 0.1f;
 	this->damage += 5;
 	this->hp += 5;
 	this->maxHp += 5;

@@ -314,7 +314,7 @@ void GUI::createLevelList()
 	while(count != nrOfLevels)
 	{
 		fin >> attribute;
-		for(int i = 0; i < attribute.size(); i++)
+		for(int i = 0; i < (int)attribute.size(); i++)
 		{
 			this->levelList[count].push_back(attribute[i]);
 		}
@@ -349,7 +349,7 @@ void GUI::changeText(D3DXVECTOR2 pos, BUTTONTYPE type)
 string GUI::getCurrentLevel()const
 {
 	string temp;
-	for(int i = 0; i < levelList[currentLevel].size(); i++)
+	for(int i = 0; i < (int)levelList[currentLevel].size(); i++)
 	{
 		temp.push_back(levelList[currentLevel][i]);
 	}
