@@ -55,7 +55,7 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 
 	temp = this->d3d->setPass(PASS_GEOMETRY);
 	temp->SetMatrix("view", vp);
-	//temp->SetMatrix("proj", proj);
+	//temp->SetMatrix("proj", proj);w
 	ID3D11ShaderResourceView *nulls;
 	nulls = NULL;
 	for(int i = 0; i < this->pGeoManager->getNrOfEntities(); i++)
@@ -73,7 +73,7 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 	//skicka in camerapos , halfpix , dela upp vp , skicka in invertVP
 	temp = this->d3d->setPass(PASS_LIGHT);
 	
-	blurTexture(temp);
+	
 
 	world = world * vp;
 	temp = this->d3d->setPass(PASS_PARTICLE);
@@ -93,11 +93,10 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 
 	//Rita ut gui
 	pGeoManager->applyGUIBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	temp->Apply(0);
 	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfGUIObjects(), 0, 0);
 
-	
-	renderDebug(vp);
+	blurTexture(temp);
+	//renderDebug(vp);
 	
 	temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
 	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -171,7 +170,7 @@ HWND Engine::getHWND()
 void Engine::blurTexture(Shader *temp)
 {
 	temp = d3d->setPass(PASS_BLURH);
-	pGeoManager->applyGUIBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//pGeoManager->applyGUIBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);
 

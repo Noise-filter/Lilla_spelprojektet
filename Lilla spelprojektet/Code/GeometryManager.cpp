@@ -286,17 +286,6 @@ int GeometryManager::getNrOfGUIObjects()
 	return this->GUI->mGetNrOfInstances();
 }
 
-float GeometryManager::getGlowPower(int ID)
-{
-	return this->vEntities[ID]->getGlowPower();
-}
-
-float GeometryManager::getBlurScalar(int ID)
-{
-	return this->vEntities[ID]->getBlurScalar();
-}
-
-
 ID3D11ShaderResourceView *GeometryManager::getTextures(int ID)
 {
 	return this->vEntities[ID]->getTexArray();
