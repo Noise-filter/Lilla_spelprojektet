@@ -321,4 +321,6 @@ Structure* AI::getStrucutre(int x, int y, float nodeID)
 	{
 	return structures[x][y-1];
 	}
+
+	return NULL;
 }

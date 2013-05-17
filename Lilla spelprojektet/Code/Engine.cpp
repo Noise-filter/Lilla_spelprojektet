@@ -58,7 +58,7 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 	//temp->SetMatrix("proj", proj);
 	ID3D11ShaderResourceView *nulls;
 	nulls = NULL;
-	for(int i = 0; i < this->pGeoManager->getNrOfEntities()-1; i++)
+	for(int i = 0; i < this->pGeoManager->getNrOfEntities(); i++)
 	{
 		if(pGeoManager->getNrOfInstances(i) > 0)
 		{
@@ -69,6 +69,7 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 			d3d->pDeviceContext->DrawInstanced(pGeoManager->getNrOfVertexPoints(i), pGeoManager->getNrOfInstances(i), 0, 0);
 		}
 	}
+	
 
 	
 	blurTexture(temp);
@@ -106,16 +107,18 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 	}
 	*/
 
+
 	//Draw hp bars
 	temp = this->d3d->setPass(PASS_HPBARS);
 	pGeoManager->applyHpBarBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	temp->Apply(0);
 	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfHPBars(), 0, 0);
-	
+
 	//Rita ut gui
 	pGeoManager->applyGUIBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	temp->Apply(0);
 	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfGUIObjects(), 0, 0);
+
 	
 	renderDebug(vp);
 	
@@ -158,10 +161,7 @@ void Engine::renderText(Text* text, int nrOfText)
 
 void Engine::setRenderData(vector<vector<RenderData*>>& renderData)
 {
-	for(int i = 0; i < (int)renderData.size(); i++)
-	{
-		pGeoManager->updateEntityBuffer(d3d->pDeviceContext, renderData[i], i);
-	}
+	pGeoManager->updateEntityBuffer(d3d->pDeviceContext, renderData);
 }
 
 void Engine::setRenderData(vector<vector<MESH_PNC>> renderData)
@@ -210,14 +210,14 @@ void Engine::renderDebug(Matrix &vp)
 	D3DXMatrixIdentity(&scaling);
 	D3DXMatrixIdentity(&translation);
 
-	D3DXMatrixScaling(&scaling, 0.2f , 0.2f , 0.2f);
-	D3DXMatrixTranslation(&translation, 0.8f , -0.4f , 0);
+	D3DXMatrixScaling(&scaling, 0.3f , 0.3f , 0.3f);
+	D3DXMatrixTranslation(&translation, 0.7f , 0.7f , 0);
 	world = scaling * translation;
 
 	this->pGeoManager->applyQuadBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	Shader *temp = this->d3d->setPass(PASS_DEBUG);
 
-	temp->SetResource("debugMap" , this->d3d->debugGetSRV(0));
+	temp->SetResource("debugMap" , this->d3d->debugGetSRV(5));
 	temp->SetMatrix("world", world);
 	
 	temp->Apply(0);
@@ -228,8 +228,8 @@ void Engine::renderDebug(Matrix &vp)
 	D3DXMatrixIdentity(&scaling);
 	D3DXMatrixIdentity(&translation);
 
-	D3DXMatrixScaling(&scaling, 0.2f , 0.2f , 0.2f);
-	D3DXMatrixTranslation(&translation, 0.8f, -0.6f, 1);
+	D3DXMatrixScaling(&scaling, 0.3f , 0.3f , 0.3f);
+	D3DXMatrixTranslation(&translation, 0.7f, 0.0f, 0);
 	world = scaling * translation;
 
 	temp->SetResource("debugMap" , this->d3d->debugGetSRV(1));
@@ -242,8 +242,8 @@ void Engine::renderDebug(Matrix &vp)
 	D3DXMatrixIdentity(&scaling);
 	D3DXMatrixIdentity(&translation);
 
-	D3DXMatrixTranslation(&translation, 0.8f, -0.8f, 0);
-	D3DXMatrixScaling(&scaling, 0.2f , 0.2f , 0.2f);
+	D3DXMatrixTranslation(&translation, 0.7f, -0.7f, 0);
+	D3DXMatrixScaling(&scaling, 0.3f , 0.3f , 0.3f);
 	world = scaling * translation;
 
 	ID3D11ShaderResourceView* srv = this->d3d->debugGetSRV(2);

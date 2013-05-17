@@ -104,27 +104,6 @@ struct MESH_PNUV
 	};
 };
 
-
-struct INSTANCEDATA
-{
-	Matrix mWorld;
-	UINT iTextureID;
-
-	INSTANCEDATA()
-	{
-		iTextureID	= 0;
-		mWorld		= Matrix(0.0f, 0.0f, 0.0f, 0.0f,
-							 0.0f, 0.0f, 0.0f, 0.0f,
-							 0.0f, 0.0f, 0.0f, 0.0f,
-							 0.0f, 0.0f, 0.0f, 1.0f);
-	};
-
-	INSTANCEDATA(Matrix world, UINT ID)
-	{
-		iTextureID	= ID;
-		mWorld		= world;
-	};
-};
 enum ENTITY_FLAGS
 {
 	ENTITY_MAINBUILDING,
@@ -273,9 +252,59 @@ struct HPBarInfo
 	}
 };
 
+struct INSTANCEDATA
+{
+	Matrix mWorld;
+	UINT iTextureID;
+
+	INSTANCEDATA()
+	{
+		iTextureID	= 0;
+		mWorld		= Matrix(0.0f, 0.0f, 0.0f, 0.0f,
+							 0.0f, 0.0f, 0.0f, 0.0f,
+							 0.0f, 0.0f, 0.0f, 0.0f,
+							 0.0f, 0.0f, 0.0f, 1.0f);
+	};
+
+	INSTANCEDATA(Matrix world, UINT ID)
+	{
+		iTextureID	= ID;
+		mWorld		= world;
+	};
+};
+
 struct MatrixInstance
 {
 	Matrix world;
+};
+
+struct POINTLIGHTINSTANCE
+{
+	Matrix mWorld;
+	Vec3 vLightPosition;
+	Vec3 vLightColor;
+	float fLightRadius;
+	
+	POINTLIGHTINSTANCE()
+	{
+		mWorld = Matrix(0.0f, 0.0f, 0.0f, 0.0f,
+						0.0f, 0.0f, 0.0f, 0.0f,
+						0.0f, 0.0f, 0.0f, 0.0f,
+						0.0f, 0.0f, 0.0f, 1.0f);
+
+		vLightPosition = Vec3(0.0f , 0.0f , 0.0f);
+		vLightColor    = Vec3(0.0f , 0.0f , 0.0f);
+		fLightRadius   = 0;
+	};
+
+	POINTLIGHTINSTANCE(Matrix world , Vec3 position , Vec3 color, float radius)
+	{
+		mWorld         = world;
+		vLightPosition = position;
+		vLightColor    = color;
+		fLightRadius   = radius;
+	};
+
 };
 
 

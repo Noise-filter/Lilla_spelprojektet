@@ -12,7 +12,7 @@ Supply::Supply(Vec3 pos, int meshID, int textureID, float hp, int lightID)
 	D3DXMatrixTranslation(&translate, pos.x+3, pos.y, pos.z);
 
 	D3DXMatrixTranslation(&topPointTrans, 3, 0.0f, -0.1f);
-	D3DXMatrixTranslation(&topTrans, pos.x+0.1, pos.y, pos.z);
+	D3DXMatrixTranslation(&topTrans, pos.x+0.1f, pos.y, pos.z);
 	D3DXMatrixIdentity(&topRotation);
 
 	rotationSpeed = 2.0f;

@@ -9,13 +9,15 @@ float lightIntensity = 1.0f;
 cbuffer EveryFrame
 {
 	matrix view;
-	matrix Projection;
+	matrix projection;
 	matrix invertViewProjection;
 };
 
 struct VSIn
 {
-	float3 pos : POSITION;
+	float3 pos    : POSITION;
+	float3 normal : NORMAL;
+	float2 uv     : TEXTCOORD;
 
 	row_major float4x4 world  : WORLD;
 	float3 lightPos           : LIGHTPOS;
@@ -25,7 +27,7 @@ struct VSIn
 
 struct PSSceneIn
 {
-	float4 Pos  : SV_Position;
+	float4 pos  : SV_Position;
 	float4 worldPos : worldPos;
 	float3 normal : TEXTCOORD0;
 	float2 uv : TEXTCOORD2;
@@ -54,13 +56,13 @@ PSSceneIn VSScene(VSIn input)
 {
 	PSSceneIn output = (PSSceneIn)0;
 
-	output.Pos = mul(float4(input.Pos, 1), WVP);
-	output.worldPos =  mul(float4(input.Pos, 1), W);
+	output.pos = mul(float4(input.pos, 1), mul(input.world , mul(view , projection)));
+	output.worldPos =  mul(float4(input.pos, 1), input.world);
 	
-	output.normal = mul(input.normal, W);
+	output.normal = mul(input.normal, input.world);
 	output.normal = normalize(output.normal);
 	output.uv = input.uv;
-	output.projUV = mul(float4(input.Pos, 1.0f) , lightWVP);
+	//output.projUV = mul(float4(input.Pos, 1.0f) , lightWVP);
 		
 	return output;
 }

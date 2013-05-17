@@ -46,24 +46,26 @@ D3D11Handler::~D3D11Handler()
 		SAFE_DELETE(this->vShaders.at(i));
 	}
 
+	SAFE_RELEASE(this->pDeferredTargets[iNrOfDeferred]);
+	SAFE_RELEASE(this->pMultipleSRVs[iNrOfDeferred]);
+
 	//Deferred targets
 	for(int i = 0; i < this->iNrOfDeferred; i++)
 	{
 		SAFE_RELEASE(this->pDeferredTargets[i]);
 		SAFE_RELEASE(this->pMultipleSRVs[i]);
+		SAFE_RELEASE(this->pMultipleRTVs[i]);
 		//SAFE_RELEASE(this->pNullSRVs[i]);
 	}
 
-	for(int i = 0; i < this->iNrOfDeferred; i++)
-	{
-		SAFE_RELEASE(this->pMultipleRTVs[i]);
-	}
-
-	SAFE_DELETE_ARRAY(pDeferredTargets);
-	SAFE_DELETE_ARRAY(pMultipleRTVs);		
-	SAFE_DELETE_ARRAY(pMultipleSRVs);		
-	//SAFE_DELETE_ARRAY(pNullSRVs);			
 	SAFE_RELEASE(pDSVDeferred);
+	SAFE_DELETE_ARRAY(pMultipleRTVs);
+
+	SAFE_DELETE_ARRAY(pMultipleSRVs);
+	SAFE_DELETE_ARRAY(pDeferredTargets);
+			
+	//SAFE_DELETE_ARRAY(pNullSRVs);			
+	
 }
 
 bool D3D11Handler::initDirect3D(HWND hWnd)
@@ -141,14 +143,20 @@ Shader *D3D11Handler::setPass(PASS_STATE pass)
 
 void D3D11Handler::clearAndBindRenderTarget()
 {
-	static float clearColour[4] = { 0.0f , 0.0f, 0.0f, 1.0f };
-	pDeviceContext->ClearRenderTargetView(pRenderTargetView, clearColour);
+	static float depthClear[4] = { 1.0f , 1.0f, 1.0f, 1.0f };
+	static float colorClear[4] = { 0.0f , 0.0f, 0.0f, 1.0f };
+	static float normalClear[4] = { 0.5f , 0.5f, 0.5f, 1.0f };
+
+	pDeviceContext->ClearRenderTargetView(pRenderTargetView, colorClear);
 	pDeviceContext->ClearDepthStencilView(pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 	//pDeviceContext->PSSetShaderResources(0, this->iNrOfDeferred+1, this->pNullSRVs);
 	pDeviceContext->ClearDepthStencilView(pDSVDeferred, 1, 1.0f, 0);
 
-	for(int i = 0; i < this->iNrOfDeferred; i++) pDeviceContext->ClearRenderTargetView(pMultipleRTVs[i], clearColour);
+	pDeviceContext->ClearRenderTargetView(pMultipleRTVs[0], depthClear);
+	pDeviceContext->ClearRenderTargetView(pMultipleRTVs[1], colorClear);
+	pDeviceContext->ClearRenderTargetView(pMultipleRTVs[2], normalClear);
+	pDeviceContext->ClearRenderTargetView(pMultipleRTVs[3], colorClear);
 }
 
 ID3D11Device* D3D11Handler::returnDevice()
@@ -264,15 +272,18 @@ bool D3D11Handler::initDepthStencil()
 	depthDesc.MiscFlags				= 0;
 	depthDesc.CPUAccessFlags		= 0;
 
-	if(FAILED(pDevice->CreateTexture2D(&depthDesc, NULL, &pDepthStencil))) return false;
+
+	if(FAILED(pDevice->CreateTexture2D(&depthDesc, NULL, &pDepthStencil))) 
+		return false;
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
 	ZeroMemory(&dsvDesc, sizeof(dsvDesc));
-	dsvDesc.Format				= depthDesc.Format;
+	dsvDesc.Format = depthDesc.Format;
 	dsvDesc.ViewDimension		= D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsvDesc.Texture2D.MipSlice	= 0;
 
-	if(FAILED(pDevice->CreateDepthStencilView(pDepthStencil, &dsvDesc, &pDepthStencilView))) return false;
+	if(FAILED(pDevice->CreateDepthStencilView(pDepthStencil, &dsvDesc, &pDepthStencilView))) 
+		return false;
 
 	return true;
 }
@@ -315,6 +326,33 @@ bool D3D11Handler::initShaders()
 	{
 		return false;
 	}
+
+
+	D3D11_INPUT_ELEMENT_DESC lightDesc[] = 
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXTCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+
+		{ "WORLD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "WORLD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "WORLD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "WORLD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "LIGHTPOS", 0, DXGI_FORMAT_R32G32B32_UINT, 2, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "LIGHTCOLOR", 0, DXGI_FORMAT_R32G32B32_UINT, 2, 76, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "LIGHTRADIUS", 0, DXGI_FORMAT_R32_UINT, 2, 88, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		
+	};
+
+	temp = new Shader();
+	this->vShaders.at(PASS_LIGHT) = temp;
+	hr = this->vShaders.at(PASS_LIGHT)->Init(this->pDevice, this->pDeviceContext, "../Shaders/PointLight.fx", lightDesc, 10);
+	if(FAILED(hr))
+	{
+		return false;
+	}
+
+
 
 	D3D11_INPUT_ELEMENT_DESC ParticleInput[] = 
 	{
@@ -373,20 +411,24 @@ bool D3D11Handler::initShaders()
 		return false;
 	}
 
+
 	D3D11_INPUT_ELEMENT_DESC descBlur[] =
+
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
+
 
 	temp = new Shader();
 	this->vShaders.at(PASS_BLUR) = temp;
 	hr = this->vShaders.at(PASS_BLUR)->Init(this->pDevice, this->pDeviceContext, "../Shaders/Blur.fx", descBlur, 2);
 	if(FAILED(hr)) return false;
 
+
 	temp = new Shader();
 	this->vShaders.at(PASS_DEBUG) = temp;
-	hr = this->vShaders.at(PASS_DEBUG)->Init(this->pDevice, this->pDeviceContext, "../Shaders/Debug.fx", tempInput, 1);
+	hr = this->vShaders.at(PASS_DEBUG)->Init(this->pDevice, this->pDeviceContext, "../Shaders/Debug.fx", descBlur, 2);
 	if(FAILED(hr))
 	{
 		return false;
@@ -410,9 +452,9 @@ bool D3D11Handler::initDeferred()
 	texDesc.CPUAccessFlags		= 0;
 	texDesc.MiscFlags			= 0;
 
-	pDeferredTargets	= new ID3D11Texture2D *[this->iNrOfDeferred];
+	pDeferredTargets	= new ID3D11Texture2D *[this->iNrOfDeferred + 1];
 	pMultipleRTVs		= new ID3D11RenderTargetView *[this->iNrOfDeferred];
-	pMultipleSRVs		= new ID3D11ShaderResourceView *[this->iNrOfDeferred];
+	pMultipleSRVs		= new ID3D11ShaderResourceView *[this->iNrOfDeferred + 1];
 	//pNullSRVs			= new ID3D11ShaderResourceView *[this->iNrOfDeferred + 1];
 
 	for(int i = 0; i < this->iNrOfDeferred; i++)
@@ -428,7 +470,7 @@ bool D3D11Handler::initDeferred()
 
 	//pNullSRVs[this->iNrOfDeferred] = NULL;
 
-	//if(!bindResources(texDesc)) return false;
+	if(!bindResources(texDesc)) return false;
 
 	return true;
 }
@@ -436,18 +478,18 @@ bool D3D11Handler::initDeferred()
 bool D3D11Handler::bindResources(D3D11_TEXTURE2D_DESC &texDesc)
 {
 	texDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
-	texDesc.Format		= DXGI_FORMAT_R32_TYPELESS;
+	texDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
 	if(FAILED(pDevice->CreateTexture2D(&texDesc, NULL, &pDeferredTargets[this->iNrOfDeferred]))) return false;
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC desc;
-	desc.Format				= DXGI_FORMAT_D32_FLOAT;
+	desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	desc.Flags				= 0;
 	desc.ViewDimension		= D3D11_DSV_DIMENSION_TEXTURE2D;
 	desc.Texture2D.MipSlice	= 0;
 	if(FAILED(pDevice->CreateDepthStencilView(pDeferredTargets[this->iNrOfDeferred], &desc, &pDSVDeferred))) return false;
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc;
-	SRVDesc.Format						= DXGI_FORMAT_R32_FLOAT;
+	SRVDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
 	SRVDesc.ViewDimension				= D3D11_SRV_DIMENSION_TEXTURE2D;
 	SRVDesc.Texture2D.MipLevels			= 1;
 	SRVDesc.Texture2D.MostDetailedMip	= 0;
