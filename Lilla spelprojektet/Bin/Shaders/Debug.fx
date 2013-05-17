@@ -34,6 +34,15 @@ float4 PSScene(PSIn input) : SV_Target
 	return color;
 }
 
+float4 PSDepth(PSIn input) : SV_Target
+{
+	int3 sampleIndices = int3(input.pos.xyz);
+
+	float4 color = pow(debugMap.Sample(anisoSampler, input.uv) , 500);
+
+	return color;
+}
+
 
 RasterizerState NoCulling
 {
@@ -56,6 +65,16 @@ technique11 BasicTech
         SetVertexShader( CompileShader(vs_4_0, VSScene() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSScene() ) );
+	    
+	    SetRasterizerState( NoCulling );
+    } 
+
+	pass p1
+    {
+		// Set VS, GS, and PS
+        SetVertexShader( CompileShader(vs_4_0, VSScene() ) );
+        SetGeometryShader( NULL );
+        SetPixelShader( CompileShader( ps_4_0, PSDepth() ) );
 	    
 	    SetRasterizerState( NoCulling );
     } 

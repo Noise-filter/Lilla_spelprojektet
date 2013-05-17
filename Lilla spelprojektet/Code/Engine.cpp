@@ -76,8 +76,9 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 			d3d->pDeviceContext->DrawInstanced(pGeoManager->getNrOfVertexPoints(i), pGeoManager->getNrOfInstances(i), 0, 0);
 		}
 	}
-	
 
+	//skicka in camerapos , halfpix , dela upp vp , skicka in invertVP
+	temp = this->d3d->setPass(PASS_LIGHT);
 	
 	blurTexture(temp);
 
@@ -88,31 +89,7 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 	pGeoManager->applyParticleBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 	d3d->pDeviceContext->Draw(pGeoManager->getNrOfParticles(), 0);
 
-	/*
-	while(index < (int)data.size())
-	{
-		topology = changeTopology(data[index][0]->iEntityID);
-
-		pGeoManager->updateBuffer(d3d->pDeviceContext, data[index], index);
-		
-		pGeoManager->applyBuffer(d3d->pDeviceContext, data[index][0], (D3D11_PRIMITIVE_TOPOLOGY)topology);
-
-		index++;
-	}
-
-	index = 0;
-	this->d3d->setPass(PASS_LIGHT);
-	while(index < (int)data.size())
-	{
-		if(data[index][0]->iLightID > -1)
-		{
-			if(topology != PASS_LIGHT) topology = changeTopology(data[index][0]->iEntityID);		
-
-			pGeoManager->applyBuffer(d3d->pDeviceContext, data[index][0], (D3D11_PRIMITIVE_TOPOLOGY)topology);
-		}
-		index++;
-	}
-	*/
+	
 
 
 	//Draw hp bars
@@ -242,8 +219,34 @@ void Engine::renderDebug(Matrix &vp)
 	temp->SetResource("debugMap" , this->d3d->debugGetSRV(5));
 	temp->SetMatrix("world", world);
 	
+	temp->Apply(1);
+	this->d3d->pDeviceContext->Draw(6, 0);
+
+
+
+
+	D3DXMatrixIdentity(&world);
+	D3DXMatrixIdentity(&scaling);
+	D3DXMatrixIdentity(&translation);
+
+	D3DXMatrixScaling(&scaling, 0.3f , 0.3f , 0.3f);
+	D3DXMatrixTranslation(&translation, 0.4f, 0.0f, 0);
+	world = scaling * translation;
+
+	temp->SetResource("debugMap" , this->d3d->debugGetSRV(0));
+	temp->SetMatrix("world", world);
+
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);
+
+
+
+
+
+
+
+
+
 
 
 	D3DXMatrixIdentity(&world);

@@ -2,7 +2,6 @@
 
 Game::Game(void)
 {
-
 	engine = new Engine();
 	gameLogic = NULL;
 	input = new Input();

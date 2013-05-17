@@ -16,9 +16,11 @@ class GameObject
 		ID3D11ShaderResourceView *texArray;
 		ID3D11ShaderResourceView *glowArray;
 		int iNrOfTextures;
-
 		int iNrOfinstances;
 		int iNrOfVertices;
+
+		float fGlowPower;
+		float fBlurScalar;
 
 	public:
 		GameObject();
@@ -42,6 +44,8 @@ class GameObject
 		int mGetNrOfVertices() const;
 		ID3D11ShaderResourceView *getTexArray() const;
 		ID3D11ShaderResourceView *getGlowArray() const;
+		float getGlowPower() const;
+		float getBlurScalar() const;
 		
 		void mSetNrOfInstances(int value);
 		void mSetNrOfVertices(int value);

@@ -41,8 +41,8 @@ Tower::Tower(Vec3 pos, int meshID, int textureID, float hp, int lightID, float d
 	topScale = scale;
 	//topPointTrans = scale * topPointTrans;
 
-	rotationSpeed = 0.1f;
-	rotY = 0.0f;
+	rotationSpeed = 0.02f;
+	rotY = 0;
 }
 
 void Tower::giveUpgrade(UpgradeStats &stats)
@@ -106,23 +106,25 @@ int Tower::update(float dt)
 	}
 
 	topTower->worldMat = topScale * topPointTrans * topRotation * topTrans;
-
+	
 	cooldown -= dt;
 	if(target != NULL)
 	{
-		rotateTop();
-		if(cooldown <= 0)
+		if(rotateTop())
 		{
-			if(range > D3DXVec3Length(&(target->getPosition() - getPosition())))
+			if(cooldown <= 0)
 			{
-				projectiles.push_back(new Projectile(Vec3(getPosition().x-2, 6, getPosition().z), ENTITY_PROJECTILE, 0, 0, 0, target, projectileSpeed, damage));
-				cooldown = attackSpeed;
-				SoundSystem::Getinstance()->playSound(sound);
-			}
-			else	//target har gått bortanför tornets range.
-			{
-				target = NULL;
-				return 2;
+				if(range > D3DXVec3Length(&(target->getPosition() - getPosition())))
+				{
+					projectiles.push_back(new Projectile(Vec3(getPosition().x-2, 6, getPosition().z), ENTITY_PROJECTILE, 0, 0, 0, target, projectileSpeed, damage));
+					cooldown = attackSpeed;
+					SoundSystem::Getinstance()->playSound(sound);
+				}
+				else	//target har gått bortanför tornets range.
+				{
+					target = NULL;
+					return 2;
+				}
 			}
 		}
 	}
@@ -202,8 +204,9 @@ vector<RenderData*> Tower::getRenderData()
 }
 
 //Rotates towards target
-void Tower::rotateTop()
+bool Tower::rotateTop()
 {
+	bool done = false;
 	Vec3 pos = getPosition();
 	pos.y = 0;
 	Vec3 look = Vec3(target->getPosition().x, 0, target->getPosition().z) - pos;
@@ -212,28 +215,18 @@ void Tower::rotateTop()
 
 	float dot = D3DXVec3Dot(&look, &Vec3(-1, 0, 0));
 	float yaw = acos(dot);
-/*	float asd = rotY - yaw;
 
-	cout << look.z << endl;
-
-	if(look.z > 0)
+	if(look.z < 0)
 	{
-		rotY -= rotationSpeed;
+		rotY = -yaw;
 	}
 	else
 	{
-		rotY += asd;
+		rotY = yaw;
 	}
+	done = true;
 
 	D3DXMatrixRotationY(&topRotation, rotY);
-	*/
-	
-	if(look.z > 0)
-	{
-		D3DXMatrixRotationY(&topRotation, yaw);
-	}
-	else
-	{
-		D3DXMatrixRotationY(&topRotation, -yaw);
-	}
+
+	return done;
 }

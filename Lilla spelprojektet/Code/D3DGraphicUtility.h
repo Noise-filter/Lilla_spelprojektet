@@ -27,7 +27,6 @@
 
 #define NROFSHADERS (8)
 
-
 struct FaceType
 {
 		int vIndex1, vIndex2, vIndex3;

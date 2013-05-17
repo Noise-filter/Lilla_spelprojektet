@@ -42,7 +42,7 @@ struct PSIn
 
 struct PSOut
 {
-	float4 position       : SV_TARGET0;
+	float4 light          : SV_TARGET0;
 	float4 diffuseAlbedo  : SV_TARGET1;
 	float4 normal         : SV_TARGET2;
 	float4 glow			  : SV_TARGET3;
@@ -89,10 +89,9 @@ PSOut PSScene(PSIn input)
 	output.glow = float4(glow, 1.0f);
 	float4 normalW = float4( 0.5f * (normalize(input.normalW).rgb + 1.0f), specularPower);
 	
-	float4 pos = pow(float4(input.depth.x / input.depth.y , input.depth.x / input.depth.y , input.depth.x / input.depth.y , input.depth.x / input.depth.y) , 600);
-	output.position = pos;
 	output.diffuseAlbedo = float4(diffuseAlbedo, 1.0f);
 	output.normal = normalW;
+	output.light = float4(0.0f, 0.0f , 0.0f, 0.0f);
 
 	return output;
 }
