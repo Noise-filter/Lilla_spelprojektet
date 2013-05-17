@@ -52,6 +52,8 @@ class GeometryManager
 		int getNrOfParticles();
 		int getNrOfHPBars();
 		int getNrOfGUIObjects();
+		float getGlowPower(int ID);
+		float getBlurScalar(int ID);
 
 		ID3D11ShaderResourceView *getTextures(int ID);
 		ID3D11ShaderResourceView *getGlowMaps(int ID);
@@ -66,7 +68,9 @@ class GeometryManager
 						int nrOfInstances,
 						Buffer* bufferObj,
 						vector<string> tex,
-						vector<string> glow);
+						vector<string> glow,
+						float glowPower,
+						float blurScalar);
 
 };
 

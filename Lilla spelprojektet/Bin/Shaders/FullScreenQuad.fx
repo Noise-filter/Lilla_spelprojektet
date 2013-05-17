@@ -7,6 +7,11 @@ Texture2D diffuseAlbedoMap   : register(t1);
 Texture2D positionMap        : register(t2);
 Texture2D glowMap			 : register(t3);
 
+cbuffer everyCall
+{
+	float glowPower;
+}
+
 struct VSIn
 {
 	float4 pos : POSITION;
@@ -34,7 +39,7 @@ float4 PSScene(PSIn input) : SV_Target
 	float3 diffuse = diffuseAlbedoMap.Load(sampleIndices).xyz;
 	float3 normal = normalMap.Load(sampleIndices).xyz;
 	float3 glow = glowMap.Load(sampleIndices).xyz;
-	float3 sum = saturate(diffuse + (glow*2));
+	float3 sum = saturate(diffuse + (glow*glowPower));
 	return float4(sum, 1.0f);
 
 	

@@ -69,8 +69,6 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 			d3d->pDeviceContext->DrawInstanced(pGeoManager->getNrOfVertexPoints(i), pGeoManager->getNrOfInstances(i), 0, 0);
 		}
 	}
-
-	
 	blurTexture(temp);
 
 	world = world * vp;

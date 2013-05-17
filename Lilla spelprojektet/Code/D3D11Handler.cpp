@@ -3,6 +3,9 @@
 int SCREEN_WIDTH;
 int SCREEN_HEIGHT;
 
+const float GLOWPOWER = 2.0f;
+const float BLURSCALAR = 1.2f;
+
 D3D11Handler::D3D11Handler()
 {
 	pRenderTargetView	= NULL;	
@@ -113,6 +116,7 @@ Shader *D3D11Handler::setPass(PASS_STATE pass)
 			this->vShaders.at(PASS_FULLSCREENQUAD)->SetResource("diffuseAlbedoMap" , this->pMultipleSRVs[1]);
 			this->vShaders.at(PASS_FULLSCREENQUAD)->SetResource("normalMap" , this->pMultipleSRVs[2]);
 			this->vShaders.at(PASS_FULLSCREENQUAD)->SetResource("glowMap", this->pMultipleSRVs[3]);
+			this->vShaders.at(PASS_FULLSCREENQUAD)->SetFloat("glowPower", GLOWPOWER);
 			return this->vShaders.at(PASS_FULLSCREENQUAD);
 			break;
 
@@ -127,12 +131,14 @@ Shader *D3D11Handler::setPass(PASS_STATE pass)
 		case PASS_BLURV:
 			this->pDeviceContext->OMSetRenderTargets(1, &pMultipleRTVs[3], NULL);
 			this->vShaders.at(PASS_BLUR)->SetResource("inputTex", this->pMultipleSRVs[4]);
+			//this->vShaders.at(PASS_BLUR)->SetFloat("blurScalar", BLURSCALAR);
 			return this->vShaders.at(PASS_BLUR);
 			break;
 
 		case PASS_BLURH:
 			this->pDeviceContext->OMSetRenderTargets(1, &pMultipleRTVs[4], NULL);
 			this->vShaders.at(PASS_BLUR)->SetResource("inputTex", this->pMultipleSRVs[3]);
+			this->vShaders.at(PASS_BLUR)->SetFloat("blurScalar", BLURSCALAR);
 			return this->vShaders.at(PASS_BLUR);
 			break;
 	}

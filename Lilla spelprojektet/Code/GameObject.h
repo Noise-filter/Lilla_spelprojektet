@@ -16,9 +16,11 @@ class GameObject
 		ID3D11ShaderResourceView *texArray;
 		ID3D11ShaderResourceView *glowArray;
 		int iNrOfTextures;
-
 		int iNrOfinstances;
 		int iNrOfVertices;
+
+		float fGlowPower;
+		float fBlurScalar;
 
 	public:
 		GameObject();
@@ -36,13 +38,15 @@ class GameObject
 		void mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_P    *mesh, int nrOfVertices, int nrOfInstances, Buffer* bufferObj);
 		void mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_PUV  *mesh, int nrOfVertices, int nrOfInstances, Buffer* bufferObj);
 		void mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_PUV *mesh, int nrOfVertices, int nrOfInstances, Buffer* bufferObj, bool asd);	//Används till hp bars
-		void mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_PNUV *mesh, int nrOfVertices, int nrOfInstances, Buffer* bufferObj, ID3D11ShaderResourceView *textures, ID3D11ShaderResourceView *glowMaps);
+		void mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, BUFFER_INIT &instanceInit, MESH_PNUV *mesh, int nrOfVertices, int nrOfInstances, Buffer* bufferObj, ID3D11ShaderResourceView *textures, ID3D11ShaderResourceView *glowMaps, float glowPower = 1.0f, float blurScalar = 1.0f);
 		void mInit(ID3D11Device *device, BUFFER_INIT &bufferInit, int nrOfVertices, Buffer* bufferObj);
 
 		int mGetNrOfInstances() const;
 		int mGetNrOfVertices() const;
 		ID3D11ShaderResourceView *getTexArray() const;
 		ID3D11ShaderResourceView *getGlowArray() const;
+		float getGlowPower() const;
+		float getBlurScalar() const;
 		
 		void mSetNrOfInstances(int value);
 		void mSetNrOfVertices(int value);

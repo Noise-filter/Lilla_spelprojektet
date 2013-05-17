@@ -120,55 +120,55 @@ void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc, int ma
 	string fileName = "Meshar/Main Building.obj";
 	tex = TexAndGlow::loadMainBuildingTex();
 	glow = TexAndGlow::loadMainBuildingGlow();
-	importMesh(device, dc, this->vEntities.at(ENTITY_MAINBUILDING), fileName, bufferInit, instanceInit, 1, this->pBufferObj, tex, glow);
+	importMesh(device, dc, this->vEntities.at(ENTITY_MAINBUILDING), fileName, bufferInit, instanceInit, 1, this->pBufferObj, tex, glow, 1.0f, 1.0f);
 
 	fileName = "Meshar/Power Building part 1.obj";
 	tex = TexAndGlow::loadSupplyLowerTex();
 	glow = TexAndGlow::loadSupplyLowerGlow();
-	importMesh(device, dc, this->vEntities.at(ENTITY_SUPPLYBASE), fileName, bufferInit, instanceInit, 100, this->pBufferObj, tex, glow);
+	importMesh(device, dc, this->vEntities.at(ENTITY_SUPPLYBASE), fileName, bufferInit, instanceInit, 100, this->pBufferObj, tex, glow, 1.0f, 1.0f);
 	
 	fileName = "Meshar/Power Building part 2.obj";
 	tex = TexAndGlow::loadSupplyUpperTex();
 	glow = TexAndGlow::loadSupplyUpperGlow();
-	importMesh(device, dc, this->vEntities.at(ENTITY_SUPPLYTOP), fileName, bufferInit, instanceInit, 100, this->pBufferObj, tex, glow);
+	importMesh(device, dc, this->vEntities.at(ENTITY_SUPPLYTOP), fileName, bufferInit, instanceInit, 100, this->pBufferObj, tex, glow, 1.0f, 1.0f);
 
 	fileName = "Meshar/Tower Part 1.obj";
 	tex = TexAndGlow::loadTowerLowerTex();
 	glow = TexAndGlow::loadTowerLowerGlow();
-	importMesh(device, dc, this->vEntities.at(ENTITY_TOWERTOP), fileName, bufferInit, instanceInit, 100, this->pBufferObj, tex, glow);
+	importMesh(device, dc, this->vEntities.at(ENTITY_TOWERTOP), fileName, bufferInit, instanceInit, 100, this->pBufferObj, tex, glow, 1.0f, 1.0f);
 
 	fileName = "Meshar/Tower Part 2.obj";
 	tex = TexAndGlow::loadTowerUpperTex();
 	glow = TexAndGlow::loadTowerUpperGlow();
-	importMesh(device, dc, this->vEntities.at(ENTITY_TOWERBASE), fileName, bufferInit, instanceInit, 100, this->pBufferObj, tex, glow);
+	importMesh(device, dc, this->vEntities.at(ENTITY_TOWERBASE), fileName, bufferInit, instanceInit, 100, this->pBufferObj, tex, glow, 1.0f, 1.0f);
 	
 	fileName = "Meshar/Green node.obj";
 	tex = TexAndGlow::loadFriendlyNodeTex();
 	glow = TexAndGlow::loadFriendlyNodeGlow();
-	importMesh(device, dc, this->vEntities.at(ENTITY_NODE_GREEN), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
+	importMesh(device, dc, this->vEntities.at(ENTITY_NODE_GREEN), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow, 1.0f, 1.0f);
 
 	fileName = "Meshar/Enemy (broken node).obj";
 	tex = TexAndGlow::loadHostileNodeTex();
 	glow = TexAndGlow::loadHostileNodeGlow();
-	importMesh(device, dc, this->vEntities.at(ENTITY_NODE_RED), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
+	importMesh(device, dc, this->vEntities.at(ENTITY_NODE_RED), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow, 1.0f, 1.0f);
 
 	fileName = "Meshar/Enemy (broken node).obj";
 	tex = TexAndGlow::loadHostileNodeTex();
 	glow = TexAndGlow::loadHostileNodeGlow();
-	importMesh(device, dc, this->vEntities.at(ENTITY_ENEMY), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
+	importMesh(device, dc, this->vEntities.at(ENTITY_ENEMY), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow, 1.0f, 1.0f);
 
 	fileName = "Meshar/Very basic disc (projectile).obj";
 	tex = TexAndGlow::loadHostileNodeTex();
 	glow = TexAndGlow::loadHostileNodeGlow();
-	importMesh(device, dc, this->vEntities.at(ENTITY_PROJECTILE), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
+	importMesh(device, dc, this->vEntities.at(ENTITY_PROJECTILE), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow, 1.0f, 1.0f);
 
 
 	//temp buffer init
 	ID3D11ShaderResourceView *nulls = NULL;
-	this->vEntities.at(ENTITY_UPGRADE_OFFENSE)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls);
-	this->vEntities.at(ENTITY_UPGRADE_DEFENSE)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls);
-	this->vEntities.at(ENTITY_UPGRADE_RES)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls);
-	this->vEntities.at(ENTITY_PLANE)->mInit(device, bufferInit, instanceInit, plane, 6, 1, this->pBufferObj, nulls, nulls);
+	this->vEntities.at(ENTITY_UPGRADE_OFFENSE)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls, 1.0f, 1.0f);
+	this->vEntities.at(ENTITY_UPGRADE_DEFENSE)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls, 1.0f, 1.0f);
+	this->vEntities.at(ENTITY_UPGRADE_RES)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls, 1.0f, 1.0f);
+	this->vEntities.at(ENTITY_PLANE)->mInit(device, bufferInit, instanceInit, plane, 6, 1, this->pBufferObj, nulls, nulls, 1.0f, 1.0f);
 
 	this->Particles->mInit(device, instanceInit, 1000, this->pBufferObj);
 
@@ -263,6 +263,17 @@ int GeometryManager::getNrOfGUIObjects()
 	return this->GUI->mGetNrOfInstances();
 }
 
+float GeometryManager::getGlowPower(int ID)
+{
+	return this->vEntities[ID]->getGlowPower();
+}
+
+float GeometryManager::getBlurScalar(int ID)
+{
+	return this->vEntities[ID]->getBlurScalar();
+}
+
+
 ID3D11ShaderResourceView *GeometryManager::getTextures(int ID)
 {
 	return this->vEntities[ID]->getTexArray();
@@ -282,7 +293,9 @@ void GeometryManager::importMesh(ID3D11Device *device,
 								 int nrOfInstances,
 								 Buffer* bufferObj,
 								 vector<string> tex,
-								 vector<string> glow)
+								 vector<string> glow,
+								 float glowPower,
+								 float blurScalar)
 {
 	int nrOfVertices = 0;
 	ID3D11ShaderResourceView *texTemp = NULL;
@@ -292,7 +305,7 @@ void GeometryManager::importMesh(ID3D11Device *device,
 	
 	if(glow.size() > 0)	glowTemp = createTextureArray(device, dc, glow, DXGI_FORMAT_R8G8B8A8_UNORM, D3DX11_FILTER_NONE, D3DX11_FILTER_NONE);
 	if(tex.size() > 0) texTemp = createTextureArray(device, dc, tex, DXGI_FORMAT_R8G8B8A8_UNORM, D3DX11_FILTER_NONE, D3DX11_FILTER_NONE);
-	object->mInit(device, bufferInit, instanceInit, temp, nrOfVertices, nrOfInstances, bufferObj, texTemp, glowTemp);
+	object->mInit(device, bufferInit, instanceInit, temp, nrOfVertices, nrOfInstances, bufferObj, texTemp, glowTemp, glowPower, blurScalar);
 
 
 
