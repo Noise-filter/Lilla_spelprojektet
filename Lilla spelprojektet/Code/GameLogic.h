@@ -10,7 +10,7 @@ public:
 	~GameLogic(void);
 
 
-	bool init(int quadSize, GameSettings &settings);
+	bool init(int quadSize, GameSettings &settings, string filename, int difficulty);
 	int update(int &gameState, float dt, MouseState *mState, D3DXMATRIX view, D3DXMATRIX proj, D3DXVECTOR3 cameraPos);
 	void incrementSelectedStructure(int increment);
 	

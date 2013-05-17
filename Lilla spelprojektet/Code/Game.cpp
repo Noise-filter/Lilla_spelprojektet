@@ -4,13 +4,14 @@ Game::Game(void)
 {
 
 	engine = new Engine();
-	gameLogic = new GameLogic();
+	gameLogic = NULL;
 	input = new Input();
 	camera = new Camera();
 	soundSystem = soundSystem->Getinstance();
 	pSystem = pSystem->Getinstance();
 	gameState = STATE_MENU;
 	oldGameState = STATE_MENU;
+	pausedGameStateSaved = STATE_MENU;
 	gui = new GUI();
 }
 
@@ -24,23 +25,22 @@ Game::~Game(void)
 	SAFE_DELETE(playlist);
 	SAFE_DELETE(gui);
 	pSystem->shutdown();
-
 }
 
 bool Game::init(HINSTANCE hInstance, int cmdShow)
 {
 
 	//read settings from file
-	GameSettings settings = readSettingsFromFile("settings.txt");
+	settings = readSettingsFromFile("settings.txt");
 
 	//use settings for the game
-	
+	this->hInstance = hInstance;
+	this->cmdShow = cmdShow;
+	//newLevel();
 
-	if(!gameLogic->init(10,settings))
-		return false;
-	int mapSize = gameLogic->getMapSize();
 
-	if(!engine->init(hInstance,cmdShow,mapSize))
+
+	if(!engine->init(hInstance,cmdShow))
 		return false;
 
 	soundSystem->init();
@@ -86,33 +86,41 @@ void Game::render()
 
 
 	//build engines renderContent with addRenderData then do render to execute those renders
-	engine->setRenderData(gameLogic->getRenderData());
-
-	engine->setRenderData(pSystem->getVertexData());
-	if(nrOfPanels != 0)
+	
+	if(gameState == STATE_GAMESTART || gameState == STATE_PLAYING)
 	{
-		engine->setGUI(panels, nrOfPanels);
+		engine->setRenderData(gameLogic->getRenderData());
+
+		engine->setRenderData(pSystem->getVertexData());
+		if(nrOfPanels != 0)
+		{
+			engine->setGUI(panels, nrOfPanels);
+		}
+
+
+		//Get hp bars and put them in the correct position
+		vector<HPBarInfo> hp = gameLogic->getHPBarInfo();
+		Matrix vp = camera->ViewsProj();
+		Vec4 pos;
+		pos.w = 1;
+		for(int i = 0; i < (int)hp.size(); i++)
+		{
+			pos.x = hp[i].translate._41;
+			pos.y = hp[i].translate._42;
+			pos.z = hp[i].translate._43;
+
+			D3DXVec4Transform(&pos, &pos, &vp);
+			pos /= pos.w;
+			D3DXMatrixTranslation(&hp[i].translate, pos.x, pos.y, 0);
+		}
+		engine->setHPBars(hp);
+
+		engine->render(camera->ViewsProj(), temp, tempSize);	
 	}
-
-
-	//Get hp bars and put them in the correct position
-	vector<HPBarInfo> hp = gameLogic->getHPBarInfo();
-	Matrix vp = camera->ViewsProj();
-	Vec4 pos;
-	pos.w = 1;
-	for(int i = 0; i < (int)hp.size(); i++)
+	else if(gameState == STATE_MENU || gameState == STATE_SETTINGS || gameState == STATE_NEWGAME || gameState == STATE_PAUSED)
 	{
-		pos.x = hp[i].translate._41;
-		pos.y = hp[i].translate._42;
-		pos.z = hp[i].translate._43;
-
-		D3DXVec4Transform(&pos, &pos, &vp);
-		pos /= pos.w;
-		D3DXMatrixTranslation(&hp[i].translate, pos.x, pos.y, 0);
+		engine->renderGui(temp, tempSize);
 	}
-	engine->setHPBars(hp);
-
-	engine->render(camera->ViewsProj(), temp, tempSize);	
 	delete temp;
 	temp = NULL;
 }
@@ -176,6 +184,7 @@ void Game::changeState()
 	}
 	if(gameState == STATE_GAMESTART)
 	{
+		newLevel(gui->getCurrentLevel(), settings.difficulty);
 		soundSystem->stopSound(menuSound);
 		soundSystem->setPaused(playlist, false);
 	}
@@ -183,10 +192,10 @@ void Game::changeState()
 	{
 		gameState = pausedGameStateSaved;
 	}
-	if(gameState == STATE_MENU && oldGameState == STATE_PAUSED)
+	/*if(gameState == STATE_GAMESTART && pausedGameStateSaved != 0)
 	{
-
-	}
+		newLevel("level3.txt", settings.difficulty);
+	}*/
 }
 
 void Game::handleInput(float dt)
@@ -239,6 +248,7 @@ void Game::handleInput(float dt)
 		}	
 	}
 }
+
 GameSettings Game::readSettingsFromFile(string fileName)
 {
 	GameSettings settings;
@@ -278,4 +288,25 @@ GameSettings Game::readSettingsFromFile(string fileName)
 
 	fin.close();
 	return settings;
+}
+
+void Game::newLevel(string filename, int difficulty)
+{
+	
+	SAFE_DELETE(gameLogic);
+
+
+	gameLogic = new GameLogic();
+
+	loadlevel(filename, difficulty);
+
+	int mapSize = gameLogic->getMapSize();
+
+	engine->start(mapSize);
+
+}
+
+void Game::loadlevel(string filename, int difficulty)
+{	
+	gameLogic->init(10,settings, filename, difficulty);
 }

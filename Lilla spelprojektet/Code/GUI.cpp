@@ -12,6 +12,9 @@ GUI::GUI()
 	midScreenW = (float)SCREEN_WIDTH/2;
 	midScreenH = (float)SCREEN_HEIGHT/2;
 	muted = false;
+	createLevelList();
+	this->currentLevel = 0;
+	
 	createBtns(STATE_MENU);
 }
 
@@ -19,6 +22,8 @@ GUI::~GUI()
 {
 
 	clear();
+	SAFE_DELETE_ARRAY(levelList);
+	this->nrOfLevels = 0;
 
 }
 
@@ -61,6 +66,7 @@ void GUI::createBtns(int state)
 	{
 		clear();
 	}
+	wchar_t* level = (wchar_t*)levelList[currentLevel].c_str();
 
 	if(state == STATE_MENU)
 	{
@@ -92,7 +98,7 @@ void GUI::createBtns(int state)
 	{
 		this->nrOfBoxes = 2;
 		this->textBoxes = new Text[nrOfBoxes];
-		this->textBoxes[0] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 100), L"Level 1", 36, 0x800000ff);
+		this->textBoxes[0] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 100), level, 36, 0x800000ff);
 		this->textBoxes[1] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 50), L"Easy", 36, 0x800000ff);
 		this->nrOfBtns = 6;
 		this->menuBtns = new Button[nrOfBtns];
@@ -282,5 +288,71 @@ int GUI::changeState(Button btn)
 	{
 		muted = !muted;
 	}
+	else if(btn.type == NEXT || btn.type == LAST)
+	{
+		changeText(btn.pos, btn.type);
+	}
 	return state;
+}
+
+void GUI::createLevelList()
+{
+	ifstream fin;
+	fin.open("Level list.txt");
+	string attribute;
+	int value;
+
+	if(fin.fail() == true)
+	{
+		cout << "FAILED TO READ LEVELS FROM FILE" << endl;
+	}
+
+	fin >> value;
+	this->nrOfLevels = value;
+	this->levelList = new wstring[nrOfLevels];
+	int count = 0;
+	while(count != nrOfLevels)
+	{
+		fin >> attribute;
+		for(int i = 0; i < attribute.size(); i++)
+		{
+			this->levelList[count].push_back(attribute[i]);
+		}
+		//this->levelList[count] = wstring(attribute.begin(), attribute.end());
+
+		count++;
+	}
+
+	//läs från fil istället
+
+	fin.close();
+}
+
+void GUI::changeText(D3DXVECTOR2 pos, BUTTONTYPE type)
+{
+	if(pos.y == textBoxes[0].pos.y && type == NEXT)
+	{
+		this->currentLevel = (currentLevel+1) % nrOfLevels;
+	}
+	else if(pos.y == textBoxes[0].pos.y && type == LAST)
+	{
+		this->currentLevel--;
+		if(this->currentLevel < 0)
+		{
+			this->currentLevel = this->nrOfLevels-1;
+		}
+	}
+	wchar_t* level = (wchar_t*)levelList[currentLevel].c_str();
+	textBoxes[0].text = level;
+}
+
+string GUI::getCurrentLevel()const
+{
+	string temp;
+	for(int i = 0; i < levelList[currentLevel].size(); i++)
+	{
+		temp.push_back(levelList[currentLevel][i]);
+	}
+
+	return temp;
 }

@@ -16,7 +16,7 @@ Engine::~Engine(void)
 	pFW1Factory->Release();
 }
 
-bool Engine::init(HINSTANCE hInstance, int cmdShow, int mapSize)
+bool Engine::init(HINSTANCE hInstance, int cmdShow)
 {
 	HRESULT hr = (win32->initWindow(hInstance, cmdShow)); // initierar win32
 	if(FAILED(hr))
@@ -30,14 +30,21 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow, int mapSize)
 		return false;
 	}
 
-	pGeoManager->init(d3d->pDevice, d3d->pDeviceContext, mapSize);
-
+	pGeoManager->init(d3d->pDevice, d3d->pDeviceContext);
+	//pGeoManager->initMeshes(d3d->pDevice, d3d->pDeviceContext, mapSize);
 
 	HRESULT hResult = FW1CreateFactory(FW1_VERSION, &pFW1Factory);
 	hResult = pFW1Factory->CreateFontWrapper(d3d->pDevice, L"Arial", &pFontWrapper);
 
 
 	return true; // allt gick bra
+}
+
+void Engine::start(int mapSize)
+{
+
+	pGeoManager->initMeshes(d3d->pDevice, d3d->pDeviceContext, mapSize);
+
 }
 
 void Engine::render(Matrix& vp, Text* text, int nrOfText)
@@ -138,9 +145,24 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 	}
 }
 
-void Engine::renderGui(int state, Text* text)
+void Engine::renderGui(Text* text, int nrOfText)
 {
+	d3d->clearAndBindRenderTarget();
+	Shader* temp;
+	temp = this->d3d->setPass(PASS_HPBARS);
+	pGeoManager->applyGUIBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	temp->Apply(0);
+	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfGUIObjects(), 0, 0);
+
+	if(text != NULL)
+	{
+		renderText(text, nrOfText);
+	}
 	
+	if(FAILED(d3d->pSwapChain->Present( 0, 0 )))
+	{
+		return;
+	}
 }
 
 void Engine::renderText(Text* text, int nrOfText)

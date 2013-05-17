@@ -2,6 +2,8 @@
 #include "D3DMathUtility.h"
 #include "WindowsUtility.h"
 #include <string>
+#include <sstream>
+#include <fstream>
 
 using namespace std;
 
@@ -11,7 +13,6 @@ enum BUTTONTYPE
 	SETTINGS,
 	QUIT,
 	PAUSED_CONTINUE,
-	MENU,
 	NEXT,
 	LAST,
 	MAIN_MENU,
@@ -67,6 +68,7 @@ public:
 	int getNrOfText()const;
 	GUI_Panel* getPanels()const;
 	int getNrOfPanels()const;
+	string getCurrentLevel()const;
 	
 
 private:
@@ -77,7 +79,8 @@ private:
 	Button createBtn(D3DXVECTOR2 pos, BUTTONTYPE type);
 	Text createTextBox(D3DXVECTOR2 pos, wchar_t* text, float size, UINT32 color);
 	void createPanels(int state);
-
+	void createLevelList();
+	void changeText(D3DXVECTOR2 pos, BUTTONTYPE type);
 
 	Button* menuBtns;
 	int nrOfBtns;
@@ -90,4 +93,10 @@ private:
 	float midScreenW;
 	float midScreenH;
 	bool muted;
+
+	wstring* levelList;
+	int nrOfLevels;
+	int currentLevel;
+
+
 };
