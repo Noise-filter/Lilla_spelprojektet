@@ -43,6 +43,7 @@ Tower::Tower(Vec3 pos, int meshID, int textureID, float hp, int lightID, float d
 
 	rotationSpeed = 0.02f;
 	rotY = 0;
+	oldRotY = 0;
 }
 
 void Tower::giveUpgrade(UpgradeStats &stats)
@@ -211,23 +212,33 @@ bool Tower::rotateTop()
 {
 	bool done = false;
 	Vec3 pos = getPosition();
-	pos.y = 0;
-	Vec3 look = Vec3(target->getPosition().x, 0, target->getPosition().z) - pos;
+	Vec3 targetPos = target->getPosition();
 
-	D3DXVec3Normalize(&look, &look);
+	float angle = atan2(targetPos.x - pos.x, targetPos.z - pos.z) * (float)(180.0 / D3DX_PI);
+	float rotation = (float)angle * 0.0174532925f;
+	rotation += PI/2;
 
-	float dot = D3DXVec3Dot(&look, &Vec3(-1, 0, 0));
-	float yaw = acos(dot);
-
-	if(look.z < 0)
-	{
-		rotY = -yaw;
-	}
+	if(rotY - rotation > PI)
+		rotY += rotationSpeed;
+	else if(rotY - rotation < -PI)
+		rotY -= rotationSpeed;
+	else if(rotY < rotation)
+		rotY += rotationSpeed;
 	else
+		rotY -= rotationSpeed;
+
+	if(rotY >= PI*2 - PI/2 && oldRotY < PI*2 - PI/2)
+		rotY -= PI*2;
+
+	else if(rotY <= 0 - PI/2 && oldRotY > 0 - PI/2)
+		rotY += PI*2;
+
+	if(abs(rotation - rotY) < 0.2)
 	{
-		rotY = yaw;
+		rotY = rotation;
+		done = true;
 	}
-	done = true;
+	oldRotY = rotY;
 
 	D3DXMatrixRotationY(&topRotation, rotY);
 
