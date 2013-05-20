@@ -356,6 +356,11 @@ void GeometryManager::importMesh(ID3D11Device *device,
 	ID3D11ShaderResourceView *glowTemp = NULL;
 
 	MESH_PNUV *temp = this->importer->getOBJfromFile(fileName, nrOfVertices, tex, glow);
+
+	if(tex.size() == 2)
+	{
+		cout << "A" << endl;
+	}
 	
 	if(glow.size() > 0)	glowTemp = createTextureArray(device, dc, glow, DXGI_FORMAT_R8G8B8A8_UNORM, D3DX11_FILTER_NONE, D3DX11_FILTER_NONE);
 	if(tex.size() > 0) texTemp = createTextureArray(device, dc, tex, DXGI_FORMAT_R8G8B8A8_UNORM, D3DX11_FILTER_NONE, D3DX11_FILTER_NONE);

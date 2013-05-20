@@ -139,15 +139,15 @@ bool Level::loadLevel(string fileName)
 			fin.get(val);
 			value = ((int)val-48); // konverterar till int
 			if(value == COLOR_GREEN)
-				entityFlag = ENTITY_NODE_GREEN;
+				nodes[i][j] = Node(Vec3((float)i*quadSize,0,(float)j*quadSize),ENTITY_NODE_GREEN,0,0,0,value);//entityFlag = ENTITY_NODE_GREEN;
 			else if(value == COLOR_RED)
-				entityFlag = ENTITY_NODE_RED;
+				nodes[i][j] = Node(Vec3((float)i*quadSize,0,(float)j*quadSize),ENTITY_NODE_GREEN,1,0,0,value);//entityFlag = ENTITY_NODE_RED;
 			else if(value == COLOR_GREY)
-				entityFlag = ENTITY_NODE_GREEN;
+				nodes[i][j] = Node(Vec3((float)i*quadSize,0,(float)j*quadSize),ENTITY_NODE_GREEN,2,0,0,value);//entityFlag = ENTITY_NODE_GREEN;
 					
 			//lägg till kollar för texturer
 
-			nodes[i][j] = Node(Vec3((float)i*quadSize,0,(float)j*quadSize),entityFlag,0,0,0,value);
+			//nodes[i][j] = Node(Vec3((float)i*quadSize,0,(float)j*quadSize),entityFlag,0,0,0,value);
 			cout << value << " , ";
 		}
 		fin.ignore();
@@ -429,7 +429,6 @@ bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 		{
 			structures[xPos][yPos] = new Headquarter(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 50, 0);
 			return true;
-		
 		}
 		else if(structures[xPos][yPos] == NULL && isAdjecent(xPos,yPos) && isLocationBuildable(xPos, yPos))
 		{
