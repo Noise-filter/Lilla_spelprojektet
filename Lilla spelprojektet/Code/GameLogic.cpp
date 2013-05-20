@@ -5,10 +5,15 @@ GameLogic::GameLogic(void)
 	this->level = new Level();
 	this->eHandler = new EnemyHandler();
 	this->selectedStructure = 2;
-	this->availableSupply = 40;
-	this->resource = 20;
+	this->availableSupply = 40000;
+	this->resource = 2000;
+
 	this->maxResCD = 0;
 	this->resPerEnemy = 5;
+	endStats = Statistics::Getinstance();
+
+	endStats->totalSupply += 40000;
+	endStats->totalRes += 2000;
 }
 
 GameLogic::~GameLogic(void)
@@ -43,7 +48,9 @@ void GameLogic::giveSupply(float dt)
 	currentResCD += dt;
 	if(currentResCD > maxResCD)
 	{
-		this->availableSupply += resPerTick + level->getNrOfSupplyStructures()/2;
+		int res = resPerTick + level->getNrOfSupplyStructures()/2;
+		this->availableSupply += res;
+		endStats->totalSupply += res;
 		cout << "gained resources: " << resPerTick + level->getNrOfSupplyStructures()/2 << " you now have: " << availableSupply << endl;
 		currentResCD = 0;
 	}
@@ -130,6 +137,7 @@ int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX v
 	int ret = level->update(dt, eHandler->getEnemies()); // returnera 4 om vinst 5 om förlust
 	if(gameState == STATE_PLAYING)
 	{
+		endStats->totalTime += dt;
 		switch(mState->btnState)
 		{	
 			case VK_LBUTTON:
@@ -157,6 +165,7 @@ int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX v
 		}
 
 		int nrOfKilledEnemies = eHandler->update(dt);
+		endStats->totalEnemiesKilled += nrOfKilledEnemies;
 		if(nrOfKilledEnemies > 0)
 		{
 			this->resource += resPerEnemy* level->getExtraResPerEnemy()  + resPerEnemy * nrOfKilledEnemies;
@@ -179,8 +188,7 @@ bool GameLogic::init(int quadSize, GameSettings &settings, string filename, int 
 
 	this->level->init(quadSize, difficulty);
 	this->level->loadLevel(filename);
-
-
+	this->endStats->init();
 	this->eHandler->init(level->getStructures(), level->getNodes(), level->getMapSize(), quadSize,settings.enemiesPerMin,settings.difficulty);
 
 	vector<RenderData*> renderData;

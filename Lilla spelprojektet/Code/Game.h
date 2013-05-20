@@ -9,6 +9,7 @@
 
 
 
+
 using namespace std;
 class Game
 {
@@ -37,6 +38,7 @@ private:
 	Sound* playlist;
 	Sound* menuSound;
 	GUI* gui;
+	
 	GameSettings settings;
 	HINSTANCE hInstance; 
 	int cmdShow;

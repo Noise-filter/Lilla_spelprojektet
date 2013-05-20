@@ -12,6 +12,7 @@ Game::Game(void)
 	oldGameState = STATE_MENU;
 	pausedGameStateSaved = STATE_MENU;
 	gui = new GUI();
+	
 }
 
 Game::~Game(void)
@@ -37,7 +38,11 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	this->cmdShow = cmdShow;
 	//newLevel();
 
+	//Statistics::Getinstance()->levelName = "level7";
+	//Statistics::Getinstance()->totalTime = 100;
+	//Statistics::Getinstance()->writeScoreToFile("score.txt");
 
+	//float derp = Statistics::Getinstance()->readScoreFromFile("score.txt","level7");
 
 	if(!engine->init(hInstance,cmdShow))
 		return false;
@@ -136,7 +141,6 @@ int Game::update(float dt)
 	}
 	if(gameState == STATE_PLAYING || gameState == STATE_GAMESTART )
 	{
-		
 		camera->UpdateViewMatrix();
 		if(!gameLogic->update(gameState, dt,input->getMs(), camera->View(), camera->Proj(), camera->GetPosition()))
 			return 0; // error

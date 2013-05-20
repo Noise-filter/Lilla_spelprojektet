@@ -9,6 +9,7 @@
 #include "Set.h"
 #include "Upgrade.h"
 #include <vector>
+#include "Statistics.h"
 using namespace std;
 
 class Level
