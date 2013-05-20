@@ -8,7 +8,7 @@ Game::Game(void)
 	camera = new Camera();
 	soundSystem = soundSystem->Getinstance();
 	pSystem = pSystem->Getinstance();
-	gameState = STATE_GAMESTART;//STATE_MENU;
+	gameState = STATE_MENU;
 	oldGameState = STATE_MENU;
 	pausedGameStateSaved = STATE_MENU;
 	gui = new GUI();
