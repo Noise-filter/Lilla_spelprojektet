@@ -46,6 +46,7 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	playlist = soundSystem->createPlaylist("playlist.m3u");
 	menuSound = soundSystem->createStream("SeductressDubstep_Test.mp3");
 	soundSystem->playSound(menuSound);
+	//soundSystem->setVolume(1);
 	//initiate other game resources such as level or whatever
 
 
@@ -233,6 +234,26 @@ void Game::handleInput(float dt)
 
 	if(gameState == STATE_PLAYING)
 	{
+		if(input->checkKeyDown(0x31))
+		{
+			gameLogic->setSelectedStructure(1);//supply
+		}
+		if(input->checkKeyDown(0x32))
+		{
+			gameLogic->setSelectedStructure(2);//tower
+		}
+		if(input->checkKeyDown(0x33))
+		{
+			gameLogic->setSelectedStructure(3);//offensive
+		}
+		if(input->checkKeyDown(0x34))
+		{
+			gameLogic->setSelectedStructure(4);//defensive
+		}
+		if(input->checkKeyDown(0x35))
+		{
+			gameLogic->setSelectedStructure(5);//resourse
+		}
 		if(input->checkKeyDown(0x45)) // E
 		{
 			//byt byggnad +1
