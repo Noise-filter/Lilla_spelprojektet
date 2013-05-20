@@ -164,7 +164,7 @@ bool Level::loadLevel(string fileName)
 	//skapa planet
 	plane = new Entity(Vec3((mapSize-1) * quadSize * 0.5f, 0, (mapSize-1) * quadSize * 0.5f), ENTITY_PLANE, 0, 0, 0);
 	plane->setScale((float)(mapSize-1)*quadSize);
-
+	Statistics::Getinstance()->levelName = fileName;
 	return true;
 }
 Level::~Level(void)

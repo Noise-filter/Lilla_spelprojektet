@@ -2,7 +2,7 @@
 #include "Level.h"
 #include "EnemyHandler.h"
 #include "WindowsUtility.h"
-
+#include "Statistics.h"
 class GameLogic
 {
 public:
@@ -38,5 +38,7 @@ private:
 	int resPerEnemy;
 	float maxResCD;
 	float currentResCD;
+
+	Statistics* endStats;
 };
 
