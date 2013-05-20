@@ -50,7 +50,7 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 
 
 
-	camera->LookAt(Vec3(45,45,45), Vec3(35, 0, 45), Vec3(-1, 0, 0));
+	camera->LookAt(Vec3(50,40,45), Vec3(35, 0, 45), Vec3(-1, 0, 0));
 	camera->SetLens((float)D3DX_PI * 0.45f, (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
 
 	gameState = STATE_MENU;

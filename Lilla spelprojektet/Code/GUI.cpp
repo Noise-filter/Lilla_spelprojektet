@@ -344,6 +344,8 @@ void GUI::changeText(D3DXVECTOR2 pos, BUTTONTYPE type)
 	}
 	wchar_t* level = (wchar_t*)levelList[currentLevel].c_str();
 	textBoxes[0].text = level;
+
+
 }
 
 string GUI::getCurrentLevel()const
