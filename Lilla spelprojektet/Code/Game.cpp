@@ -188,6 +188,9 @@ void Game::changeState()
 	if(gameState == STATE_GAMESTART)
 	{
 		newLevel(gui->getCurrentLevel(), gui->getCurrentDiff());
+	}
+	if(gameState == STATE_GAMESTART || (gameState == STATE_PLAYING && oldGameState != STATE_GAMESTART))
+	{
 		soundSystem->stopSound(menuSound);
 		soundSystem->setPaused(playlist, false);
 	}

@@ -41,6 +41,7 @@ private:
 	Enemy* target;
 	vector<Projectile*> projectiles;
 	Sound* sound;
+	Sound* death;
 
 	//Top part of tower
 	RenderData* topTower;
