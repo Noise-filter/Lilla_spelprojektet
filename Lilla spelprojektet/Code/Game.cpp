@@ -12,6 +12,7 @@ Game::Game(void)
 	oldGameState = STATE_MENU;
 	pausedGameStateSaved = STATE_MENU;
 	gui = new GUI();
+	
 }
 
 Game::~Game(void)
@@ -37,7 +38,11 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	this->cmdShow = cmdShow;
 	//newLevel();
 
+	//Statistics::Getinstance()->levelName = "level7";
+	//Statistics::Getinstance()->totalTime = 100;
+	//Statistics::Getinstance()->writeScoreToFile("score.txt");
 
+	//float derp = Statistics::Getinstance()->readScoreFromFile("score.txt","level7");
 
 	if(!engine->init(hInstance,cmdShow))
 		return false;
@@ -46,6 +51,7 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	playlist = soundSystem->createPlaylist("playlist.m3u");
 	menuSound = soundSystem->createStream("SeductressDubstep_Test.mp3");
 	soundSystem->playSound(menuSound);
+	//soundSystem->setVolume(1);
 	//initiate other game resources such as level or whatever
 
 
@@ -182,7 +188,7 @@ void Game::changeState()
 	}
 	if(gameState == STATE_GAMESTART)
 	{
-		newLevel(gui->getCurrentLevel(), settings.difficulty);
+		newLevel(gui->getCurrentLevel(), gui->getCurrentDiff());
 		soundSystem->stopSound(menuSound);
 		soundSystem->setPaused(playlist, false);
 	}
@@ -233,6 +239,26 @@ void Game::handleInput(float dt)
 
 	if(gameState == STATE_PLAYING)
 	{
+		if(input->checkKeyDown(0x31))
+		{
+			gameLogic->setSelectedStructure(1);//supply
+		}
+		if(input->checkKeyDown(0x32))
+		{
+			gameLogic->setSelectedStructure(2);//tower
+		}
+		if(input->checkKeyDown(0x33))
+		{
+			gameLogic->setSelectedStructure(3);//offensive
+		}
+		if(input->checkKeyDown(0x34))
+		{
+			gameLogic->setSelectedStructure(4);//defensive
+		}
+		if(input->checkKeyDown(0x35))
+		{
+			gameLogic->setSelectedStructure(5);//resourse
+		}
 		if(input->checkKeyDown(0x45)) // E
 		{
 			//byt byggnad +1
@@ -296,7 +322,7 @@ void Game::newLevel(string filename, int difficulty)
 
 	gameLogic = new GameLogic();
 
-	loadlevel(filename, difficulty);
+	loadlevel(filename+".txt", difficulty);
 
 	int mapSize = gameLogic->getMapSize();
 

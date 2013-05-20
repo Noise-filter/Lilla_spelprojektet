@@ -27,7 +27,7 @@ Tower::Tower(Vec3 pos, int meshID, int textureID, float hp, int lightID, float d
 	this->level = 1;
 	this->experience = 0;
 
-	sound = SoundSystem::Getinstance()->createSound("plop.mp3");
+	sound = SoundSystem::Getinstance()->createSound("Swoosh_test.mp3");
 
 	topTower = new RenderData(ENTITY_TOWERTOP, textureID, this->renderData.worldMat, 0);
 
