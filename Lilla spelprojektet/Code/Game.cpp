@@ -182,7 +182,7 @@ void Game::changeState()
 	}
 	if(gameState == STATE_GAMESTART)
 	{
-		newLevel(gui->getCurrentLevel(), settings.difficulty);
+		newLevel(gui->getCurrentLevel(), gui->getCurrentDiff());
 		soundSystem->stopSound(menuSound);
 		soundSystem->setPaused(playlist, false);
 	}
@@ -296,7 +296,7 @@ void Game::newLevel(string filename, int difficulty)
 
 	gameLogic = new GameLogic();
 
-	loadlevel(filename, difficulty);
+	loadlevel(filename+".txt", difficulty);
 
 	int mapSize = gameLogic->getMapSize();
 
