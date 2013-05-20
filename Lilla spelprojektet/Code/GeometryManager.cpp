@@ -226,7 +226,7 @@ void GeometryManager::initMeshes(ID3D11Device *device, ID3D11DeviceContext *dc, 
 	this->vEntities.at(ENTITY_PLANE)->mInit(device, bufferInit, instanceInit, plane, 6, 1, this->pBufferObj, texTemp, glowTemp);
 
 
-	this->Particles->mInit(device, instanceInit, 1000, this->pBufferObj);
+	this->Particles->mInit(device, instanceInit, 100000, this->pBufferObj);
 
 	MESH_P p[] = {  MESH_P(D3DXVECTOR3(1,-1,0)),
 						MESH_P(D3DXVECTOR3(-1,-1,0)), 

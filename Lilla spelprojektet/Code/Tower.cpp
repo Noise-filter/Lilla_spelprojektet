@@ -14,8 +14,8 @@ Tower::Tower() : Structure()
 	topTower = new RenderData(ENTITY_TOWERTOP, 0, world, 0);
 }
 
-Tower::Tower(Vec3 pos, int meshID, int textureID, float hp, int lightID, float damage, float attackSpeed, float range, float projectileSpeed)
-	: Structure(pos, meshID, textureID, hp, lightID)
+Tower::Tower(Vec3 pos, int meshID, int textureID, float hp, int lightID, float damage, float attackSpeed, float range, float projectileSpeed, bool fakeBuilding)
+	: Structure(pos, meshID, textureID, hp, lightID, fakeBuilding)
 {
 	target = NULL;
 	this->damage = damage;
@@ -29,21 +29,23 @@ Tower::Tower(Vec3 pos, int meshID, int textureID, float hp, int lightID, float d
 
 	sound = SoundSystem::Getinstance()->createSound("plop.mp3");
 
-	topTower = new RenderData(ENTITY_TOWERTOP, 0, this->renderData.worldMat, 0);
+	topTower = new RenderData(ENTITY_TOWERTOP, textureID, this->renderData.worldMat, 0);
 
 	//Top part
-	D3DXMatrixTranslation(&topPointTrans, 1.5f, 0, 0);
-	D3DXMatrixTranslation(&topTrans, pos.x+1, pos.y, pos.z);
+	D3DXMatrixTranslation(&topPointTrans, 2, 0, 0);
+	D3DXMatrixTranslation(&topTrans, pos.x-0.2, pos.y, pos.z);
 	D3DXMatrixIdentity(&topRotation);
-	D3DXMatrixTranslation(&translate, pos.x+3.5f, pos.y, pos.z);
+	D3DXMatrixTranslation(&translate, pos.x+2.1f, pos.y, pos.z);
 	//scaleFactor = 1;
 	D3DXMatrixScaling(&scale, scaleFactor, scaleFactor, scaleFactor);
 	topScale = scale;
-	//topPointTrans = scale * topPointTrans;
 
 	rotationSpeed = 7.0f;
 	rotY = 0;
 	oldRotY = 0;
+	
+	renderData.worldMat = scale * pointTranslate * rotation * translate;
+	topTower->worldMat = topScale * topPointTrans * topRotation * topTrans;
 }
 
 void Tower::giveUpgrade(UpgradeStats &stats)
@@ -223,7 +225,7 @@ bool Tower::rotateTop(float dt)
 		rotY -= rotationSpeed * dt;
 	else if(rotY < rotation)
 		rotY += rotationSpeed * dt;
-	else
+	else if(rotY > rotation)
 		rotY -= rotationSpeed * dt;
 
 	if(rotY >= PI*2 - PI/2 && oldRotY < PI*2 - PI/2)
@@ -232,7 +234,7 @@ bool Tower::rotateTop(float dt)
 	else if(rotY <= 0 - PI/2 && oldRotY > 0 - PI/2)
 		rotY += PI*2;
 
-	if(abs(rotation - rotY) < 0.2)
+	if(abs(rotation - rotY) < rotationSpeed * 1.4 * dt)
 	{
 		rotY = rotation;
 		done = true;

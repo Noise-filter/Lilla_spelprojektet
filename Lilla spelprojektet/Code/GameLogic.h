@@ -38,5 +38,7 @@ private:
 	int resPerEnemy;
 	float maxResCD;
 	float currentResCD;
-};
 
+	Vec3 mouseWorldPos;
+	Structure* selectedStructureRenderData;
+};
