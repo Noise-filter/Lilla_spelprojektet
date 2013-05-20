@@ -3,8 +3,8 @@
 int SCREEN_WIDTH;
 int SCREEN_HEIGHT;
 
-const float GLOWPOWER = 2.0f;
-const float BLURSCALAR = 1.2f;
+const float GLOWPOWER = 2.8f;
+const float BLURSCALAR = 1.4f;
 
 D3D11Handler::D3D11Handler()
 {
@@ -138,7 +138,7 @@ Shader *D3D11Handler::setPass(PASS_STATE pass)
 		case PASS_BLURV:
 			this->pDeviceContext->OMSetRenderTargets(1, &pMultipleRTVs[3], NULL);
 			this->vShaders.at(PASS_BLUR)->SetResource("inputTex", this->pMultipleSRVs[4]);
-			//this->vShaders.at(PASS_BLUR)->SetFloat("blurScalar", BLURSCALAR);
+			this->vShaders.at(PASS_BLUR)->SetFloat("blurScalar", BLURSCALAR);
 			return this->vShaders.at(PASS_BLUR);
 			break;
 
@@ -168,6 +168,7 @@ void D3D11Handler::clearAndBindRenderTarget()
 	pDeviceContext->ClearRenderTargetView(pMultipleRTVs[1], colorClear);
 	pDeviceContext->ClearRenderTargetView(pMultipleRTVs[2], normalClear);
 	pDeviceContext->ClearRenderTargetView(pMultipleRTVs[3], colorClear);
+	pDeviceContext->ClearRenderTargetView(pMultipleRTVs[4], colorClear);
 }
 
 ID3D11Device* D3D11Handler::returnDevice()
@@ -326,7 +327,7 @@ bool D3D11Handler::initShaders()
 		{ "WORLD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		{ "WORLD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		{ "WORLD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "TEXTUREID", 0, DXGI_FORMAT_R32_UINT, 2, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "TEXTUREID", 0, DXGI_FORMAT_R32_UINT, 1, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		
 	};
 
@@ -463,9 +464,9 @@ bool D3D11Handler::initDeferred()
 	texDesc.CPUAccessFlags		= 0;
 	texDesc.MiscFlags			= 0;
 
-	pDeferredTargets	= new ID3D11Texture2D *[this->iNrOfDeferred + 1];
+	pDeferredTargets	= new ID3D11Texture2D *[this->iNrOfDeferred+1];
 	pMultipleRTVs		= new ID3D11RenderTargetView *[this->iNrOfDeferred];
-	pMultipleSRVs		= new ID3D11ShaderResourceView *[this->iNrOfDeferred + 1];
+	pMultipleSRVs		= new ID3D11ShaderResourceView *[this->iNrOfDeferred+1];
 	//pNullSRVs			= new ID3D11ShaderResourceView *[this->iNrOfDeferred + 1];
 
 	for(int i = 0; i < this->iNrOfDeferred; i++)

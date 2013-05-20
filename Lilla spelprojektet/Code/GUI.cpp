@@ -14,7 +14,7 @@ GUI::GUI()
 	muted = false;
 	createLevelList();
 	this->currentLevel = 0;
-	
+	initDifficulty();
 	createBtns(STATE_MENU);
 }
 
@@ -67,6 +67,7 @@ void GUI::createBtns(int state)
 		clear();
 	}
 	wchar_t* level = (wchar_t*)levelList[currentLevel].c_str();
+	wchar_t* difficulty = (wchar_t*)difficultyList[currentDifficulty].c_str();
 
 	if(state == STATE_MENU)
 	{
@@ -99,7 +100,7 @@ void GUI::createBtns(int state)
 		this->nrOfBoxes = 2;
 		this->textBoxes = new Text[nrOfBoxes];
 		this->textBoxes[0] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 100), level, 36, 0x800000ff);
-		this->textBoxes[1] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 50), L"Easy", 36, 0x800000ff);
+		this->textBoxes[1] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 50), difficulty, 36, 0x800000ff);
 		this->nrOfBtns = 6;
 		this->menuBtns = new Button[nrOfBtns];
 		this->menuBtns[0] = createBtn(D3DXVECTOR2(textBoxes[0].pos.x - 80, textBoxes[0].pos.y), LAST);
@@ -342,8 +343,23 @@ void GUI::changeText(D3DXVECTOR2 pos, BUTTONTYPE type)
 			this->currentLevel = this->nrOfLevels-1;
 		}
 	}
-	wchar_t* level = (wchar_t*)levelList[currentLevel].c_str();
-	textBoxes[0].text = level;
+
+	textBoxes[0].text = (wchar_t*)levelList[currentLevel].c_str();
+
+	if(pos.y == textBoxes[1].pos.y && type == NEXT)
+	{
+		this->currentDifficulty = (currentDifficulty+1) % nrOfDifficultys;
+	}
+	else if(pos.y == textBoxes[1].pos.y && type == LAST)
+	{
+		this->currentDifficulty--;
+		if(this->currentDifficulty < 0)
+		{
+			this->currentDifficulty = this->nrOfDifficultys-1;
+		}
+	}
+	wchar_t* difficulty = (wchar_t*)difficultyList[currentDifficulty].c_str();
+	textBoxes[1].text = difficulty;
 }
 
 string GUI::getCurrentLevel()const
@@ -355,4 +371,33 @@ string GUI::getCurrentLevel()const
 	}
 
 	return temp;
+}
+
+void GUI::initDifficulty()
+{
+	this->nrOfDifficultys = 3;
+	this->difficultyList = new wstring[nrOfDifficultys];
+	this->difficultyList[0] = L"Easy";
+	this->difficultyList[1] = L"Medium";
+	this->difficultyList[2] = L"Hard";
+	this->currentDifficulty = 0;
+}
+
+int GUI::getCurrentDiff()const
+{
+	return this->currentDifficulty;
+}
+
+wstring GUI::convertStrToWstr(string text)
+{
+	wstring temp(text.begin(), text.end());
+	//copy(text.begin(), text.end(), temp.begin());
+	return temp;
+}
+
+string GUI::convertWstrToStr(wstring text)
+{
+	string temp(text.begin(), text.end());
+    //copy(text.begin(), text.end(), temp.begin());
+    return temp;
 }

@@ -41,7 +41,7 @@ Tower::Tower(Vec3 pos, int meshID, int textureID, float hp, int lightID, float d
 	topScale = scale;
 	//topPointTrans = scale * topPointTrans;
 
-	rotationSpeed = 0.02f;
+	rotationSpeed = 7.0f;
 	rotY = 0;
 	oldRotY = 0;
 }
@@ -111,7 +111,7 @@ int Tower::update(float dt)
 	cooldown -= dt;
 	if(target != NULL)
 	{
-		if(rotateTop())
+		if(rotateTop(dt))
 		{
 			if(cooldown <= 0)
 			{
@@ -208,7 +208,7 @@ vector<RenderData*> Tower::getRenderData()
 }
 
 //Rotates towards target
-bool Tower::rotateTop()
+bool Tower::rotateTop(float dt)
 {
 	bool done = false;
 	Vec3 pos = getPosition();
@@ -218,13 +218,13 @@ bool Tower::rotateTop()
 	rotation += PI/2;
 
 	if(rotY - rotation > PI)
-		rotY += rotationSpeed;
+		rotY += rotationSpeed * dt;
 	else if(rotY - rotation < -PI)
-		rotY -= rotationSpeed;
+		rotY -= rotationSpeed * dt;
 	else if(rotY < rotation)
-		rotY += rotationSpeed;
+		rotY += rotationSpeed * dt;
 	else
-		rotY -= rotationSpeed;
+		rotY -= rotationSpeed * dt;
 
 	if(rotY >= PI*2 - PI/2 && oldRotY < PI*2 - PI/2)
 		rotY -= PI*2;

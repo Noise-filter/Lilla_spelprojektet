@@ -92,15 +92,17 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 	
 
 
+
+
+	//Rita ut gui
+	pGeoManager->applyGUIBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfGUIObjects(), 0, 0);
+
 	//Draw hp bars
 	temp = this->d3d->setPass(PASS_HPBARS);
 	pGeoManager->applyHpBarBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	temp->Apply(0);
 	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfHPBars(), 0, 0);
-
-	//Rita ut gui
-	pGeoManager->applyGUIBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfGUIObjects(), 0, 0);
 	
 	blurTexture(temp);
 	renderDebug(vp);
@@ -114,7 +116,7 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 	{
 		renderText(text, nrOfText);
 	}
-	
+
 	if(FAILED(d3d->pSwapChain->Present( 0, 0 )))
 	{
 		return;
@@ -192,7 +194,7 @@ HWND Engine::getHWND()
 void Engine::blurTexture(Shader *temp)
 {
 	temp = d3d->setPass(PASS_BLURH);
-	//pGeoManager->applyGUIBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);
 
