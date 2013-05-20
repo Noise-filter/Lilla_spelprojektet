@@ -98,5 +98,7 @@ private:
 	int nrOfLevels;
 	int currentLevel;
 
-
+	wstring* difficultyList;
+	int nrOfDifficultys;
+	int currentDifficulty;
 };

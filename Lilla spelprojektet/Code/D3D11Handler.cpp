@@ -3,8 +3,8 @@
 int SCREEN_WIDTH;
 int SCREEN_HEIGHT;
 
-const float GLOWPOWER = 2.0f;
-const float BLURSCALAR = 1.2f;
+const float GLOWPOWER = 2.8f;
+const float BLURSCALAR = 1.4f;
 
 D3D11Handler::D3D11Handler()
 {
