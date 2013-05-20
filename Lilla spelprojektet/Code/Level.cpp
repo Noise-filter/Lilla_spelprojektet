@@ -202,6 +202,7 @@ int Level::getExtraResPerEnemy()
 int Level::update(float dt, vector<Enemy*>& enemies)
 {
 	bool buildingDestroyed = false;
+	int numberDead = 0;
 
 	for(int i = 0; i < mapSize-1; i++)
 	{
@@ -218,7 +219,7 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 					}
 					else if(typeid(*structures[i][j]) == typeid(Supply))
 					{
-						
+						nrOfSupplyStructures--;
 					}
 					else if(typeid(*structures[i][j]) == typeid(Upgrade))
 					{
@@ -240,6 +241,7 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 					SAFE_DELETE(structures[i][j]);
 
 					buildingDestroyed = true;
+					numberDead++;
 				}
 				else
 				{
@@ -299,7 +301,8 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 		sets.initSets(structures, mapSize-1);
 		destroyBuildings();
 	}
-
+	if(numberDead > 0)
+		cout << numberDead << endl;
 	return 1;
 }
 
@@ -436,7 +439,7 @@ bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 	{
 		if(selectedStructure == BUILDABLE_MAINBUILDING && structures[xPos][yPos] == NULL && isLocationBuildable(xPos, yPos))
 		{
-			structures[xPos][yPos] = new Headquarter(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 50, 0,false);
+			structures[xPos][yPos] = new Headquarter(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 50000, 0,false);
 			return true;
 		}
 		else if(structures[xPos][yPos] == NULL && isAdjecent(xPos,yPos) && isLocationBuildable(xPos, yPos))
@@ -472,14 +475,12 @@ bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 						ENTITY_SUPPLYBASE,2,100,0,BUILDABLE_UPGRADE_RES,false);
 					this->extraResPerEnemy += 2;
 					break;
-				cout << "a structure has been built on the location X:"<< xPos << " Y:" << yPos << endl;
-
-				if(builtUpgrade)
-				{
-					upgradeStructures(selectedStructure);
-					cout << "the structure was an upgrade: " << selectedStructure <<endl;
-				}
-			
+			}
+			cout << "a structure has been built on the location X:"<< xPos << " Y:" << yPos << endl;
+			if(builtUpgrade)
+			{
+				upgradeStructures(selectedStructure);
+				cout << "the structure was an upgrade: " << selectedStructure <<endl;
 			}
 			return true;
 		}
@@ -563,17 +564,6 @@ int Level::destroyBuildings()
 			{
 				if(sets.findSet(mainBuilding) != sets.findSet(j + (i * (mapSize-1))))
 				{
-					if(typeid(*structures[i][j]) == typeid(Supply))
-					{
-						nrOfSupplyStructures--;
-					}
-
-					else if(typeid(*structures[i][j]) == typeid(Upgrade))
-					{
-						//remove this upgrade from all towers on the map
-						removeUpgrade(dynamic_cast<Upgrade*>(structures[i][j])->getUpgradeID());
-					}
-
 					structures[i][j]->setDead(true);
 				}
 			}
