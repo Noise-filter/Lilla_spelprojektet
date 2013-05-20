@@ -41,8 +41,9 @@ Tower::Tower(Vec3 pos, int meshID, int textureID, float hp, int lightID, float d
 	topScale = scale;
 	//topPointTrans = scale * topPointTrans;
 
-	rotationSpeed = 0.02f;
+	rotationSpeed = 7.0f;
 	rotY = 0;
+	oldRotY = 0;
 }
 
 void Tower::giveUpgrade(UpgradeStats &stats)
@@ -106,11 +107,11 @@ int Tower::update(float dt)
 	}
 
 	topTower->worldMat = topScale * topPointTrans * topRotation * topTrans;
-	
+
 	cooldown -= dt;
 	if(target != NULL)
 	{
-		if(rotateTop())
+		if(rotateTop(dt))
 		{
 			if(cooldown <= 0)
 			{
@@ -156,7 +157,7 @@ void Tower::lvlUp()
 	D3DXMatrixScaling(&scale,scaleFactor,scaleFactor,scaleFactor);
 	D3DXMatrixScaling(&topScale,scaleFactor,scaleFactor,scaleFactor);
 	this->attackSpeed -= 0.1f;
-	this->cooldown -= 0.1f;
+	//this->cooldown -= 0.1f;
 	this->damage += 5;
 	this->hp += 5;
 	this->maxHp += 5;
@@ -174,13 +175,16 @@ void Tower::aquireTarget(vector<Enemy*>* enemies)
 
 	for(int i = 0; i < (int)enemies->size(); i++)
 	{
-		vec = enemies->at(i)->getPosition() - getPosition();
-		length = D3DXVec3Length(&vec);
-
-		if(length < closestLength)
+		if(enemies->at(i) && !enemies->at(i)->isDead())
 		{
-			t = enemies->at(i);
-			closestLength = length;
+			vec = enemies->at(i)->getPosition() - getPosition();
+			length = D3DXVec3Length(&vec);
+
+			if(length < closestLength)
+			{
+				t = enemies->at(i);
+				closestLength = length;
+			}
 		}
 	}
 
@@ -204,27 +208,36 @@ vector<RenderData*> Tower::getRenderData()
 }
 
 //Rotates towards target
-bool Tower::rotateTop()
+bool Tower::rotateTop(float dt)
 {
 	bool done = false;
 	Vec3 pos = getPosition();
-	pos.y = 0;
-	Vec3 look = Vec3(target->getPosition().x, 0, target->getPosition().z) - pos;
+	Vec3 targetPos = target->getPosition();
 
-	D3DXVec3Normalize(&look, &look);
+	float rotation = atan2(targetPos.x - pos.x, targetPos.z - pos.z);
+	rotation += PI/2;
 
-	float dot = D3DXVec3Dot(&look, &Vec3(-1, 0, 0));
-	float yaw = acos(dot);
-
-	if(look.z < 0)
-	{
-		rotY = -yaw;
-	}
+	if(rotY - rotation > PI)
+		rotY += rotationSpeed * dt;
+	else if(rotY - rotation < -PI)
+		rotY -= rotationSpeed * dt;
+	else if(rotY < rotation)
+		rotY += rotationSpeed * dt;
 	else
+		rotY -= rotationSpeed * dt;
+
+	if(rotY >= PI*2 - PI/2 && oldRotY < PI*2 - PI/2)
+		rotY -= PI*2;
+
+	else if(rotY <= 0 - PI/2 && oldRotY > 0 - PI/2)
+		rotY += PI*2;
+
+	if(abs(rotation - rotY) < 0.2)
 	{
-		rotY = yaw;
+		rotY = rotation;
+		done = true;
 	}
-	done = true;
+	oldRotY = rotY;
 
 	D3DXMatrixRotationY(&topRotation, rotY);
 

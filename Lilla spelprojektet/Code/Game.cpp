@@ -50,10 +50,10 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 
 
 
-	camera->LookAt(Vec3(45,45,45), Vec3(35, 0, 45), Vec3(-1, 0, 0));
+	camera->LookAt(Vec3(50,40,45), Vec3(35, 0, 45), Vec3(-1, 0, 0));
 	camera->SetLens((float)D3DX_PI * 0.45f, (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
 
-	//gameState = STATE_MENU;
+	gameState = STATE_MENU;
 
 	return true; // all initiates went well
 }
@@ -68,7 +68,7 @@ void Game::render()
 
 	int nrOfBtns = gui->getNrOfBtns();
 	int nrOfBoxes = gui->getNrOfText();
-	
+
 	tempSize = nrOfBtns + nrOfBoxes;
 	temp = new Text[tempSize];
 	for(int i = 0; i < nrOfBoxes; i++)
@@ -82,7 +82,7 @@ void Game::render()
 	
 	GUI_Panel* panels = gui->getPanels();
 	int nrOfPanels = gui->getNrOfPanels();
-
+	
 
 	//build engines renderContent with addRenderData then do render to execute those renders
 	
@@ -95,7 +95,6 @@ void Game::render()
 		{
 			engine->setGUI(panels, nrOfPanels);
 		}
-
 
 		//Get hp bars and put them in the correct position
 		vector<HPBarInfo> hp = gameLogic->getHPBarInfo();
@@ -114,13 +113,13 @@ void Game::render()
 		}
 		engine->setHPBars(hp);
 
-		engine->render(camera->ViewsProj(), temp, tempSize);	
+		engine->render(camera->ViewsProj(), temp, tempSize);
 	}
 	else if(gameState == STATE_MENU || gameState == STATE_SETTINGS || gameState == STATE_NEWGAME || gameState == STATE_PAUSED)
 	{
 		engine->renderGui(temp, tempSize);
 	}
-	delete temp;
+	delete[] temp;
 	temp = NULL;
 }
 

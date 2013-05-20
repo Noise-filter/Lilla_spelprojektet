@@ -27,7 +27,7 @@ Entity::Entity(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID
 	D3DXMatrixIdentity(&scale);
 	D3DXMatrixIdentity(&pointTranslate);
 	D3DXMatrixIdentity(&rotation);
-	D3DXMatrixTranslation(&translate, pos.x, pos.y, pos.z);
+	D3DXMatrixTranslation(&translate, pos.x-0.3f, pos.y, pos.z);
 	renderData.worldMat = scale * pointTranslate * rotation * translate;
 }
 

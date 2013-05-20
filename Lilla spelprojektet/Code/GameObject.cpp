@@ -102,11 +102,11 @@ void GameObject::mUpdate(ID3D11DeviceContext *dc , std::vector<HPBarInfo>& data)
 
 	MatrixInstance *mesh = reinterpret_cast<MatrixInstance*>(mappedData->pData);
 
+	Matrix scale;
 	for(int j = 0; j < (int)data.size(); j++)
 	{
-		D3DXMatrixIdentity(&mesh[j].world);
-		D3DXMatrixScaling(&mesh[j].world, data[j].hpPercent * 0.05f, 0.005f, 1.0f);
-		mesh[j].world = mesh[j].world * data[j].translate;
+		D3DXMatrixScaling(&scale, data[j].hpPercent * 0.05f, 0.005f, 1.0f);
+		mesh[j].world = scale * data[j].translate;
 	}
 	this->iNrOfinstances = data.size();
 

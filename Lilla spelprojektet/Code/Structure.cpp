@@ -7,7 +7,7 @@ Structure::Structure(Vec3 pos, int meshID, int textureID, float hp, int lightID)
 	: Entity(pos, meshID, textureID, hp, lightID)
 {
 
-	scaleFactor = 2.8f;
+	scaleFactor = 2.3f;
 
 	D3DXMatrixScaling(&scale, scaleFactor, scaleFactor, scaleFactor);
 }
@@ -26,5 +26,6 @@ HPBarInfo Structure::getHPBarInfo()
 {
 	HPBarInfo info(translate, hp/maxHp);
 	info.translate._41 -= scale._11*3;
+
 	return info;
 }

@@ -12,7 +12,7 @@ Level::Level(void)
 bool Level::init(int quadSize, int difficulty)
 {
 	this->availibleUpgrades = new UpgradeStats[3];
-	this->availibleUpgrades[0] = (UpgradeStats(BUILDABLE_UPGRADE_OFFENSE,0,1,1,1));
+	this->availibleUpgrades[0] = (UpgradeStats(BUILDABLE_UPGRADE_OFFENSE,0,1,0.1f,1));
 	this->availibleUpgrades[1] = (UpgradeStats(BUILDABLE_UPGRADE_DEFENSE,30,0,0,0));
 	this->availibleUpgrades[2] = (UpgradeStats(BUILDABLE_UPGRADE_RES,0,0,0,0));
 
@@ -424,10 +424,9 @@ bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 	int yPos = (int)(mouseClickPos.z/quadSize);
 
 	if(xPos >= 0 && xPos < mapSize-1 && yPos >= 0 && yPos < mapSize-1)
-	{	
-
+	{
 		if(selectedStructure == BUILDABLE_MAINBUILDING && structures[xPos][yPos] == NULL && isLocationBuildable(xPos, yPos))
-		{ 
+		{
 			structures[xPos][yPos] = new Headquarter(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 50, 0);
 			return true;
 		
@@ -438,7 +437,7 @@ bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 			switch(selectedStructure)
 			{
 				case BUILDABLE_TOWER:
-					structures[xPos][yPos] = new Tower(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWERBASE,0,100,0,20, 1, 20, 100);
+					structures[xPos][yPos] = new Tower(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWERBASE,0,100,0,20, 1, 25, 100);
 					for(int i = 0; i < (int)this->upgradesInUse.size();i++)
 					{
 						dynamic_cast<Tower*>(structures[xPos][yPos])->giveUpgrade(upgradesInUse[i]);

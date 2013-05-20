@@ -54,7 +54,7 @@ HRESULT Shader::Init(ID3D11Device* device, ID3D11DeviceContext* deviceContext, c
 	char* l_pError = NULL;
 	if( FAILED(hr) )
 	{
-		char msg[20000];
+		char msg[2000];
 		strcpy_s(msg, sizeof(msg), (char*)pBlobErrors->GetBufferPointer());
 		OutputDebugString(msg);
 		MessageBox(GetDesktopWindow(), msg, "Effect compilation error", MB_OK | MB_ICONERROR);

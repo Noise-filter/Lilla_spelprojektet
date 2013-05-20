@@ -9,6 +9,8 @@ Upgrade::Upgrade(Vec3 pos, int meshID, int textureID, float hp, int lightID, int
 	: Structure(pos, meshID, textureID, hp, lightID)
 {
 	this->upgradeID = upgradeID;
+	D3DXMatrixTranslation(&translate, pos.x+2, pos.y, pos.z);
+	renderData.worldMat = scale * pointTranslate * rotation * translate;
 }
 
 Upgrade::~Upgrade()
