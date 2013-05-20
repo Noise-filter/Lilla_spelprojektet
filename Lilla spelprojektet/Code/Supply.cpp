@@ -4,19 +4,22 @@ Supply::Supply() : Structure()
 {
 }
 
-Supply::Supply(Vec3 pos, int meshID, int textureID, float hp, int lightID)
-	: Structure(pos, meshID, textureID, hp, lightID)
+Supply::Supply(Vec3 pos, int meshID, int textureID, float hp, int lightID, bool fakeBuilding)
+	: Structure(pos, meshID, textureID, hp, lightID, fakeBuilding)
 {
-	topSupply = new RenderData(ENTITY_SUPPLYTOP, 0, renderData.worldMat, 0);
+	topSupply = new RenderData(ENTITY_SUPPLYTOP, textureID, renderData.worldMat, 0);
 
-	D3DXMatrixTranslation(&translate, pos.x+3, pos.y, pos.z);
+	D3DXMatrixTranslation(&translate, pos.x+1.9f, pos.y, pos.z);
 
-	D3DXMatrixTranslation(&topPointTrans, 3, 0.0f, -0.1f);
-	D3DXMatrixTranslation(&topTrans, pos.x+0.1f, pos.y, pos.z);
+	D3DXMatrixTranslation(&topPointTrans, 2.5f, 0.0f, -0.1f);
+	D3DXMatrixTranslation(&topTrans, pos.x-0.6, pos.y, pos.z);
 	D3DXMatrixIdentity(&topRotation);
 
 	rotationSpeed = 2.0f;
 	rotY = 0.0f;
+
+	renderData.worldMat = scale * pointTranslate * rotation * translate;
+	topSupply->worldMat = scale * topPointTrans * topRotation * topTrans;
 }
 
 Supply::~Supply()

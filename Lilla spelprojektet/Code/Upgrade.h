@@ -7,7 +7,7 @@ class Upgrade : public Structure
 {
 public:
 	Upgrade();
-	Upgrade(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, int upgradeID);
+	Upgrade(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, int upgradeID, bool fakeBuilding);
 	virtual ~Upgrade();
 
 	virtual int update(float dt);

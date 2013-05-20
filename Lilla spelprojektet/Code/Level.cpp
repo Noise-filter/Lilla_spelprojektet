@@ -62,7 +62,7 @@ void Level::constructNeutrals()
 			if(counter == 4)
 			{
 				pos = Vec3((float)i*quadSize + (quadSize/2),0,(float)j*quadSize + (quadSize/2));
-				neutralStructures.push_back(new Structure(pos,1,0,100,0));
+				neutralStructures.push_back(new Structure(pos,1,0,100,0,false));
 			}
 		}
 	}
@@ -418,6 +418,15 @@ bool Level::isLocationBuildable(int xPos, int yPos)
 	}
 }
 
+bool Level::isEmpty(int xPos, int yPos)
+{
+	if(structures[xPos][yPos])
+	{
+		return false;
+	}
+	return true;
+}
+
 bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 {
 	int xPos = (int)(mouseClickPos.x/quadSize);
@@ -427,7 +436,7 @@ bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 	{
 		if(selectedStructure == BUILDABLE_MAINBUILDING && structures[xPos][yPos] == NULL && isLocationBuildable(xPos, yPos))
 		{
-			structures[xPos][yPos] = new Headquarter(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 50, 0);
+			structures[xPos][yPos] = new Headquarter(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 50, 0,false);
 			return true;
 		}
 		else if(structures[xPos][yPos] == NULL && isAdjecent(xPos,yPos) && isLocationBuildable(xPos, yPos))
@@ -436,31 +445,31 @@ bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 			switch(selectedStructure)
 			{
 				case BUILDABLE_TOWER:
-					structures[xPos][yPos] = new Tower(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWERBASE,0,100,0,20, 1, 25, 100);
+					structures[xPos][yPos] = new Tower(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWERBASE,2,100,0,20, 1, 25, 100,false);
 					for(int i = 0; i < (int)this->upgradesInUse.size();i++)
 					{
 						dynamic_cast<Tower*>(structures[xPos][yPos])->giveUpgrade(upgradesInUse[i]);
 					}
 					break;
 				case BUILDABLE_SUPPLY:
-					structures[xPos][yPos] = new Supply(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_SUPPLYBASE,0,100,0);
+					structures[xPos][yPos] = new Supply(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_SUPPLYBASE,2,100,0,false);
 					this->nrOfSupplyStructures++;
 					break;
 				case BUILDABLE_UPGRADE_OFFENSE:
 					structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
-						ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_OFFENSE);
+						ENTITY_SUPPLYBASE,2,100,0,BUILDABLE_UPGRADE_OFFENSE,false);
 					upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_OFFENSE)-3]);
 					builtUpgrade = true;
 					break;
 				case BUILDABLE_UPGRADE_DEFENSE:
 					structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
-						ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_DEFENSE);
+						ENTITY_SUPPLYBASE,2,100,0,BUILDABLE_UPGRADE_DEFENSE,false);
 					upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_DEFENSE)-3]);
 					builtUpgrade = true;
 					break;
 				case BUILDABLE_UPGRADE_RES:
 					structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
-						ENTITY_SUPPLYBASE,0,100,0,BUILDABLE_UPGRADE_RES);
+						ENTITY_SUPPLYBASE,2,100,0,BUILDABLE_UPGRADE_RES,false);
 					this->extraResPerEnemy += 2;
 					break;
 				cout << "a structure has been built on the location X:"<< xPos << " Y:" << yPos << endl;
@@ -602,6 +611,11 @@ Node** Level::getNodes()
 int Level::getMapSize()
 {
 	return mapSize;
+}
+
+int Level::getQuadSize()
+{
+	return quadSize;
 }
 
 void Level::getHPBarInfo(vector<HPBarInfo>& hpBars)

@@ -40,6 +40,9 @@ private:
 	float maxResCD;
 	float currentResCD;
 
+	Vec3 mouseWorldPos;
+	Structure* selectedStructureRenderData;
+
 	Statistics* endStats;
 };
 

@@ -14,7 +14,6 @@ using namespace std;
 
 class Level
 {
-
 public:
 	Level(void);
 	~Level(void);
@@ -30,12 +29,14 @@ public:
 	Structure*** getStructures();
 	Node** getNodes();
 	int getMapSize();
+	int getQuadSize();
 	void getHPBarInfo(vector<HPBarInfo>& hpBars);
 
 	bool buildStructure(Vec3 mouseClickPos, int selectedStructure);
 	bool isAdjecent(int xPos, int yPos);
 	bool isLocationBuildable(int xPos, int yPos);
-	
+	bool isEmpty(int xPos, int yPos);
+
 	bool loadLevel(string fileName);
 
 private:

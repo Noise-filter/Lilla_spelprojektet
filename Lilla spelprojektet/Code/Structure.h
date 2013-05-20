@@ -8,7 +8,7 @@ class Structure : public Entity
 {
 public:
 	Structure();
-	Structure(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID);
+	Structure(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, bool fakeBuilding);
 	virtual ~Structure();
 
 	virtual int update(float dt);
@@ -21,8 +21,8 @@ public:
 	*/
 
 
-private:
-
+protected:
+	bool fake;
 
 };
 
