@@ -13,6 +13,7 @@ GameLogic::GameLogic(void)
 
 	mouseWorldPos = Vec3(0, 0, 0);
 	selectedStructureRenderData = new Headquarter();
+
 	endStats = Statistics::Getinstance();
 
 	endStats->totalSupply += 40000;
