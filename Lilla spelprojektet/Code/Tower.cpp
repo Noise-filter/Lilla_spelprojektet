@@ -214,8 +214,7 @@ bool Tower::rotateTop()
 	Vec3 pos = getPosition();
 	Vec3 targetPos = target->getPosition();
 
-	float angle = atan2(targetPos.x - pos.x, targetPos.z - pos.z) * (float)(180.0 / D3DX_PI);
-	float rotation = (float)angle * 0.0174532925f;
+	float rotation = atan2(targetPos.x - pos.x, targetPos.z - pos.z);
 	rotation += PI/2;
 
 	if(rotY - rotation > PI)
