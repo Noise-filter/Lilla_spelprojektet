@@ -17,6 +17,8 @@ public:
 
 	int update(float dt);
 
+	void setTextureID(int ID);
+
 	void aquireTarget(vector<Enemy*>* enemies);
 	void giveUpgrade(UpgradeStats &stats);
 	void removeUpgrade(UpgradeStats &stats);

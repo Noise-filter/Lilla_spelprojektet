@@ -12,6 +12,8 @@ public:
 
 	virtual int update(float dt);
 	
+	void setTextureID(int ID);
+
 	vector<RenderData*> getRenderData();
 
 private:

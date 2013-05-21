@@ -17,8 +17,8 @@ GameObject::~GameObject()
 	SAFE_RELEASE(this->pVertexBuffer);
 	SAFE_RELEASE(this->pIndexBuffer);
 	SAFE_RELEASE(this->pInstanceBuffer);
-	//SAFE_RELEASE(this->texArray);
-	//SAFE_RELEASE(this->glowArray);
+	SAFE_RELEASE(this->texArray);
+	SAFE_RELEASE(this->glowArray);
 }
 
 
@@ -120,7 +120,7 @@ void GameObject::mUpdate(ID3D11DeviceContext *dc , std::vector<HPBarInfo>& data)
 	}
 	this->iNrOfinstances = data.size();
 
-	mUnmap(dc, this->pVertexBuffer);
+	mUnmap(dc, this->pInstanceBuffer);
 }
 void GameObject::mUpdate(ID3D11DeviceContext *dc, GUI_Panel* data, int nrOfInstances)
 {
@@ -135,7 +135,7 @@ void GameObject::mUpdate(ID3D11DeviceContext *dc, GUI_Panel* data, int nrOfInsta
 	}
 	this->iNrOfinstances = nrOfInstances;
 
-	mUnmap(dc, this->pVertexBuffer);
+	mUnmap(dc, this->pInstanceBuffer);
 }
 
 //////////////////////////////////////////

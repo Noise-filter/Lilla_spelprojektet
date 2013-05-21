@@ -106,7 +106,7 @@ bool GameLogic::canAfford()
 				break;
 			}
 		
-		cout << "Cant afford structure" << endl; 
+		//cout << "Cant afford structure" << endl; 
 		return false;
 }
 void GameLogic::structureBuilt()
@@ -155,7 +155,7 @@ int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX v
 	{
 		endStats->totalTime += dt;
 		switch(mState->btnState)
-		{	
+		{
 			case VK_LBUTTON:
 			
 			if(canAfford())
@@ -235,7 +235,6 @@ vector<vector<RenderData*>>& GameLogic::getRenderData()
 	{
 		if(level->isEmpty(xPos, yPos))
 		{
-
 			if(canAfford() && level->isLocationBuildable(xPos, yPos))
 			{
 				if(selectedStructure != BUILDABLE_MAINBUILDING)
@@ -251,16 +250,28 @@ vector<vector<RenderData*>>& GameLogic::getRenderData()
 				}
 			}
 
-			SAFE_DELETE(selectedStructureRenderData);
+			bool update = true;
+			if(selectedStructure == oldSelectedStructure && (xPos == (int)(oldMouseWorldPos.x/quadSize) && yPos == (int)(oldMouseWorldPos.z/quadSize)))
+			{
+					update = false;
+			}
 
-			if(selectedStructure == BUILDABLE_MAINBUILDING)
-				selectedStructureRenderData = new Headquarter(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, texture, 500, 0, true);
-			else if(selectedStructure == BUILDABLE_UPGRADE_OFFENSE || selectedStructure == BUILDABLE_UPGRADE_DEFENSE || selectedStructure == BUILDABLE_UPGRADE_RES)
-				selectedStructureRenderData = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), selectedStructure,selectedStructure-BUILDABLE_UPGRADE_OFFENSE,100,0,BUILDABLE_UPGRADE_OFFENSE, true);
+			selectedStructureRenderData->setTextureID(texture);
+
+			if(update)
+			{
+				SAFE_DELETE(selectedStructureRenderData);
+
+				if(selectedStructure == BUILDABLE_MAINBUILDING)
+					selectedStructureRenderData = new Headquarter(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, texture, 500, 0, true);
+				else if(selectedStructure == BUILDABLE_UPGRADE_OFFENSE || selectedStructure == BUILDABLE_UPGRADE_DEFENSE || selectedStructure == BUILDABLE_UPGRADE_RES)
+					selectedStructureRenderData = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), selectedStructure,selectedStructure-BUILDABLE_UPGRADE_OFFENSE,100,0,BUILDABLE_UPGRADE_OFFENSE, true);
+			}
 
 			if(selectedStructure == BUILDABLE_SUPPLY)
 			{
-				selectedStructureRenderData = new Supply(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_SUPPLYBASE,texture,100,0,true);
+				if(update)
+					selectedStructureRenderData = new Supply(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_SUPPLYBASE,texture,100,0,true);
 
 				vector<RenderData*> rD = dynamic_cast<Supply*>(selectedStructureRenderData)->getRenderData();
 
@@ -269,7 +280,8 @@ vector<vector<RenderData*>>& GameLogic::getRenderData()
 			}
 			else if(selectedStructure == BUILDABLE_TOWER)
 			{
-				selectedStructureRenderData = new Tower(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWERBASE,texture,100,0,20, 1, 25, 100,true);
+				if(update)
+					selectedStructureRenderData = new Tower(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWERBASE,texture,100,0,20, 1, 25, 100,true);
 
 				vector<RenderData*> rD = dynamic_cast<Tower*>(selectedStructureRenderData)->getRenderData();
 
@@ -282,6 +294,8 @@ vector<vector<RenderData*>>& GameLogic::getRenderData()
 			}
 		}
 	}
+	oldSelectedStructure = selectedStructure;
+	oldMouseWorldPos = mouseWorldPos;
 
 	return rDataList;
 }

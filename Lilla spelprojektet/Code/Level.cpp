@@ -49,20 +49,21 @@ void Level::constructNeutrals()
 			}
 			if(nodes[i+1][j].getColor() == COLOR_GREY)
 			{
-				counter++;		
+				counter++;
 			}
 			if(nodes[i][j+1].getColor() == COLOR_GREY)
 			{
-				counter++;		
+				counter++;
 			}
 			if(nodes[i+1][j+1].getColor() == COLOR_GREY)
 			{
-				counter++;			
+				counter++;
 			}
 			if(counter == 4)
 			{
 				pos = Vec3((float)i*quadSize + (quadSize/2),0,(float)j*quadSize + (quadSize/2));
 				neutralStructures.push_back(new Structure(pos,ENTITY_SPIRALSPHERE,0,100,0,false));
+				neutralStructures.at(neutralStructures.size()-1)->setScale(1.5f);
 			}
 		}
 	}
@@ -99,7 +100,6 @@ bool Level::loadLevel(string fileName)
 	fin.open(fileName);
 	string attribute;
 	int value;
-	int entityFlag;
 
 	if(fin.fail() == true)
 	{
@@ -225,7 +225,7 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 					{
 						if(dynamic_cast<Upgrade*>(structures[i][j])->getUpgradeID() == BUILDABLE_UPGRADE_RES)
 						{
-							this->extraResPerEnemy -= 2;
+							this->extraResPerEnemy -= 1;
 						}
 						else
 						{
@@ -471,7 +471,7 @@ bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 				case BUILDABLE_UPGRADE_RES:
 					structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
 						ENTITY_UPGRADE_RES,2,100,0,BUILDABLE_UPGRADE_RES,false);
-					this->extraResPerEnemy += 2;
+					this->extraResPerEnemy += 1;
 					break;
 			}
 			cout << "a structure has been built on the location X:"<< xPos << " Y:" << yPos << endl;

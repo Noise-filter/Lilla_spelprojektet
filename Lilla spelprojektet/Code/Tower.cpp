@@ -48,6 +48,12 @@ Tower::Tower(Vec3 pos, int meshID, int textureID, float hp, int lightID, float d
 	topTower->worldMat = topScale * topPointTrans * topRotation * topTrans;
 }
 
+void Tower::setTextureID(int ID)
+{
+	renderData.textureID = ID;
+	topTower->textureID = ID;
+}
+
 void Tower::giveUpgrade(UpgradeStats &stats)
 {
 	this->damage += stats.dmg;
