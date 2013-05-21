@@ -52,6 +52,7 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 
 	camera->LookAt(Vec3(45,45,45), Vec3(35, 0, 45), Vec3(-1, 0, 0));
 	camera->SetLens((float)D3DX_PI * 0.45f, (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
+	camera->UpdateViewMatrix();
 
 	gameState = STATE_MENU;
 
@@ -113,7 +114,7 @@ void Game::render()
 		}
 		engine->setHPBars(hp);
 
-		engine->render(camera->ViewsProj(), temp, tempSize);
+		engine->render(camera->View(), camera->Proj(), temp, tempSize, camera->GetPosition());
 	}
 	else if(gameState == STATE_MENU || gameState == STATE_SETTINGS || gameState == STATE_NEWGAME || gameState == STATE_PAUSED)
 	{
@@ -225,10 +226,10 @@ void Game::handleInput(float dt)
 		}
 	}
 
-	if(input->checkKeyDown(0x20))	//Space
+	//if(input->checkKeyDown(0x20))	//Space
 	{
 		soundSystem->setPaused(pausedMusic);
-		pausedMusic = !pausedMusic;
+		//pausedMusic = !pausedMusic;
 	}
 
 	if(gameState == STATE_PLAYING)

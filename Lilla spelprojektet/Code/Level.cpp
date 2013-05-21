@@ -147,7 +147,7 @@ bool Level::loadLevel(string fileName)
 					
 			//lägg till kollar för texturer
 
-			nodes[i][j] = Node(Vec3((float)i*quadSize,0,(float)j*quadSize),entityFlag,0,0,0,value);
+			nodes[i][j] = Node(Vec3((float)i*quadSize,0,(float)j*quadSize),entityFlag,0,0,LIGHT_POINT,value);
 			cout << value << " , ";
 		}
 		fin.ignore();
@@ -162,7 +162,7 @@ bool Level::loadLevel(string fileName)
 	constructNeutrals();
 
 	//skapa planet
-	plane = new Entity(Vec3((mapSize-1) * quadSize * 0.5f, 0, (mapSize-1) * quadSize * 0.5f), ENTITY_PLANE, 0, 0, 0);
+	plane = new Entity(Vec3((mapSize-1) * quadSize * 0.5f, 0, (mapSize-1) * quadSize * 0.5f), ENTITY_PLANE, 0, 0, LIGHT_NONE);
 	plane->setScale((float)(mapSize-1)*quadSize);
 
 	return true;

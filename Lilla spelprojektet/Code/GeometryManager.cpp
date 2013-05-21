@@ -207,7 +207,7 @@ void GeometryManager::initMeshes(ID3D11Device *device, ID3D11DeviceContext *dc, 
 
 	std::vector<string> nullVec;
 	nullVec.resize(0);
-	fileName = "Meshar/Sphere.obj";
+	fileName = "Meshar/Spheretri.obj";
 	importMesh(device, dc, this->vLightTypes.at(LIGHT_POINT), fileName, bufferInit, instanceInit, 2000, this->pBufferObj,  nullVec , nullVec);
 
 	
@@ -255,7 +255,6 @@ void GeometryManager::applyEntityBuffer(ID3D11DeviceContext *dc, int ID, D3D_PRI
 	UINT strides[2] = {sizeof(MESH_PNUV) , sizeof(INSTANCEDATA)};
 	this->vEntities.at(ID)->mApply(dc, topology, strides);
 }
-
 void GeometryManager::applyLightBuffer(ID3D11DeviceContext *dc, D3D_PRIMITIVE_TOPOLOGY topology)
 {
 	UINT strides[2] = {sizeof(MESH_PNUV) , sizeof(POINTLIGHTINSTANCE)};
@@ -317,6 +316,16 @@ int GeometryManager::getNrOfEntities()
 {
 	return this->vEntities.size();
 }
+int GeometryManager::getNrOfLightVertices(int ID)
+{
+	return this->vLightTypes[ID]->mGetNrOfVertices();
+}
+
+int GeometryManager::getNrOfLightInstances(int ID)
+{
+	return this->vLightTypes[ID]->mGetNrOfInstances();
+}
+
 int GeometryManager::getNrOfParticles()
 {
 	return this->Particles->mGetNrOfVertices();
