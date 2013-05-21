@@ -43,6 +43,7 @@ int GUI::update(MouseState *mouse, int& state, bool& muted)
 {
 	if(GUI_STATE != state)
 	{
+		clear();
 		createBtns(state);
 		createPanels(state);
 		GUI_STATE = state;
@@ -64,9 +65,9 @@ int GUI::update(MouseState *mouse, int& state, bool& muted)
 void GUI::createBtns(int state)
 {
 
-	//if(this->menuBtns != NULL)
+	//if(this->nrOfBtns != 0 || this->nrOfBoxes != 0)
 	{
-		clear();
+		//clear();
 	}
 	wchar_t* level = (wchar_t*)levelList[currentLevel].c_str();
 	wchar_t* difficulty = (wchar_t*)difficultyList[currentDifficulty].c_str();
@@ -112,7 +113,19 @@ void GUI::createBtns(int state)
 		this->menuBtns[4] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 75), STARTGAME);
 		this->menuBtns[5] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 120), MAIN_MENU);
 	}
-	
+	else if(state == STATE_WIN)
+	{
+		this->nrOfBoxes = 1;
+		this->textBoxes = new Text[nrOfBoxes];
+		this->textBoxes[0] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 100), L"You Won!", 62, 0x800000ff);
+		
+	}
+	else if(state == STATE_LOSE)
+	{
+		this->nrOfBoxes = 1;
+		this->textBoxes = new Text[nrOfBoxes];
+		this->textBoxes[0] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 100), L"You Lost", 62, 0x800000ff);
+	}
 }
 
 int GUI::getNrOfBtns()const

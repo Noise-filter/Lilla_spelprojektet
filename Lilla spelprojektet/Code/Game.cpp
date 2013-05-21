@@ -98,7 +98,7 @@ void Game::render()
 		engine->setRenderData(gameLogic->getRenderData());
 
 		engine->setRenderData(pSystem->getVertexData());
-		if(nrOfPanels != 0)
+		//if(nrOfPanels != 0)
 		{
 			engine->setGUI(panels, nrOfPanels);
 		}
@@ -124,6 +124,7 @@ void Game::render()
 	}
 	else if(gameState == STATE_MENU || gameState == STATE_SETTINGS || gameState == STATE_NEWGAME || gameState == STATE_PAUSED)
 	{
+		engine->setGUI(panels, nrOfPanels);
 		engine->renderGui(temp, tempSize);
 	}
 	delete[] temp;
@@ -150,7 +151,7 @@ int Game::update(float dt)
 
 		
 	}
-	 if(gameState == STATE_WIN) 
+	if(gameState == STATE_WIN) 
 	{
 		cout << "YOU WON" << endl;
 	}

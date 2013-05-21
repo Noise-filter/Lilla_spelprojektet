@@ -5,8 +5,8 @@ GameLogic::GameLogic(void)
 	this->level = new Level();
 	this->eHandler = new EnemyHandler();
 	this->selectedStructure = 0;
-	this->availableSupply = 40000;
-	this->resource = 2000;
+	this->availableSupply = 40;
+	this->resource = 20;
 
 	this->maxResCD = 0;
 	this->resPerEnemy = 5;
@@ -16,8 +16,8 @@ GameLogic::GameLogic(void)
 
 	endStats = Statistics::Getinstance();
 
-	endStats->totalSupply += 40000;
-	endStats->totalRes += 2000;
+	endStats->totalSupply += 40;
+	endStats->totalRes += 20;
 }
 
 GameLogic::~GameLogic(void)
@@ -252,7 +252,7 @@ vector<vector<RenderData*>>& GameLogic::getRenderData()
 			SAFE_DELETE(selectedStructureRenderData);
 
 			if(selectedStructure == BUILDABLE_MAINBUILDING)
-				selectedStructureRenderData = new Headquarter(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, texture, 50, 0, true);
+				selectedStructureRenderData = new Headquarter(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, texture, 500, 0, true);
 			else if(selectedStructure == BUILDABLE_UPGRADE_OFFENSE || selectedStructure == BUILDABLE_UPGRADE_DEFENSE || selectedStructure == BUILDABLE_UPGRADE_RES)
 				selectedStructureRenderData = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_SUPPLYBASE,texture,100,0,BUILDABLE_UPGRADE_OFFENSE, true);
 
