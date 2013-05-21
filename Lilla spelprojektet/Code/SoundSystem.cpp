@@ -95,7 +95,7 @@ bool SoundSystem::init()
 	}
 
 	//init system
-	result = system->init(5, FMOD_INIT_NORMAL, 0);
+	result = system->init(10, FMOD_INIT_NORMAL, 0);
 	if(result == FMOD_ERR_OUTPUT_CREATEBUFFER)
 	{
 		result = system->setSpeakerMode(FMOD_SPEAKERMODE_STEREO);
