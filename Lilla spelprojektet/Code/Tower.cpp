@@ -87,6 +87,8 @@ int Tower::update(float dt)
 	if(target != NULL && target->isDead())
 		target = NULL;
 
+		
+
 	//Uppdatera projektilerna
 	for(int i = 0; i < (int)projectiles.size(); i++)
 	{

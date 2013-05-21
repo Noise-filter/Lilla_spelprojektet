@@ -9,6 +9,7 @@ Entity::Entity()
 
 	maxHp = hp = 0;
 	dead = false;
+	
 }
 
 Entity::Entity(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID)
@@ -29,6 +30,8 @@ Entity::Entity(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID
 	D3DXMatrixIdentity(&rotation);
 	D3DXMatrixTranslation(&translate, pos.x-0.3f, pos.y, pos.z);
 	renderData.worldMat = scale * pointTranslate * rotation * translate;
+
+	death = SoundSystem::Getinstance()->createSound("explosion_test.mp3");
 }
 
 Entity::~Entity()
@@ -39,6 +42,7 @@ int Entity::update(float dt)
 	if(hp <= 0)
 	{
 		dead = true;
+		SoundSystem::Getinstance()->playSound(death);
 		return 0;
 	}
 
