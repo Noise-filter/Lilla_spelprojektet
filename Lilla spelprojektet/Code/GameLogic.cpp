@@ -20,6 +20,7 @@ GameLogic::~GameLogic(void)
 {
 	SAFE_DELETE(this->level);
 	SAFE_DELETE(this->eHandler);
+	endStats->shutdown();
 }
 
 void GameLogic::incrementSelectedStructure(int increment)
