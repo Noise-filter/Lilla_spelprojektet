@@ -12,7 +12,7 @@ class Tower : public Structure
 {
 public:
 	Tower();
-	Tower(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, float damage, float attackSpeed, float range, float projectileSpeed);
+	Tower(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, float damage, float attackSpeed, float range, float projectileSpeed, bool fakeBuilding);
 	~Tower();
 
 	int update(float dt);
@@ -20,7 +20,7 @@ public:
 	void aquireTarget(vector<Enemy*>* enemies);
 	void giveUpgrade(UpgradeStats &stats);
 	void removeUpgrade(UpgradeStats &stats);
-	bool rotateTop();
+	bool rotateTop(float dt);
 	
 	vector<RenderData*> getRenderData();
 

@@ -61,4 +61,8 @@ private:
 	lua_State* pathScript;
 	lua_State* targetScript;
 	lua_State* spawnScript;
+
+	//Testing
+	vector<Waypoint>*** saved;
+
 };

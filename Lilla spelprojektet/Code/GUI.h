@@ -2,8 +2,8 @@
 #include "D3DMathUtility.h"
 #include "WindowsUtility.h"
 #include <string>
-#include <sstream>
 #include <fstream>
+#include <sstream>
 
 using namespace std;
 
@@ -69,6 +69,7 @@ public:
 	GUI_Panel* getPanels()const;
 	int getNrOfPanels()const;
 	string getCurrentLevel()const;
+	int getCurrentDiff()const;
 	
 
 private:
@@ -81,6 +82,9 @@ private:
 	void createPanels(int state);
 	void createLevelList();
 	void changeText(D3DXVECTOR2 pos, BUTTONTYPE type);
+	void initDifficulty();
+	wstring convertStrToWstr(string text);
+	string convertWstrToStr(wstring text);
 
 	Button* menuBtns;
 	int nrOfBtns;
@@ -98,5 +102,7 @@ private:
 	int nrOfLevels;
 	int currentLevel;
 
-
+	wstring* difficultyList;
+	int nrOfDifficultys;
+	int currentDifficulty;
 };

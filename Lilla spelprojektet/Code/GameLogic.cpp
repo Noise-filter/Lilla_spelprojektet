@@ -4,24 +4,48 @@ GameLogic::GameLogic(void)
 {
 	this->level = new Level();
 	this->eHandler = new EnemyHandler();
-	this->selectedStructure = 2;
-	this->availableSupply = 40000;
-	this->resource = 2000;
+	this->selectedStructure = 0;
+
+	this->availableSupply = 40;
+	this->resource = 20;
+
 	this->maxResCD = 0;
 	this->resPerEnemy = 5;
+
+	mouseWorldPos = Vec3(0, 0, 0);
+	selectedStructureRenderData = new Headquarter();
+
+	endStats = Statistics::Getinstance();
+
+	endStats->totalSupply += 40;
+	endStats->totalRes += 20;
 }
 
 GameLogic::~GameLogic(void)
 {
 	SAFE_DELETE(this->level);
 	SAFE_DELETE(this->eHandler);
+	endStats->shutdown();
+	SAFE_DELETE(selectedStructureRenderData);
 }
 
 void GameLogic::incrementSelectedStructure(int increment)
 {
-	if(selectedStructure >= 0 && selectedStructure <= BUILDABLE_UPGRADE_RES)
+	if(selectedStructure >= 1 && selectedStructure <= BUILDABLE_UPGRADE_RES)
 	{
 		this->selectedStructure += increment;
+		printSelected();
+	}
+	if(selectedStructure < 1)
+		selectedStructure = 1;
+	if(selectedStructure > 5)
+		selectedStructure = 5;
+}
+void GameLogic::setSelectedStructure(int select)
+{
+	if(selectedStructure >= 1 && selectedStructure <= BUILDABLE_UPGRADE_RES)
+	{
+		this->selectedStructure = select;
 		printSelected();
 	}
 }
@@ -35,7 +59,9 @@ void GameLogic::giveSupply(float dt)
 	currentResCD += dt;
 	if(currentResCD > maxResCD)
 	{
-		this->availableSupply += resPerTick + level->getNrOfSupplyStructures()/2;
+		int res = resPerTick + level->getNrOfSupplyStructures()/2;
+		this->availableSupply += res;
+		endStats->totalSupply += res;
 		cout << "gained resources: " << resPerTick + level->getNrOfSupplyStructures()/2 << " you now have: " << availableSupply << endl;
 		currentResCD = 0;
 	}
@@ -45,6 +71,9 @@ bool GameLogic::canAfford()
 {
 		switch(this->selectedStructure)
 			{
+			case BUILDABLE_MAINBUILDING:
+				return true;
+				break;
 			case BUILDABLE_TOWER:
 				if(availableSupply >= COST_TOWER)
 				{
@@ -106,15 +135,17 @@ void GameLogic::structureBuilt()
 
 int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX view, D3DXMATRIX proj, Vec3 cameraPos)
 {
+	mouseWorldPos = getMouseWorldPos(mState, view, proj, cameraPos);
 	if(gameState == STATE_GAMESTART)
 	{
 		if(mState->btnState == VK_LBUTTON)
 		{
 			//placera ut main byggnad
-			if(level->buildStructure(getMouseWorldPos(mState, view, proj, cameraPos), BUILDABLE_MAINBUILDING))
+			if(level->buildStructure(mouseWorldPos, BUILDABLE_MAINBUILDING))
 			{
 				gameState = STATE_PLAYING;
 				cout << "mainstruct buildt" << endl;
+				selectedStructure = BUILDABLE_TOWER;
 			}
 		}
 	}
@@ -122,13 +153,14 @@ int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX v
 	int ret = level->update(dt, eHandler->getEnemies()); // returnera 4 om vinst 5 om förlust
 	if(gameState == STATE_PLAYING)
 	{
+		endStats->totalTime += dt;
 		switch(mState->btnState)
 		{	
 			case VK_LBUTTON:
 			
 			if(canAfford())
 			{
-				if(level->buildStructure(getMouseWorldPos(mState, view, proj, cameraPos), this->selectedStructure))
+				if(level->buildStructure(mouseWorldPos, this->selectedStructure))
 				{
 					structureBuilt();
 				}
@@ -149,6 +181,7 @@ int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX v
 		}
 
 		int nrOfKilledEnemies = eHandler->update(dt);
+		endStats->totalEnemiesKilled += nrOfKilledEnemies;
 		if(nrOfKilledEnemies > 0)
 		{
 			this->resource += resPerEnemy* level->getExtraResPerEnemy()  + resPerEnemy * nrOfKilledEnemies;
@@ -171,8 +204,7 @@ bool GameLogic::init(int quadSize, GameSettings &settings, string filename, int 
 
 	this->level->init(quadSize, difficulty);
 	this->level->loadLevel(filename);
-
-
+	this->endStats->init();
 	this->eHandler->init(level->getStructures(), level->getNodes(), level->getMapSize(), quadSize,settings.enemiesPerMin,settings.difficulty);
 
 	vector<RenderData*> renderData;
@@ -192,6 +224,64 @@ vector<vector<RenderData*>>& GameLogic::getRenderData()
 
 	level->getRenderData(rDataList);
 	eHandler->getRenderData(rDataList);
+
+	//Skapar byggnaden som kommer att renderas på mus positionen på spel planen
+	int texture = 1;
+	int quadSize = level->getQuadSize();
+	int mapSize = level->getMapSize();
+	int xPos = (int)(mouseWorldPos.x/quadSize);
+	int yPos = (int)(mouseWorldPos.z/quadSize);
+	if(xPos >= 0 && xPos < mapSize-1 && yPos >= 0 && yPos < mapSize-1)
+	{
+		if(level->isEmpty(xPos, yPos))
+		{
+
+			if(canAfford() && level->isLocationBuildable(xPos, yPos))
+			{
+				if(selectedStructure != BUILDABLE_MAINBUILDING)
+				{
+					if(level->isAdjecent(xPos, yPos))
+					{
+						texture = 0; //Betyder att man kan bygga den.
+					}
+				}
+				else
+				{
+					texture = 0; //Betyder att man kan bygga den.
+				}
+			}
+
+			SAFE_DELETE(selectedStructureRenderData);
+
+			if(selectedStructure == BUILDABLE_MAINBUILDING)
+				selectedStructureRenderData = new Headquarter(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, texture, 500, 0, true);
+			else if(selectedStructure == BUILDABLE_UPGRADE_OFFENSE || selectedStructure == BUILDABLE_UPGRADE_DEFENSE || selectedStructure == BUILDABLE_UPGRADE_RES)
+				selectedStructureRenderData = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), selectedStructure,selectedStructure-BUILDABLE_UPGRADE_OFFENSE,100,0,BUILDABLE_UPGRADE_OFFENSE, true);
+
+			if(selectedStructure == BUILDABLE_SUPPLY)
+			{
+				selectedStructureRenderData = new Supply(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_SUPPLYBASE,texture,100,0,true);
+
+				vector<RenderData*> rD = dynamic_cast<Supply*>(selectedStructureRenderData)->getRenderData();
+
+				for(int k = 0; k < (int)rD.size(); k++)
+					rDataList.at(rD.at(k)->meshID).push_back(rD.at(k));
+			}
+			else if(selectedStructure == BUILDABLE_TOWER)
+			{
+				selectedStructureRenderData = new Tower(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWERBASE,texture,100,0,20, 1, 25, 100,true);
+
+				vector<RenderData*> rD = dynamic_cast<Tower*>(selectedStructureRenderData)->getRenderData();
+
+				for(int k = 0; k < (int)rD.size(); k++)
+					rDataList.at(rD.at(k)->meshID).push_back(rD.at(k));
+			}
+			else
+			{
+				rDataList.at(selectedStructureRenderData->getRenderData().meshID).push_back(&selectedStructureRenderData->getRenderData());
+			}
+		}
+	}
 
 	return rDataList;
 }

@@ -7,7 +7,7 @@ class Supply : public Structure
 {
 public:
 	Supply();
-	Supply(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID);
+	Supply(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID, bool fakeBuilding);
 	virtual ~Supply();
 
 	virtual int update(float dt);

@@ -14,8 +14,8 @@ Tower::Tower() : Structure()
 	topTower = new RenderData(ENTITY_TOWERTOP, 0, world, 0);
 }
 
-Tower::Tower(Vec3 pos, int meshID, int textureID, float hp, int lightID, float damage, float attackSpeed, float range, float projectileSpeed)
-	: Structure(pos, meshID, textureID, hp, lightID)
+Tower::Tower(Vec3 pos, int meshID, int textureID, float hp, int lightID, float damage, float attackSpeed, float range, float projectileSpeed, bool fakeBuilding)
+	: Structure(pos, meshID, textureID, hp, lightID, fakeBuilding)
 {
 	target = NULL;
 	this->damage = damage;
@@ -27,23 +27,25 @@ Tower::Tower(Vec3 pos, int meshID, int textureID, float hp, int lightID, float d
 	this->level = 1;
 	this->experience = 0;
 
-	sound = SoundSystem::Getinstance()->createSound("plop.mp3");
+	sound = SoundSystem::Getinstance()->createSound("Swoosh_test.mp3");
 
-	topTower = new RenderData(ENTITY_TOWERTOP, 0, this->renderData.worldMat, 0);
+	topTower = new RenderData(ENTITY_TOWERTOP, textureID, this->renderData.worldMat, 0);
 
 	//Top part
-	D3DXMatrixTranslation(&topPointTrans, 1.5f, 0, 0);
-	D3DXMatrixTranslation(&topTrans, pos.x+1, pos.y, pos.z);
+	D3DXMatrixTranslation(&topPointTrans, 2, 0, 0);
+	D3DXMatrixTranslation(&topTrans, pos.x-0.2, pos.y, pos.z);
 	D3DXMatrixIdentity(&topRotation);
-	D3DXMatrixTranslation(&translate, pos.x+3.5f, pos.y, pos.z);
+	D3DXMatrixTranslation(&translate, pos.x+2.1f, pos.y, pos.z);
 	//scaleFactor = 1;
 	D3DXMatrixScaling(&scale, scaleFactor, scaleFactor, scaleFactor);
 	topScale = scale;
-	//topPointTrans = scale * topPointTrans;
 
-	rotationSpeed = 0.02f;
+	rotationSpeed = 7.0f;
 	rotY = 0;
 	oldRotY = 0;
+	
+	renderData.worldMat = scale * pointTranslate * rotation * translate;
+	topTower->worldMat = topScale * topPointTrans * topRotation * topTrans;
 }
 
 void Tower::giveUpgrade(UpgradeStats &stats)
@@ -85,6 +87,8 @@ int Tower::update(float dt)
 	if(target != NULL && target->isDead())
 		target = NULL;
 
+		
+
 	//Uppdatera projektilerna
 	for(int i = 0; i < (int)projectiles.size(); i++)
 	{
@@ -111,7 +115,7 @@ int Tower::update(float dt)
 	cooldown -= dt;
 	if(target != NULL)
 	{
-		if(rotateTop())
+		if(rotateTop(dt))
 		{
 			if(cooldown <= 0)
 			{
@@ -208,24 +212,23 @@ vector<RenderData*> Tower::getRenderData()
 }
 
 //Rotates towards target
-bool Tower::rotateTop()
+bool Tower::rotateTop(float dt)
 {
 	bool done = false;
 	Vec3 pos = getPosition();
 	Vec3 targetPos = target->getPosition();
 
-	float angle = atan2(targetPos.x - pos.x, targetPos.z - pos.z) * (float)(180.0 / D3DX_PI);
-	float rotation = (float)angle * 0.0174532925f;
+	float rotation = atan2(targetPos.x - pos.x, targetPos.z - pos.z);
 	rotation += PI/2;
 
 	if(rotY - rotation > PI)
-		rotY += rotationSpeed;
+		rotY += rotationSpeed * dt;
 	else if(rotY - rotation < -PI)
-		rotY -= rotationSpeed;
+		rotY -= rotationSpeed * dt;
 	else if(rotY < rotation)
-		rotY += rotationSpeed;
-	else
-		rotY -= rotationSpeed;
+		rotY += rotationSpeed * dt;
+	else if(rotY > rotation)
+		rotY -= rotationSpeed * dt;
 
 	if(rotY >= PI*2 - PI/2 && oldRotY < PI*2 - PI/2)
 		rotY -= PI*2;
@@ -233,7 +236,7 @@ bool Tower::rotateTop()
 	else if(rotY <= 0 - PI/2 && oldRotY > 0 - PI/2)
 		rotY += PI*2;
 
-	if(abs(rotation - rotY) < 0.2)
+	if(abs(rotation - rotY) < rotationSpeed * 1.4 * dt)
 	{
 		rotY = rotation;
 		done = true;

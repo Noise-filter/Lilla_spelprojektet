@@ -7,6 +7,7 @@ AI::AI(void)
 	pathScript = NULL;
 	targetScript = NULL;
 	spawnScript = NULL;
+	saved = NULL;
 }
 
 
@@ -29,6 +30,17 @@ AI::~AI(void)
 	lua_close(pathScript);
 	lua_close(targetScript);
 	lua_close(spawnScript);
+
+	int size = mapSize*mapSize;
+	for(int i = 0; i < size; i++)
+	{
+		for(int j = 0; j < size; j++)
+		{
+			SAFE_DELETE(saved[i][j]);
+		}
+		SAFE_DELETE_ARRAY(saved[i]);
+	}
+	SAFE_DELETE_ARRAY(saved);
 }
 
 bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize, int quadSize, int enemiesPerMin, int difficulty)
@@ -62,17 +74,37 @@ bool AI::init(Structure*** structures, Node** nodes, string* scripts,int mapSize
 	cout << "the following scripts have been initiated:" << endl;
 	cout << scripts[0] << endl << scripts[1] << endl << scripts[2] << endl;
 
+	int size = mapSize*mapSize;
+	saved = new vector<Waypoint>**[size];
+	for(int i = 0; i < size; i++)
+	{
+		saved[i] = new vector<Waypoint>*[size];
+		for(int j = 0; j < size; j++)
+		{
+			saved[i][j] = NULL;
+		}
+	}
+
 	return true;
 }
 
 vector<Waypoint> AI::findPath(Waypoint start, Waypoint goal, int enemyType)
 {
+	int startN, goalN;
 	vector<Waypoint> wayPoints;
+
+	startN = (start.x/quadSize) + ((start.y/quadSize) * mapSize);
+	goalN = goal.x + (goal.y*mapSize);
+
+	if(saved[startN][goalN])
+	{
+		return *saved[startN][goalN];	//Returnar en saved path
+	}
 
 	lua_getglobal(pathScript, "astar");
 
-	lua_pushnumber(pathScript, (start.x/quadSize) + ((start.y/quadSize) * mapSize));
-	lua_pushnumber(pathScript, goal.x + (goal.y*mapSize));
+	lua_pushnumber(pathScript, startN);
+	lua_pushnumber(pathScript, goalN);
 	lua_pushnumber(pathScript, enemyType);
 
 	lua_pcall(pathScript, 3, 2, 0); //kalla på funktionen
@@ -94,6 +126,22 @@ vector<Waypoint> AI::findPath(Waypoint start, Waypoint goal, int enemyType)
 			lua_pop(pathScript, 1);
 		}
 		lua_pop(pathScript, 1);
+	}
+
+	saved[startN][goalN] = new vector<Waypoint>();
+	saved[startN][goalN]->reserve(wayPoints.size());
+	for(int i = 0; i < (int)wayPoints.size(); i++)
+	{
+		saved[startN][goalN]->push_back(wayPoints.at(i));	//Sparar pathen
+	}
+	if(goalN != startN)
+	{
+		saved[goalN][startN] = new vector<Waypoint>();
+		saved[goalN][startN]->reserve(wayPoints.size());
+		for(int i = wayPoints.size()-1; i >= 0; i--)
+		{
+			saved[goalN][startN]->push_back(wayPoints.at(i)); //Sparar pathen åt andra hållet
+		}
 	}
 
 	return wayPoints;
