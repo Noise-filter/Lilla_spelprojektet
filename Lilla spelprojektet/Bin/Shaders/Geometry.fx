@@ -73,23 +73,26 @@ PSOut PSScene(PSIn input)
 {
 	PSOut output = (PSOut)0;
 
-	float3 diffuseAlbedo = textures.Sample( anisoSampler , float3(input.uv.x, input.uv.y, input.textureID)).rgb;
+	float4 diffuseAlbedo = textures.Sample( anisoSampler , float3(input.uv.x, input.uv.y, input.textureID));
 
-	float3 glow = glowMaps.Sample(anisoSampler, float3(input.uv.x, input.uv.y, input.textureID)).rgb;
-	if(((glow.x < 1.0f) && (glow.y < 1.0f)) && (glow.z < 1.0f))
+	float4 glow = glowMaps.Sample(anisoSampler, float3(input.uv.x, input.uv.y, input.textureID));
+	if(((glow.x == 0.0f) && (glow.y == 0.0f)) && (glow.z == 0.0f))
 	{
-		glow = float3(0.0f, 0.0f, 0.0f);
+		glow = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	}
-	else
+	else if(((glow.x == 1.0f) && (glow.y == 1.0f)) && (glow.z == 1.0f))
 	{
 		glow = diffuseAlbedo;
 	}
+	else
+	{
+		glow = diffuseAlbedo * glow;
+	}
 
-	output.diffuseAlbedo = float4(diffuseAlbedo, 1.0f);
-	output.glow = float4(glow, 1.0f);
+	output.diffuseAlbedo = float4(diffuseAlbedo);
+	output.glow = float4(glow);
 	float4 normalW = float4( 0.5f * (normalize(input.normalW).rgb + 1.0f), specularPower);
-	
-	output.diffuseAlbedo = float4(diffuseAlbedo, 1.0f);
+
 	output.normal = normalW;
 	output.light = float4(0.0f, 0.0f , 0.0f, 0.0f);
 

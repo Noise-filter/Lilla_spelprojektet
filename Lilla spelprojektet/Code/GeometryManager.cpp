@@ -192,8 +192,8 @@ void GeometryManager::initMeshes(ID3D11Device *device, ID3D11DeviceContext *dc, 
 
 	fileName = "Meshar/Tower Part 2.obj";
 	importMesh(device, dc, this->vEntities.at(ENTITY_TOWERBASE), fileName, bufferInit, instanceInit, 1000, this->pBufferObj, tex, glow);
-	
-	fileName = "Meshar/Green node.obj";
+
+	fileName = "Meshar/Green Node.obj";
 	importMesh(device, dc, this->vEntities.at(ENTITY_NODE_GREEN), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
 
 	fileName = "Meshar/Enemy (broken node).obj";
@@ -205,6 +205,14 @@ void GeometryManager::initMeshes(ID3D11Device *device, ID3D11DeviceContext *dc, 
 	fileName = "Meshar/Very basic disc (projectile).obj";
 	importMesh(device, dc, this->vEntities.at(ENTITY_PROJECTILE), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
 
+	fileName = "Meshar/Spiral Sphere.obj";
+	importMesh(device, dc, this->vEntities.at(ENTITY_SPIRALSPHERE), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
+	
+	fileName = "Meshar/Upgrade Building.obj";
+	importMesh(device, dc, this->vEntities.at(ENTITY_UPGRADE_OFFENSE), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
+	importMesh(device, dc, this->vEntities.at(ENTITY_UPGRADE_DEFENSE), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
+	importMesh(device, dc, this->vEntities.at(ENTITY_UPGRADE_RES), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
+
 	std::vector<string> nullVec;
 	nullVec.resize(0);
 	fileName = "Meshar/Sphere.obj";
@@ -213,9 +221,7 @@ void GeometryManager::initMeshes(ID3D11Device *device, ID3D11DeviceContext *dc, 
 	
 	//temp buffer init
 	ID3D11ShaderResourceView *nulls = NULL;
-	this->vEntities.at(ENTITY_UPGRADE_OFFENSE)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls);
-	this->vEntities.at(ENTITY_UPGRADE_DEFENSE)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls);
-	this->vEntities.at(ENTITY_UPGRADE_RES)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls);
+	//this->vEntities.at(ENTITY_UPGRADE_OFFENSE)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls);
 
 	ID3D11ShaderResourceView *texTemp = NULL;
 	ID3D11ShaderResourceView *glowTemp = NULL;

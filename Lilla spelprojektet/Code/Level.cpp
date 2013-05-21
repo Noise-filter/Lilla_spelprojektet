@@ -62,7 +62,7 @@ void Level::constructNeutrals()
 			if(counter == 4)
 			{
 				pos = Vec3((float)i*quadSize + (quadSize/2),0,(float)j*quadSize + (quadSize/2));
-				neutralStructures.push_back(new Structure(pos,1,0,100,0,false));
+				neutralStructures.push_back(new Structure(pos,ENTITY_SPIRALSPHERE,0,100,0,false));
 			}
 		}
 	}
@@ -202,7 +202,6 @@ int Level::getExtraResPerEnemy()
 int Level::update(float dt, vector<Enemy*>& enemies)
 {
 	bool buildingDestroyed = false;
-	int numberDead = 0;
 
 	for(int i = 0; i < mapSize-1; i++)
 	{
@@ -241,7 +240,6 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 					SAFE_DELETE(structures[i][j]);
 
 					buildingDestroyed = true;
-					numberDead++;
 				}
 				else
 				{
@@ -301,8 +299,7 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 		sets.initSets(structures, mapSize-1);
 		destroyBuildings();
 	}
-	if(numberDead > 0)
-		cout << numberDead << endl;
+
 	return 1;
 }
 
@@ -439,7 +436,7 @@ bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 	{
 		if(selectedStructure == BUILDABLE_MAINBUILDING && structures[xPos][yPos] == NULL && isLocationBuildable(xPos, yPos))
 		{
-			structures[xPos][yPos] = new Headquarter(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 0, 50000, 0,false);
+			structures[xPos][yPos] = new Headquarter(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 2, 50000, 0,false);
 			return true;
 		}
 		else if(structures[xPos][yPos] == NULL && isAdjecent(xPos,yPos) && isLocationBuildable(xPos, yPos))
@@ -460,19 +457,19 @@ bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 					break;
 				case BUILDABLE_UPGRADE_OFFENSE:
 					structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
-						ENTITY_SUPPLYBASE,2,100,0,BUILDABLE_UPGRADE_OFFENSE,false);
+						ENTITY_UPGRADE_OFFENSE,0,100,0,BUILDABLE_UPGRADE_OFFENSE,false);
 					upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_OFFENSE)-3]);
 					builtUpgrade = true;
 					break;
 				case BUILDABLE_UPGRADE_DEFENSE:
 					structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
-						ENTITY_SUPPLYBASE,2,100,0,BUILDABLE_UPGRADE_DEFENSE,false);
+						ENTITY_UPGRADE_DEFENSE,1,100,0,BUILDABLE_UPGRADE_DEFENSE,false);
 					upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_DEFENSE)-3]);
 					builtUpgrade = true;
 					break;
 				case BUILDABLE_UPGRADE_RES:
 					structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
-						ENTITY_SUPPLYBASE,2,100,0,BUILDABLE_UPGRADE_RES,false);
+						ENTITY_UPGRADE_RES,2,100,0,BUILDABLE_UPGRADE_RES,false);
 					this->extraResPerEnemy += 2;
 					break;
 			}
@@ -501,7 +498,7 @@ void Level::getRenderData(vector<vector<RenderData*>>& rData)
 	
 	for(int i = 0; i < (int)neutralStructures.size(); i++)
 	{
-		rData.at(2).push_back(&neutralStructures.at(i)->getRenderData());
+		rData.at(neutralStructures.at(i)->getRenderData().meshID).push_back(&neutralStructures.at(i)->getRenderData());
 	}
 
 	//Lägg till alla byggnader i renderData
