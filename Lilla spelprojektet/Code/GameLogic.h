@@ -13,7 +13,8 @@ public:
 	bool init(int quadSize, GameSettings &settings, string filename, int difficulty);
 	int update(int &gameState, float dt, MouseState *mState, D3DXMATRIX view, D3DXMATRIX proj, D3DXVECTOR3 cameraPos);
 	void incrementSelectedStructure(int increment);
-	
+	void setSelectedStructure(int select);
+
 	vector<vector<RenderData*>>& getRenderData();
 	vector<HPBarInfo> getHPBarInfo();
 	int getMapSize();
@@ -38,6 +39,9 @@ private:
 	int resPerEnemy;
 	float maxResCD;
 	float currentResCD;
+
+	Vec3 mouseWorldPos;
+	Structure* selectedStructureRenderData;
 
 	Statistics* endStats;
 };

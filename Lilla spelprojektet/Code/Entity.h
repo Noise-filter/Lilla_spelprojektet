@@ -2,6 +2,7 @@
 #define ENTITY_H
 
 #include "D3DMathUtility.h"
+#include "SoundSystem.h"
 
 class Entity
 {
@@ -31,6 +32,8 @@ protected:
 	float hp, maxHp;
 	bool dead;
 	float scaleFactor;
+
+	Sound* death;
 };
 
 #endif

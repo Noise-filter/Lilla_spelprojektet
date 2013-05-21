@@ -51,12 +51,14 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	playlist = soundSystem->createPlaylist("playlist.m3u");
 	menuSound = soundSystem->createStream("SeductressDubstep_Test.mp3");
 	soundSystem->playSound(menuSound);
+	//soundSystem->setVolume(1);
 	//initiate other game resources such as level or whatever
 
 
 
 	camera->LookAt(Vec3(50,40,45), Vec3(35, 0, 45), Vec3(-1, 0, 0));
 	camera->SetLens((float)D3DX_PI * 0.45f, (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
+	camera->UpdateViewMatrix();
 
 	gameState = STATE_MENU;
 
@@ -187,6 +189,9 @@ void Game::changeState()
 	if(gameState == STATE_GAMESTART)
 	{
 		newLevel(gui->getCurrentLevel(), gui->getCurrentDiff());
+	}
+	if(gameState == STATE_GAMESTART || (gameState == STATE_PLAYING && oldGameState != STATE_GAMESTART))
+	{
 		soundSystem->stopSound(menuSound);
 		soundSystem->setPaused(playlist, false);
 	}
@@ -237,6 +242,26 @@ void Game::handleInput(float dt)
 
 	if(gameState == STATE_PLAYING)
 	{
+		if(input->checkKeyDown(0x31))
+		{
+			gameLogic->setSelectedStructure(1);//supply
+		}
+		if(input->checkKeyDown(0x32))
+		{
+			gameLogic->setSelectedStructure(2);//tower
+		}
+		if(input->checkKeyDown(0x33))
+		{
+			gameLogic->setSelectedStructure(3);//offensive
+		}
+		if(input->checkKeyDown(0x34))
+		{
+			gameLogic->setSelectedStructure(4);//defensive
+		}
+		if(input->checkKeyDown(0x35))
+		{
+			gameLogic->setSelectedStructure(5);//resourse
+		}
 		if(input->checkKeyDown(0x45)) // E
 		{
 			//byt byggnad +1

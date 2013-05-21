@@ -24,6 +24,8 @@ GUI::~GUI()
 	clear();
 	SAFE_DELETE_ARRAY(levelList);
 	this->nrOfLevels = 0;
+	SAFE_DELETE_ARRAY(difficultyList);
+	this->nrOfDifficultys = 0;
 
 }
 
