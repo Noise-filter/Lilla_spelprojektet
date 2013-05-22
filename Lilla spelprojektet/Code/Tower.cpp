@@ -180,7 +180,7 @@ void Tower::aquireTarget(vector<Enemy*>* enemies)
 {
 	Vec3 vec;
 	Enemy* t = NULL;
-	float closestLength = 1000;
+	float closestLength = 99999;
 	float length;
 
 	for(int i = 0; i < (int)enemies->size(); i++)

@@ -255,14 +255,6 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 								dynamic_cast<Tower*>(structures[i][j])->aquireTarget(&enemies);
 							}
 						}
-						else
-						{
-							cout << "FAIL!!!!!!!!!!!!!" << endl;
-							cout << "FAIL!!!!!!!!!!!!!" << endl;
-							cout << "FAIL!!!!!!!!!!!!!" << endl;
-							cout << "FAIL!!!!!!!!!!!!!" << endl;
-							cout << "FAIL!!!!!!!!!!!!!" << endl;
-						}
 					}
 				}
 			}
