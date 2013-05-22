@@ -49,7 +49,6 @@ GeometryManager::~GeometryManager()
 
 void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc)
 {
-	importer = new OBJReader();
 	BUFFER_INIT bufferInit		= BUFFER_INIT();
 	BUFFER_INIT instanceInit	= BUFFER_INIT();
 	BUFFER_INIT indexInit		= BUFFER_INIT();
@@ -87,6 +86,16 @@ void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc)
 						MESH_PUV(D3DXVECTOR3(-1,-1,0), D3DXVECTOR2(0, 1)),
 						MESH_PUV(D3DXVECTOR3(-1,1,0), D3DXVECTOR2(0, 0))
 	};
+	std::vector<string> vGUIPanels;
+	vGUIPanels.push_back("Texturer/menyTest.png");
+	vGUIPanels.push_back("Texturer/menyTest2.png");
+	vGUIPanels.push_back("Texturer/menyTest3.png");
+	vGUIPanels.push_back("Texturer/test.png");
+	vGUIPanels.push_back("Texturer/menyTest4.png");
+	vGUIPanels.push_back("Texturer/menyTest5.png");
+	texGUI = createTextureArray(device, dc, vGUIPanels, DXGI_FORMAT_R8G8B8A8_UNORM, D3DX11_FILTER_NONE, D3DX11_FILTER_NONE);
+	
+	
 
 	UINT byteWidth[2] = {sizeof(MESH_PUV) , 0};
 	this->FullScreenQuad->mInit(device, bufferInit, instanceInit, puv , 6, 0 , this->pBufferObj , byteWidth );
@@ -98,8 +107,39 @@ void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc)
 
 void GeometryManager::initMeshes(ID3D11Device *device, ID3D11DeviceContext *dc, int mapSize)
 {
-	delete importer;
+	//Delete
+	SAFE_DELETE(importer);
+	for(int i = 0; i < (int)this->vEntities.size(); i++)
+	{
+		SAFE_DELETE(this->vEntities[i]);
+	}
+
+	for(int i = 0; i < (int)this->vLightTypes.size(); i++)
+	{
+		SAFE_DELETE(this->vLightTypes[i]);
+	}
+
+	SAFE_DELETE(this->Particles);
+	SAFE_DELETE(hpBars);
+
+	//new
+	for(int i = 0; i < (int)this->vEntities.size(); i++)
+	{
+		this->vEntities[i] = new GameObject();
+	}
+
+	this->vLightTypes.resize(3);
+
+	for(int i = 0; i < (int)this->vLightTypes.size(); i++)
+	{
+		this->vLightTypes[i] = new GameObject();
+	}
+
+	this->Particles = new GameObject();
+	hpBars = new GameObject();
+
 	importer = new OBJReader();
+
 	BUFFER_INIT bufferInit		= BUFFER_INIT();
 	BUFFER_INIT instanceInit	= BUFFER_INIT();
 	BUFFER_INIT indexInit		= BUFFER_INIT();
@@ -128,43 +168,7 @@ void GeometryManager::initMeshes(ID3D11Device *device, ID3D11DeviceContext *dc, 
 	instanceInit.data.uSysMemPitch          = NULL;
 	instanceInit.data.uSysMemSlicePitch     = NULL;
 	//---------------------------------------------------------------
-	
 
-	//temp meshes
-	//------------------------------------------------------------------
-	MESH_PNUV mainBuilding[] = {
-
-		MESH_PNUV(Vec3(1.0,0,0), Vec3(0,1,1), Vec2(0,0)),
-		MESH_PNUV(Vec3(-1.0,0,0), Vec3(0,0,1), Vec2(0,0)),
-		MESH_PNUV(Vec3(0,1.0,0), Vec3(1,0,1), Vec2(0,0)),
-			
-	};
-	
-	MESH_PNUV supply[] ={
-		MESH_PNUV(Vec3(1.0,0,0), Vec3(1,0,0), Vec2(1,1)),
-		MESH_PNUV(Vec3(-1.0,0,0), Vec3(0,0,1), Vec2(-1,0)),
-		MESH_PNUV(Vec3(0,1.0,0), Vec3(0,1,0), Vec2(1,0)),
-
-		MESH_PNUV(Vec3(1,0,0), Vec3(0,0,1), Vec2(0,0)),
-		MESH_PNUV(Vec3(-1,0,0), Vec3(0,1,0), Vec2(0,-1)),
-		MESH_PNUV(Vec3(0,-1.0,0), Vec3(1,0,0), Vec2(1,1)),
-	};
-
-	MESH_PNUV node[] = {
-
-		MESH_PNUV(Vec3(0,0.5,0), Vec3(1,1,0), Vec2(0,0)),
-		MESH_PNUV(Vec3(0,0,0.5), Vec3(1,0,1), Vec2(0,0)),
-		MESH_PNUV(Vec3(0,-0.5,0), Vec3(1,0,0), Vec2(0,0)),
-	};
-
-	MESH_P quad[] = {  MESH_P(D3DXVECTOR3(1,-1,0)),
-						MESH_P(D3DXVECTOR3(-1,-1,0)), 
-						MESH_P(D3DXVECTOR3(1,1,0)),
-
-						MESH_P(D3DXVECTOR3(1,1,0)),  
-						MESH_P(D3DXVECTOR3(-1,-1,0)), 
-						MESH_P(D3DXVECTOR3(-1,1,0)), 
-	};
 	mapSize--;
 	MESH_PNUV plane[] ={
 		MESH_PNUV(Vec3(0.5f,0,-0.5f), Vec3(0,1,0), Vec2((float)mapSize,0)),
@@ -192,12 +196,9 @@ void GeometryManager::initMeshes(ID3D11Device *device, ID3D11DeviceContext *dc, 
 
 	fileName = "Meshar/Tower Part 2.obj";
 	importMesh(device, dc, this->vEntities.at(ENTITY_TOWERBASE), fileName, bufferInit, instanceInit, 1000, this->pBufferObj, tex, glow);
-	
-	fileName = "Meshar/Green node.obj";
-	importMesh(device, dc, this->vEntities.at(ENTITY_NODE_GREEN), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
 
-	fileName = "Meshar/Enemy (broken node).obj";
-	importMesh(device, dc, this->vEntities.at(ENTITY_NODE_RED), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
+	fileName = "Meshar/Green Node.obj";
+	importMesh(device, dc, this->vEntities.at(ENTITY_NODE_GREEN), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
 
 	fileName = "Meshar/Enemy (broken node).obj";
 	importMesh(device, dc, this->vEntities.at(ENTITY_ENEMY), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
@@ -205,18 +206,20 @@ void GeometryManager::initMeshes(ID3D11Device *device, ID3D11DeviceContext *dc, 
 	fileName = "Meshar/Very basic disc (projectile).obj";
 	importMesh(device, dc, this->vEntities.at(ENTITY_PROJECTILE), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
 
+	fileName = "Meshar/Spiral Sphere.obj";
+	importMesh(device, dc, this->vEntities.at(ENTITY_SPIRALSPHERE), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
+	
+	fileName = "Meshar/Upgrade Building.obj";
+	importMesh(device, dc, this->vEntities.at(ENTITY_UPGRADE_OFFENSE), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
+	importMesh(device, dc, this->vEntities.at(ENTITY_UPGRADE_DEFENSE), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
+	importMesh(device, dc, this->vEntities.at(ENTITY_UPGRADE_RES), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
+
 	std::vector<string> nullVec;
 	nullVec.resize(0);
-	fileName = "Meshar/Sphere.obj";
+	fileName = "Meshar/Spheretri.obj";
 	importMesh(device, dc, this->vLightTypes.at(LIGHT_POINT), fileName, bufferInit, instanceInit, 2000, this->pBufferObj,  nullVec , nullVec);
 
-	
-	//temp buffer init
-	ID3D11ShaderResourceView *nulls = NULL;
-	this->vEntities.at(ENTITY_UPGRADE_OFFENSE)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls);
-	this->vEntities.at(ENTITY_UPGRADE_DEFENSE)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls);
-	this->vEntities.at(ENTITY_UPGRADE_RES)->mInit(device, bufferInit, instanceInit, supply, 6, 100, this->pBufferObj, nulls, nulls);
-
+	//load plane
 	ID3D11ShaderResourceView *texTemp = NULL;
 	ID3D11ShaderResourceView *glowTemp = NULL;
 	tex = TexAndGlow::loadPlaneTex();
@@ -226,7 +229,7 @@ void GeometryManager::initMeshes(ID3D11Device *device, ID3D11DeviceContext *dc, 
 	this->vEntities.at(ENTITY_PLANE)->mInit(device, bufferInit, instanceInit, plane, 6, 1, this->pBufferObj, texTemp, glowTemp);
 
 
-	this->Particles->mInit(device, instanceInit, 100000, this->pBufferObj);
+	this->Particles->mInit(device, instanceInit, 10000, this->pBufferObj);
 
 	MESH_P p[] = {  MESH_P(D3DXVECTOR3(1,-1,0)),
 						MESH_P(D3DXVECTOR3(-1,-1,0)), 
@@ -247,7 +250,6 @@ void GeometryManager::initMeshes(ID3D11Device *device, ID3D11DeviceContext *dc, 
 	UINT byteWidth[2] = {sizeof(MESH_PUV) , 0};
 	byteWidth[1] = sizeof(MatrixInstance);
 	hpBars->mInit(device, bufferInit, instanceInit, puv, 6, 1000, pBufferObj , byteWidth);
-	
 }
 
 void GeometryManager::applyEntityBuffer(ID3D11DeviceContext *dc, int ID, D3D_PRIMITIVE_TOPOLOGY topology)
@@ -255,7 +257,6 @@ void GeometryManager::applyEntityBuffer(ID3D11DeviceContext *dc, int ID, D3D_PRI
 	UINT strides[2] = {sizeof(MESH_PNUV) , sizeof(INSTANCEDATA)};
 	this->vEntities.at(ID)->mApply(dc, topology, strides);
 }
-
 void GeometryManager::applyLightBuffer(ID3D11DeviceContext *dc, D3D_PRIMITIVE_TOPOLOGY topology)
 {
 	UINT strides[2] = {sizeof(MESH_PNUV) , sizeof(POINTLIGHTINSTANCE)};
@@ -317,6 +318,16 @@ int GeometryManager::getNrOfEntities()
 {
 	return this->vEntities.size();
 }
+int GeometryManager::getNrOfLightVertices(int ID)
+{
+	return this->vLightTypes[ID]->mGetNrOfVertices();
+}
+
+int GeometryManager::getNrOfLightInstances(int ID)
+{
+	return this->vLightTypes[ID]->mGetNrOfInstances();
+}
+
 int GeometryManager::getNrOfParticles()
 {
 	return this->Particles->mGetNrOfVertices();
@@ -338,6 +349,11 @@ ID3D11ShaderResourceView *GeometryManager::getTextures(int ID)
 ID3D11ShaderResourceView *GeometryManager::getGlowMaps(int ID)
 {
 	return this->vEntities[ID]->getGlowArray();
+}
+
+ID3D11ShaderResourceView *GeometryManager::getGUIPanels()
+{
+	return this->texGUI;
 }
 
 void GeometryManager::importMesh(ID3D11Device *device,

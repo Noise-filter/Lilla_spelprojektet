@@ -18,6 +18,7 @@ class GeometryManager
 
 		GameObject* hpBars;
 		GameObject* GUI;
+		ID3D11ShaderResourceView *texGUI;
 
 	private:
 		ID3D11ShaderResourceView *createTextureArray(ID3D11Device *device,
@@ -51,12 +52,15 @@ class GeometryManager
 		int getNrOfInstances(int ID);
 		int getNrOfVertexPoints(int ID);
 		int getNrOfEntities();
+		int getNrOfLightVertices(int ID);
+		int getNrOfLightInstances(int ID);
 		int getNrOfParticles();
 		int getNrOfHPBars();
 		int getNrOfGUIObjects();
 
 		ID3D11ShaderResourceView *getTextures(int ID);
 		ID3D11ShaderResourceView *getGlowMaps(int ID);
+		ID3D11ShaderResourceView *getGUIPanels();
 
 		//imports the mesh and init the buffer for it
 		void importMesh(ID3D11Device *device,

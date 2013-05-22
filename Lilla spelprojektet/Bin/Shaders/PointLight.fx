@@ -4,7 +4,7 @@ Texture2D depthMap         : register(t2);
 
 float4 cameraPos; //float3
 float4 halfPixel; //float2
-float lightIntensity = 1.0f;
+float lightIntensity = 5.0f;
 
 SamplerState diffuseSampler
 {
@@ -41,16 +41,18 @@ struct VSIn
 	float3 normal : NORMAL; //behövs igentligen inte. 
 	float2 uv     : TEXTCOORD; //behövs igentligen inte. 
 
-	row_major float4x4 world  : WORLD;
+	row_major float4x4 world  : WORLD; // ta bort
 	float3 lightPos           : LIGHTPOS;
-	float lightRadius         : LIGHTRADIUS;
 	float3 lightColor         : LIGHTCOLOR;
+	float lightRadius         : LIGHTRADIUS;
+
+	uint instanceID : SV_InstanceID;
 };
 
 struct PSSceneIn
 {
 	float4 screenPos     : SV_Position;
-	float4 worldPos      : worldPos;
+	float4 screenPosition: ScreenCoord;
 
 	float4 worldLightPos : LIGHTPOS;
 	float3 lightColor    : LIGHTCOLOR;
@@ -64,10 +66,12 @@ PSSceneIn VSScene(VSIn input)
 {
 	PSSceneIn output = (PSSceneIn)0;
 
-	output.screenPos = mul(float4(input.pos, 1), mul(input.world , mul(view , projection)));
-	output.worldPos  =  mul(float4(input.pos, 1), input.world);
+	//output.screenPos = mul(float4(input.pos, 1), mul(input.world , mul(view , projection)));
+	float3 worldPos = (input.pos * input.lightRadius) + input.lightPos;
+	output.screenPos = mul(float4(worldPos , 1) , mul(view,projection));
+	output.screenPosition = output.screenPos;
 
-	output.worldLightPos = mul(float4(input.lightPos, 1) ,  mul(input.world , mul(view , projection)));
+	output.worldLightPos = float4(input.lightPos, 1);
 	output.lightColor = input.lightColor;
 	output.lightRadius = input.lightRadius;
 	
@@ -80,20 +84,19 @@ PSSceneIn VSScene(VSIn input)
 float4 PSScene(PSSceneIn input) : SV_Target
 {
 	//räkna ut UV koordinater för sampling
-	input.screenPos.xy /= input.screenPos.w;
-	float2 uv = 0.5f * (float2(input.screenPos.x, -input.screenPos.y) +1 );
-	uv -= halfPixel;
+	input.screenPosition.xy /= input.screenPosition.w;
+	float2 uv = 0.5f * (float2(input.screenPosition.x, -input.screenPosition.y) +1 );
 
 	//sampling av texturer
 	float4 normalData = normalMap.Sample(normalSampler, uv);
 	float3 normal = 2.0f * normalData.xyz - 1.0f;
 	float specularPower = normalData.a * 255;
 	float specularIntensity = diffuseAlbedoMap.Sample(diffuseSampler, uv).a;
-	float depth = depthMap.Sample(depthSampler, uv).r;
+	float depth = depthMap.Sample(depthSampler, uv);
 
 	//uträkning av världsposition
 	float4 position;
-	position.xy = input.screenPos.xy;
+	position.xy = input.screenPosition.xy;
 	position.z = depth;
 	position.w = 1.0f;
 	position = mul(position, invertViewProjection);
@@ -103,7 +106,7 @@ float4 PSScene(PSSceneIn input) : SV_Target
 	//ljusberäkningar
 	//--------------------------------------------------------------------------------
 		//Attenuation
-		float3 lightVector = input.worldLightPos - position;
+		float3 lightVector = input.worldLightPos.rgb - position.rgb;
 		float attenuation = saturate(1.0f - length(lightVector)/input.lightRadius);
 
 		//diffuseLight
@@ -118,9 +121,12 @@ float4 PSScene(PSSceneIn input) : SV_Target
 
 	//--------------------------------------------------------------------------------
 
+	//return float4(1,1,1,1);
+	//return float4(input.lightColor, 1);
+	//return float4(attenuation,attenuation ,attenuation ,attenuation);
+	//return float4(diffuseLight.rgb, specularLight);
 
-
-	return attenuation * lightIntensity * float4(diffuseLight.rgb, specularLight);
+	return (attenuation * lightIntensity * float4(diffuseLight.rgb, specularLight));
 }
 
 
@@ -129,14 +135,13 @@ float4 PSScene(PSSceneIn input) : SV_Target
 //-----------------------------------------------------------------------------------------
 RasterizerState LightCulling
 {
-	//CullMode = //CullCounterClockwiseFace;
+	CullMode = BACK;
 };
 RasterizerState wire
 {
-	CullMode = NONE;
+	CullMode = BACK;
 	FillMode = Wireframe;
 };
-
 
 //-----------------------------------------------------------------------------------------
 // Technique: RenderTextured  
@@ -151,5 +156,6 @@ technique11 BasicTech
         SetPixelShader( CompileShader( ps_4_0, PSScene() ) );
 	    
 	    SetRasterizerState( LightCulling );
+
     } 
 }

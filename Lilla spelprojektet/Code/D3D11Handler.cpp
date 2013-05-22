@@ -112,9 +112,9 @@ Shader *D3D11Handler::setPass(PASS_STATE pass)
 			return this->vShaders.at(PASS_PARTICLE);
 			break;
 
-		case PASS_MENY:
+		case PASS_MENU:
 			this->pDeviceContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);
-			return this->vShaders.at(PASS_MENY);
+			return this->vShaders.at(PASS_MENU);
 			break;
 
 		case PASS_FULLSCREENQUAD:
@@ -128,6 +128,7 @@ Shader *D3D11Handler::setPass(PASS_STATE pass)
 			break;
 
 		case PASS_DEBUG:
+			this->pDeviceContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);
 			return this->vShaders.at(PASS_DEBUG);
 
 		case PASS_HPBARS:
@@ -197,7 +198,7 @@ bool D3D11Handler::initSwapChainAndDevice(HWND hWnd)
 	UINT createDeviceFlags = 0;
 
 #ifdef _DEBUG
-	//createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
 	D3D_DRIVER_TYPE driverType;
@@ -350,9 +351,9 @@ bool D3D11Handler::initShaders()
 		{ "WORLD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		{ "WORLD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		{ "WORLD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "LIGHTPOS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 2, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "LIGHTCOLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 2, 76, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "LIGHTRADIUS", 0, DXGI_FORMAT_R32_FLOAT, 2, 88, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "LIGHTPOS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 1, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "LIGHTCOLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 1, 76, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "LIGHTRADIUS", 0, DXGI_FORMAT_R32_FLOAT, 1, 88, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		
 	};
 
@@ -382,20 +383,31 @@ bool D3D11Handler::initShaders()
 	}
 	
 
-	D3D11_INPUT_ELEMENT_DESC tempInput[] = 
+	D3D11_INPUT_ELEMENT_DESC GUIInput[] = 
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		
+		{ "WORLD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "WORLD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "WORLD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "WORLD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "TEXTUREID", 0, DXGI_FORMAT_R32_UINT, 1, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		
 	};
 
 	temp = new Shader();
-	this->vShaders.at(PASS_MENY) = temp;
-	hr = this->vShaders.at(PASS_MENY)->Init(this->pDevice, this->pDeviceContext, "../Shaders/FullScreenQuad.fx", tempInput, 1);
+	this->vShaders.at(PASS_MENU) = temp;
+	hr = this->vShaders.at(PASS_MENU)->Init(this->pDevice, this->pDeviceContext, "../Shaders/PanelGUI.fx", GUIInput, 7);
 	if(FAILED(hr))
 	{
 		return false;
 	}
-
-
+	
+	D3D11_INPUT_ELEMENT_DESC tempInput[] = 
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
 	temp = new Shader();
 	this->vShaders.at(PASS_FULLSCREENQUAD) = temp;
 	hr = this->vShaders.at(PASS_FULLSCREENQUAD)->Init(this->pDevice, this->pDeviceContext, "../Shaders/FullScreenQuad.fx", tempInput, 1);

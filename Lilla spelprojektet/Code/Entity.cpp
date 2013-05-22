@@ -31,7 +31,7 @@ Entity::Entity(D3DXVECTOR3 pos, int meshID, int textureID, float hp, int lightID
 	D3DXMatrixTranslation(&translate, pos.x-0.3f, pos.y, pos.z);
 	renderData.worldMat = scale * pointTranslate * rotation * translate;
 
-	death = SoundSystem::Getinstance()->createSound("plop.mp3");
+	death = SoundSystem::Getinstance()->createSound("explosion_test.mp3");
 }
 
 Entity::~Entity()
@@ -91,6 +91,11 @@ bool Entity::isDead()
 void Entity::setDead(bool dead)
 {
 	this->dead = dead;
+}
+
+void Entity::setTextureID(int ID)
+{
+	renderData.textureID = ID;
 }
 
 RenderData& Entity::getRenderData()

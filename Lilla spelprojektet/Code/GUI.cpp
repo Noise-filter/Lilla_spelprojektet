@@ -16,6 +16,7 @@ GUI::GUI()
 	this->currentLevel = 0;
 	initDifficulty();
 	createBtns(STATE_MENU);
+	createPanels(STATE_MENU);
 }
 
 GUI::~GUI()
@@ -43,6 +44,8 @@ int GUI::update(MouseState *mouse, int& state, bool& muted)
 {
 	if(GUI_STATE != state)
 	{
+		old_GUI_STATE = GUI_STATE;
+		clear();
 		createBtns(state);
 		createPanels(state);
 		GUI_STATE = state;
@@ -64,9 +67,9 @@ int GUI::update(MouseState *mouse, int& state, bool& muted)
 void GUI::createBtns(int state)
 {
 
-	//if(this->menuBtns != NULL)
+	//if(this->nrOfBtns != 0 || this->nrOfBoxes != 0)
 	{
-		clear();
+		//clear();
 	}
 	wchar_t* level = (wchar_t*)levelList[currentLevel].c_str();
 	wchar_t* difficulty = (wchar_t*)difficultyList[currentDifficulty].c_str();
@@ -87,7 +90,7 @@ void GUI::createBtns(int state)
 		this->nrOfBtns = 2;
 		this->menuBtns = new Button[nrOfBtns];
 		this->menuBtns[0] = createBtn(D3DXVECTOR2(midScreenW, midScreenH - 30), MUTE);
-		this->menuBtns[1] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 120), MAIN_MENU);
+		this->menuBtns[1] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 120), BACK);
 	}
 	else if(state == STATE_PAUSED)
 	{
@@ -110,9 +113,35 @@ void GUI::createBtns(int state)
 		this->menuBtns[2] = createBtn(D3DXVECTOR2(textBoxes[1].pos.x - 80, textBoxes[1].pos.y), LAST);
 		this->menuBtns[3] = createBtn(D3DXVECTOR2(textBoxes[1].pos.x + 80, textBoxes[1].pos.y), NEXT);
 		this->menuBtns[4] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 75), STARTGAME);
-		this->menuBtns[5] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 120), MAIN_MENU);
+		this->menuBtns[5] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 120), BACK);
 	}
-	
+	else if(state == STATE_GAMESTART || state == STATE_PLAYING)
+	{
+		this->nrOfBoxes = 4;
+		this->textBoxes = new Text[nrOfBoxes];
+		this->textBoxes[0] = createTextBox(D3DXVECTOR2(0.5*(0.6*SCREEN_WIDTH),0.5*(1.65*SCREEN_HEIGHT)), L"Information:", 20, 0xff000000);
+		this->textBoxes[1] = createTextBox(D3DXVECTOR2(0.5*(0.95*SCREEN_WIDTH),0.5*(1.65*SCREEN_HEIGHT)), L"Resourse:", 20, 0xff000000);
+		this->textBoxes[2] = createTextBox(D3DXVECTOR2(0.5*(0.95*SCREEN_WIDTH),0.5*(1.825*SCREEN_HEIGHT)), L"Supply:", 20, 0xff000000);
+		this->textBoxes[3] = createTextBox(D3DXVECTOR2(0.5*(1.275*SCREEN_WIDTH),0.5*(1.7*SCREEN_HEIGHT)), L"Time:", 20, 0xff000000);
+	}
+	else if(state == STATE_WIN)
+	{
+		this->nrOfBoxes = 1;
+		this->textBoxes = new Text[nrOfBoxes];
+		this->textBoxes[0] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 100), L"You Won!", 62, 0x800000ff);
+		this->nrOfBtns = 1;
+		this->menuBtns = new Button[nrOfBtns];
+		this->menuBtns[0] = createBtn(D3DXVECTOR2(midScreenW - 100, midScreenH + 100), MAIN_MENU);
+	}
+	else if(state == STATE_LOSE)
+	{
+		this->nrOfBoxes = 1;
+		this->textBoxes = new Text[nrOfBoxes];
+		this->textBoxes[0] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 100), L"You Lost", 62, 0x800000ff);
+		this->nrOfBtns = 1;
+		this->menuBtns = new Button[nrOfBtns];
+		this->menuBtns[0] = createBtn(D3DXVECTOR2(midScreenW - 100, midScreenH + 100), MAIN_MENU);
+	}
 }
 
 int GUI::getNrOfBtns()const
@@ -189,15 +218,20 @@ Button GUI::createBtn(D3DXVECTOR2 pos, BUTTONTYPE type)
 		btn.size = D3DXVECTOR2(20, 20);
 		text.text = L"<";
 	}
-	if(type == MAIN_MENU)
+	if(type == BACK)
 	{
 		btn.size = D3DXVECTOR2(80, 20);
-		text.text = L"Main Menu";
+		text.text = L"Back";
 	}
-	if( type == MUTE)
+	if(type == MUTE)
 	{
 		btn.size = D3DXVECTOR2(80, 20);
 		text.text = L"Mute";
+	}
+	if(type == MAIN_MENU)
+	{
+		btn.size = D3DXVECTOR2(100, 20);
+		text.text = L"Main Menu";
 	}
 
 	btn.text = text;
@@ -217,21 +251,21 @@ Text GUI::createTextBox(D3DXVECTOR2 pos, wchar_t* text, float size, UINT32 color
 
 void GUI::createPanels(int state)
 {
-	if(state == STATE_MENU || state == SETTINGS || state == STATE_NEWGAME)
+	if(state == STATE_MENU || state == SETTINGS || state == STATE_NEWGAME || state == STATE_PAUSED)
 	{
 		this->nrOfPanles = 1;
 		this->panels = new GUI_Panel[nrOfPanles];
-		this->panels[0] = GUI_Panel(D3DXVECTOR2(0, 0), D3DXVECTOR2(1, 1), TEXTURE_MAIN_MENU);
+		this->panels[0] = GUI_Panel(D3DXVECTOR2(0, 0), D3DXVECTOR2(1, 1), TEXTURE_MENU);
 	}
 	else if(state == STATE_GAMESTART || state == STATE_PLAYING )
 	{
 		this->nrOfPanles = 5;
 		this->panels = new GUI_Panel[nrOfPanles];
-		this->panels[0] = GUI_Panel(D3DXVECTOR2(-0.8, 0.8), D3DXVECTOR2(0.1, 0.1), TEXTURE_RESOURSE);
-		this->panels[1] = GUI_Panel(D3DXVECTOR2(0.8, 0.8), D3DXVECTOR2(0.1, 0.1), TEXTURE_GOAL);
-		this->panels[2] = GUI_Panel(D3DXVECTOR2(0.8, -0.8), D3DXVECTOR2(0.1, 0.1), TEXTURE_BUILDINGS_HOTKEY);
-		this->panels[3] = GUI_Panel(D3DXVECTOR2(-0.8, -0.8), D3DXVECTOR2(0.1, 0.1), TEXTURE_INFO);
-		this->panels[4] = GUI_Panel(D3DXVECTOR2(-0.9, -0.9), D3DXVECTOR2(0.1, 0.1), TEXTURE_BUILDING);
+		this->panels[0] = GUI_Panel(D3DXVECTOR2(-0.8, -0.8), D3DXVECTOR2(0.2, 0.2), TEXTURE_BUILDING);
+		this->panels[1] = GUI_Panel(D3DXVECTOR2(-0.4, -0.8), D3DXVECTOR2(0.2, 0.2), TEXTURE_INFO);
+		this->panels[2] = GUI_Panel(D3DXVECTOR2(0.0, -0.8), D3DXVECTOR2(0.2, 0.2), TEXTURE_STATS);
+		this->panels[3] = GUI_Panel(D3DXVECTOR2(0.6, -0.7), D3DXVECTOR2(0.4, 0.1), TEXTURE_TIME_GOAL);
+		this->panels[4] = GUI_Panel(D3DXVECTOR2(0.6, -0.9), D3DXVECTOR2(0.4, 0.1), TEXTURE_BUILDINGS_HOTKEY);
 	}
 	else if(state == STATE_WIN || state == STATE_LOSE)
 	{
@@ -277,11 +311,15 @@ int GUI::changeState(Button btn)
 	}
 	else if(btn.type == PAUSED_CONTINUE)
 	{
-		state = STATE_PLAYING;
+		state = old_GUI_STATE;
+	}
+	else if(btn.type == BACK)
+	{
+		state = old_GUI_STATE;
 	}
 	else if(btn.type == MAIN_MENU)
 	{
-		state = STATE_MENU;
+		 state = STATE_MENU;
 	}
 	else if(btn.type == QUIT)
 	{

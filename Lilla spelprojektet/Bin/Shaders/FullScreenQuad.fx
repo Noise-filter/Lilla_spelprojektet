@@ -35,9 +35,9 @@ float4 PSScene(PSIn input) : SV_Target
 	float3 diffuse = diffuseAlbedoMap.Load(sampleIndices).xyz;
 	float3 normal = normalMap.Load(sampleIndices).xyz;
 	float3 glow = glowMap.Load(sampleIndices).xyz;
-	float3 sum = saturate(diffuse + (glow*glowPower));
+	float3 sum = saturate((diffuse + (glow*glowPower)) * light);
 
-	//return float4(position, 1.0f);
+	//return float4(diffuse, 1);
 	//return float4(normal, 1.0f);
 	//return float4(light, 1.0f);
 	return float4(sum, 1.0f);
@@ -46,7 +46,7 @@ float4 PSScene(PSIn input) : SV_Target
 
 RasterizerState NoCulling
 {
-	CullMode = NONE;
+	//CullMode = NONE;
 };
 RasterizerState wire
 {
