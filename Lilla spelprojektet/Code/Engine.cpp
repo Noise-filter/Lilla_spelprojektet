@@ -47,7 +47,7 @@ void Engine::start(int mapSize)
 
 }
 
-void Engine::render(Matrix& vp, Text* text, int nrOfText)
+void Engine::render(Matrix& view, Matrix& proj, Text* text, int nrOfText,  Vec3 cameraPos)
 {
 	d3d->clearAndBindRenderTarget();
 
@@ -61,8 +61,8 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 	Shader* temp;
 
 	temp = this->d3d->setPass(PASS_GEOMETRY);
-	temp->SetMatrix("view", vp);
-	//temp->SetMatrix("proj", proj);w
+	temp->SetMatrix("view", view);
+	temp->SetMatrix("proj", proj);
 	ID3D11ShaderResourceView *nulls;
 	nulls = NULL;
 	for(int i = 0; i < this->pGeoManager->getNrOfEntities(); i++)
@@ -77,22 +77,55 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 		}
 	}
 
-	//skicka in camerapos , halfpix , dela upp vp , skicka in invertVP
-	temp = this->d3d->setPass(PASS_LIGHT);
-	
-	
 
-	world = world * vp;
+
+
+	//till för ljuset
+
+	ID3D11BlendState* blendState = NULL;
+	D3D11_BLEND_DESC blendDesc;
+	ZeroMemory(&blendDesc, sizeof(blendDesc));
+
+	blendDesc.RenderTarget->BlendEnable = TRUE;
+	blendDesc.RenderTarget->SrcBlend = D3D11_BLEND_SRC_COLOR;
+	blendDesc.RenderTarget->DestBlend = D3D11_BLEND_DEST_COLOR;
+	blendDesc.RenderTarget->BlendOp = D3D11_BLEND_OP_MAX;
+	blendDesc.RenderTarget->SrcBlendAlpha = D3D11_BLEND_ONE;
+	blendDesc.RenderTarget->DestBlendAlpha = D3D11_BLEND_ZERO;
+	blendDesc.RenderTarget->BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blendDesc.RenderTarget->RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	HRESULT hr = S_OK;
+
+	hr = this->d3d->pDevice->CreateBlendState(&blendDesc, &blendState);
+	if(FAILED(hr))
+		return;
+	this->d3d->pDeviceContext->OMSetBlendState(blendState, 0, 0xffffffff);
+
+	//ljus
+	Matrix ViewProj = view * proj;
+	Matrix invertViewProj;
+	float determinant = D3DXMatrixDeterminant(&invertViewProj);
+	D3DXMatrixInverse(&invertViewProj, NULL , &ViewProj);
+
+	temp = this->d3d->setPass(PASS_LIGHT);
+	temp->SetMatrix("view", view);
+	temp->SetMatrix("projection", proj);
+	temp->SetMatrix("invertViewProjection", invertViewProj);
+	temp->SetFloat4("cameraPos" , Vec4(cameraPos , 0));
+
+	temp->Apply(0);
+	this->pGeoManager->applyLightBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	this->d3d->pDeviceContext->DrawInstanced(pGeoManager->getNrOfLightVertices(LIGHT_POINT), pGeoManager->getNrOfLightInstances(LIGHT_POINT) , 0 ,0);
+
+	this->d3d->pDeviceContext->OMSetBlendState(NULL, NULL, 0xffffffff);
+
+	world = world * view * proj;
 	temp = this->d3d->setPass(PASS_PARTICLE);
 	temp->SetMatrix("gWVP" , world);
 	temp->Apply(0);
 	pGeoManager->applyParticleBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 	d3d->pDeviceContext->Draw(pGeoManager->getNrOfParticles(), 0);
-
-	
-
-
-
 
 	//Rita ut gui
 	temp = this->d3d->setPass(PASS_MENU);
@@ -109,7 +142,9 @@ void Engine::render(Matrix& vp, Text* text, int nrOfText)
 	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfHPBars(), 0, 0);
 	
 	blurTexture(temp);
-	renderDebug(vp);
+
+	view = view * proj;
+	renderDebug(view);
 	
 	temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
 	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -230,14 +265,12 @@ void Engine::renderDebug(Matrix &vp)
 	this->d3d->pDeviceContext->Draw(6, 0);
 
 
-
-
 	D3DXMatrixIdentity(&world);
 	D3DXMatrixIdentity(&scaling);
 	D3DXMatrixIdentity(&translation);
 
 	D3DXMatrixScaling(&scaling, 0.3f , 0.3f , 0.3f);
-	D3DXMatrixTranslation(&translation, 0.4f, 0.0f, 0);
+	D3DXMatrixTranslation(&translation, 0.0f, -0.7f, 0);
 	world = scaling * translation;
 
 	temp->SetResource("debugMap" , this->d3d->debugGetSRV(0));
@@ -245,15 +278,6 @@ void Engine::renderDebug(Matrix &vp)
 
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);
-
-
-
-
-
-
-
-
-
 
 
 	D3DXMatrixIdentity(&world);

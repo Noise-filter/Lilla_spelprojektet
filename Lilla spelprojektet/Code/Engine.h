@@ -13,8 +13,7 @@ class Engine
 		Engine(void);
 		~Engine(void);
 
-
-		void render(D3DXMATRIX& vp, Text* text, int nrOfText);
+		void render(Matrix& view, Matrix& proj, Text* text, int nrOfText,  Vec3 cameraPos);
 		void renderGui(Text* text, int nrOfText);
 		void renderText(Text* text, int nrOfText);
 

@@ -40,8 +40,11 @@ private:
 	float maxResCD;
 	float currentResCD;
 
+	//Används till byggnaderna som ritas ut på mus positionen
 	Vec3 mouseWorldPos;
 	Structure* selectedStructureRenderData;
+	int oldSelectedStructure;
+	Vec3 oldMouseWorldPos;
 
 	Statistics* endStats;
 };

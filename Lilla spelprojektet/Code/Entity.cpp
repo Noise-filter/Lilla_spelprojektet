@@ -93,6 +93,11 @@ void Entity::setDead(bool dead)
 	this->dead = dead;
 }
 
+void Entity::setTextureID(int ID)
+{
+	renderData.textureID = ID;
+}
+
 RenderData& Entity::getRenderData()
 {
 	return renderData;

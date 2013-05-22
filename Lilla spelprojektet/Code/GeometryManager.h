@@ -52,6 +52,8 @@ class GeometryManager
 		int getNrOfInstances(int ID);
 		int getNrOfVertexPoints(int ID);
 		int getNrOfEntities();
+		int getNrOfLightVertices(int ID);
+		int getNrOfLightInstances(int ID);
 		int getNrOfParticles();
 		int getNrOfHPBars();
 		int getNrOfGUIObjects();

@@ -18,6 +18,8 @@ public:
 	void setScale(float scale);
 	void setRotation(D3DXVECTOR3& dir);
 	void setDead(bool dead);
+	
+	virtual void setTextureID(int ID);
 
 	float getHp();
 	bool isDead();

@@ -48,6 +48,12 @@ Tower::Tower(Vec3 pos, int meshID, int textureID, float hp, int lightID, float d
 	topTower->worldMat = topScale * topPointTrans * topRotation * topTrans;
 }
 
+void Tower::setTextureID(int ID)
+{
+	renderData.textureID = ID;
+	topTower->textureID = ID;
+}
+
 void Tower::giveUpgrade(UpgradeStats &stats)
 {
 	this->damage += stats.dmg;
@@ -174,7 +180,7 @@ void Tower::aquireTarget(vector<Enemy*>* enemies)
 {
 	Vec3 vec;
 	Enemy* t = NULL;
-	float closestLength = 1000;
+	float closestLength = 99999;
 	float length;
 
 	for(int i = 0; i < (int)enemies->size(); i++)

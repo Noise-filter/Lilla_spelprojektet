@@ -38,6 +38,12 @@ int Supply::update(float dt)
 	return Structure::update(dt);
 }
 
+void Supply::setTextureID(int ID)
+{
+	renderData.textureID = ID;
+	topSupply->textureID = ID;
+}
+
 vector<RenderData*> Supply::getRenderData()
 {
 	vector<RenderData*> renderData;

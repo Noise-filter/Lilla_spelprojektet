@@ -120,7 +120,7 @@ void Game::render()
 		}
 		engine->setHPBars(hp);
 
-		engine->render(camera->ViewsProj(), temp, tempSize);
+		engine->render(camera->View(), camera->Proj(), temp, tempSize, camera->GetPosition());
 	}
 	else if(gameState == STATE_MENU || gameState == STATE_SETTINGS || gameState == STATE_NEWGAME || gameState == STATE_PAUSED || gameState == STATE_WIN || gameState == STATE_LOSE)
 	{
@@ -235,10 +235,10 @@ void Game::handleInput(float dt)
 		}
 	}
 
-	if(input->checkKeyDown(0x20))	//Space
+	//if(input->checkKeyDown(0x20))	//Space
 	{
 		soundSystem->setPaused(pausedMusic);
-		pausedMusic = !pausedMusic;
+		//pausedMusic = !pausedMusic;
 	}
 
 	if(gameState == STATE_PLAYING)
