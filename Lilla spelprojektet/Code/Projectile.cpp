@@ -40,7 +40,7 @@ int Projectile::update(float dt)
 	this->setPosition(pos);
 
 	//returnerna ett annat värde om projektilen har träffat sitt target.
-	if(length <= 1 )
+	if(length <= dt * speed * 1.1)
 	{
 		if(target && !target->isDead())
 		{
