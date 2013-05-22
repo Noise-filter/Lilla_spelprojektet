@@ -115,9 +115,14 @@ void GUI::createBtns(int state)
 		this->menuBtns[4] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 75), STARTGAME);
 		this->menuBtns[5] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 120), BACK);
 	}
-	else if(state == STATE_PLAYING)
+	else if(state == STATE_GAMESTART || state == STATE_PLAYING)
 	{
-		
+		this->nrOfBoxes = 4;
+		this->textBoxes = new Text[nrOfBoxes];
+		this->textBoxes[0] = createTextBox(D3DXVECTOR2(0.5*(0.6*SCREEN_WIDTH),0.5*(1.65*SCREEN_HEIGHT)), L"Information:", 20, 0xff000000);
+		this->textBoxes[1] = createTextBox(D3DXVECTOR2(0.5*(0.95*SCREEN_WIDTH),0.5*(1.65*SCREEN_HEIGHT)), L"Resourse:", 20, 0xff000000);
+		this->textBoxes[2] = createTextBox(D3DXVECTOR2(0.5*(0.95*SCREEN_WIDTH),0.5*(1.825*SCREEN_HEIGHT)), L"Supply:", 20, 0xff000000);
+		this->textBoxes[3] = createTextBox(D3DXVECTOR2(0.5*(1.275*SCREEN_WIDTH),0.5*(1.7*SCREEN_HEIGHT)), L"Time:", 20, 0xff000000);
 	}
 	else if(state == STATE_WIN)
 	{
