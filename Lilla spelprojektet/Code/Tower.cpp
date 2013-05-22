@@ -163,17 +163,19 @@ void Tower::giveXp(int xp)
 }
 void Tower::lvlUp()
 {
-	this->scaleFactor++;
-	D3DXMatrixScaling(&scale,scaleFactor,scaleFactor,scaleFactor);
-	D3DXMatrixScaling(&topScale,scaleFactor,scaleFactor,scaleFactor);
 	this->attackSpeed -= 0.1f;
-	//this->cooldown -= 0.1f;
 	this->damage += 5;
 	this->hp += 5;
 	this->maxHp += 5;
 	this->xpToNextLvl += xpToNextLvl/2;
 	this->experience = 0;
 	this->level++;
+	this->renderData.textureID++;
+	this->topTower->textureID++;
+	if(level == 3)
+	{
+		Statistics::Getinstance()->totalNrOfMaxLvlTowers++;
+	}
 }
 
 void Tower::aquireTarget(vector<Enemy*>* enemies)
