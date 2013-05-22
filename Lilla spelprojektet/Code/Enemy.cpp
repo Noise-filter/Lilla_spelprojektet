@@ -68,8 +68,7 @@ int Enemy::move(float dt)
 		Vec3 pos = this->getPosition();
 		Vec3 target((float)waypoints.at(currentWP).x, 0, (float)waypoints.at(currentWP).y);
 		Vec3 dir = target - pos;
-		
-		cout << D3DXVec3Length(&dir) << ' ' << dt * speed << endl;
+
 		if(D3DXVec3Length(&dir) < dt * speed * 1.1)
 		{
 			//this->setPosition(target);	// Gör så att fienderna hoppar till mitten av noderna när de är en viss längd ifrån dem.
