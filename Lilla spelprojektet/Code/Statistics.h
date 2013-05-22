@@ -22,13 +22,15 @@ public:
 	int totalSupply;
 	int totalNrOfBuildings;
 	int totalEnemiesKilled;
-	int nrOfUpgrades;
-	int nrOfMaxLvlTowers;
+	int totalNrOfUpgrades;
+	int totalNrOfMaxLvlTowers;
 	
 	float totalTime;
 	float averageTowerLvl;
 
 	string levelName;
+
+
 
 private:
 	Statistics(void);
