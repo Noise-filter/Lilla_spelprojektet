@@ -85,7 +85,7 @@ void GUI::createBtns(int state)
 		this->menuBtns[2] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 50), QUIT);
 		this->nrOfBoxes = 1;
 		this->textBoxes = new Text[nrOfBoxes];
-		this->textBoxes[0] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 140), L".exe", 62, 0x800000ff);
+		this->textBoxes[0] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 140), L"Caecus", 62, 0x800000ff);
 	}
 	else if(state == STATE_SETTINGS)
 	{
