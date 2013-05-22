@@ -86,6 +86,16 @@ void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc)
 						MESH_PUV(D3DXVECTOR3(-1,-1,0), D3DXVECTOR2(0, 1)),
 						MESH_PUV(D3DXVECTOR3(-1,1,0), D3DXVECTOR2(0, 0))
 	};
+	std::vector<string> vGUIPanels;
+	vGUIPanels.push_back("Texturer/menyTest.png");
+	vGUIPanels.push_back("Texturer/menyTest2.png");
+	vGUIPanels.push_back("Texturer/menyTest3.png");
+	vGUIPanels.push_back("Texturer/test.png");
+	vGUIPanels.push_back("Texturer/menyTest4.png");
+	vGUIPanels.push_back("Texturer/menyTest5.png");
+	texGUI = createTextureArray(device, dc, vGUIPanels, DXGI_FORMAT_R8G8B8A8_UNORM, D3DX11_FILTER_NONE, D3DX11_FILTER_NONE);
+	
+	
 
 	UINT byteWidth[2] = {sizeof(MESH_PUV) , 0};
 	this->FullScreenQuad->mInit(device, bufferInit, instanceInit, puv , 6, 0 , this->pBufferObj , byteWidth );
@@ -339,6 +349,11 @@ ID3D11ShaderResourceView *GeometryManager::getTextures(int ID)
 ID3D11ShaderResourceView *GeometryManager::getGlowMaps(int ID)
 {
 	return this->vEntities[ID]->getGlowArray();
+}
+
+ID3D11ShaderResourceView *GeometryManager::getGUIPanels()
+{
+	return this->texGUI;
 }
 
 void GeometryManager::importMesh(ID3D11Device *device,

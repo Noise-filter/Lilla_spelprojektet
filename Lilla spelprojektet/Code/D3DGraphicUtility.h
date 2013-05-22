@@ -59,7 +59,7 @@ enum PASS_STATE
 	PASS_FULLSCREENQUAD,
 	PASS_PARTICLE,
 	PASS_HPBARS,
-	PASS_MENY,
+	PASS_MENU,
 	PASS_DEBUG,
 	PASS_BLUR,  //Where the shader that's used for blurring is placed, place before this one if new shaders are needed
 	PASS_BLURV, //Used to set pMultipleSRVs[3] and pMultipleRTVs[3] to blur the image vertically

@@ -128,8 +128,10 @@ void Engine::render(Matrix& view, Matrix& proj, Text* text, int nrOfText,  Vec3 
 	d3d->pDeviceContext->Draw(pGeoManager->getNrOfParticles(), 0);
 
 	//Rita ut gui
-	temp = this->d3d->setPass(PASS_HPBARS);
+	temp = this->d3d->setPass(PASS_MENU);
 	pGeoManager->applyGUIBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	ID3D11ShaderResourceView* texture = pGeoManager->getGUIPanels();
+	temp->SetResource("textures", texture);
 	temp->Apply(0);
 	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfGUIObjects(), 0, 0);
 
@@ -164,8 +166,10 @@ void Engine::renderGui(Text* text, int nrOfText)
 {
 	d3d->clearAndBindRenderTarget();
 	Shader* temp;
-	temp = this->d3d->setPass(PASS_HPBARS);
+	temp = this->d3d->setPass(PASS_MENU);
 	pGeoManager->applyGUIBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	ID3D11ShaderResourceView* texture = pGeoManager->getGUIPanels();
+	temp->SetResource("textures", texture);
 	temp->Apply(0);
 	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfGUIObjects(), 0, 0);
 
