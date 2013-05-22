@@ -17,7 +17,8 @@ enum BUTTONTYPE
 	LAST,
 	BACK,
 	MUTE,
-	MAIN_MENU
+	MAIN_MENU,
+	RETRY
 };
 
 struct Text
@@ -63,7 +64,7 @@ public:
 	~GUI();
 
 	void render(Button*& btn, Text*& text);
-	int update(MouseState *mouse, int& state, bool& muted);
+	int update(MouseState *mouse, int& state, bool& muted, bool& retry);
 	void createBtns(int state);
 	int getNrOfBtns()const;
 	int getNrOfText()const;
@@ -99,6 +100,7 @@ private:
 	float midScreenW;
 	float midScreenH;
 	bool muted;
+	bool retry;
 
 	wstring* levelList;
 	int nrOfLevels;
