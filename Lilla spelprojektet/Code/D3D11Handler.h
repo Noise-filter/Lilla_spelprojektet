@@ -22,6 +22,9 @@ class D3D11Handler
 		ID3D11ShaderResourceView	**pNullSRVs;
 		ID3D11DepthStencilView		*pDSVDeferred;
 
+		//Test
+		ID3D11RenderTargetView**	pNullRTV;
+
 		int							 iNrOfDeferred;
 		std::vector<Shader*>         vShaders;
 
@@ -65,6 +68,8 @@ class D3D11Handler
 		ID3D11DeviceContext* returnDeviceContext();
 
 		ID3D11ShaderResourceView* debugGetSRV(int id);
+
+		void nullRTV();
 
 };
 

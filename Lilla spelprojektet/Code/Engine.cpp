@@ -49,6 +49,7 @@ void Engine::start(int mapSize)
 
 void Engine::render(Matrix& view, Matrix& proj, Text* text, int nrOfText,  Vec3 cameraPos)
 {
+	//d3d->nullRTV();
 	d3d->clearAndBindRenderTarget();
 
 	int index = 0;
@@ -76,9 +77,12 @@ void Engine::render(Matrix& view, Matrix& proj, Text* text, int nrOfText,  Vec3 
 			d3d->pDeviceContext->DrawInstanced(pGeoManager->getNrOfVertexPoints(i), pGeoManager->getNrOfInstances(i), 0, 0);
 		}
 	}
+	temp->m_pEffect->GetVariableByName("textures")->AsShaderResource()->SetResource(NULL);
+	temp->m_pEffect->GetVariableByName("glowMaps")->AsShaderResource()->SetResource(NULL);
+	temp->m_pTechnique->GetPassByIndex(0)->Apply(0, d3d->pDeviceContext);
 
-
-
+	//d3d->nullRTV();
+	
 
 	//till för ljuset
 
@@ -118,22 +122,30 @@ void Engine::render(Matrix& view, Matrix& proj, Text* text, int nrOfText,  Vec3 
 	this->pGeoManager->applyLightBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	this->d3d->pDeviceContext->DrawInstanced(pGeoManager->getNrOfLightVertices(LIGHT_POINT), pGeoManager->getNrOfLightInstances(LIGHT_POINT) , 0 ,0);
 
-	this->d3d->pDeviceContext->OMSetBlendState(NULL, NULL, 0xffffffff);
+	temp->m_pEffect->GetVariableByName("normalMap")->AsShaderResource()->SetResource(NULL);
+	temp->m_pEffect->GetVariableByName("diffuseAlbedoMap")->AsShaderResource()->SetResource(NULL);
+	temp->m_pEffect->GetVariableByName("depthMap")->AsShaderResource()->SetResource(NULL);
+	temp->m_pTechnique->GetPassByIndex(0)->Apply(0, d3d->pDeviceContext);
 
+	this->d3d->pDeviceContext->OMSetBlendState(NULL, NULL, 0xffffffff);
+	
+	//d3d->nullRTV();
 	world = world * view * proj;
 	temp = this->d3d->setPass(PASS_PARTICLE);
 	temp->SetMatrix("gWVP" , world);
 	temp->Apply(0);
 	pGeoManager->applyParticleBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 	d3d->pDeviceContext->Draw(pGeoManager->getNrOfParticles(), 0);
-
+	
+	//d3d->nullRTV();
 	//Rita ut gui
 	temp = this->d3d->setPass(PASS_MENU);
 	pGeoManager->applyGUIBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	ID3D11ShaderResourceView* texture = pGeoManager->getGUIPanels();
-	temp->SetResource("textures", texture);
-	temp->Apply(0);
-	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfGUIObjects(), 0, 0);
+	//this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfGUIObjects(), 0, 0);
+	
+	temp->m_pEffect->GetVariableByName("textures")->AsShaderResource()->SetResource(NULL);
+	temp->m_pTechnique->GetPassByIndex(0)->Apply(0, d3d->pDeviceContext);
 
 	//Draw hp bars
 	temp = this->d3d->setPass(PASS_HPBARS);
@@ -141,16 +153,26 @@ void Engine::render(Matrix& view, Matrix& proj, Text* text, int nrOfText,  Vec3 
 	temp->Apply(0);
 	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfHPBars(), 0, 0);
 	
+	//d3d->nullRTV();
 	blurTexture(temp);
-
+	
+	//d3d->nullRTV();
 	view = view * proj;
 	renderDebug(view);
 	
+	//d3d->nullRTV();
 	temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
 	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);
 
+	temp->m_pEffect->GetVariableByName("normalMap")->AsShaderResource()->SetResource(NULL);
+	temp->m_pEffect->GetVariableByName("diffuseAlbedoMap")->AsShaderResource()->SetResource(NULL);
+	temp->m_pEffect->GetVariableByName("lightMap")->AsShaderResource()->SetResource(NULL);
+	temp->m_pEffect->GetVariableByName("glowMap")->AsShaderResource()->SetResource(NULL);
+	temp->m_pTechnique->GetPassByIndex(0)->Apply(0, d3d->pDeviceContext);
+	
+	//d3d->nullRTV();
 	if(text != NULL)
 	{
 		renderText(text, nrOfText);
@@ -172,6 +194,9 @@ void Engine::renderGui(Text* text, int nrOfText)
 	temp->SetResource("textures", texture);
 	temp->Apply(0);
 	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfGUIObjects(), 0, 0);
+	
+	temp->m_pEffect->GetVariableByName("textures")->AsShaderResource()->SetResource(NULL);
+	temp->m_pTechnique->GetPassByIndex(0)->Apply(0, d3d->pDeviceContext);
 
 	if(text != NULL)
 	{
@@ -239,9 +264,15 @@ void Engine::blurTexture(Shader *temp)
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);
 
+	temp->m_pEffect->GetVariableByName("inputTex")->AsShaderResource()->SetResource(NULL);
+	temp->m_pTechnique->GetPassByIndex(0)->Apply(0, d3d->pDeviceContext);
+
 	temp = d3d->setPass(PASS_BLURV);
 	temp->Apply(1);
 	this->d3d->pDeviceContext->Draw(6, 0);
+
+	temp->m_pEffect->GetVariableByName("inputTex")->AsShaderResource()->SetResource(NULL);
+	temp->m_pTechnique->GetPassByIndex(0)->Apply(0, d3d->pDeviceContext);
 }
 
 void Engine::renderDebug(Matrix &vp)
@@ -264,6 +295,8 @@ void Engine::renderDebug(Matrix &vp)
 	temp->Apply(1);
 	this->d3d->pDeviceContext->Draw(6, 0);
 
+	temp->m_pEffect->GetVariableByName("debugMap")->AsShaderResource()->SetResource(NULL);
+	temp->m_pTechnique->GetPassByIndex(0)->Apply(0, d3d->pDeviceContext);
 
 	D3DXMatrixIdentity(&world);
 	D3DXMatrixIdentity(&scaling);
@@ -279,6 +312,8 @@ void Engine::renderDebug(Matrix &vp)
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);
 
+	temp->m_pEffect->GetVariableByName("debugMap")->AsShaderResource()->SetResource(NULL);
+	temp->m_pTechnique->GetPassByIndex(0)->Apply(0, d3d->pDeviceContext);
 
 	D3DXMatrixIdentity(&world);
 	D3DXMatrixIdentity(&scaling);
@@ -294,6 +329,9 @@ void Engine::renderDebug(Matrix &vp)
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);
 
+	temp->m_pEffect->GetVariableByName("debugMap")->AsShaderResource()->SetResource(NULL);
+	temp->m_pTechnique->GetPassByIndex(0)->Apply(0, d3d->pDeviceContext);
+
 	D3DXMatrixIdentity(&world);
 	D3DXMatrixIdentity(&scaling);
 	D3DXMatrixIdentity(&translation);
@@ -308,4 +346,7 @@ void Engine::renderDebug(Matrix &vp)
 
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);
+
+	temp->m_pEffect->GetVariableByName("debugMap")->AsShaderResource()->SetResource(NULL);
+	temp->m_pTechnique->GetPassByIndex(0)->Apply(0, d3d->pDeviceContext);
 }

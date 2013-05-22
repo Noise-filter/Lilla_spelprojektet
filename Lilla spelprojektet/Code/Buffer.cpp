@@ -7,6 +7,7 @@ Buffer::Buffer()
 
 Buffer::~Buffer()
 {
+	//pBuffer = NULL;
 	SAFE_RELEASE(pBuffer);
 }
 

@@ -17,12 +17,17 @@ D3D11Handler::D3D11Handler()
 	pMultipleRTVs		= NULL;
 	pMultipleSRVs		= NULL;
 	pNullSRVs			= NULL;
-	pDSVDeferred		= NULL; 
+	pDSVDeferred		= NULL;
 	iNrOfDeferred		= 5;
 
 	//Blur targets
 	pBlurRTV	= NULL;
 	pBlurSRV	= NULL;
+
+	//Testing
+	//pNullRTV = new ID3D11RenderTargetView*[3];
+	//for(int i = 0; i < 3; i++)
+	//	pNullRTV[i] = NULL;
 
 	this->vShaders.resize(NROFSHADERS);
 
@@ -68,7 +73,7 @@ D3D11Handler::~D3D11Handler()
 	SAFE_DELETE_ARRAY(pDeferredTargets);
 			
 	//SAFE_DELETE_ARRAY(pNullSRVs);			
-	
+	//SAFE_DELETE_ARRAY(pNullRTV);	
 }
 
 bool D3D11Handler::initDirect3D(HWND hWnd)
@@ -552,4 +557,9 @@ bool D3D11Handler::initBlur()
 	}
 
 	return true;
+}
+
+void D3D11Handler::nullRTV()
+{
+	this->pDeviceContext->OMSetRenderTargets(3, pNullRTV, NULL);
 }
