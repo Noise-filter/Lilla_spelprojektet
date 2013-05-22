@@ -235,10 +235,10 @@ void Game::handleInput(float dt)
 		}
 	}
 
-	//if(input->checkKeyDown(0x20))	//Space
+	if(input->checkKeyDown(0x20))	//Space
 	{
 		soundSystem->setPaused(pausedMusic);
-		//pausedMusic = !pausedMusic;
+		pausedMusic = !pausedMusic;
 	}
 
 	if(gameState == STATE_PLAYING)
