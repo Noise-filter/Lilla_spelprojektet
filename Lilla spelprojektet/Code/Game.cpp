@@ -51,8 +51,7 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	playlist = soundSystem->createPlaylist("playlist.m3u");
 	menuSound = soundSystem->createStream("SeductressDubstep_Test.mp3");
 	soundSystem->playSound(menuSound);
-	//soundSystem->setVolume(1);
-	//initiate other game resources such as level or whatever
+	
 
 
 
@@ -122,7 +121,7 @@ void Game::render()
 
 		engine->render(camera->View(), camera->Proj(), temp, tempSize, camera->GetPosition());
 	}
-	else if(gameState == STATE_MENU || gameState == STATE_SETTINGS || gameState == STATE_NEWGAME || gameState == STATE_PAUSED || gameState == STATE_WIN || gameState == STATE_LOSE)
+	else //if(gameState == STATE_MENU || gameState == STATE_SETTINGS || gameState == STATE_NEWGAME || gameState == STATE_PAUSED || gameState == STATE_WIN || gameState == STATE_LOSE)
 	{
 		engine->setGUI(panels, nrOfPanels);
 		engine->renderGui(temp, tempSize);
@@ -136,10 +135,9 @@ int Game::update(float dt)
 	static bool muted = false;
 	handleInput(dt);
 	soundSystem->update();
-	if(gameState == STATE_MENU || gameState == STATE_NEWGAME || gameState == STATE_PAUSED)
+	if(gameState == STATE_MENU || gameState == STATE_NEWGAME || gameState == STATE_PAUSED || gameState == STATE_WIN || gameState == STATE_LOSE)
 	{
-		
-	soundSystem->setPaused(playlist, true);
+		soundSystem->setPaused(playlist, true);
 	}
 	if(gameState == STATE_PLAYING || gameState == STATE_GAMESTART )
 	{
@@ -164,11 +162,11 @@ int Game::update(float dt)
 	{
 		return 0;
 	}
-	
-	gui->update(input->getMs(), gameState, muted);
+	bool retry;
+	gui->update(input->getMs(), gameState, muted, retry);
 	if(oldGameState != gameState)
 	{
-		changeState();
+		changeState(retry);
 		oldGameState = gameState;
 	}
 	soundSystem->setMute(muted);
@@ -180,18 +178,18 @@ int Game::update(float dt)
 	return 1;
 }
 
-void Game::changeState()
+void Game::changeState(bool retry)
 {
-	if((gameState == STATE_MENU || gameState == STATE_PAUSED) && (oldGameState != STATE_NEWGAME && oldGameState != STATE_SETTINGS && oldGameState != STATE_PAUSED))
+	if((gameState == STATE_MENU || gameState == STATE_PAUSED || gameState == STATE_WIN || gameState == STATE_LOSE) && (oldGameState != STATE_NEWGAME && oldGameState != STATE_SETTINGS && oldGameState != STATE_PAUSED))
 	{
 		menuSound = soundSystem->createStream("SeductressDubstep_Test.mp3");
 		soundSystem->playSound(menuSound);
 	}
-	if(gameState == STATE_GAMESTART)
+	if(gameState == STATE_GAMESTART && retry == false)
 	{
 		newLevel(gui->getCurrentLevel(), gui->getCurrentDiff());
 	}
-	if(gameState == STATE_GAMESTART || (gameState == STATE_PLAYING && oldGameState != STATE_GAMESTART))
+	if((gameState == STATE_GAMESTART || (gameState == STATE_PLAYING && oldGameState != STATE_GAMESTART)) && retry == false)
 	{
 		soundSystem->stopSound(menuSound);
 		soundSystem->setPaused(playlist, false);
@@ -200,10 +198,12 @@ void Game::changeState()
 	{
 		gameState = pausedGameStateSaved;
 	}
-	/*if(gameState == STATE_GAMESTART && pausedGameStateSaved != 0)
+	if(gameState == STATE_GAMESTART && retry == true)
 	{
-		newLevel("level3.txt", settings.difficulty);
-	}*/
+		soundSystem->stopSound(menuSound);
+		soundSystem->setPaused(playlist, false);
+		retrylevel(gui->getCurrentLevel(), gui->getCurrentDiff());
+	}
 }
 
 void Game::handleInput(float dt)
@@ -337,4 +337,13 @@ void Game::newLevel(string filename, int difficulty)
 void Game::loadlevel(string filename, int difficulty)
 {	
 	gameLogic->init(10,settings, filename, difficulty);
+}
+
+void Game::retrylevel(string filename, int difficulty)
+{	
+	SAFE_DELETE(gameLogic);
+
+	gameLogic = new GameLogic();
+
+	loadlevel(filename+".txt", difficulty);
 }

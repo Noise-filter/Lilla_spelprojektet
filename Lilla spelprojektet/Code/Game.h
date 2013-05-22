@@ -23,10 +23,11 @@ public:
 	void handleInput(float dt);
 	void newLevel(string filename, int difficulty);
 	void loadlevel(string filename, int difficulty);
+	void retrylevel(string filename, int difficulty);
 
 private:
 	GameSettings readSettingsFromFile(string fileName);
-	void changeState();
+	void changeState(bool retry);
 
 private:
 	Engine* engine;

@@ -12,6 +12,7 @@ GUI::GUI()
 	midScreenW = (float)SCREEN_WIDTH/2;
 	midScreenH = (float)SCREEN_HEIGHT/2;
 	muted = false;
+	retry = false;
 	createLevelList();
 	this->currentLevel = 0;
 	initDifficulty();
@@ -40,7 +41,7 @@ void GUI::render(Button*& btns, Text*& text)
 	
 }
 
-int GUI::update(MouseState *mouse, int& state, bool& muted)
+int GUI::update(MouseState *mouse, int& state, bool& muted, bool& retry)
 {
 	if(GUI_STATE != state)
 	{
@@ -61,6 +62,7 @@ int GUI::update(MouseState *mouse, int& state, bool& muted)
 		}
 	}
 	muted = this->muted;
+	retry = this->retry;
 	return state;
 }
 
@@ -127,20 +129,21 @@ void GUI::createBtns(int state)
 	else if(state == STATE_WIN)
 	{
 		this->nrOfBoxes = 1;
-		this->textBoxes = new Text[nrOfBoxes];
 		this->textBoxes[0] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 100), L"You Won!", 62, 0x800000ff);
-		this->nrOfBtns = 1;
+		this->nrOfBtns =2;
 		this->menuBtns = new Button[nrOfBtns];
 		this->menuBtns[0] = createBtn(D3DXVECTOR2(midScreenW - 100, midScreenH + 100), MAIN_MENU);
+		this->menuBtns[1] = createBtn(D3DXVECTOR2(midScreenW + 100, midScreenH + 100), RETRY);
 	}
 	else if(state == STATE_LOSE)
 	{
 		this->nrOfBoxes = 1;
 		this->textBoxes = new Text[nrOfBoxes];
 		this->textBoxes[0] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 100), L"You Lost", 62, 0x800000ff);
-		this->nrOfBtns = 1;
+		this->nrOfBtns = 2;
 		this->menuBtns = new Button[nrOfBtns];
 		this->menuBtns[0] = createBtn(D3DXVECTOR2(midScreenW - 100, midScreenH + 100), MAIN_MENU);
+		this->menuBtns[1] = createBtn(D3DXVECTOR2(midScreenW + 100, midScreenH + 100), RETRY);
 	}
 }
 
@@ -232,6 +235,11 @@ Button GUI::createBtn(D3DXVECTOR2 pos, BUTTONTYPE type)
 	{
 		btn.size = D3DXVECTOR2(100, 20);
 		text.text = L"Main Menu";
+	}
+	if(type == RETRY)
+	{
+		btn.size = D3DXVECTOR2(80, 20);
+		text.text = L"Retry";
 	}
 
 	btn.text = text;
@@ -332,6 +340,11 @@ int GUI::changeState(Button btn)
 	else if(btn.type == NEXT || btn.type == LAST)
 	{
 		changeText(btn.pos, btn.type);
+	}
+	else if(btn.type == RETRY)
+	{
+		state = STATE_GAMESTART;
+		this->retry = true;
 	}
 	return state;
 }
