@@ -18,6 +18,7 @@ public:
 
 private:
 	Enemy* target;
+	Vec3 targetPos;
 	float speed;
 	float damage;
 

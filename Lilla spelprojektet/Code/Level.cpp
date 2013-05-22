@@ -438,7 +438,7 @@ bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 			switch(selectedStructure)
 			{
 				case BUILDABLE_TOWER:
-					structures[xPos][yPos] = new Tower(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWERBASE,2,100,0,20, 1, 25, 100,false);
+					structures[xPos][yPos] = new Tower(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWERBASE,2,100,0,20, 1, 250, 100,false);
 					for(int i = 0; i < (int)this->upgradesInUse.size();i++)
 					{
 						dynamic_cast<Tower*>(structures[xPos][yPos])->giveUpgrade(upgradesInUse[i]);
@@ -467,6 +467,16 @@ bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 					break;
 			}
 			cout << "a structure has been built on the location X:"<< xPos << " Y:" << yPos << endl;
+			//använd x,y för att sätta de nodernas ljus till null
+			
+			nodes[xPos][yPos].getRenderData().lightID = -1;
+			nodes[xPos+1][yPos].getRenderData().lightID = -1;
+			nodes[xPos][yPos+1].getRenderData().lightID = -1;
+			nodes[xPos+1][yPos+1].getRenderData().lightID = -1;
+
+			//använd x,y för att sätta de nodernas ljus till null
+			
+
 			if(builtUpgrade)
 			{
 				upgradeStructures(selectedStructure);
