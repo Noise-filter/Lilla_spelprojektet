@@ -15,8 +15,9 @@ enum BUTTONTYPE
 	PAUSED_CONTINUE,
 	NEXT,
 	LAST,
-	MAIN_MENU,
-	MUTE
+	BACK,
+	MUTE,
+	MAIN_MENU
 };
 
 struct Text
@@ -51,7 +52,7 @@ struct GUI_Panel
 		matrix._41 = pos.x;
 		matrix._42 = pos.y;
 
-		textureID = ID;
+		textureID = ID; //Fixa detta
 	}
 };
 
@@ -94,6 +95,7 @@ private:
 	int nrOfPanles;
 
 	int GUI_STATE;
+	int old_GUI_STATE;
 	float midScreenW;
 	float midScreenH;
 	bool muted;

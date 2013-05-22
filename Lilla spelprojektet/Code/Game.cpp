@@ -122,7 +122,7 @@ void Game::render()
 
 		engine->render(camera->ViewsProj(), temp, tempSize);
 	}
-	else if(gameState == STATE_MENU || gameState == STATE_SETTINGS || gameState == STATE_NEWGAME || gameState == STATE_PAUSED)
+	else if(gameState == STATE_MENU || gameState == STATE_SETTINGS || gameState == STATE_NEWGAME || gameState == STATE_PAUSED || gameState == STATE_WIN || gameState == STATE_LOSE)
 	{
 		engine->setGUI(panels, nrOfPanels);
 		engine->renderGui(temp, tempSize);
@@ -151,15 +151,15 @@ int Game::update(float dt)
 
 		
 	}
-	if(gameState == STATE_WIN) 
-	{
-		cout << "YOU WON" << endl;
-	}
-	else if(gameState == STATE_LOSE)
-	{
-		//hantera win/lose state
-		cout << "YOU LOSE" << endl;
-	}
+	//if(gameState == STATE_WIN) 
+	//{
+	//	cout << "YOU WON" << endl;
+	//}
+	//else if(gameState == STATE_LOSE)
+	//{
+	//	//hantera win/lose state
+	//	cout << "YOU LOSE" << endl;
+	//}
 	else if(gameState == STATE_QUIT)
 	{
 		return 0;
