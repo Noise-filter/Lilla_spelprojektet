@@ -64,6 +64,11 @@ void Level::constructNeutrals()
 				pos = Vec3((float)i*quadSize + (quadSize/2),0,(float)j*quadSize + (quadSize/2));
 				neutralStructures.push_back(new Structure(pos,ENTITY_SPIRALSPHERE,0,100,0,false));
 				neutralStructures.at(neutralStructures.size()-1)->setScale(1.5f);
+
+				nodes[i][j].getRenderData().lightID = LIGHT_NONE;
+				nodes[i+1][j].getRenderData().lightID = LIGHT_NONE;
+				nodes[i][j+1].getRenderData().lightID = LIGHT_NONE;
+				nodes[i+1][j+1].getRenderData().lightID = LIGHT_NONE;
 			}
 		}
 	}
@@ -480,12 +485,14 @@ bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 			nodes[xPos][yPos+1].getRenderData().lightID = LIGHT_NONE;
 			nodes[xPos+1][yPos+1].getRenderData().lightID = LIGHT_NONE;
 
+			Statistics::Getinstance()->totalNrOfBuildings++;
 			//använd x,y för att sätta de nodernas ljus till null
 			
 
 			if(builtUpgrade)
 			{
 				upgradeStructures(selectedStructure);
+				Statistics::Getinstance()->totalNrOfUpgrades++;
 				cout << "the structure was an upgrade: " << selectedStructure <<endl;
 			}
 			return true;

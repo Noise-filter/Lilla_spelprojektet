@@ -8,8 +8,8 @@ Statistics::Statistics(void)
 	totalSupply = 0;
 	totalNrOfBuildings = 0;
 	totalEnemiesKilled = 0;
-	nrOfUpgrades = 0;
-	nrOfMaxLvlTowers = 0;
+	totalNrOfUpgrades = 0;
+	totalNrOfMaxLvlTowers = 0;
 	
 	totalTime = 0;
 	averageTowerLvl = 0;

@@ -85,7 +85,7 @@ void GUI::createBtns(int state)
 		this->menuBtns[2] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 50), QUIT);
 		this->nrOfBoxes = 1;
 		this->textBoxes = new Text[nrOfBoxes];
-		this->textBoxes[0] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 140), L".exe", 62, 0x800000ff);
+		this->textBoxes[0] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 140), L"Caecus", 62, 0x800000ff);
 	}
 	else if(state == STATE_SETTINGS)
 	{
@@ -259,7 +259,7 @@ Text GUI::createTextBox(D3DXVECTOR2 pos, wchar_t* text, float size, UINT32 color
 
 void GUI::createPanels(int state)
 {
-	if(state == STATE_MENU || state == SETTINGS || state == STATE_NEWGAME || state == STATE_PAUSED)
+	if(state == STATE_MENU || state == SETTINGS || state == STATE_NEWGAME || state == STATE_PAUSED || state == STATE_WIN || state == STATE_LOSE)
 	{
 		this->nrOfPanles = 1;
 		this->panels = new GUI_Panel[nrOfPanles];
@@ -275,10 +275,7 @@ void GUI::createPanels(int state)
 		this->panels[3] = GUI_Panel(D3DXVECTOR2(0.6, -0.7), D3DXVECTOR2(0.4, 0.1), TEXTURE_TIME_GOAL);
 		this->panels[4] = GUI_Panel(D3DXVECTOR2(0.6, -0.9), D3DXVECTOR2(0.4, 0.1), TEXTURE_BUILDINGS_HOTKEY);
 	}
-	else if(state == STATE_WIN || state == STATE_LOSE)
-	{
 
-	}
 }
 
 bool GUI::checkBtn(MouseState *mousePos, Button btn)

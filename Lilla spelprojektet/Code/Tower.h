@@ -6,6 +6,7 @@
 #include "Projectile.h"
 #include "SoundSystem.h"
 #include <vector>
+#include "Statistics.h"
 using namespace std;
 
 class Tower : public Structure

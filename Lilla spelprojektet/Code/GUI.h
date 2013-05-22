@@ -1,6 +1,7 @@
 #pragma once
 #include "D3DMathUtility.h"
 #include "WindowsUtility.h"
+#include "Statistics.h"
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -94,6 +95,8 @@ private:
 	int nrOfBoxes;
 	GUI_Panel* panels;
 	int nrOfPanles;
+
+	Statistics* endStats;
 
 	int GUI_STATE;
 	int old_GUI_STATE;
