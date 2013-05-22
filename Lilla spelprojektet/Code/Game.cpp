@@ -215,16 +215,16 @@ void Game::handleInput(float dt)
 	
 	if(gameState == STATE_GAMESTART || gameState == STATE_PLAYING) 
 	{
-		if(input->checkMovement('W'))	//W
+		if(input->checkMovement('W') && camera->GetPosition().x > (gameLogic->getMapSize()-5 * -1))	//W
 			camera->Walk(-100.0f * dt);
 
-		if(input->checkMovement('A'))	//A
+		if(input->checkMovement('A') && camera->GetPosition().z > (gameLogic->getMapSize()-5 * -1))	//A
 			camera->Strafe(-100.0f * dt);
 
-		if(input->checkMovement('S'))	//S
+		if(input->checkMovement('S') && camera->GetPosition().x < (gameLogic->getMapSize()) * 10)	//S
 			camera->Walk(100.0f * dt);
 
-		if(input->checkMovement('D'))	//D
+		if(input->checkMovement('D') && camera->GetPosition().z < (gameLogic->getMapSize()) * 10)	//D
 			camera->Strafe(100.0f * dt);
 
 		if(input->checkKeyDown(VK_ESCAPE))

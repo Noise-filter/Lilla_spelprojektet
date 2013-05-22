@@ -20,7 +20,7 @@ Enemy::Enemy(Vec3 pos, int meshID, int textureID, float hp, int lightID, float s
 	this->xp = xp;
 
 	waypoints.push_back(Waypoint((int)pos.x, (int)pos.z));
-	trail = ParticleSystem::Getinstance()->addTrail(Vec3(1, 1, 1),this->getPosition(), 1, 0.1f, 0, 1, 1, 1);
+	//trail = ParticleSystem::Getinstance()->addTrail(Vec3(1, 1, 1),this->getPosition(), 1, 0.1f, 0, 1, 1, 1);
 
 	target = NULL;
 	attackSpeed = 1;
@@ -33,14 +33,14 @@ Enemy::Enemy(Vec3 pos, int meshID, int textureID, float hp, int lightID, float s
 
 Enemy::~Enemy()
 {
-	ParticleSystem::Getinstance()->removePolicy(trail);
+	//ParticleSystem::Getinstance()->removePolicy(trail);
 	ParticleSystem::Getinstance()->addDeathExplosion(Vec3(1,0,0), getPosition(), 100, 0.5, 30);
 }
 
 int Enemy::update(float dt)
 {
 	targetUpdateTime -= dt;
-	trail->updatePosition(this->getPosition());
+	//trail->updatePosition(this->getPosition());
 	int id = Entity::update(dt);
 	if(id == 0)
 		return 0;
