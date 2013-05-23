@@ -88,6 +88,8 @@ private:
 	void initDifficulty();
 	wstring convertStrToWstr(string text);
 	string convertWstrToStr(wstring text);
+	void getEndStats();
+	string convertFloat(float value);
 
 	Button* menuBtns;
 	int nrOfBtns;
