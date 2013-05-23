@@ -93,7 +93,7 @@ void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc)
 	vGUIPanels.push_back("Texturer/test.png");
 	vGUIPanels.push_back("Texturer/menyTest4.png");
 	vGUIPanels.push_back("Texturer/menyTest5.png");
-	vGUIPanels.push_back("Texturer/fu_test3.jpg");
+	vGUIPanels.push_back("Texturer/gui.png");
 	texGUI = createTextureArray(device, dc, vGUIPanels, DXGI_FORMAT_R8G8B8A8_UNORM, D3DX11_FILTER_NONE, D3DX11_FILTER_NONE);
 	
 	
