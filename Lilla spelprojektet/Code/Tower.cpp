@@ -103,6 +103,7 @@ int Tower::update(float dt)
 		{
 			Projectile* temp = projectiles.at(i);
 			projectiles.erase(projectiles.begin() + i);
+			i--;
 			delete temp;
 		}
 		else if(ret == 2)
@@ -111,6 +112,7 @@ int Tower::update(float dt)
 			Projectile* temp = projectiles.at(i);
 			giveXp(temp->getTarget()->getXp());
 			projectiles.erase(projectiles.begin() + i);
+			i--;
 			delete temp;
 
 		}
