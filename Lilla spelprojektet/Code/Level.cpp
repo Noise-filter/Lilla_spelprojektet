@@ -662,10 +662,10 @@ void Level::getHPBarInfo(vector<HPBarInfo>& hpBars)
 
 float Level::getCurrPercent()const
 {
-	return this->currPercent;
+	return floorf(this->currPercent*100);
 }
 
 float Level::getWinPercent()const
 {
-	return this->winPercent;
+	return floorf(this->winPercent*100);
 }

@@ -78,7 +78,9 @@ public:
 
 private:
 	
-	void clear();
+	void clearBtns();
+	void clearTexts();
+	void clearPanels();
 	bool checkBtn(MouseState *mousePos, Button btn);
 	int changeState(Button btn);
 	Button createBtn(D3DXVECTOR2 pos, BUTTONTYPE type);
@@ -105,10 +107,12 @@ private:
 
 	int GUI_STATE;
 	int old_GUI_STATE;
+	int lastPlayingState;
 	float midScreenW;
 	float midScreenH;
 	bool muted;
 	bool retry;
+	bool first;
 
 	wstring* levelList;
 	int nrOfLevels;
