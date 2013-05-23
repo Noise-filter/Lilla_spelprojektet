@@ -289,14 +289,14 @@ void GUI::createPanels(int state)
 	}
 	else if(state == STATE_GAMESTART || state == STATE_PLAYING )
 	{
-		this->nrOfPanles = 1;
+		this->nrOfPanles = 6;
 		this->panels = new GUI_Panel[nrOfPanles];
-		//this->panels[0] = GUI_Panel(D3DXVECTOR2(-0.8, -0.8), D3DXVECTOR2(0.2, 0.2), TEXTURE_BUILDING);
-		//this->panels[1] = GUI_Panel(D3DXVECTOR2(-0.4, -0.8), D3DXVECTOR2(0.2, 0.2), TEXTURE_INFO);
-		//this->panels[2] = GUI_Panel(D3DXVECTOR2(0.0, -0.8), D3DXVECTOR2(0.2, 0.2), TEXTURE_STATS);
-		//this->panels[3] = GUI_Panel(D3DXVECTOR2(0.6, -0.7), D3DXVECTOR2(0.4, 0.1), TEXTURE_TIME_GOAL);
-		//this->panels[4] = GUI_Panel(D3DXVECTOR2(0.6, -0.9), D3DXVECTOR2(0.4, 0.1), TEXTURE_BUILDINGS_HOTKEY);
-		this->panels[0] = GUI_Panel(D3DXVECTOR2(0, -0.8), D3DXVECTOR2(1, 0.2), TEXTURE_FRAME);
+		this->panels[0] = GUI_Panel(D3DXVECTOR2(-0.8, -0.8), D3DXVECTOR2(0.2, 0.2), TEXTURE_BUILDING);
+		this->panels[1] = GUI_Panel(D3DXVECTOR2(-0.4, -0.8), D3DXVECTOR2(0.2, 0.2), TEXTURE_INFO);
+		this->panels[2] = GUI_Panel(D3DXVECTOR2(0.0, -0.8), D3DXVECTOR2(0.2, 0.2), TEXTURE_STATS);
+		this->panels[3] = GUI_Panel(D3DXVECTOR2(0.6, -0.7), D3DXVECTOR2(0.4, 0.1), TEXTURE_TIME_GOAL);
+		this->panels[4] = GUI_Panel(D3DXVECTOR2(0.6, -0.9), D3DXVECTOR2(0.4, 0.1), TEXTURE_BUILDINGS_HOTKEY);
+		this->panels[5] = GUI_Panel(D3DXVECTOR2(0, -0.8), D3DXVECTOR2(1, 0.2), TEXTURE_FRAME);
 	}
 
 }
