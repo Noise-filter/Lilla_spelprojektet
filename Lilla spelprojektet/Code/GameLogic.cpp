@@ -366,3 +366,23 @@ vector<HPBarInfo> GameLogic::getHPBarInfo()
 
 	return hpBars;
 }
+
+int GameLogic::getResource()const
+{
+	return this->resource;
+}
+
+int GameLogic::getSupply()const
+{
+	return this->availableSupply;
+}
+
+float GameLogic::getCurrPercent()const
+{
+	return this->level->getCurrPercent();
+}
+
+float GameLogic::getWinPercent()const
+{
+	return this->level->getWinPercent();
+}

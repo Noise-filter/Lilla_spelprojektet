@@ -139,7 +139,11 @@ int Game::update(float dt)
 			return 0; // error
 		
 		pSystem->update(dt);
-
+		int resource = gameLogic->getResource();
+		int supply = gameLogic->getSupply();
+		float currPercent = gameLogic->getCurrPercent();
+		float winPercent = gameLogic->getWinPercent();
+		gui->setInGameText(resource, supply, currPercent, winPercent);
 		
 	}
 	//if(gameState == STATE_WIN) 

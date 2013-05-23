@@ -7,6 +7,7 @@ Level::Level(void)
 	this->nrOfSupplyStructures = 0;
 	this->extraResPerEnemy = 0;
 	this->winPercent = 0;
+	this->currPercent = 0;
 }
 
 bool Level::init(int quadSize, int difficulty)
@@ -289,8 +290,8 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 			nodes[i][j].update(dt);
 		}
 	}
-
-	if((float)nrOfStructures/((mapSize-1) * (mapSize-1)) > winPercent)
+	currPercent = (float)nrOfStructures/((mapSize-1) * (mapSize-1));
+	if(currPercent > winPercent)
 	{
 		return 4; // win
 	}
@@ -657,4 +658,14 @@ void Level::getHPBarInfo(vector<HPBarInfo>& hpBars)
 			}
 		}
 	}
+}
+
+float Level::getCurrPercent()const
+{
+	return this->currPercent;
+}
+
+float Level::getWinPercent()const
+{
+	return this->winPercent;
 }

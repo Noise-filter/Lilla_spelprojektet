@@ -1,7 +1,6 @@
 Texture2DArray textures: register(t0);
 SamplerState ss
 {
-
 };
 struct VSIn
 {
