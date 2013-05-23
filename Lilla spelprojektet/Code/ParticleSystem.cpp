@@ -16,6 +16,7 @@ ParticleSystem::~ParticleSystem(void)
 void ParticleSystem::shutdown()
 {
 	delete particleSystem;
+	particleSystem = NULL;
 }
 
 ParticleSystem* ParticleSystem::particleSystem = NULL;

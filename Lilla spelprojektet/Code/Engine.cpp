@@ -200,15 +200,30 @@ void Engine::renderText(Text* text, int nrOfText)
 {
 	for(int i = 0; i < nrOfText; i++)
 	{
-		pFontWrapper->DrawString(
-			d3d->pDeviceContext,
-			text[i].text,// String
-			text[i].textSize,// Font size
-			text[i].pos.x,// X position
-			text[i].pos.y,// Y position
-			text[i].textColor,// Text color, 0xAaBbGgRr
-			FW1_VCENTER | FW1_CENTER | FW1_RESTORESTATE// Flags (for example FW1_RESTORESTATE to keep context states unchanged)
-		);
+		if(text[i].center)
+		{
+			pFontWrapper->DrawString(
+				d3d->pDeviceContext,
+				text[i].text,// String
+				text[i].textSize,// Font size
+				text[i].pos.x,// X position
+				text[i].pos.y,// Y position
+				text[i].textColor,// Text color, 0xAaBbGgRr
+				FW1_VCENTER  | FW1_RESTORESTATE | FW1_CENTER// Flags (for example FW1_RESTORESTATE to keep context states unchanged)
+			);
+		}
+		else
+		{
+			pFontWrapper->DrawString(
+				d3d->pDeviceContext,
+				text[i].text,// String
+				text[i].textSize,// Font size
+				text[i].pos.x,// X position
+				text[i].pos.y,// Y position
+				text[i].textColor,// Text color, 0xAaBbGgRr
+				FW1_VCENTER  | FW1_RESTORESTATE //| FW1_CENTER// Flags (for example FW1_RESTORESTATE to keep context states unchanged)
+			);
+		}
 	}
 }
 

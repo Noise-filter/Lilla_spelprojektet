@@ -28,6 +28,7 @@ struct Text
 	wchar_t* text;
 	float textSize;
 	UINT32 textColor;
+	bool center;
 };
 
 struct Button
@@ -90,6 +91,7 @@ private:
 	string convertWstrToStr(wstring text);
 	void getEndStats();
 	string convertFloat(float value);
+	void setLeftAligned();
 
 	Button* menuBtns;
 	int nrOfBtns;
@@ -99,6 +101,7 @@ private:
 	int nrOfPanles;
 
 	Statistics* endStats;
+	wstring wStats[10];
 
 	int GUI_STATE;
 	int old_GUI_STATE;
