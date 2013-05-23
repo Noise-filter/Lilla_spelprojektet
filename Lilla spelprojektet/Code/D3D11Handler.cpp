@@ -227,7 +227,7 @@ bool D3D11Handler::initSwapChainAndDevice(HWND hWnd)
 	swapChainDesc.OutputWindow							= hWnd;
 	swapChainDesc.SampleDesc.Count						= 1;
 	swapChainDesc.SampleDesc.Quality					= 0;
-	swapChainDesc.Windowed								= FALSE;
+	swapChainDesc.Windowed								= TRUE;
 
 	D3D_FEATURE_LEVEL featureLevelsToTry[] = {
 		D3D_FEATURE_LEVEL_11_0,
