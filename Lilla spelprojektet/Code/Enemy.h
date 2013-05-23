@@ -41,7 +41,6 @@ public:
 
 private:
 	//Waypoints
-	Trail* trail;
 	std::vector<Waypoint> waypoints;
 	int currentWP;
 

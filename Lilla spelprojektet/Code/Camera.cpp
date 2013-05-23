@@ -125,10 +125,7 @@ void Camera::Pitch(float angle)
 {
 	float radians = angle * 0.0174532925f;
 	
-	D3DXMATRIX R;/* = D3DXMATRIX(1, 0, 0, 0, 
-							  0, cos(radians), -sin(radians), 0, 
-							  0, sin(radians), cos(radians), 0, 
-							  0, 0, 0, 1);*/
+	D3DXMATRIX R;
 							  
 	D3DXMatrixRotationAxis(&R, &-mRight, radians);
 	this->mUp = CrossMatrix(this->mUp, R);
@@ -139,10 +136,7 @@ void Camera::Yaw(float angle)
 {
 	float radians = angle * 0.0174532925f;
 	
-	D3DXMATRIX R;/* = D3DXMATRIX(cos(radians), 0, sin(radians), 0, 
-							  0, 1, 0, 0, 
-							  -sin(radians), 0, cos(radians), 0,
-							  0, 0, 0, 1);*/
+	D3DXMATRIX R;
 							  
 	Vec3 up(0,1,0);
 	D3DXMatrixRotationAxis(&R, &-up, radians);

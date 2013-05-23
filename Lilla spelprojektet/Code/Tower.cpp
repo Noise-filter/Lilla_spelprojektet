@@ -129,7 +129,7 @@ int Tower::update(float dt)
 			{
 				if(range > D3DXVec3Length(&(target->getPosition() - getPosition())))
 				{
-					projectiles.push_back(new Projectile(Vec3(getPosition().x-2, 6, getPosition().z), ENTITY_PROJECTILE, 0, 0, 0, target, projectileSpeed, damage));
+					projectiles.push_back(new Projectile(Vec3(getPosition().x-2, 6, getPosition().z), ENTITY_PROJECTILE, 0, 0, 0, target, projectileSpeed -50, damage));
 					cooldown = attackSpeed;
 					SoundSystem::Getinstance()->playSound(sound);
 				}

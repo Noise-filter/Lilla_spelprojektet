@@ -36,6 +36,7 @@ public:
 	bool isAdjecent(int xPos, int yPos);
 	bool isLocationBuildable(int xPos, int yPos);
 	bool isEmpty(int xPos, int yPos);
+	bool isGrey(int xPos, int yPos);
 
 	bool loadLevel(string fileName);
 

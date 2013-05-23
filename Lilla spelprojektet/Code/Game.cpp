@@ -36,13 +36,6 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	//use settings for the game
 	this->hInstance = hInstance;
 	this->cmdShow = cmdShow;
-	//newLevel();
-
-	//Statistics::Getinstance()->levelName = "level7";
-	//Statistics::Getinstance()->totalTime = 100;
-	//Statistics::Getinstance()->writeScoreToFile("score.txt");
-
-	//float derp = Statistics::Getinstance()->readScoreFromFile("score.txt","level7");
 
 	if(!engine->init(hInstance,cmdShow))
 		return false;

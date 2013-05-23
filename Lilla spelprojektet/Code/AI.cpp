@@ -272,16 +272,11 @@ bool AI::initFindTarget(string scriptName)
 
 	lua_getglobal(targetScript, "init");
 
-	
-	//sendArray(structuresInt, mapSize-1, targetScript);
-
 	lua_pushnumber(targetScript, mapSize);
 	lua_pcall(targetScript, 1, 1, 0);
 
 	int a = (int)lua_tonumber(targetScript, -1);
 	lua_pop(targetScript, 1);
-
-	//cout << "Output: " << a << endl;
 
 	return true;
 }
