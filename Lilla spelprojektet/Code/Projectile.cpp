@@ -25,6 +25,9 @@ Projectile::~Projectile()
 
 int Projectile::update(float dt)
 {
+	if(target && target->isDead())
+		target = NULL;
+
 	float length;
 	Vec3 dir;
 	Vec3 pos = getPosition();

@@ -43,7 +43,7 @@ void GameLogic::incrementSelectedStructure(int increment)
 }
 void GameLogic::setSelectedStructure(int select)
 {
-	if(selectedStructure >= 1 && selectedStructure <= BUILDABLE_UPGRADE_RES)
+	if(select >= 1 && select <= BUILDABLE_UPGRADE_RES)
 	{
 		this->selectedStructure = select;
 		printSelected();
