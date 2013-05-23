@@ -192,7 +192,7 @@ void GeometryManager::initMeshes(ID3D11Device *device, ID3D11DeviceContext *dc, 
 	fileName = "Meshar/Power Building part 2.obj";
 	importMesh(device, dc, this->vEntities.at(ENTITY_SUPPLYTOP), fileName, bufferInit, instanceInit, 100, this->pBufferObj, tex, glow);
 
-	fileName = "Meshar/Tower Part 1.obj";
+	fileName = "Meshar/Tower Top.obj";
 	importMesh(device, dc, this->vEntities.at(ENTITY_TOWERTOP), fileName, bufferInit, instanceInit, 1000, this->pBufferObj, tex, glow);
 
 	fileName = "Meshar/Tower Part 2.obj";
