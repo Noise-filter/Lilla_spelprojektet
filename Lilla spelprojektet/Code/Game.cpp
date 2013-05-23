@@ -178,7 +178,7 @@ void Game::changeState(bool retry)
 		menuSound = soundSystem->createStream("SeductressDubstep_Test.mp3");
 		soundSystem->playSound(menuSound);
 	}
-	if(gameState == STATE_GAMESTART && retry == false)
+	if(gameState == STATE_GAMESTART && retry == false && oldGameState != STATE_PAUSED)
 	{
 		newLevel(gui->getCurrentLevel(), gui->getCurrentDiff());
 	}
@@ -315,9 +315,11 @@ void Game::newLevel(string filename, int difficulty)
 {
 	
 	SAFE_DELETE(gameLogic);
-
+	pSystem->shutdown();
 
 	gameLogic = new GameLogic();
+	pSystem = pSystem->Getinstance();
+
 
 	loadlevel(filename+".txt", difficulty);
 
@@ -335,8 +337,10 @@ void Game::loadlevel(string filename, int difficulty)
 void Game::retrylevel(string filename, int difficulty)
 {	
 	SAFE_DELETE(gameLogic);
+	pSystem->shutdown();
 
 	gameLogic = new GameLogic();
+	pSystem = pSystem->Getinstance();
 
 	loadlevel(filename+".txt", difficulty);
 }
