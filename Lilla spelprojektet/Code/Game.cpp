@@ -128,6 +128,7 @@ int Game::update(float dt)
 	static bool muted = false;
 	handleInput(dt);
 	soundSystem->update();
+
 	if(gameState == STATE_MENU || gameState == STATE_NEWGAME || gameState == STATE_PAUSED || gameState == STATE_WIN || gameState == STATE_LOSE)
 	{
 		soundSystem->setPaused(playlist, true);
@@ -139,12 +140,7 @@ int Game::update(float dt)
 			return 0; // error
 		
 		pSystem->update(dt);
-		int resource = gameLogic->getResource();
-		int supply = gameLogic->getSupply();
-		float currPercent = gameLogic->getCurrPercent();
-		float winPercent = gameLogic->getWinPercent();
-		gui->setInGameText(resource, supply, currPercent, winPercent);
-		
+
 	}
 	//if(gameState == STATE_WIN) 
 	//{
@@ -161,6 +157,15 @@ int Game::update(float dt)
 	}
 	bool retry;
 	gui->update(input->getMs(), gameState, muted, retry);
+	if(gameState == STATE_GAMESTART || gameState == STATE_PLAYING)
+	{
+		int resource = gameLogic->getResource();
+		int supply = gameLogic->getSupply();
+		float currPercent = gameLogic->getCurrPercent();
+		float winPercent = gameLogic->getWinPercent();
+		gui->setInGameText(resource, supply, currPercent, winPercent);
+		
+	}
 	if(oldGameState != gameState)
 	{
 		changeState(retry);
