@@ -38,8 +38,8 @@ D3D11Handler::D3D11Handler()
 	SCREEN_WIDTH = desktop.right;
 	SCREEN_HEIGHT = desktop.bottom;
 	//KOM IHÅG ATT ÄNDRA 
-	SCREEN_WIDTH = 1920;
-	SCREEN_HEIGHT = 1080;
+	SCREEN_WIDTH = 800;
+	SCREEN_HEIGHT = 600;
 
 }
 

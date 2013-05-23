@@ -40,6 +40,9 @@ public:
 
 	bool loadLevel(string fileName);
 
+	float getCurrPercent()const;
+	float getWinPercent()const;
+
 private:
 	int destroyBuildings();
 	void makeSet(int x, int z);
@@ -58,6 +61,7 @@ private:
 	Set<Structure*> sets;
 
 	float winPercent;
+	float currPercent;
 	int nrOfSupplyStructures;
 	int quadSize;
 	int mapSize;
