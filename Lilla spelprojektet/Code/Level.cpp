@@ -245,7 +245,6 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 					//Ta bort byggnaden
 					SAFE_DELETE(structures[i][j]);
 
-					//blalblablalblablalbalbal karl
 					nodes[i][j].getRenderData().lightID = LIGHT_POINT;
 					nodes[i+1][j].getRenderData().lightID = LIGHT_POINT;
 					nodes[i][j+1].getRenderData().lightID = LIGHT_POINT;
@@ -315,9 +314,7 @@ void Level::upgradeStructures(int selectedUpgrade)
 		{
 			if(structures[i][j] != NULL && typeid(*structures[i][j]) == typeid(Tower))
 			{
-				//cout << "hp before: "<< dynamic_cast<Tower*>(structures[i][j])->getHp() << endl;
 				dynamic_cast<Tower*>(structures[i][j])->giveUpgrade(availibleUpgrades[selectedUpgrade-3]);
-				//cout << "hp after: "<< dynamic_cast<Tower*>(structures[i][j])->getHp() << endl;
 			}
 		}	
 	}
@@ -422,6 +419,34 @@ bool Level::isLocationBuildable(int xPos, int yPos)
 	}
 }
 
+bool Level::isGrey(int xPos, int yPos)
+{
+	int counter = 0;
+
+	if(nodes[xPos][yPos].getColor() == COLOR_GREY)
+	{
+		counter++;
+	}
+	if(nodes[xPos+1][yPos].getColor() == COLOR_GREY)
+	{
+		counter++;
+	}
+	if(nodes[xPos][yPos+1].getColor() == COLOR_GREY)
+	{
+		counter++;
+	}
+	if(nodes[xPos+1][yPos+1].getColor() == COLOR_GREY)
+	{
+		counter++;
+	}
+	if(counter == 4)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 bool Level::isEmpty(int xPos, int yPos)
 {
 	if(structures[xPos][yPos])
@@ -493,7 +518,6 @@ bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 			{
 				upgradeStructures(selectedStructure);
 				Statistics::Getinstance()->totalNrOfUpgrades++;
-				cout << "the structure was an upgrade: " << selectedStructure <<endl;
 			}
 			return true;
 		}

@@ -62,7 +62,7 @@ void GameLogic::giveSupply(float dt)
 		int res = resPerTick + level->getNrOfSupplyStructures()/2;
 		this->availableSupply += res;
 		endStats->totalSupply += res;
-		cout << "gained resources: " << resPerTick + level->getNrOfSupplyStructures()/2 << " you now have: " << availableSupply << endl;
+		cout << "gained supply: " << resPerTick + level->getNrOfSupplyStructures()/2 << " you now have: " << availableSupply << endl;
 		currentResCD = 0;
 	}
 }
@@ -105,8 +105,6 @@ bool GameLogic::canAfford()
 				}
 				break;
 			}
-		
-		//cout << "Cant afford structure" << endl; 
 		return false;
 }
 void GameLogic::structureBuilt()
@@ -144,7 +142,6 @@ int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX v
 			if(level->buildStructure(mouseWorldPos, BUILDABLE_MAINBUILDING))
 			{
 				gameState = STATE_PLAYING;
-				cout << "mainstruct buildt" << endl;
 				selectedStructure = BUILDABLE_TOWER;
 			}
 		}
@@ -233,7 +230,7 @@ vector<vector<RenderData*>>& GameLogic::getRenderData()
 	int yPos = (int)(mouseWorldPos.z/quadSize);
 	if(xPos >= 0 && xPos < mapSize-1 && yPos >= 0 && yPos < mapSize-1)
 	{
-		if(level->isEmpty(xPos, yPos))
+		if(level->isEmpty(xPos, yPos) && !level->isGrey(xPos,yPos))
 		{
 			if(canAfford() && level->isLocationBuildable(xPos, yPos))
 			{

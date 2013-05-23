@@ -38,8 +38,8 @@ D3D11Handler::D3D11Handler()
 	SCREEN_WIDTH = desktop.right;
 	SCREEN_HEIGHT = desktop.bottom;
 	//KOM IHÅG ATT ÄNDRA 
-	SCREEN_WIDTH = 800;
-	SCREEN_HEIGHT = 600;
+	SCREEN_WIDTH = 1920;
+	SCREEN_HEIGHT = 1080;
 
 }
 
@@ -227,7 +227,7 @@ bool D3D11Handler::initSwapChainAndDevice(HWND hWnd)
 	swapChainDesc.OutputWindow							= hWnd;
 	swapChainDesc.SampleDesc.Count						= 1;
 	swapChainDesc.SampleDesc.Quality					= 0;
-	swapChainDesc.Windowed								= TRUE;
+	swapChainDesc.Windowed								= FALSE;
 
 	D3D_FEATURE_LEVEL featureLevelsToTry[] = {
 		D3D_FEATURE_LEVEL_11_0,
