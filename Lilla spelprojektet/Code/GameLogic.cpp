@@ -386,3 +386,8 @@ float GameLogic::getWinPercent()const
 {
 	return this->level->getWinPercent();
 }
+
+int GameLogic::getSelectedBuilding()const
+{
+	return this->selectedStructure;
+}

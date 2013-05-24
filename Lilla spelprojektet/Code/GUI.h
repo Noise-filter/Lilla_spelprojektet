@@ -74,7 +74,8 @@ public:
 	int getNrOfPanels()const;
 	string getCurrentLevel()const;
 	int getCurrentDiff()const;
-	void setInGameText(int resource, int supply, float currPercent, float winPercent);
+	void setInGameText(int resource, int supply, float currPercent, float winPercent, int selectedStructure);
+	void restartStats();
 
 private:
 	
@@ -93,7 +94,7 @@ private:
 	string convertWstrToStr(wstring text);
 	void getEndStats();
 	string convertFloat(float value);
-	void setLeftAligned();
+	void setLeftAligned(Text& text);
 
 	Button* menuBtns;
 	int nrOfBtns;

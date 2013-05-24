@@ -144,7 +144,8 @@ int Game::update(float dt)
 		int supply = gameLogic->getSupply();
 		float currPercent = gameLogic->getCurrPercent();
 		float winPercent = gameLogic->getWinPercent();
-		gui->setInGameText(resource, supply, currPercent, winPercent);
+		int selectedStructure = gameLogic->getSelectedBuilding();
+		gui->setInGameText(resource, supply, currPercent, winPercent, selectedStructure);
 		
 
 	}
@@ -167,10 +168,6 @@ int Game::update(float dt)
 	{
 		changeState(retry);
 		oldGameState = gameState;
-	}
-	if(gameState == STATE_GAMESTART || gameState == STATE_PLAYING)
-	{
-		
 	}
 	
 	soundSystem->setMute(muted);
@@ -349,9 +346,11 @@ void Game::retrylevel(string filename, int difficulty)
 {	
 	SAFE_DELETE(gameLogic);
 	pSystem->shutdown();
+	
 
 	gameLogic = new GameLogic();
 	pSystem = pSystem->Getinstance();
+	gui->restartStats();
 
 	loadlevel(filename+".txt", difficulty);
 }

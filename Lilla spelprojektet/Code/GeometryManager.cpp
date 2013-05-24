@@ -87,7 +87,7 @@ void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc)
 						MESH_PUV(D3DXVECTOR3(-1,1,0), D3DXVECTOR2(0, 0))
 	};
 	std::vector<string> vGUIPanels;
-	vGUIPanels.push_back("Texturer/menyTest.png");
+	vGUIPanels.push_back("Texturer/TitleScreen2.png");
 	vGUIPanels.push_back("Texturer/menyTest2.png");
 	vGUIPanels.push_back("Texturer/menyTest3.png");
 	vGUIPanels.push_back("Texturer/test.png");

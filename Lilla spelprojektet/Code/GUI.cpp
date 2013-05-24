@@ -33,9 +33,8 @@ GUI::~GUI()
 	this->nrOfLevels = 0;
 	SAFE_DELETE_ARRAY(difficultyList);
 	this->nrOfDifficultys = 0;
-
+	endStats->shutdown();
 }
-
 
 void GUI::render(Button*& btns, Text*& text)
 {
@@ -90,42 +89,50 @@ void GUI::createBtns(int state)
 	{
 		this->nrOfBtns = 3;
 		this->menuBtns = new Button[nrOfBtns];
-		this->menuBtns[0] = createBtn(D3DXVECTOR2(midScreenW, midScreenH - 30), STARTGAME);
-		this->menuBtns[1] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 10), SETTINGS);
-		this->menuBtns[2] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 50), QUIT);
-		this->nrOfBoxes = 1;
-		this->textBoxes = new Text[nrOfBoxes];
-		this->textBoxes[0] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 140), L"Caecus", 62, 0x800000ff);
+		this->menuBtns[0] = createBtn(D3DXVECTOR2(0.5*(0.3*SCREEN_WIDTH),0.5*(0.9*SCREEN_HEIGHT)), STARTGAME);
+		this->menuBtns[1] = createBtn(D3DXVECTOR2(0.5*(0.3*SCREEN_WIDTH),0.5*(1.1*SCREEN_HEIGHT)), SETTINGS);
+		this->menuBtns[2] = createBtn(D3DXVECTOR2(0.5*(0.3*SCREEN_WIDTH),0.5*(1.3*SCREEN_HEIGHT)), QUIT);
+		for(int i = 0; i < this->nrOfBtns; i++)
+		{
+			setLeftAligned(this->menuBtns[i].text);
+		}
+		//this->nrOfBoxes = 1;
+		//this->textBoxes = new Text[nrOfBoxes];
+		//this->textBoxes[0] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 140), L"Caecus", 62, 0x800000ff);
 	}
 	else if(state == STATE_SETTINGS)
 	{
 		this->nrOfBtns = 2;
 		this->menuBtns = new Button[nrOfBtns];
-		this->menuBtns[0] = createBtn(D3DXVECTOR2(midScreenW, midScreenH - 30), MUTE);
-		this->menuBtns[1] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 120), BACK);
+		this->menuBtns[0] = createBtn(D3DXVECTOR2(0.5*(1*SCREEN_WIDTH),0.5*(0.55*SCREEN_HEIGHT)), MUTE);
+		this->menuBtns[1] = createBtn(D3DXVECTOR2(0.5*(1*SCREEN_WIDTH),0.5*(1.55*SCREEN_HEIGHT)), BACK);
 	}
 	else if(state == STATE_PAUSED)
 	{
 		this->nrOfBtns = 3;
 		this->menuBtns = new Button[nrOfBtns];
-		this->menuBtns[0] = createBtn(D3DXVECTOR2(midScreenW, midScreenH), PAUSED_CONTINUE);
-		this->menuBtns[1] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 30), SETTINGS);
-		this->menuBtns[2] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + +60), MAIN_MENU);
+		this->menuBtns[0] = createBtn(D3DXVECTOR2(0.5*(0.3*SCREEN_WIDTH),0.5*(0.9*SCREEN_HEIGHT)), PAUSED_CONTINUE);
+		this->menuBtns[1] = createBtn(D3DXVECTOR2(0.5*(0.3*SCREEN_WIDTH),0.5*(1.1*SCREEN_HEIGHT)), SETTINGS);
+		this->menuBtns[2] = createBtn(D3DXVECTOR2(0.5*(0.3*SCREEN_WIDTH),0.5*(1.3*SCREEN_HEIGHT)), MAIN_MENU);
+		for(int i = 0; i < this->nrOfBtns; i++)
+		{
+			setLeftAligned(this->menuBtns[i].text);
+		}
 	}
 	else if(state == STATE_NEWGAME)
 	{
 		this->nrOfBoxes = 2;
 		this->textBoxes = new Text[nrOfBoxes];
-		this->textBoxes[0] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 100), level, 36, 0x800000ff);
-		this->textBoxes[1] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 50), difficulty, 36, 0x800000ff);
+		this->textBoxes[0] = createTextBox(D3DXVECTOR2(0.5*(1*SCREEN_WIDTH),0.5*(0.5*SCREEN_HEIGHT)), level, 36, 0xffa8a8a8);
+		this->textBoxes[1] = createTextBox(D3DXVECTOR2(0.5*(1*SCREEN_WIDTH),0.5*(0.65*SCREEN_HEIGHT)), difficulty, 36, 0xffa8a8a8);
 		this->nrOfBtns = 6;
 		this->menuBtns = new Button[nrOfBtns];
 		this->menuBtns[0] = createBtn(D3DXVECTOR2(textBoxes[0].pos.x - 80, textBoxes[0].pos.y), LAST);
 		this->menuBtns[1] = createBtn(D3DXVECTOR2(textBoxes[0].pos.x + 80, textBoxes[0].pos.y), NEXT);
 		this->menuBtns[2] = createBtn(D3DXVECTOR2(textBoxes[1].pos.x - 80, textBoxes[1].pos.y), LAST);
 		this->menuBtns[3] = createBtn(D3DXVECTOR2(textBoxes[1].pos.x + 80, textBoxes[1].pos.y), NEXT);
-		this->menuBtns[4] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 75), STARTGAME);
-		this->menuBtns[5] = createBtn(D3DXVECTOR2(midScreenW, midScreenH + 120), BACK);
+		this->menuBtns[4] = createBtn(D3DXVECTOR2(0.5*(1*SCREEN_WIDTH),0.5*(1.45*SCREEN_HEIGHT)), STARTGAME);
+		this->menuBtns[5] = createBtn(D3DXVECTOR2(0.5*(1*SCREEN_WIDTH),0.5*(1.6*SCREEN_HEIGHT)), BACK);
 	}
 	else if(state == STATE_GAMESTART || state == STATE_PLAYING)
 	{
@@ -143,9 +150,9 @@ void GUI::createBtns(int state)
 		this->textBoxes = NULL;
 		this->textBoxes = temp;
 		//this->textBoxes[5] = createTextBox(D3DXVECTOR2(0.5*(0.5*SCREEN_WIDTH),0.5*(1.7*SCREEN_HEIGHT)), L"Information:", 18, 0xffffffff);
-		this->textBoxes[5] = createTextBox(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.7*SCREEN_HEIGHT)), L"Resourse:", 18, 0xffffffff);
-		this->textBoxes[6] = createTextBox(D3DXVECTOR2(0.5*(0.775*SCREEN_WIDTH),0.5*(1.875*SCREEN_HEIGHT)), L"Supply:", 18, 0xffffffff);
-		this->textBoxes[7] = createTextBox(D3DXVECTOR2(0.5*(1.2*SCREEN_WIDTH),0.5*(1.7*SCREEN_HEIGHT)), L"Time:", 18, 0xffffffff);
+		this->textBoxes[8] = createTextBox(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.7*SCREEN_HEIGHT)), L"Resource:", 18, 0xffffffff);
+		this->textBoxes[9] = createTextBox(D3DXVECTOR2(0.5*(0.775*SCREEN_WIDTH),0.5*(1.875*SCREEN_HEIGHT)), L"Supply:", 18, 0xffffffff);
+		this->textBoxes[10] = createTextBox(D3DXVECTOR2(0.5*(1.2*SCREEN_WIDTH),0.5*(1.7*SCREEN_HEIGHT)), L"Time:", 18, 0xffffffff);
 	}
 	else if(state == STATE_WIN)
 	{
@@ -160,12 +167,15 @@ void GUI::createBtns(int state)
 		delete []this->textBoxes;
 		this->textBoxes = NULL;
 		this->textBoxes = temp;
-		setLeftAligned();
-		this->textBoxes[10] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 150), L"You Won!", 62, 0x800000ff);
+		for(int i = 0; i < 8; i++)
+		{
+			setLeftAligned(this->textBoxes[i]);
+		}
+		this->textBoxes[8] = createTextBox(D3DXVECTOR2(0.5*(1*SCREEN_WIDTH),0.5*(0.45*SCREEN_HEIGHT)), L"You Won!", 62, 0xffa8a8a8);
 		this->nrOfBtns =2;
 		this->menuBtns = new Button[nrOfBtns];
-		this->menuBtns[0] = createBtn(D3DXVECTOR2(midScreenW - 100, midScreenH + 100), MAIN_MENU);
-		this->menuBtns[1] = createBtn(D3DXVECTOR2(midScreenW + 100, midScreenH + 100), RETRY);
+		this->menuBtns[0] = createBtn(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.6*SCREEN_HEIGHT)), MAIN_MENU);
+		this->menuBtns[1] = createBtn(D3DXVECTOR2(0.5*(1.2*SCREEN_WIDTH),0.5*(1.6*SCREEN_HEIGHT)), RETRY);
 	}
 	else if(state == STATE_LOSE)
 	{
@@ -179,12 +189,15 @@ void GUI::createBtns(int state)
 		delete []this->textBoxes;
 		this->textBoxes = NULL;
 		this->textBoxes = temp;
-		setLeftAligned();
-		this->textBoxes[10] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 150), L"You Lost", 62, 0x800000ff);
+		for(int i = 0; i < 8; i++)
+		{
+			setLeftAligned(this->textBoxes[i]);
+		}
+		this->textBoxes[8] = createTextBox(D3DXVECTOR2(0.5*(1*SCREEN_WIDTH),0.5*(0.45*SCREEN_HEIGHT)), L"You Lost", 62, 0xffa8a8a8);
 		this->nrOfBtns = 2;
 		this->menuBtns = new Button[nrOfBtns];
-		this->menuBtns[0] = createBtn(D3DXVECTOR2(midScreenW - 100, midScreenH + 100), MAIN_MENU);
-		this->menuBtns[1] = createBtn(D3DXVECTOR2(midScreenW + 100, midScreenH + 100), RETRY);
+		this->menuBtns[0] = createBtn(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.6*SCREEN_HEIGHT)), MAIN_MENU);
+		this->menuBtns[1] = createBtn(D3DXVECTOR2(0.5*(1.2*SCREEN_WIDTH),0.5*(1.6*SCREEN_HEIGHT)), RETRY);
 	}
 }
 
@@ -236,7 +249,7 @@ Button GUI::createBtn(D3DXVECTOR2 pos, BUTTONTYPE type)
 	text.pos = pos;
 	text.textSize = 36;
 	text.center = true;
-	text.textColor = 0x800000ff;
+	text.textColor = 0xffa8a8a8;
 
 	if(type == STARTGAME)
 	{
@@ -256,7 +269,7 @@ Button GUI::createBtn(D3DXVECTOR2 pos, BUTTONTYPE type)
 	if(type == PAUSED_CONTINUE)
 	{
 		btn.size = D3DXVECTOR2(100, 20);
-		text.text = L"CONTINUE";
+		text.text = L"Continue";
 	}
 	if(type == NEXT)
 	{
@@ -506,11 +519,11 @@ string GUI::convertWstrToStr(wstring text)
 
 void GUI::getEndStats()
 {
-	int nrOfStats = 10;
+	int nrOfStats = 8;
 	this->nrOfBoxes = nrOfStats;
 	this->textBoxes = new Text[this->nrOfBoxes];
 	char temp[255];
-	string Stats[10];
+	string Stats[8];
 	Stats[0] = "Level: " + getCurrentLevel();
 	Stats[1] = "Score: ";
 	Stats[1].append( itoa(this->endStats->totalScore, temp, 10) );
@@ -520,16 +533,16 @@ void GUI::getEndStats()
 	Stats[3].append (itoa(this->endStats->totalSupply, temp, 10) );
 	Stats[4] = "Time: ";
 	Stats[4].append( itoa(this->endStats->totalTime, temp, 10) );
-	Stats[5] = "Building built: ";
+	Stats[5] = "Buildings built: ";
 	Stats[5].append( itoa(this->endStats->totalNrOfBuildings, temp, 10) );
 	Stats[6] = "Enemies killed: ";
 	Stats[6].append( itoa(this->endStats->totalEnemiesKilled, temp, 10) );
 	Stats[7] = "Nr of Upgrades: ";
 	Stats[7].append( itoa(this->endStats->totalNrOfUpgrades, temp, 10) );
-	Stats[8] = "Buildings at max lv: ";
-	Stats[8].append( itoa(this->endStats->totalNrOfMaxLvlTowers, temp, 10) );
-	Stats[9] = "Average lv: ";
-	Stats[9].append( convertFloat(this->endStats->averageTowerLvl) );
+	//Stats[8] = "Buildings at max lv: ";
+	//Stats[8].append( itoa(this->endStats->totalNrOfMaxLvlTowers, temp, 10) );
+	//Stats[9] = "Average lv: ";
+	//Stats[9].append( convertFloat(this->endStats->averageTowerLvl) );
 
 	
 	for(int i = 0; i < nrOfStats; i++)
@@ -537,16 +550,16 @@ void GUI::getEndStats()
 		wStats[i] = convertStrToWstr(Stats[i]);
 	}
 
-	this->textBoxes[0] = createTextBox(D3DXVECTOR2(0.5*(0.9*SCREEN_WIDTH),0.5*(0.65*SCREEN_HEIGHT)), (wchar_t*)wStats[0].c_str(), 18, 0xffffffff);
-	this->textBoxes[1] = createTextBox(D3DXVECTOR2(0.5*(0.9*SCREEN_WIDTH),0.5*(0.7*SCREEN_HEIGHT)), (wchar_t*)wStats[1].c_str(), 18, 0xffffffff);
-	this->textBoxes[2] = createTextBox(D3DXVECTOR2(0.5*(0.9*SCREEN_WIDTH),0.5*(0.75*SCREEN_HEIGHT)), (wchar_t*)wStats[2].c_str(), 18, 0xffffffff);
-	this->textBoxes[3] = createTextBox(D3DXVECTOR2(0.5*(0.9*SCREEN_WIDTH),0.5*(0.8*SCREEN_HEIGHT)), (wchar_t*)wStats[3].c_str(), 18, 0xffffffff);
-	this->textBoxes[4] = createTextBox(D3DXVECTOR2(0.5*(0.9*SCREEN_WIDTH),0.5*(0.85*SCREEN_HEIGHT)), (wchar_t*)wStats[4].c_str(), 18, 0xffffffff);
-	this->textBoxes[5] = createTextBox(D3DXVECTOR2(0.5*(0.9*SCREEN_WIDTH),0.5*(0.9*SCREEN_HEIGHT)), (wchar_t*)wStats[5].c_str(), 18, 0xffffffff);
-	this->textBoxes[6] = createTextBox(D3DXVECTOR2(0.5*(0.9*SCREEN_WIDTH),0.5*(0.95*SCREEN_HEIGHT)), (wchar_t*)wStats[6].c_str(), 18, 0xffffffff);
-	this->textBoxes[7] = createTextBox(D3DXVECTOR2(0.5*(0.9*SCREEN_WIDTH),0.5*(1*SCREEN_HEIGHT)), (wchar_t*)wStats[7].c_str(), 18, 0xffffffff);
-	this->textBoxes[8] = createTextBox(D3DXVECTOR2(0.5*(0.9*SCREEN_WIDTH),0.5*(1.05*SCREEN_HEIGHT)), (wchar_t*)wStats[8].c_str(), 18, 0xffffffff);
-	this->textBoxes[9] = createTextBox(D3DXVECTOR2(0.5*(0.9*SCREEN_WIDTH),0.5*(1.1*SCREEN_HEIGHT)), (wchar_t*)wStats[9].c_str(), 18, 0xffffffff);
+	this->textBoxes[0] = createTextBox(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(0.75*SCREEN_HEIGHT)), (wchar_t*)wStats[0].c_str(), 18, 0xffffffff);
+	this->textBoxes[1] = createTextBox(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(0.85*SCREEN_HEIGHT)), (wchar_t*)wStats[1].c_str(), 18, 0xffffffff);
+	this->textBoxes[2] = createTextBox(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(0.95*SCREEN_HEIGHT)), (wchar_t*)wStats[2].c_str(), 18, 0xffffffff);
+	this->textBoxes[3] = createTextBox(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.05*SCREEN_HEIGHT)), (wchar_t*)wStats[3].c_str(), 18, 0xffffffff);
+	this->textBoxes[4] = createTextBox(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.15*SCREEN_HEIGHT)), (wchar_t*)wStats[4].c_str(), 18, 0xffffffff);
+	this->textBoxes[5] = createTextBox(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.25*SCREEN_HEIGHT)), (wchar_t*)wStats[5].c_str(), 18, 0xffffffff);
+	this->textBoxes[6] = createTextBox(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.35*SCREEN_HEIGHT)), (wchar_t*)wStats[6].c_str(), 18, 0xffffffff);
+	this->textBoxes[7] = createTextBox(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.45*SCREEN_HEIGHT)), (wchar_t*)wStats[7].c_str(), 18, 0xffffffff);
+	//this->textBoxes[8] = createTextBox(D3DXVECTOR2(0.5*(0.9*SCREEN_WIDTH),0.5*(1.05*SCREEN_HEIGHT)), (wchar_t*)wStats[8].c_str(), 18, 0xffffffff);
+	//this->textBoxes[9] = createTextBox(D3DXVECTOR2(0.5*(0.9*SCREEN_WIDTH),0.5*(1.1*SCREEN_HEIGHT)), (wchar_t*)wStats[9].c_str(), 18, 0xffffffff);
 
 }
 
@@ -558,33 +571,75 @@ string GUI::convertFloat(float value)
   return o.str();
 }
 
-void GUI::setLeftAligned()
+void GUI::setLeftAligned(Text& text)
 {
-	for(int i = 0; i<this->nrOfBoxes; i++)
-	{
-		this->textBoxes[i].center = false;
-	}
+	text.center = false;
 }
 
-void GUI::setInGameText(int resource, int supply, float currPercent, float winPercent)
+void GUI::setInGameText(int resource, int supply, float currPercent, float winPercent, int selectedStructure)
 {
-	
+	string name;
+	string purpose;
+	int cost;
+	if(selectedStructure == BUILDABLE_MAINBUILDING)
+	{
+		name = "Headquarter";
+		purpose = "Base";
+		cost = 0;
+	}
+	else if(selectedStructure == BUILDABLE_SUPPLY)
+	{
+		name = "Supply";
+		purpose = "Give supply";
+		cost = COST_SUPPLY;
+	}
+	else if(selectedStructure == BUILDABLE_TOWER)
+	{
+		name = "Tower";
+		purpose = "Defensive structure";
+		cost = COST_TOWER;
+	}
+	else if(selectedStructure == BUILDABLE_UPGRADE_OFFENSE)
+	{
+		name = "Offensive";
+		purpose = "Upgrade";
+		cost = COST_UPGRADE;
+	}
+	else if(selectedStructure == BUILDABLE_UPGRADE_DEFENSE)
+	{
+		name = "Defensive";
+		purpose = "Upgrade";
+		cost = COST_UPGRADE;
+	}
+	else if(selectedStructure == BUILDABLE_UPGRADE_RES)
+	{
+		name = "Resources";
+		purpose = "Increase res/kill";
+		cost = COST_UPGRADE;
+	}
+		
 	if(first)
 	{
-		this->nrOfBoxes = 5;
+		this->nrOfBoxes = 8;
 		this->textBoxes = new Text[this->nrOfBoxes];
 		
 	}
 	char temp[255];
-	string Stats[5];
+	string Stats[8];
 	Stats[0] = itoa(resource, temp, 10);
 	Stats[1] = itoa(supply, temp, 10);
 	Stats[2] = itoa(this->endStats->totalTime, temp, 10);
-	Stats[3] = convertFloat(currPercent);
-	Stats[4] = convertFloat(winPercent);
+	Stats[3] = "Built: ";
+	Stats[3].append( convertFloat(currPercent) );
+	Stats[4] = "Goal: ";
+	Stats[4].append( convertFloat(winPercent) );
+	Stats[5] = name;
+	Stats[6] = purpose;
+	Stats[7] = "Cost: ";
+	Stats[7].append( itoa(cost, temp, 10) );
 	
 
-	for(int i = 0; i < 5; i++)
+	for(int i = 0; i < 8; i++)
 	{
 		wStats[i] = convertStrToWstr(Stats[i]);
 	}
@@ -592,7 +647,15 @@ void GUI::setInGameText(int resource, int supply, float currPercent, float winPe
 	this->textBoxes[0] = createTextBox(D3DXVECTOR2(0.5*(1*SCREEN_WIDTH),0.5*(1.7*SCREEN_HEIGHT)), (wchar_t*)wStats[0].c_str(), 18, 0xffffffff);
 	this->textBoxes[1] = createTextBox(D3DXVECTOR2(0.5*(1*SCREEN_WIDTH),0.5*(1.875*SCREEN_HEIGHT)), (wchar_t*)wStats[1].c_str(), 18, 0xffffffff);
 	this->textBoxes[2] = createTextBox(D3DXVECTOR2(0.5*(1.3*SCREEN_WIDTH),0.5*(1.7*SCREEN_HEIGHT)), (wchar_t*)wStats[2].c_str(), 18, 0xffffffff);
-	this->textBoxes[3] = createTextBox(D3DXVECTOR2(0.5*(1.7*SCREEN_WIDTH),0.5*(1.7*SCREEN_HEIGHT)), (wchar_t*)wStats[3].c_str(), 18, 0xffffffff);
-	this->textBoxes[4] = createTextBox(D3DXVECTOR2(0.5*(1.8*SCREEN_WIDTH),0.5*(1.7*SCREEN_HEIGHT)), (wchar_t*)wStats[4].c_str(), 18, 0xffffffff);
+	this->textBoxes[3] = createTextBox(D3DXVECTOR2(0.5*(1.65*SCREEN_WIDTH),0.5*(1.7*SCREEN_HEIGHT)), (wchar_t*)wStats[3].c_str(), 18, 0xffffffff);
+	this->textBoxes[4] = createTextBox(D3DXVECTOR2(0.5*(1.85*SCREEN_WIDTH),0.5*(1.7*SCREEN_HEIGHT)), (wchar_t*)wStats[4].c_str(), 18, 0xffffffff);
+	this->textBoxes[5] = createTextBox(D3DXVECTOR2(0.5*(0.5*SCREEN_WIDTH),0.5*(1.7*SCREEN_HEIGHT)), (wchar_t*)wStats[5].c_str(), 18, 0xffffffff);
+	this->textBoxes[6] = createTextBox(D3DXVECTOR2(0.5*(0.5*SCREEN_WIDTH),0.5*(1.8*SCREEN_HEIGHT)), (wchar_t*)wStats[6].c_str(), 14, 0xffffffff);
+	this->textBoxes[7] = createTextBox(D3DXVECTOR2(0.5*(0.5*SCREEN_WIDTH),0.5*(1.9*SCREEN_HEIGHT)), (wchar_t*)wStats[7].c_str(), 14, 0xffffffff);
+}
 
+void GUI::restartStats()
+{
+	endStats->shutdown();
+	endStats = endStats->Getinstance();
 }

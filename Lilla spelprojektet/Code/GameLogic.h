@@ -18,6 +18,7 @@ public:
 	int getSupply()const;
 	float getCurrPercent()const;
 	float getWinPercent()const;
+	int getSelectedBuilding()const;
 
 	vector<vector<RenderData*>>& getRenderData();
 	vector<HPBarInfo> getHPBarInfo();
