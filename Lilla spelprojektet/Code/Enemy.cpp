@@ -125,6 +125,6 @@ void Enemy::setTarget(Structure* t)
 HPBarInfo Enemy::getHPBarInfo()
 {
 	HPBarInfo info(translate, hp/maxHp);
-	info.translate._41 -= scale._11*10;
+	//info.translate._41 -= scale._11*10;
 	return info;
 }

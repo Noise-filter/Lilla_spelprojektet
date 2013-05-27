@@ -115,9 +115,10 @@ void GameObject::mUpdate(ID3D11DeviceContext *dc , std::vector<HPBarInfo>& data)
 	Matrix scale;
 	for(int j = 0; j < (int)data.size(); j++)
 	{
-		D3DXMatrixScaling(&scale, data[j].hpPercent * 0.05f, 0.005f, 1.0f);
+		D3DXMatrixScaling(&scale, data[j].hpPercent * 3, 0.2, 1.0f);
 		mesh[j].world = scale * data[j].translate;
 	}
+
 	this->iNrOfinstances = data.size();
 
 	mUnmap(dc, this->pInstanceBuffer);
@@ -262,7 +263,6 @@ D3D11_MAPPED_SUBRESOURCE* GameObject::mMap(ID3D11DeviceContext *dc, ID3D11Buffer
 	D3D11_BUFFER_DESC bufferUsage;
 	buffer->GetDesc(&bufferUsage);
 	UINT i = bufferUsage.CPUAccessFlags;
-	i = (UINT)bufferUsage.Usage;
 	if(bufferUsage.CPUAccessFlags == (UINT)D3D11_CPU_ACCESS_WRITE || bufferUsage.Usage == WRITE_NO_OVERWRITE)
 	{
 		D3D11_MAPPED_SUBRESOURCE mappedResource;
