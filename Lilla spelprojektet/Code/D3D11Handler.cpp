@@ -31,16 +31,15 @@ D3D11Handler::D3D11Handler()
 
 	this->vShaders.resize(NROFSHADERS);
 
-	RECT desktop;
-	const HWND hDesktop = GetDesktopWindow();
-	GetWindowRect(hDesktop, &desktop);
-
-	SCREEN_WIDTH = desktop.right;
-	SCREEN_HEIGHT = desktop.bottom;
-	//KOM IHÅG ATT ÄNDRA 
-	SCREEN_WIDTH = 800;
-	SCREEN_HEIGHT = 600;
-
+	SCREEN_WIDTH  = GetSystemMetrics(SM_CXSCREEN);
+	SCREEN_HEIGHT = GetSystemMetrics(SM_CYSCREEN);
+	FullScreen = false;
+	if(!FullScreen)
+	{
+		// If windowed then set it to 800x600 resolution.
+		SCREEN_WIDTH  = 800;
+		SCREEN_HEIGHT = 600;
+	}
 }
 
 D3D11Handler::~D3D11Handler()
@@ -215,6 +214,8 @@ bool D3D11Handler::initSwapChainAndDevice(HWND hWnd)
 
 	UINT numDriverTypes = sizeof(driverTypes) / sizeof(driverTypes[0]);
 
+	
+
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;
 	ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
 	swapChainDesc.BufferCount							= 1;
@@ -227,7 +228,7 @@ bool D3D11Handler::initSwapChainAndDevice(HWND hWnd)
 	swapChainDesc.OutputWindow							= hWnd;
 	swapChainDesc.SampleDesc.Count						= 1;
 	swapChainDesc.SampleDesc.Quality					= 0;
-	swapChainDesc.Windowed								= TRUE;
+	swapChainDesc.Windowed								= !FullScreen;
 
 	D3D_FEATURE_LEVEL featureLevelsToTry[] = {
 		D3D_FEATURE_LEVEL_11_0,

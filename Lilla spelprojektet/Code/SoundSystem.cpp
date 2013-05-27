@@ -169,7 +169,7 @@ bool SoundSystem::update()
 Sound* SoundSystem::createStream(const char* filename)
 {
 	Sound* sound = new Sound();
-	result = system->createStream(filename, FMOD_DEFAULT, 0, &sound->sound);
+	result = system->createStream(filename, FMOD_LOOP_NORMAL, 0, &sound->sound);
 	errorCheck(result);
 
 	char name[255];
