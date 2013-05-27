@@ -1,3 +1,8 @@
+cbuffer EveryFrame
+{
+	Matrix vp;
+};
+
 struct VSIn
 {
 	float3 pos : POSITION;
@@ -20,8 +25,11 @@ RasterizerState NoCulling
 
 PSIn VSScene(VSIn input)
 {
-	PSIn output;
+	PSIn output = (PSIn)0;
+
 	output.pos = mul(float4(input.pos, 1), input.world);
+	output.pos = mul(output.pos, vp);
+
 	return output;
 }
 

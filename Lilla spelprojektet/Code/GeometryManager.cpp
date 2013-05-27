@@ -45,6 +45,7 @@ GeometryManager::~GeometryManager()
 	SAFE_DELETE(pBufferObj);
 	SAFE_DELETE(this->importer);
 	SAFE_DELETE(this->GUI);
+	SAFE_RELEASE(texGUI);
 }
 
 void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc)
@@ -448,7 +449,6 @@ ID3D11ShaderResourceView *GeometryManager::createTextureArray(ID3D11Device *devi
 
 	ID3D11Texture2D *texArray = NULL;
 	hr = device->CreateTexture2D(&texArrayDesc, NULL, &texArray);
-
 	if(FAILED(hr))
 	{
 		MessageBox(NULL, "Failed to create texture array", "Not good :(", MB_ICONERROR | MB_OK);

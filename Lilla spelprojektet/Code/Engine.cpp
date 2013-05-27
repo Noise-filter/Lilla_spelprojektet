@@ -141,12 +141,6 @@ void Engine::render(Matrix& view, Matrix& proj, Text* text, int nrOfText,  Vec3 
 	temp->Apply(0);
 	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfGUIObjects(), 0, 0);
 
-	//Draw hp bars
-	temp = this->d3d->setPass(PASS_HPBARS);
-	pGeoManager->applyHpBarBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	temp->Apply(0);
-	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfHPBars(), 0, 0);
-	
 	blurTexture(temp);
 
 	view = view * proj;
@@ -157,12 +151,19 @@ void Engine::render(Matrix& view, Matrix& proj, Text* text, int nrOfText,  Vec3 
 	temp->Apply(0);
 	this->d3d->pDeviceContext->Draw(6, 0);
 
-	//temp->m_pEffect->GetVariableByName("normalMap")->AsShaderResource()->SetResource(NULL);
+	temp->m_pEffect->GetVariableByName("normalMap")->AsShaderResource()->SetResource(NULL);
 	temp->m_pEffect->GetVariableByName("diffuseAlbedoMap")->AsShaderResource()->SetResource(NULL);
 	temp->m_pEffect->GetVariableByName("lightMap")->AsShaderResource()->SetResource(NULL);
 	temp->m_pEffect->GetVariableByName("glowMap")->AsShaderResource()->SetResource(NULL);
 	temp->m_pTechnique->GetPassByIndex(0)->Apply(0, d3d->pDeviceContext);
 
+	//Draw hp bars, rita ut dem sist för att få dem över allt annat
+	temp = this->d3d->setPass(PASS_HPBARS);
+	pGeoManager->applyHpBarBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	temp->SetMatrix("vp", view);
+	temp->Apply(0);
+	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfHPBars(), 0, 0);
+	
 	if(text != NULL)
 	{
 		renderText(text, nrOfText);

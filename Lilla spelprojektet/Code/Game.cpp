@@ -104,18 +104,28 @@ void Game::render()
 
 		//Get hp bars and put them in the correct position
 		vector<HPBarInfo> hp = gameLogic->getHPBarInfo();
-		Matrix vp = camera->ViewsProj();
-		Vec4 pos;
-		pos.w = 1;
+		Vec3 pos;
+		Vec3 cameraPosition = camera->GetPosition();
 		for(int i = 0; i < (int)hp.size(); i++)
 		{
 			pos.x = hp[i].translate._41;
 			pos.y = hp[i].translate._42;
 			pos.z = hp[i].translate._43;
 
-			D3DXVec4Transform(&pos, &pos, &vp);
-			pos /= pos.w;
-			D3DXMatrixTranslation(&hp[i].translate, pos.x, pos.y, 0);
+			Vec3 toCam, right, up;
+			toCam = cameraPosition - pos;
+			D3DXVec3Normalize(&toCam, &toCam);
+			D3DXVec3Cross(&right, &camera->GetUp(), &toCam);
+			D3DXVec3Cross(&up, &toCam, &right);
+			right = Vec3(0, 0, -1);
+			Matrix orient(right.x,right.y, right.z, 0, up.x, up.y, up.z, 0, toCam.x, toCam.y, toCam.z, 0, 0, 0, 0, 1);
+
+			float x = cameraPosition.x - pos.x;
+			float y = cameraPosition.y - pos.y;
+			float z = cameraPosition.z - pos.z;
+			hp[i].translate._41 -= x * 0.1;
+			hp[i].translate._43 -= z * 0.1;
+			hp[i].translate = orient * hp[i].translate;
 		}
 		engine->setHPBars(hp);
 

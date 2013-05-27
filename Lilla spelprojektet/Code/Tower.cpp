@@ -93,7 +93,6 @@ int Tower::update(float dt)
 	if(target != NULL && target->isDead())
 		target = NULL;
 
-		
 
 	//Uppdatera projektilerna
 	for(int i = 0; i < (int)projectiles.size(); i++)
@@ -108,13 +107,11 @@ int Tower::update(float dt)
 		}
 		else if(ret == 2)
 		{
-			
 			Projectile* temp = projectiles.at(i);
 			giveXp(temp->getTarget()->getXp());
 			projectiles.erase(projectiles.begin() + i);
 			i--;
 			delete temp;
-
 		}
 	}
 
