@@ -207,8 +207,17 @@ void GeometryManager::initMeshes(ID3D11Device *device, ID3D11DeviceContext *dc, 
 	fileName = "Meshar/Very basic disc (projectile).obj";
 	importMesh(device, dc, this->vEntities.at(ENTITY_PROJECTILE), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
 
+	//neutrala byggnader
 	fileName = "Meshar/Spiral Sphere.obj";
 	importMesh(device, dc, this->vEntities.at(ENTITY_SPIRALSPHERE), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
+
+	fileName = "Meshar/Neutral Gate.obj";
+	importMesh(device, dc, this->vEntities.at(ENTITY_NEUTRALGATE), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
+
+	fileName = "Meshar/Pyramid.obj";
+	importMesh(device, dc, this->vEntities.at(ENTITY_PYRAMID), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);
+
+	//neutrala byggnader
 	
 	fileName = "Meshar/Upgrade Building.obj";
 	importMesh(device, dc, this->vEntities.at(ENTITY_UPGRADE_OFFENSE), fileName, bufferInit, instanceInit, 400, this->pBufferObj, tex, glow);

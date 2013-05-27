@@ -182,11 +182,13 @@ int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX v
 		if(nrOfKilledEnemies > 0)
 		{
 			this->resource += resPerEnemy* level->getExtraResPerEnemy()  + resPerEnemy * nrOfKilledEnemies;
+			endStats->totalRes += resPerEnemy* level->getExtraResPerEnemy()  + resPerEnemy * nrOfKilledEnemies;
 		}
 	}
 	
 	if(gameState == STATE_WIN || gameState == STATE_LOSE)
 	{
+		
 		//ska något göras här?
 	}
 

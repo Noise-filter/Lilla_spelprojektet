@@ -167,11 +167,11 @@ void GUI::createBtns(int state)
 		delete []this->textBoxes;
 		this->textBoxes = NULL;
 		this->textBoxes = temp;
-		for(int i = 0; i < 8; i++)
+		for(int i = 0; i < 7; i++)
 		{
 			setLeftAligned(this->textBoxes[i]);
 		}
-		this->textBoxes[8] = createTextBox(D3DXVECTOR2(0.5*(1*SCREEN_WIDTH),0.5*(0.45*SCREEN_HEIGHT)), L"You Won!", 62, 0xffa8a8a8);
+		this->textBoxes[7] = createTextBox(D3DXVECTOR2(0.5*(1*SCREEN_WIDTH),0.5*(0.45*SCREEN_HEIGHT)), L"You Won!", 62, 0xffa8a8a8);
 		this->nrOfBtns =2;
 		this->menuBtns = new Button[nrOfBtns];
 		this->menuBtns[0] = createBtn(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.6*SCREEN_HEIGHT)), MAIN_MENU);
@@ -189,11 +189,11 @@ void GUI::createBtns(int state)
 		delete []this->textBoxes;
 		this->textBoxes = NULL;
 		this->textBoxes = temp;
-		for(int i = 0; i < 8; i++)
+		for(int i = 0; i < 7; i++)
 		{
 			setLeftAligned(this->textBoxes[i]);
 		}
-		this->textBoxes[8] = createTextBox(D3DXVECTOR2(0.5*(1*SCREEN_WIDTH),0.5*(0.45*SCREEN_HEIGHT)), L"You Lost", 62, 0xffa8a8a8);
+		this->textBoxes[7] = createTextBox(D3DXVECTOR2(0.5*(1*SCREEN_WIDTH),0.5*(0.45*SCREEN_HEIGHT)), L"You Lost", 62, 0xffa8a8a8);
 		this->nrOfBtns = 2;
 		this->menuBtns = new Button[nrOfBtns];
 		this->menuBtns[0] = createBtn(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.6*SCREEN_HEIGHT)), MAIN_MENU);
@@ -519,26 +519,24 @@ string GUI::convertWstrToStr(wstring text)
 
 void GUI::getEndStats()
 {
-	int nrOfStats = 8;
+	int nrOfStats = 7;
 	this->nrOfBoxes = nrOfStats;
 	this->textBoxes = new Text[this->nrOfBoxes];
 	char temp[255];
-	string Stats[8];
+	string Stats[7];
 	Stats[0] = "Level: " + getCurrentLevel();
-	Stats[1] = "Score: ";
-	Stats[1].append( itoa(this->endStats->totalScore, temp, 10) );
-	Stats[2] = "Resources: ";
-	Stats[2].append( itoa(this->endStats->totalRes, temp, 10) );
-	Stats[3] = "Supplys: ";
-	Stats[3].append (itoa(this->endStats->totalSupply, temp, 10) );
-	Stats[4] = "Time: ";
-	Stats[4].append( itoa(this->endStats->totalTime, temp, 10) );
-	Stats[5] = "Buildings built: ";
-	Stats[5].append( itoa(this->endStats->totalNrOfBuildings, temp, 10) );
-	Stats[6] = "Enemies killed: ";
-	Stats[6].append( itoa(this->endStats->totalEnemiesKilled, temp, 10) );
-	Stats[7] = "Nr of Upgrades: ";
-	Stats[7].append( itoa(this->endStats->totalNrOfUpgrades, temp, 10) );
+	Stats[1] = "Resources: ";
+	Stats[1].append( itoa(this->endStats->totalRes, temp, 10) );
+	Stats[2] = "Supplys: ";
+	Stats[2].append (itoa(this->endStats->totalSupply, temp, 10) );
+	Stats[3] = "Time: ";
+	Stats[3].append( itoa(this->endStats->totalTime, temp, 10) );
+	Stats[4] = "Buildings built: ";
+	Stats[4].append( itoa(this->endStats->totalNrOfBuildings, temp, 10) );
+	Stats[5] = "Enemies killed: ";
+	Stats[5].append( itoa(this->endStats->totalEnemiesKilled, temp, 10) );
+	Stats[6] = "Nr of Upgrades: ";
+	Stats[6].append( itoa(this->endStats->totalNrOfUpgrades, temp, 10) );
 	//Stats[8] = "Buildings at max lv: ";
 	//Stats[8].append( itoa(this->endStats->totalNrOfMaxLvlTowers, temp, 10) );
 	//Stats[9] = "Average lv: ";
@@ -557,7 +555,7 @@ void GUI::getEndStats()
 	this->textBoxes[4] = createTextBox(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.15*SCREEN_HEIGHT)), (wchar_t*)wStats[4].c_str(), 18, 0xffffffff);
 	this->textBoxes[5] = createTextBox(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.25*SCREEN_HEIGHT)), (wchar_t*)wStats[5].c_str(), 18, 0xffffffff);
 	this->textBoxes[6] = createTextBox(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.35*SCREEN_HEIGHT)), (wchar_t*)wStats[6].c_str(), 18, 0xffffffff);
-	this->textBoxes[7] = createTextBox(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.45*SCREEN_HEIGHT)), (wchar_t*)wStats[7].c_str(), 18, 0xffffffff);
+	//this->textBoxes[7] = createTextBox(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.45*SCREEN_HEIGHT)), (wchar_t*)wStats[7].c_str(), 18, 0xffffffff);
 	//this->textBoxes[8] = createTextBox(D3DXVECTOR2(0.5*(0.9*SCREEN_WIDTH),0.5*(1.05*SCREEN_HEIGHT)), (wchar_t*)wStats[8].c_str(), 18, 0xffffffff);
 	//this->textBoxes[9] = createTextBox(D3DXVECTOR2(0.5*(0.9*SCREEN_WIDTH),0.5*(1.1*SCREEN_HEIGHT)), (wchar_t*)wStats[9].c_str(), 18, 0xffffffff);
 
