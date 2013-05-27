@@ -331,12 +331,12 @@ void GUI::createPanels(int state)
 	{
 		this->nrOfPanles = 7;
 		this->panels = new GUI_Panel[nrOfPanles];
-		this->panels[0] = GUI_Panel(D3DXVECTOR2(-0.8225, -0.8), D3DXVECTOR2(0.13, 0.13), currentBuilding);
-		this->panels[1] = GUI_Panel(D3DXVECTOR2(0.188, -0.89), D3DXVECTOR2(0.07, 0.07), TEXTURE_SUPPLY_TINY);
-		this->panels[2] = GUI_Panel(D3DXVECTOR2(0.365, -0.89), D3DXVECTOR2(0.07, 0.07), TEXTURE_TOWER_TINY);
-		this->panels[3] = GUI_Panel(D3DXVECTOR2(0.545, -0.89), D3DXVECTOR2(0.07, 0.07), TEXTURE_ATK_TINY);
-		this->panels[4] = GUI_Panel(D3DXVECTOR2(0.7225, -0.89), D3DXVECTOR2(0.07, 0.07), TEXTURE_DEF_TINY);
-		this->panels[5] = GUI_Panel(D3DXVECTOR2(0.8975, -0.89), D3DXVECTOR2(0.07, 0.07), TEXTURE_MONEY_TINY);
+		this->panels[0] = GUI_Panel(D3DXVECTOR2(-0.8225, -0.8), D3DXVECTOR2(0.14, 0.14), currentBuilding);
+		this->panels[1] = GUI_Panel(D3DXVECTOR2(0.188, -0.89), D3DXVECTOR2(0.07, 0.08), TEXTURE_SUPPLY_TINY);
+		this->panels[2] = GUI_Panel(D3DXVECTOR2(0.365, -0.89), D3DXVECTOR2(0.07, 0.08), TEXTURE_TOWER_TINY);
+		this->panels[3] = GUI_Panel(D3DXVECTOR2(0.545, -0.89), D3DXVECTOR2(0.07, 0.08), TEXTURE_ATK_TINY);
+		this->panels[4] = GUI_Panel(D3DXVECTOR2(0.7225, -0.89), D3DXVECTOR2(0.07, 0.08), TEXTURE_DEF_TINY);
+		this->panels[5] = GUI_Panel(D3DXVECTOR2(0.8975, -0.89), D3DXVECTOR2(0.07, 0.08), TEXTURE_MONEY_TINY);
 		this->panels[6] = GUI_Panel(D3DXVECTOR2(0, -0.8), D3DXVECTOR2(1, 0.2), TEXTURE_FRAME);
 	}
 
