@@ -8,6 +8,7 @@ Level::Level(void)
 	this->extraResPerEnemy = 0;
 	this->winPercent = 0;
 	this->currPercent = 0;
+	this->nrOfStructures = 0;
 }
 
 bool Level::init(int quadSize, int difficulty)
@@ -27,6 +28,7 @@ bool Level::init(int quadSize, int difficulty)
 		this->winPercent = 0.50f;
 	if(difficulty == DIFF_HARD)
 		this->winPercent = 0.60f;
+
 
 	return true;
 }
@@ -79,6 +81,7 @@ void Level::constructNeutrals()
 				{
 					neutralStructures.push_back(new Structure(pos,ENTITY_NEUTRALGATE,0,100,LIGHT_POINT,false));
 					neutralStructures.at(neutralStructures.size()-1)->setScale(1.5f);
+					neutralStructures.at(neutralStructures.size()-1)->setRotation(3.14f/2);
 				}
 
 				nodes[i][j].getRenderData().lightID = LIGHT_NONE;
@@ -187,6 +190,19 @@ bool Level::loadLevel(string fileName)
 	plane = new Entity(Vec3((mapSize-1) * quadSize * 0.5f, 0, (mapSize-1) * quadSize * 0.5f), ENTITY_PLANE, 0, 0, LIGHT_NONE);
 	plane->setScale((float)(mapSize-1)*quadSize);
 	Statistics::Getinstance()->levelName = fileName;
+
+	int nrOfBuilable = 0;
+	for(int i = 0; i < mapSize-1; i++)
+	{
+		for(int j = 0; j < mapSize-1; j++)
+		{
+			if(isLocationBuildable(i, j))
+			{
+				nrOfBuilable++;
+			}
+		}
+	}
+	goal = winPercent*nrOfBuilable;
 	return true;
 }
 Level::~Level(void)
@@ -260,7 +276,7 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 
 					//Ta bort byggnaden
 					SAFE_DELETE(structures[i][j]);
-
+					this->nrOfStructures--;
 					nodes[i][j].getRenderData().lightID = LIGHT_POINT;
 					nodes[i+1][j].getRenderData().lightID = LIGHT_POINT;
 					nodes[i][j+1].getRenderData().lightID = LIGHT_POINT;
@@ -286,17 +302,8 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 			}
 		}
 	}
-	int nrOfStructures = 0;
-	for(int i = 0; i < mapSize-1; i++)
-	{
-		for(int j = 0; j  < mapSize-1; j++)
-		{
-			if(structures[i][j] != NULL)
-			{
-				nrOfStructures++;
-			}
-		}
-	}
+	
+
 
 	for(int i = 0; i < mapSize; i++)
 	{
@@ -306,7 +313,7 @@ int Level::update(float dt, vector<Enemy*>& enemies)
 		}
 	}
 	currPercent = (float)nrOfStructures/((mapSize-1) * (mapSize-1));
-	if(currPercent > winPercent)
+	if(nrOfStructures >= goal)
 	{
 		return 4; // win
 	}
@@ -479,13 +486,17 @@ bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 
 	if(xPos >= 0 && xPos < mapSize-1 && yPos >= 0 && yPos < mapSize-1)
 	{
+		
 		if(selectedStructure == BUILDABLE_MAINBUILDING && structures[xPos][yPos] == NULL && isLocationBuildable(xPos, yPos))
 		{
+			this->nrOfStructures++;
 			structures[xPos][yPos] = new Headquarter(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 2, 500, LIGHT_POINT,false);
+			Statistics::Getinstance()->totalNrOfBuildings++;
 			return true;
 		}
 		else if(structures[xPos][yPos] == NULL && isAdjecent(xPos,yPos) && isLocationBuildable(xPos, yPos))
 		{
+			this->nrOfStructures++;
 			bool builtUpgrade = false;
 			switch(selectedStructure)
 			{
@@ -675,12 +686,12 @@ void Level::getHPBarInfo(vector<HPBarInfo>& hpBars)
 	}
 }
 
-float Level::getCurrPercent()const
+float Level::getNrOfBuilding()const
 {
-	return floorf(this->currPercent*100);
+	return this->nrOfStructures;
 }
 
-float Level::getWinPercent()const
+float Level::getGoal()const
 {
-	return floorf(this->winPercent*100);
+	return goal;
 }

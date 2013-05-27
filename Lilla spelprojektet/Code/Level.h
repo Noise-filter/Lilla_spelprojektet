@@ -41,8 +41,8 @@ public:
 
 	bool loadLevel(string fileName);
 
-	float getCurrPercent()const;
-	float getWinPercent()const;
+	float getNrOfBuilding()const;
+	float getGoal()const;
 
 private:
 	int destroyBuildings();
@@ -67,5 +67,7 @@ private:
 	int quadSize;
 	int mapSize;
 	int extraResPerEnemy;
+	int nrOfStructures;
+	int goal;
 };
 

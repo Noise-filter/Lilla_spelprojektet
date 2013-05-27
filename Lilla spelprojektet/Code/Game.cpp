@@ -152,10 +152,10 @@ int Game::update(float dt)
 		pSystem->update(dt);
 		int resource = gameLogic->getResource();
 		int supply = gameLogic->getSupply();
-		float currPercent = gameLogic->getCurrPercent();
-		float winPercent = gameLogic->getWinPercent();
+		float nrOfBuildings = gameLogic->getNrOfBuilding();
+		float goal = gameLogic->getGoal();
 		int selectedStructure = gameLogic->getSelectedBuilding();
-		gui->setInGameText(resource, supply, currPercent, winPercent, selectedStructure);
+		gui->setInGameText(resource, supply, nrOfBuildings, goal, selectedStructure);
 		
 
 	}

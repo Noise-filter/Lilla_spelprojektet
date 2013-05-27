@@ -73,9 +73,10 @@ void Entity::setScale(float scale)
 	renderData.worldMat = this->scale * pointTranslate * rotation * translate;
 }
 
-void Entity::setRotation(D3DXVECTOR3& dir)
+void Entity::setRotation(float angle)
 {
-
+	D3DXMatrixRotationY(&rotation, angle);
+	renderData.worldMat = this->scale * pointTranslate * rotation * translate;
 }
 
 float Entity::getHp()
