@@ -502,19 +502,19 @@ bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 					break;
 				case BUILDABLE_UPGRADE_OFFENSE:
 					structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
-						ENTITY_UPGRADE_OFFENSE,0,100,LIGHT_POINT,BUILDABLE_UPGRADE_OFFENSE,false);
+						ENTITY_UPGRADE_OFFENSE,6,100,LIGHT_POINT,BUILDABLE_UPGRADE_OFFENSE,false);
 					upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_OFFENSE)-3]);
 					builtUpgrade = true;
 					break;
 				case BUILDABLE_UPGRADE_DEFENSE:
 					structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
-						ENTITY_UPGRADE_DEFENSE,1,100,LIGHT_POINT,BUILDABLE_UPGRADE_DEFENSE,false);
+						ENTITY_UPGRADE_DEFENSE,7,100,LIGHT_POINT,BUILDABLE_UPGRADE_DEFENSE,false);
 					upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_DEFENSE)-3]);
 					builtUpgrade = true;
 					break;
 				case BUILDABLE_UPGRADE_RES:
 					structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
-						ENTITY_UPGRADE_RES,2,100,LIGHT_POINT,BUILDABLE_UPGRADE_RES,false);
+						ENTITY_UPGRADE_RES,8,100,LIGHT_POINT,BUILDABLE_UPGRADE_RES,false);
 					this->extraResPerEnemy += 1;
 					break;
 			}
