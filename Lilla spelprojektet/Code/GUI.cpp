@@ -93,13 +93,6 @@ void GUI::createBtns(int state)
 		this->menuBtns[0] = createBtn(D3DXVECTOR2(0.5*(0.3*SCREEN_WIDTH),0.5*(0.9*SCREEN_HEIGHT)), STARTGAME);
 		this->menuBtns[1] = createBtn(D3DXVECTOR2(0.5*(0.3*SCREEN_WIDTH),0.5*(1.1*SCREEN_HEIGHT)), SETTINGS);
 		this->menuBtns[2] = createBtn(D3DXVECTOR2(0.5*(0.3*SCREEN_WIDTH),0.5*(1.3*SCREEN_HEIGHT)), QUIT);
-		for(int i = 0; i < this->nrOfBtns; i++)
-		{
-			setLeftAligned(this->menuBtns[i].text);
-		}
-		//this->nrOfBoxes = 1;
-		//this->textBoxes = new Text[nrOfBoxes];
-		//this->textBoxes[0] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 140), L"Caecus", 62, 0x800000ff);
 	}
 	else if(state == STATE_SETTINGS)
 	{
@@ -171,7 +164,7 @@ void GUI::createBtns(int state)
 		{
 			setLeftAligned(this->textBoxes[i]);
 		}
-		this->textBoxes[7] = createTextBox(D3DXVECTOR2(0.5*(1*SCREEN_WIDTH),0.5*(0.45*SCREEN_HEIGHT)), L"You Won!", 62, 0xffa8a8a8);
+		this->textBoxes[7] = createTextBox(D3DXVECTOR2(0.5*(1*SCREEN_WIDTH),0.5*(0.55*SCREEN_HEIGHT)), L"You Won!", 62, 0xffa8a8a8);
 		this->nrOfBtns =2;
 		this->menuBtns = new Button[nrOfBtns];
 		this->menuBtns[0] = createBtn(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.6*SCREEN_HEIGHT)), MAIN_MENU);
@@ -193,7 +186,7 @@ void GUI::createBtns(int state)
 		{
 			setLeftAligned(this->textBoxes[i]);
 		}
-		this->textBoxes[7] = createTextBox(D3DXVECTOR2(0.5*(1*SCREEN_WIDTH),0.5*(0.45*SCREEN_HEIGHT)), L"You Lost", 62, 0xffa8a8a8);
+		this->textBoxes[7] = createTextBox(D3DXVECTOR2(0.5*(1*SCREEN_WIDTH),0.5*(0.55*SCREEN_HEIGHT)), L"You Lost", 62, 0xffa8a8a8);
 		this->nrOfBtns = 2;
 		this->menuBtns = new Button[nrOfBtns];
 		this->menuBtns[0] = createBtn(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.6*SCREEN_HEIGHT)), MAIN_MENU);
@@ -253,22 +246,22 @@ Button GUI::createBtn(D3DXVECTOR2 pos, BUTTONTYPE type)
 
 	if(type == STARTGAME)
 	{
-		btn.size = D3DXVECTOR2(100, 15);
+		btn.size = D3DXVECTOR2(90, 15);
 		text.text = L"New Game";
 	}
 	if(type == SETTINGS)
 	{
-		btn.size = D3DXVECTOR2(100, 18);
+		btn.size = D3DXVECTOR2(65, 18);
 		text.text = L"Settings";
 	}
 	if(type == QUIT)
 	{
-		btn.size = D3DXVECTOR2(80, 18);
+		btn.size = D3DXVECTOR2(40, 18);
 		text.text = L"Quit";
 	}
 	if(type == PAUSED_CONTINUE)
 	{
-		btn.size = D3DXVECTOR2(100, 20);
+		btn.size = D3DXVECTOR2(80, 20);
 		text.text = L"Continue";
 	}
 	if(type == NEXT)
@@ -283,22 +276,22 @@ Button GUI::createBtn(D3DXVECTOR2 pos, BUTTONTYPE type)
 	}
 	if(type == BACK)
 	{
-		btn.size = D3DXVECTOR2(80, 20);
+		btn.size = D3DXVECTOR2(40, 20);
 		text.text = L"Back";
 	}
 	if(type == MUTE)
 	{
-		btn.size = D3DXVECTOR2(80, 20);
+		btn.size = D3DXVECTOR2(40, 20);
 		text.text = L"Mute";
 	}
 	if(type == MAIN_MENU)
 	{
-		btn.size = D3DXVECTOR2(100, 20);
+		btn.size = D3DXVECTOR2(40, 20);
 		text.text = L"Menu";
 	}
 	if(type == RETRY)
 	{
-		btn.size = D3DXVECTOR2(80, 20);
+		btn.size = D3DXVECTOR2(40, 20);
 		text.text = L"Retry";
 	}
 
