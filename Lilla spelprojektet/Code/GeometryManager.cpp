@@ -88,11 +88,17 @@ void GeometryManager::init(ID3D11Device *device, ID3D11DeviceContext *dc)
 	};
 	std::vector<string> vGUIPanels;
 	vGUIPanels.push_back("Texturer/TitleScreen2.png");
-	vGUIPanels.push_back("Texturer/menyTest2.png");
-	vGUIPanels.push_back("Texturer/menyTest3.png");
-	vGUIPanels.push_back("Texturer/test.png");
-	vGUIPanels.push_back("Texturer/menyTest4.png");
-	vGUIPanels.push_back("Texturer/menyTest5.png");
+	vGUIPanels.push_back("Texturer/Prev Main Building HiRes_test.jpg");
+	vGUIPanels.push_back("Texturer/Supply HiRes_test.jpg");
+	vGUIPanels.push_back("Texturer/Supply Button Size_test.jpg");
+	vGUIPanels.push_back("Texturer/Tower HiRes_test.jpg");
+	vGUIPanels.push_back("Texturer/Tower Button Size_test.jpg");
+	vGUIPanels.push_back("Texturer/ATK2 upg HiRes_test.jpg");
+	vGUIPanels.push_back("Texturer/ATK upg Button Size_test.jpg");
+	vGUIPanels.push_back("Texturer/DEF upg HiRes_test.jpg");
+	vGUIPanels.push_back("Texturer/DEF upg Button Size_test.jpg");
+	vGUIPanels.push_back("Texturer/MONEY upg HiRes_test.jpg");
+	vGUIPanels.push_back("Texturer/Money upg Button Size_test.jpg");
 	vGUIPanels.push_back("Texturer/gui.png");
 	texGUI = createTextureArray(device, dc, vGUIPanels, DXGI_FORMAT_R8G8B8A8_UNORM, D3DX11_FILTER_NONE, D3DX11_FILTER_NONE);
 	

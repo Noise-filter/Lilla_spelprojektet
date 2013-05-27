@@ -1,7 +1,7 @@
 Texture2D inputTex   : register(t0);
 
-static const float TEXEL_SIZE_WIDTH = 1.0f/1920;
-static const float TEXEL_SIZE_HEIGHT = 1.0f/1080;
+static const float TEXEL_SIZE_WIDTH = 1.0f/800;
+static const float TEXEL_SIZE_HEIGHT = 1.0f/600;
 static const float WEIGHT[9] =
 {
 	0.05f, 0.05f, 0.1f, 0.15f, 0.3f, 0.15f, 0.1f, 0.05f, 0.05f

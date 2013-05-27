@@ -17,6 +17,7 @@ GUI::GUI()
 	createLevelList();
 	this->currentLevel = 0;
 	initDifficulty();
+	this->currentBuilding = TEXTURE_MAINBUILDING;
 	createBtns(STATE_MENU);
 	createPanels(STATE_MENU);
 	endStats = Statistics::Getinstance();
@@ -328,14 +329,15 @@ void GUI::createPanels(int state)
 	}
 	else if(state == STATE_GAMESTART || state == STATE_PLAYING )
 	{
-		this->nrOfPanles = 1;
+		this->nrOfPanles = 7;
 		this->panels = new GUI_Panel[nrOfPanles];
-		//this->panels[0] = GUI_Panel(D3DXVECTOR2(-0.8, -0.8), D3DXVECTOR2(0.2, 0.2), TEXTURE_BUILDING);
-		//this->panels[1] = GUI_Panel(D3DXVECTOR2(-0.4, -0.8), D3DXVECTOR2(0.2, 0.2), TEXTURE_INFO);
-		//this->panels[2] = GUI_Panel(D3DXVECTOR2(0.0, -0.8), D3DXVECTOR2(0.2, 0.2), TEXTURE_STATS);
-		//this->panels[3] = GUI_Panel(D3DXVECTOR2(0.6, -0.7), D3DXVECTOR2(0.4, 0.1), TEXTURE_TIME_GOAL);
-		//this->panels[4] = GUI_Panel(D3DXVECTOR2(0.6, -0.9), D3DXVECTOR2(0.4, 0.1), TEXTURE_BUILDINGS_HOTKEY);
-		this->panels[0] = GUI_Panel(D3DXVECTOR2(0, -0.8), D3DXVECTOR2(1, 0.2), TEXTURE_FRAME);
+		this->panels[0] = GUI_Panel(D3DXVECTOR2(-0.8225, -0.8), D3DXVECTOR2(0.13, 0.13), currentBuilding);
+		this->panels[1] = GUI_Panel(D3DXVECTOR2(0.188, -0.89), D3DXVECTOR2(0.07, 0.07), TEXTURE_SUPPLY_TINY);
+		this->panels[2] = GUI_Panel(D3DXVECTOR2(0.365, -0.89), D3DXVECTOR2(0.07, 0.07), TEXTURE_TOWER_TINY);
+		this->panels[3] = GUI_Panel(D3DXVECTOR2(0.545, -0.89), D3DXVECTOR2(0.07, 0.07), TEXTURE_ATK_TINY);
+		this->panels[4] = GUI_Panel(D3DXVECTOR2(0.7225, -0.89), D3DXVECTOR2(0.07, 0.07), TEXTURE_DEF_TINY);
+		this->panels[5] = GUI_Panel(D3DXVECTOR2(0.8975, -0.89), D3DXVECTOR2(0.07, 0.07), TEXTURE_MONEY_TINY);
+		this->panels[6] = GUI_Panel(D3DXVECTOR2(0, -0.8), D3DXVECTOR2(1, 0.2), TEXTURE_FRAME);
 	}
 
 }
@@ -550,14 +552,14 @@ void GUI::getEndStats()
 		wStats[i] = convertStrToWstr(Stats[i]);
 	}
 
-	this->textBoxes[0] = createTextBox(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(0.75*SCREEN_HEIGHT)), (wchar_t*)wStats[0].c_str(), 18, 0xffffffff);
-	this->textBoxes[1] = createTextBox(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(0.85*SCREEN_HEIGHT)), (wchar_t*)wStats[1].c_str(), 18, 0xffffffff);
-	this->textBoxes[2] = createTextBox(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(0.95*SCREEN_HEIGHT)), (wchar_t*)wStats[2].c_str(), 18, 0xffffffff);
-	this->textBoxes[3] = createTextBox(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.05*SCREEN_HEIGHT)), (wchar_t*)wStats[3].c_str(), 18, 0xffffffff);
-	this->textBoxes[4] = createTextBox(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.15*SCREEN_HEIGHT)), (wchar_t*)wStats[4].c_str(), 18, 0xffffffff);
-	this->textBoxes[5] = createTextBox(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.25*SCREEN_HEIGHT)), (wchar_t*)wStats[5].c_str(), 18, 0xffffffff);
-	this->textBoxes[6] = createTextBox(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.35*SCREEN_HEIGHT)), (wchar_t*)wStats[6].c_str(), 18, 0xffffffff);
-	this->textBoxes[7] = createTextBox(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.45*SCREEN_HEIGHT)), (wchar_t*)wStats[7].c_str(), 18, 0xffffffff);
+	this->textBoxes[0] = createTextBox(D3DXVECTOR2(0.5*(0.4*SCREEN_WIDTH),0.5*(0.75*SCREEN_HEIGHT)), (wchar_t*)wStats[0].c_str(), 18, 0xffffffff);
+	this->textBoxes[1] = createTextBox(D3DXVECTOR2(0.5*(0.4*SCREEN_WIDTH),0.5*(0.85*SCREEN_HEIGHT)), (wchar_t*)wStats[1].c_str(), 18, 0xffffffff);
+	this->textBoxes[2] = createTextBox(D3DXVECTOR2(0.5*(0.4*SCREEN_WIDTH),0.5*(0.95*SCREEN_HEIGHT)), (wchar_t*)wStats[2].c_str(), 18, 0xffffffff);
+	this->textBoxes[3] = createTextBox(D3DXVECTOR2(0.5*(0.4*SCREEN_WIDTH),0.5*(1.05*SCREEN_HEIGHT)), (wchar_t*)wStats[3].c_str(), 18, 0xffffffff);
+	this->textBoxes[4] = createTextBox(D3DXVECTOR2(0.5*(0.4*SCREEN_WIDTH),0.5*(1.15*SCREEN_HEIGHT)), (wchar_t*)wStats[4].c_str(), 18, 0xffffffff);
+	this->textBoxes[5] = createTextBox(D3DXVECTOR2(0.5*(0.4*SCREEN_WIDTH),0.5*(1.25*SCREEN_HEIGHT)), (wchar_t*)wStats[5].c_str(), 18, 0xffffffff);
+	this->textBoxes[6] = createTextBox(D3DXVECTOR2(0.5*(0.4*SCREEN_WIDTH),0.5*(1.35*SCREEN_HEIGHT)), (wchar_t*)wStats[6].c_str(), 18, 0xffffffff);
+	this->textBoxes[7] = createTextBox(D3DXVECTOR2(0.5*(0.4*SCREEN_WIDTH),0.5*(1.45*SCREEN_HEIGHT)), (wchar_t*)wStats[7].c_str(), 18, 0xffffffff);
 	//this->textBoxes[8] = createTextBox(D3DXVECTOR2(0.5*(0.9*SCREEN_WIDTH),0.5*(1.05*SCREEN_HEIGHT)), (wchar_t*)wStats[8].c_str(), 18, 0xffffffff);
 	//this->textBoxes[9] = createTextBox(D3DXVECTOR2(0.5*(0.9*SCREEN_WIDTH),0.5*(1.1*SCREEN_HEIGHT)), (wchar_t*)wStats[9].c_str(), 18, 0xffffffff);
 
@@ -586,36 +588,42 @@ void GUI::setInGameText(int resource, int supply, float currPercent, float winPe
 		name = "Headquarter";
 		purpose = "Base";
 		cost = 0;
+		currentBuilding = TEXTURE_MAINBUILDING;
 	}
 	else if(selectedStructure == BUILDABLE_SUPPLY)
 	{
 		name = "Supply";
 		purpose = "Give supply";
 		cost = COST_SUPPLY;
+		currentBuilding = TEXTURE_SUPPLY;
 	}
 	else if(selectedStructure == BUILDABLE_TOWER)
 	{
 		name = "Tower";
-		purpose = "Defensive structure";
+		purpose = "Offensive structure";
 		cost = COST_TOWER;
+		currentBuilding = TEXTURE_TOWER;
 	}
 	else if(selectedStructure == BUILDABLE_UPGRADE_OFFENSE)
 	{
 		name = "Offensive";
 		purpose = "Upgrade";
 		cost = COST_UPGRADE;
+		currentBuilding = TEXTURE_ATK;
 	}
 	else if(selectedStructure == BUILDABLE_UPGRADE_DEFENSE)
 	{
 		name = "Defensive";
 		purpose = "Upgrade";
 		cost = COST_UPGRADE;
+		currentBuilding = TEXTURE_DEF;
 	}
 	else if(selectedStructure == BUILDABLE_UPGRADE_RES)
 	{
 		name = "Resources";
 		purpose = "Increase res/kill";
 		cost = COST_UPGRADE;
+		currentBuilding = TEXTURE_MONEY;
 	}
 		
 	if(first)
@@ -650,8 +658,10 @@ void GUI::setInGameText(int resource, int supply, float currPercent, float winPe
 	this->textBoxes[3] = createTextBox(D3DXVECTOR2(0.5*(1.65*SCREEN_WIDTH),0.5*(1.7*SCREEN_HEIGHT)), (wchar_t*)wStats[3].c_str(), 18, 0xffffffff);
 	this->textBoxes[4] = createTextBox(D3DXVECTOR2(0.5*(1.85*SCREEN_WIDTH),0.5*(1.7*SCREEN_HEIGHT)), (wchar_t*)wStats[4].c_str(), 18, 0xffffffff);
 	this->textBoxes[5] = createTextBox(D3DXVECTOR2(0.5*(0.5*SCREEN_WIDTH),0.5*(1.7*SCREEN_HEIGHT)), (wchar_t*)wStats[5].c_str(), 18, 0xffffffff);
-	this->textBoxes[6] = createTextBox(D3DXVECTOR2(0.5*(0.5*SCREEN_WIDTH),0.5*(1.8*SCREEN_HEIGHT)), (wchar_t*)wStats[6].c_str(), 14, 0xffffffff);
+	this->textBoxes[6] = createTextBox(D3DXVECTOR2(0.5*(0.51*SCREEN_WIDTH),0.5*(1.8*SCREEN_HEIGHT)), (wchar_t*)wStats[6].c_str(), 14, 0xffffffff);
 	this->textBoxes[7] = createTextBox(D3DXVECTOR2(0.5*(0.5*SCREEN_WIDTH),0.5*(1.9*SCREEN_HEIGHT)), (wchar_t*)wStats[7].c_str(), 14, 0xffffffff);
+
+	this->panels[0].textureID = currentBuilding;
 }
 
 void GUI::restartStats()
