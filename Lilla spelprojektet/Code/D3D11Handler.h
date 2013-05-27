@@ -33,6 +33,8 @@ class D3D11Handler
 		ID3D11ShaderResourceView	*pBlurSRV;
 		ID3D11Texture2D				*pBlurTargets;
 
+		bool FullScreen;
+
 	private:
 		bool initSwapChainAndDevice(HWND hWnd);
 		void initAndSetViewPort();
