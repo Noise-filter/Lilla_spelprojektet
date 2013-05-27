@@ -9,8 +9,6 @@ Headquarter::Headquarter(D3DXVECTOR3 pos, int meshID, int textureID, float hp, i
 {
 
 	D3DXMatrixRotationY(&rotation, PI/4);
-	//scaleFactor = 2.8;
-	//D3DXMatrixScaling(&scale, scaleFactor, scaleFactor, scaleFactor);
 	renderData.worldMat = scale * pointTranslate * rotation * translate;
 }
 

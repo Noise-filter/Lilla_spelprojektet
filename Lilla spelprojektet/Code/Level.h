@@ -36,8 +36,12 @@ public:
 	bool isAdjecent(int xPos, int yPos);
 	bool isLocationBuildable(int xPos, int yPos);
 	bool isEmpty(int xPos, int yPos);
+	bool isGrey(int xPos, int yPos);
 
 	bool loadLevel(string fileName);
+
+	float getCurrPercent()const;
+	float getWinPercent()const;
 
 private:
 	int destroyBuildings();
@@ -57,6 +61,7 @@ private:
 	Set<Structure*> sets;
 
 	float winPercent;
+	float currPercent;
 	int nrOfSupplyStructures;
 	int quadSize;
 	int mapSize;

@@ -36,13 +36,6 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	//use settings for the game
 	this->hInstance = hInstance;
 	this->cmdShow = cmdShow;
-	//newLevel();
-
-	//Statistics::Getinstance()->levelName = "level7";
-	//Statistics::Getinstance()->totalTime = 100;
-	//Statistics::Getinstance()->writeScoreToFile("score.txt");
-
-	//float derp = Statistics::Getinstance()->readScoreFromFile("score.txt","level7");
 
 	if(!engine->init(hInstance,cmdShow))
 		return false;
@@ -145,6 +138,7 @@ int Game::update(float dt)
 	static bool muted = false;
 	handleInput(dt);
 	soundSystem->update();
+
 	if(gameState == STATE_MENU || gameState == STATE_NEWGAME || gameState == STATE_PAUSED || gameState == STATE_WIN || gameState == STATE_LOSE)
 	{
 		soundSystem->setPaused(playlist, true);
@@ -156,8 +150,14 @@ int Game::update(float dt)
 			return 0; // error
 		
 		pSystem->update(dt);
-
+		int resource = gameLogic->getResource();
+		int supply = gameLogic->getSupply();
+		float currPercent = gameLogic->getCurrPercent();
+		float winPercent = gameLogic->getWinPercent();
+		int selectedStructure = gameLogic->getSelectedBuilding();
+		gui->setInGameText(resource, supply, currPercent, winPercent, selectedStructure);
 		
+
 	}
 	//if(gameState == STATE_WIN) 
 	//{
@@ -179,6 +179,7 @@ int Game::update(float dt)
 		changeState(retry);
 		oldGameState = gameState;
 	}
+	
 	soundSystem->setMute(muted);
 	input->resetBtnState();
 	char title[255];
@@ -195,7 +196,7 @@ void Game::changeState(bool retry)
 		menuSound = soundSystem->createStream("SeductressDubstep_Test.mp3");
 		soundSystem->playSound(menuSound);
 	}
-	if(gameState == STATE_GAMESTART && retry == false)
+	if(gameState == STATE_GAMESTART && retry == false && oldGameState != STATE_PAUSED)
 	{
 		newLevel(gui->getCurrentLevel(), gui->getCurrentDiff());
 	}
@@ -332,9 +333,11 @@ void Game::newLevel(string filename, int difficulty)
 {
 	
 	SAFE_DELETE(gameLogic);
-
+	pSystem->shutdown();
 
 	gameLogic = new GameLogic();
+	pSystem = pSystem->Getinstance();
+
 
 	loadlevel(filename+".txt", difficulty);
 
@@ -352,8 +355,12 @@ void Game::loadlevel(string filename, int difficulty)
 void Game::retrylevel(string filename, int difficulty)
 {	
 	SAFE_DELETE(gameLogic);
+	pSystem->shutdown();
+	
 
 	gameLogic = new GameLogic();
+	pSystem = pSystem->Getinstance();
+	gui->restartStats();
 
 	loadlevel(filename+".txt", difficulty);
 }

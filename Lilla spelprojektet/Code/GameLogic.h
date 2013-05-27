@@ -14,6 +14,11 @@ public:
 	int update(int &gameState, float dt, MouseState *mState, D3DXMATRIX view, D3DXMATRIX proj, D3DXVECTOR3 cameraPos);
 	void incrementSelectedStructure(int increment);
 	void setSelectedStructure(int select);
+	int getResource()const;
+	int getSupply()const;
+	float getCurrPercent()const;
+	float getWinPercent()const;
+	int getSelectedBuilding()const;
 
 	vector<vector<RenderData*>>& getRenderData();
 	vector<HPBarInfo> getHPBarInfo();

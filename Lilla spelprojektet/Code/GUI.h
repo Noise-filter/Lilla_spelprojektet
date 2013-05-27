@@ -28,6 +28,7 @@ struct Text
 	wchar_t* text;
 	float textSize;
 	UINT32 textColor;
+	bool center;
 };
 
 struct Button
@@ -73,11 +74,14 @@ public:
 	int getNrOfPanels()const;
 	string getCurrentLevel()const;
 	int getCurrentDiff()const;
-	
+	void setInGameText(int resource, int supply, float currPercent, float winPercent, int selectedStructure);
+	void restartStats();
 
 private:
 	
-	void clear();
+	void clearBtns();
+	void clearTexts();
+	void clearPanels();
 	bool checkBtn(MouseState *mousePos, Button btn);
 	int changeState(Button btn);
 	Button createBtn(D3DXVECTOR2 pos, BUTTONTYPE type);
@@ -88,6 +92,9 @@ private:
 	void initDifficulty();
 	wstring convertStrToWstr(string text);
 	string convertWstrToStr(wstring text);
+	void getEndStats();
+	string convertFloat(float value);
+	void setLeftAligned(Text& text);
 
 	Button* menuBtns;
 	int nrOfBtns;
@@ -97,13 +104,16 @@ private:
 	int nrOfPanles;
 
 	Statistics* endStats;
+	wstring wStats[10];
 
 	int GUI_STATE;
 	int old_GUI_STATE;
+	int lastPlayingState;
 	float midScreenW;
 	float midScreenH;
 	bool muted;
 	bool retry;
+	bool first;
 
 	wstring* levelList;
 	int nrOfLevels;

@@ -300,7 +300,6 @@ bool SoundSystem::playPlaylist(Sound* playlist)
 bool SoundSystem::playNextSong(Sound* playlist)
 {
 	FMOD_TAG tag;
-	//((Playlist*)playlist)->count++;
 
 	int tempRand = rand() % this->nrOfSounds;
 	while(tempRand==((Playlist*)playlist)->count)
