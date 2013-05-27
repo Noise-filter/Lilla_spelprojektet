@@ -137,7 +137,7 @@ Shader *D3D11Handler::setPass(PASS_STATE pass)
 			return this->vShaders.at(PASS_DEBUG);
 
 		case PASS_HPBARS:
-			this->pDeviceContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);
+			this->pDeviceContext->OMSetRenderTargets(1, &pRenderTargetView, NULL);
 			return this->vShaders.at(PASS_HPBARS);
 			break;
 

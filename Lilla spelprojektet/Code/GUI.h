@@ -114,6 +114,7 @@ private:
 	bool muted;
 	bool retry;
 	bool first;
+	int currentBuilding;
 
 	wstring* levelList;
 	int nrOfLevels;
