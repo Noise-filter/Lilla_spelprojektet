@@ -55,7 +55,7 @@ int GUI::update(MouseState *mouse, int& state, bool& muted, bool& retry)
 		{
 			lastPlayingState = GUI_STATE;
 		}
-		if(state != STATE_GAMESTART && state != STATE_PLAYING && old_GUI_STATE != STATE_PAUSED && old_GUI_STATE != STATE_WIN && old_GUI_STATE != STATE_LOSE)
+		if(state != STATE_GAMESTART && state != STATE_PLAYING && old_GUI_STATE != STATE_PAUSED)
 		{
 			clearTexts();
 		}
