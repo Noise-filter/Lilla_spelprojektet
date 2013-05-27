@@ -81,6 +81,7 @@ void Level::constructNeutrals()
 				{
 					neutralStructures.push_back(new Structure(pos,ENTITY_NEUTRALGATE,0,100,LIGHT_POINT,false));
 					neutralStructures.at(neutralStructures.size()-1)->setScale(1.5f);
+					neutralStructures.at(neutralStructures.size()-1)->setRotation(3.14f/2);
 				}
 
 				nodes[i][j].getRenderData().lightID = LIGHT_NONE;

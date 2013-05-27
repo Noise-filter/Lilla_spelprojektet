@@ -8,7 +8,7 @@
 #define Vec4 D3DXVECTOR4
 #define Matrix D3DXMATRIX
 
-#define PI (3.14159265358979323846f)
+#define PI (3.14159f)
 
 #define NROFDIFFERENTMESHES (15)
 
