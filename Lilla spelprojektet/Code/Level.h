@@ -10,6 +10,7 @@
 #include "Upgrade.h"
 #include <vector>
 #include "Statistics.h"
+#include <random>
 using namespace std;
 
 class Level

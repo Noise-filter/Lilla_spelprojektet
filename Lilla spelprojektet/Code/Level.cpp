@@ -63,8 +63,23 @@ void Level::constructNeutrals()
 			if(counter == 4)
 			{
 				pos = Vec3((float)i*quadSize + (quadSize/2),0,(float)j*quadSize + (quadSize/2));
-				neutralStructures.push_back(new Structure(pos,ENTITY_SPIRALSPHERE,0,100,0,false));
-				neutralStructures.at(neutralStructures.size()-1)->setScale(1.5f);
+				int randNum = rand() % 3 + 1;
+
+				if(randNum == 1)
+				{
+					neutralStructures.push_back(new Structure(pos,ENTITY_PYRAMID,0,100,LIGHT_POINT,false));
+					neutralStructures.at(neutralStructures.size()-1)->setScale(0.6f);
+				}
+				if(randNum == 2)
+				{
+					neutralStructures.push_back(new Structure(pos,ENTITY_SPIRALSPHERE,0,100,LIGHT_POINT,false));
+					neutralStructures.at(neutralStructures.size()-1)->setScale(1.5f);
+				}
+				if(randNum == 3)
+				{
+					neutralStructures.push_back(new Structure(pos,ENTITY_NEUTRALGATE,0,100,LIGHT_POINT,false));
+					neutralStructures.at(neutralStructures.size()-1)->setScale(1.5f);
+				}
 
 				nodes[i][j].getRenderData().lightID = LIGHT_NONE;
 				nodes[i+1][j].getRenderData().lightID = LIGHT_NONE;
@@ -145,11 +160,11 @@ bool Level::loadLevel(string fileName)
 			fin.get(val);
 			value = ((int)val-48); // konverterar till int
 			if(value == COLOR_GREEN)
-				nodes[i][j] = Node(Vec3((float)i*quadSize,0,(float)j*quadSize),ENTITY_NODE_GREEN,0,0,0,value);//entityFlag = ENTITY_NODE_GREEN;
+				nodes[i][j] = Node(Vec3((float)i*quadSize,0,(float)j*quadSize),ENTITY_NODE_GREEN,0,0,LIGHT_POINT,value);//entityFlag = ENTITY_NODE_GREEN;
 			else if(value == COLOR_RED)
-				nodes[i][j] = Node(Vec3((float)i*quadSize,0,(float)j*quadSize),ENTITY_NODE_GREEN,1,0,0,value);//entityFlag = ENTITY_NODE_RED;
+				nodes[i][j] = Node(Vec3((float)i*quadSize,0,(float)j*quadSize),ENTITY_NODE_GREEN,1,0,LIGHT_POINT,value);//entityFlag = ENTITY_NODE_RED;
 			else if(value == COLOR_GREY)
-				nodes[i][j] = Node(Vec3((float)i*quadSize,0,(float)j*quadSize),ENTITY_NODE_GREEN,2,0,0,value);//entityFlag = ENTITY_NODE_GREEN;
+				nodes[i][j] = Node(Vec3((float)i*quadSize,0,(float)j*quadSize),ENTITY_NODE_GREEN,2,0,LIGHT_POINT,value);//entityFlag = ENTITY_NODE_GREEN;
 					
 			//lägg till kollar för texturer
 
@@ -466,7 +481,7 @@ bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 	{
 		if(selectedStructure == BUILDABLE_MAINBUILDING && structures[xPos][yPos] == NULL && isLocationBuildable(xPos, yPos))
 		{
-			structures[xPos][yPos] = new Headquarter(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 2, 500, 0,false);
+			structures[xPos][yPos] = new Headquarter(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, 2, 500, LIGHT_POINT,false);
 			return true;
 		}
 		else if(structures[xPos][yPos] == NULL && isAdjecent(xPos,yPos) && isLocationBuildable(xPos, yPos))
@@ -475,31 +490,31 @@ bool Level::buildStructure(Vec3 mouseClickPos, int selectedStructure)
 			switch(selectedStructure)
 			{
 				case BUILDABLE_TOWER:
-					structures[xPos][yPos] = new Tower(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWERBASE,2,100,0,20, 1, 25, 100,false);
+					structures[xPos][yPos] = new Tower(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),ENTITY_TOWERBASE,2,100,LIGHT_POINT,20, 1, 25, 100,false);
 					for(int i = 0; i < (int)this->upgradesInUse.size();i++)
 					{
 						dynamic_cast<Tower*>(structures[xPos][yPos])->giveUpgrade(upgradesInUse[i]);
 					}
 					break;
 				case BUILDABLE_SUPPLY:
-					structures[xPos][yPos] = new Supply(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_SUPPLYBASE,2,100,0,false);
+					structures[xPos][yPos] = new Supply(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_SUPPLYBASE,2,100,LIGHT_POINT,false);
 					this->nrOfSupplyStructures++;
 					break;
 				case BUILDABLE_UPGRADE_OFFENSE:
 					structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
-						ENTITY_UPGRADE_OFFENSE,0,100,0,BUILDABLE_UPGRADE_OFFENSE,false);
+						ENTITY_UPGRADE_OFFENSE,0,100,LIGHT_POINT,BUILDABLE_UPGRADE_OFFENSE,false);
 					upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_OFFENSE)-3]);
 					builtUpgrade = true;
 					break;
 				case BUILDABLE_UPGRADE_DEFENSE:
 					structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
-						ENTITY_UPGRADE_DEFENSE,1,100,0,BUILDABLE_UPGRADE_DEFENSE,false);
+						ENTITY_UPGRADE_DEFENSE,1,100,LIGHT_POINT,BUILDABLE_UPGRADE_DEFENSE,false);
 					upgradesInUse.push_back(availibleUpgrades[(BUILDABLE_UPGRADE_DEFENSE)-3]);
 					builtUpgrade = true;
 					break;
 				case BUILDABLE_UPGRADE_RES:
 					structures[xPos][yPos] = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)),
-						ENTITY_UPGRADE_RES,2,100,0,BUILDABLE_UPGRADE_RES,false);
+						ENTITY_UPGRADE_RES,2,100,LIGHT_POINT,BUILDABLE_UPGRADE_RES,false);
 					this->extraResPerEnemy += 1;
 					break;
 			}
