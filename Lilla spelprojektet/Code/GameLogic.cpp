@@ -381,14 +381,14 @@ int GameLogic::getSupply()const
 	return this->availableSupply;
 }
 
-float GameLogic::getCurrPercent()const
+float GameLogic::getNrOfBuilding()const
 {
-	return this->level->getCurrPercent();
+	return this->level->getNrOfBuilding();
 }
 
-float GameLogic::getWinPercent()const
+float GameLogic::getGoal()const
 {
-	return this->level->getWinPercent();
+	return this->level->getGoal();
 }
 
 int GameLogic::getSelectedBuilding()const

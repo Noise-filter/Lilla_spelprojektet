@@ -16,7 +16,7 @@ public:
 
 	void setPosition(D3DXVECTOR3& pos);
 	void setScale(float scale);
-	void setRotation(D3DXVECTOR3& dir);
+	void setRotation(float angle);
 	void setDead(bool dead);
 	
 	virtual void setTextureID(int ID);

@@ -76,6 +76,7 @@ void Engine::render(Matrix& view, Matrix& proj, Text* text, int nrOfText,  Vec3 
 			d3d->pDeviceContext->DrawInstanced(pGeoManager->getNrOfVertexPoints(i), pGeoManager->getNrOfInstances(i), 0, 0);
 		}
 	}
+	
 	temp->m_pEffect->GetVariableByName("textures")->AsShaderResource()->SetResource(NULL);
 	temp->m_pEffect->GetVariableByName("glowMaps")->AsShaderResource()->SetResource(NULL);
 	temp->m_pTechnique->GetPassByIndex(0)->Apply(0, d3d->pDeviceContext);
@@ -140,9 +141,7 @@ void Engine::render(Matrix& view, Matrix& proj, Text* text, int nrOfText,  Vec3 
 	temp->SetResource("textures", texture);
 	temp->Apply(0);
 	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfGUIObjects(), 0, 0);
-
 	blurTexture(temp);
-
 	view = view * proj;
 	renderDebug(view);
 

@@ -93,13 +93,6 @@ void GUI::createBtns(int state)
 		this->menuBtns[0] = createBtn(D3DXVECTOR2(0.5*(0.3*SCREEN_WIDTH),0.5*(0.9*SCREEN_HEIGHT)), STARTGAME);
 		this->menuBtns[1] = createBtn(D3DXVECTOR2(0.5*(0.3*SCREEN_WIDTH),0.5*(1.1*SCREEN_HEIGHT)), SETTINGS);
 		this->menuBtns[2] = createBtn(D3DXVECTOR2(0.5*(0.3*SCREEN_WIDTH),0.5*(1.3*SCREEN_HEIGHT)), QUIT);
-		for(int i = 0; i < this->nrOfBtns; i++)
-		{
-			setLeftAligned(this->menuBtns[i].text);
-		}
-		//this->nrOfBoxes = 1;
-		//this->textBoxes = new Text[nrOfBoxes];
-		//this->textBoxes[0] = createTextBox(D3DXVECTOR2(midScreenW, midScreenH - 140), L"Caecus", 62, 0x800000ff);
 	}
 	else if(state == STATE_SETTINGS)
 	{
@@ -150,7 +143,6 @@ void GUI::createBtns(int state)
 		delete []this->textBoxes;
 		this->textBoxes = NULL;
 		this->textBoxes = temp;
-		//this->textBoxes[5] = createTextBox(D3DXVECTOR2(0.5*(0.5*SCREEN_WIDTH),0.5*(1.7*SCREEN_HEIGHT)), L"Information:", 18, 0xffffffff);
 		this->textBoxes[8] = createTextBox(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.7*SCREEN_HEIGHT)), L"Resource:", 18, 0xffffffff);
 		this->textBoxes[9] = createTextBox(D3DXVECTOR2(0.5*(0.775*SCREEN_WIDTH),0.5*(1.875*SCREEN_HEIGHT)), L"Supply:", 18, 0xffffffff);
 		this->textBoxes[10] = createTextBox(D3DXVECTOR2(0.5*(1.2*SCREEN_WIDTH),0.5*(1.7*SCREEN_HEIGHT)), L"Time:", 18, 0xffffffff);
@@ -168,11 +160,11 @@ void GUI::createBtns(int state)
 		delete []this->textBoxes;
 		this->textBoxes = NULL;
 		this->textBoxes = temp;
-		for(int i = 0; i < 8; i++)
+		for(int i = 0; i < 7; i++)
 		{
 			setLeftAligned(this->textBoxes[i]);
 		}
-		this->textBoxes[8] = createTextBox(D3DXVECTOR2(0.5*(1*SCREEN_WIDTH),0.5*(0.45*SCREEN_HEIGHT)), L"You Won!", 62, 0xffa8a8a8);
+		this->textBoxes[7] = createTextBox(D3DXVECTOR2(0.5*(1*SCREEN_WIDTH),0.5*(0.55*SCREEN_HEIGHT)), L"You Won!", 62, 0xffa8a8a8);
 		this->nrOfBtns =2;
 		this->menuBtns = new Button[nrOfBtns];
 		this->menuBtns[0] = createBtn(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.6*SCREEN_HEIGHT)), MAIN_MENU);
@@ -190,11 +182,11 @@ void GUI::createBtns(int state)
 		delete []this->textBoxes;
 		this->textBoxes = NULL;
 		this->textBoxes = temp;
-		for(int i = 0; i < 8; i++)
+		for(int i = 0; i < 7; i++)
 		{
 			setLeftAligned(this->textBoxes[i]);
 		}
-		this->textBoxes[8] = createTextBox(D3DXVECTOR2(0.5*(1*SCREEN_WIDTH),0.5*(0.45*SCREEN_HEIGHT)), L"You Lost", 62, 0xffa8a8a8);
+		this->textBoxes[7] = createTextBox(D3DXVECTOR2(0.5*(1*SCREEN_WIDTH),0.5*(0.55*SCREEN_HEIGHT)), L"You Lost", 62, 0xffa8a8a8);
 		this->nrOfBtns = 2;
 		this->menuBtns = new Button[nrOfBtns];
 		this->menuBtns[0] = createBtn(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.6*SCREEN_HEIGHT)), MAIN_MENU);
@@ -254,22 +246,22 @@ Button GUI::createBtn(D3DXVECTOR2 pos, BUTTONTYPE type)
 
 	if(type == STARTGAME)
 	{
-		btn.size = D3DXVECTOR2(100, 15);
+		btn.size = D3DXVECTOR2(90, 15);
 		text.text = L"New Game";
 	}
 	if(type == SETTINGS)
 	{
-		btn.size = D3DXVECTOR2(100, 18);
+		btn.size = D3DXVECTOR2(65, 18);
 		text.text = L"Settings";
 	}
 	if(type == QUIT)
 	{
-		btn.size = D3DXVECTOR2(80, 18);
+		btn.size = D3DXVECTOR2(40, 18);
 		text.text = L"Quit";
 	}
 	if(type == PAUSED_CONTINUE)
 	{
-		btn.size = D3DXVECTOR2(100, 20);
+		btn.size = D3DXVECTOR2(80, 20);
 		text.text = L"Continue";
 	}
 	if(type == NEXT)
@@ -284,22 +276,22 @@ Button GUI::createBtn(D3DXVECTOR2 pos, BUTTONTYPE type)
 	}
 	if(type == BACK)
 	{
-		btn.size = D3DXVECTOR2(80, 20);
+		btn.size = D3DXVECTOR2(40, 20);
 		text.text = L"Back";
 	}
 	if(type == MUTE)
 	{
-		btn.size = D3DXVECTOR2(80, 20);
+		btn.size = D3DXVECTOR2(40, 20);
 		text.text = L"Mute";
 	}
 	if(type == MAIN_MENU)
 	{
-		btn.size = D3DXVECTOR2(100, 20);
-		text.text = L"Main Menu";
+		btn.size = D3DXVECTOR2(40, 20);
+		text.text = L"Menu";
 	}
 	if(type == RETRY)
 	{
-		btn.size = D3DXVECTOR2(80, 20);
+		btn.size = D3DXVECTOR2(40, 20);
 		text.text = L"Retry";
 	}
 
@@ -521,30 +513,24 @@ string GUI::convertWstrToStr(wstring text)
 
 void GUI::getEndStats()
 {
-	int nrOfStats = 8;
+	int nrOfStats = 7;
 	this->nrOfBoxes = nrOfStats;
 	this->textBoxes = new Text[this->nrOfBoxes];
 	char temp[255];
-	string Stats[8];
+	string Stats[7];
 	Stats[0] = "Level: " + getCurrentLevel();
-	Stats[1] = "Score: ";
-	Stats[1].append( itoa(this->endStats->totalScore, temp, 10) );
-	Stats[2] = "Resources: ";
-	Stats[2].append( itoa(this->endStats->totalRes, temp, 10) );
-	Stats[3] = "Supplys: ";
-	Stats[3].append (itoa(this->endStats->totalSupply, temp, 10) );
-	Stats[4] = "Time: ";
-	Stats[4].append( itoa(this->endStats->totalTime, temp, 10) );
-	Stats[5] = "Buildings built: ";
-	Stats[5].append( itoa(this->endStats->totalNrOfBuildings, temp, 10) );
-	Stats[6] = "Enemies killed: ";
-	Stats[6].append( itoa(this->endStats->totalEnemiesKilled, temp, 10) );
-	Stats[7] = "Nr of Upgrades: ";
-	Stats[7].append( itoa(this->endStats->totalNrOfUpgrades, temp, 10) );
-	//Stats[8] = "Buildings at max lv: ";
-	//Stats[8].append( itoa(this->endStats->totalNrOfMaxLvlTowers, temp, 10) );
-	//Stats[9] = "Average lv: ";
-	//Stats[9].append( convertFloat(this->endStats->averageTowerLvl) );
+	Stats[1] = "Resources: ";
+	Stats[1].append( itoa(this->endStats->totalRes, temp, 10) );
+	Stats[2] = "Supplys: ";
+	Stats[2].append (itoa(this->endStats->totalSupply, temp, 10) );
+	Stats[3] = "Time: ";
+	Stats[3].append( itoa(this->endStats->totalTime, temp, 10) );
+	Stats[4] = "Buildings built: ";
+	Stats[4].append( itoa(this->endStats->totalNrOfBuildings, temp, 10) );
+	Stats[5] = "Enemies killed: ";
+	Stats[5].append( itoa(this->endStats->totalEnemiesKilled, temp, 10) );
+	Stats[6] = "Nr of Upgrades: ";
+	Stats[6].append( itoa(this->endStats->totalNrOfUpgrades, temp, 10) );
 
 	
 	for(int i = 0; i < nrOfStats; i++)
@@ -559,9 +545,6 @@ void GUI::getEndStats()
 	this->textBoxes[4] = createTextBox(D3DXVECTOR2(0.5*(0.4*SCREEN_WIDTH),0.5*(1.15*SCREEN_HEIGHT)), (wchar_t*)wStats[4].c_str(), 18, 0xffffffff);
 	this->textBoxes[5] = createTextBox(D3DXVECTOR2(0.5*(0.4*SCREEN_WIDTH),0.5*(1.25*SCREEN_HEIGHT)), (wchar_t*)wStats[5].c_str(), 18, 0xffffffff);
 	this->textBoxes[6] = createTextBox(D3DXVECTOR2(0.5*(0.4*SCREEN_WIDTH),0.5*(1.35*SCREEN_HEIGHT)), (wchar_t*)wStats[6].c_str(), 18, 0xffffffff);
-	this->textBoxes[7] = createTextBox(D3DXVECTOR2(0.5*(0.4*SCREEN_WIDTH),0.5*(1.45*SCREEN_HEIGHT)), (wchar_t*)wStats[7].c_str(), 18, 0xffffffff);
-	//this->textBoxes[8] = createTextBox(D3DXVECTOR2(0.5*(0.9*SCREEN_WIDTH),0.5*(1.05*SCREEN_HEIGHT)), (wchar_t*)wStats[8].c_str(), 18, 0xffffffff);
-	//this->textBoxes[9] = createTextBox(D3DXVECTOR2(0.5*(0.9*SCREEN_WIDTH),0.5*(1.1*SCREEN_HEIGHT)), (wchar_t*)wStats[9].c_str(), 18, 0xffffffff);
 
 }
 
@@ -578,17 +561,19 @@ void GUI::setLeftAligned(Text& text)
 	text.center = false;
 }
 
-void GUI::setInGameText(int resource, int supply, float currPercent, float winPercent, int selectedStructure)
+void GUI::setInGameText(int resource, int supply, float nrOfBuildings, float goal, int selectedStructure)
 {
 	string name;
 	string purpose;
 	int cost;
+	string typeOfCost;
 	if(selectedStructure == BUILDABLE_MAINBUILDING)
 	{
 		name = "Headquarter";
 		purpose = "Base";
 		cost = 0;
 		currentBuilding = TEXTURE_MAINBUILDING;
+		typeOfCost = "Cost: ";
 	}
 	else if(selectedStructure == BUILDABLE_SUPPLY)
 	{
@@ -596,6 +581,7 @@ void GUI::setInGameText(int resource, int supply, float currPercent, float winPe
 		purpose = "Give supply";
 		cost = COST_SUPPLY;
 		currentBuilding = TEXTURE_SUPPLY;
+		typeOfCost = "Resource: ";
 	}
 	else if(selectedStructure == BUILDABLE_TOWER)
 	{
@@ -603,6 +589,7 @@ void GUI::setInGameText(int resource, int supply, float currPercent, float winPe
 		purpose = "Offensive structure";
 		cost = COST_TOWER;
 		currentBuilding = TEXTURE_TOWER;
+		typeOfCost = "Supply: ";
 	}
 	else if(selectedStructure == BUILDABLE_UPGRADE_OFFENSE)
 	{
@@ -610,6 +597,7 @@ void GUI::setInGameText(int resource, int supply, float currPercent, float winPe
 		purpose = "Upgrade";
 		cost = COST_UPGRADE;
 		currentBuilding = TEXTURE_ATK;
+		typeOfCost = "Resource: ";
 	}
 	else if(selectedStructure == BUILDABLE_UPGRADE_DEFENSE)
 	{
@@ -617,6 +605,7 @@ void GUI::setInGameText(int resource, int supply, float currPercent, float winPe
 		purpose = "Upgrade";
 		cost = COST_UPGRADE;
 		currentBuilding = TEXTURE_DEF;
+		typeOfCost = "Resource: ";
 	}
 	else if(selectedStructure == BUILDABLE_UPGRADE_RES)
 	{
@@ -624,6 +613,7 @@ void GUI::setInGameText(int resource, int supply, float currPercent, float winPe
 		purpose = "Increase res/kill";
 		cost = COST_UPGRADE;
 		currentBuilding = TEXTURE_MONEY;
+		typeOfCost = "Resource: ";
 	}
 		
 	if(first)
@@ -638,12 +628,12 @@ void GUI::setInGameText(int resource, int supply, float currPercent, float winPe
 	Stats[1] = itoa(supply, temp, 10);
 	Stats[2] = itoa(this->endStats->totalTime, temp, 10);
 	Stats[3] = "Built: ";
-	Stats[3].append( convertFloat(currPercent) );
+	Stats[3].append( convertFloat(nrOfBuildings) );
 	Stats[4] = "Goal: ";
-	Stats[4].append( convertFloat(winPercent) );
+	Stats[4].append( convertFloat(goal) );
 	Stats[5] = name;
 	Stats[6] = purpose;
-	Stats[7] = "Cost: ";
+	Stats[7] = typeOfCost;
 	Stats[7].append( itoa(cost, temp, 10) );
 	
 

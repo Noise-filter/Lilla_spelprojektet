@@ -144,6 +144,8 @@ Shader *D3D11Handler::setPass(PASS_STATE pass)
 			this->pDeviceContext->OMSetRenderTargets(1, &pMultipleRTVs[3], NULL);
 			this->vShaders.at(PASS_BLUR)->SetResource("inputTex", this->pMultipleSRVs[4]);
 			this->vShaders.at(PASS_BLUR)->SetFloat("blurScalar", BLURSCALAR);
+			this->vShaders.at(PASS_BLUR)->SetInt("TEXEL_HEIGHT", SCREEN_HEIGHT);
+			this->vShaders.at(PASS_BLUR)->SetInt("TEXEL_WIDTH", SCREEN_WIDTH);
 			return this->vShaders.at(PASS_BLUR);
 			break;
 
@@ -151,6 +153,8 @@ Shader *D3D11Handler::setPass(PASS_STATE pass)
 			this->pDeviceContext->OMSetRenderTargets(1, &pMultipleRTVs[4], NULL);
 			this->vShaders.at(PASS_BLUR)->SetResource("inputTex", this->pMultipleSRVs[3]);
 			this->vShaders.at(PASS_BLUR)->SetFloat("blurScalar", BLURSCALAR);
+			this->vShaders.at(PASS_BLUR)->SetInt("TEXEL_HEIGHT", SCREEN_HEIGHT);
+			this->vShaders.at(PASS_BLUR)->SetInt("TEXEL_WIDTH", SCREEN_WIDTH);
 			return this->vShaders.at(PASS_BLUR);
 			break;
 	}
@@ -559,6 +563,7 @@ bool D3D11Handler::initBlur()
 
 	return true;
 }
+
 
 void D3D11Handler::nullRTV()
 {
