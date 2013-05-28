@@ -32,8 +32,8 @@ Tower::Tower(Vec3 pos, int meshID, int textureID, float hp, int lightID, float d
 	topTower = new RenderData(ENTITY_TOWERTOP, textureID, this->renderData.worldMat, 0);
 
 	//Top part
-	D3DXMatrixTranslation(&topPointTrans, 2, 0, 0);
-	D3DXMatrixTranslation(&topTrans, pos.x-0.2, pos.y, pos.z);
+	D3DXMatrixTranslation(&topPointTrans, 0.5, 0, 0);
+	D3DXMatrixTranslation(&topTrans, pos.x, pos.y, pos.z);
 	D3DXMatrixIdentity(&topRotation);
 	D3DXMatrixTranslation(&translate, pos.x+2.1f, pos.y, pos.z);
 	//scaleFactor = 1;
@@ -126,7 +126,7 @@ int Tower::update(float dt)
 			{
 				if(range > D3DXVec3Length(&(target->getPosition() - getPosition())))
 				{
-					projectiles.push_back(new Projectile(Vec3(getPosition().x-2, 6, getPosition().z), ENTITY_PROJECTILE, 0, 0, 0, target, projectileSpeed -50, damage));
+					projectiles.push_back(new Projectile(Vec3(getPosition().x-2, 6, getPosition().z), ENTITY_PROJECTILE, level-1, 0, 0, target, projectileSpeed -50, damage));
 					cooldown = attackSpeed;
 					SoundSystem::Getinstance()->playSound(sound);
 				}
@@ -243,7 +243,7 @@ bool Tower::rotateTop(float dt)
 	else if(rotY <= 0 - PI/2 && oldRotY > 0 - PI/2)
 		rotY += PI*2;
 
-	if(abs(rotation - rotY) < rotationSpeed * 1.4 * dt)
+	if(abs(rotation - rotY) < rotationSpeed * 1.7 * dt)
 	{
 		rotY = rotation;
 		done = true;

@@ -1,7 +1,5 @@
 Texture2D inputTex   : register(t0);
 
-static const float TEXEL_SIZE_WIDTH = 1.0f/800;
-static const float TEXEL_SIZE_HEIGHT = 1.0f/600;
 static const float WEIGHT[9] =
 {
 	0.05f, 0.05f, 0.1f, 0.15f, 0.3f, 0.15f, 0.1f, 0.05f, 0.05f
@@ -12,6 +10,8 @@ static const int BLURRADIUS = 4;
 cbuffer everyCall
 {
 	float blurScalar;
+	int TEXEL_WIDTH;
+	int TEXEL_HEIGHT;
 }
 
 SamplerState blurSampler
@@ -56,20 +56,20 @@ PSout PSScene(VSout input, uniform bool blur)
 	
 	if(blur)
 	{
-		texOffset = float2(TEXEL_SIZE_WIDTH, 0.0f);
+		texOffset = float2((1.0f/TEXEL_WIDTH), 0.0f);
 	}
 	else
 	{
-		texOffset = float2(0.0f, TEXEL_SIZE_HEIGHT);
+		texOffset = float2(0.0f, (1.0f/TEXEL_HEIGHT));
 	}
 
 	[unroll]
 	//for(int j = 0; j < 2; j++)
-		for(int i = -BLURRADIUS; i < BLURRADIUS; i++)
-		{
-			float2 uv = input.tex + i*texOffset * blurScalar;
-			glowResult += (inputTex.Sample(blurSampler, uv) * WEIGHT[i+BLURRADIUS]);
-		}
+	for(int i = -BLURRADIUS; i < BLURRADIUS; i++)
+	{
+		float2 uv = input.tex + i*texOffset * blurScalar;
+		glowResult += (inputTex.Sample(blurSampler, uv) * WEIGHT[i+BLURRADIUS]);
+	}
 
 	output.blur = glowResult;
 

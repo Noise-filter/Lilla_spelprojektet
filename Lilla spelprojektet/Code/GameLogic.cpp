@@ -265,14 +265,16 @@ vector<vector<RenderData*>>& GameLogic::getRenderData()
 					selectedStructureRenderData = new Headquarter(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), ENTITY_MAINBUILDING, texture, 500, 0, true);
 				else if(selectedStructure == BUILDABLE_UPGRADE_OFFENSE || selectedStructure == BUILDABLE_UPGRADE_DEFENSE || selectedStructure == BUILDABLE_UPGRADE_RES)
 				{
-					selectedStructureRenderData = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), selectedStructure,selectedStructure-BUILDABLE_UPGRADE_OFFENSE,100,0,BUILDABLE_UPGRADE_OFFENSE, true);
-					
+					int temp = (selectedStructure-BUILDABLE_UPGRADE_OFFENSE) * 2 + texture;
+					selectedStructureRenderData = new Upgrade(Vec3((float)xPos*quadSize + (quadSize/2),0,(float)yPos*quadSize + (quadSize/2)), selectedStructure,temp,100,0,BUILDABLE_UPGRADE_OFFENSE, true);
 				}
 			}
 			else if(selectedStructure == BUILDABLE_UPGRADE_OFFENSE || selectedStructure == BUILDABLE_UPGRADE_DEFENSE || selectedStructure == BUILDABLE_UPGRADE_RES)
 			{
 				if(!update)
-					selectedStructureRenderData->setTextureID(selectedStructure-BUILDABLE_UPGRADE_OFFENSE);
+				{
+					selectedStructureRenderData->setTextureID((selectedStructure-BUILDABLE_UPGRADE_OFFENSE) * 2 + texture);
+				}
 			}
 
 			if(selectedStructure == BUILDABLE_SUPPLY)
