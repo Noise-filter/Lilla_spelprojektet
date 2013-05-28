@@ -42,7 +42,7 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 
 	soundSystem->init();
 	playlist = soundSystem->createPlaylist("playlist.m3u");
-	menuSound = soundSystem->createStream("SeductressDubstep_Test.mp3");
+	menuSound = soundSystem->createStream("TechTalk_Test.mp3");
 	soundSystem->playSound(menuSound);
 	
 
@@ -124,7 +124,7 @@ void Game::render()
 
 		engine->render(camera->View(), camera->Proj(), temp, tempSize, camera->GetPosition());
 	}
-	else //if(gameState == STATE_MENU || gameState == STATE_SETTINGS || gameState == STATE_NEWGAME || gameState == STATE_PAUSED || gameState == STATE_WIN || gameState == STATE_LOSE)
+	else 
 	{
 		engine->setGUI(panels, nrOfPanels);
 		engine->renderGui(temp, tempSize);
@@ -159,15 +159,6 @@ int Game::update(float dt)
 		
 
 	}
-	//if(gameState == STATE_WIN) 
-	//{
-	//	cout << "YOU WON" << endl;
-	//}
-	//else if(gameState == STATE_LOSE)
-	//{
-	//	//hantera win/lose state
-	//	cout << "YOU LOSE" << endl;
-	//}
 	else if(gameState == STATE_QUIT)
 	{
 		return 0;
@@ -193,7 +184,7 @@ void Game::changeState(bool retry)
 {
 	if((gameState == STATE_MENU || gameState == STATE_PAUSED || gameState == STATE_WIN || gameState == STATE_LOSE) && (oldGameState != STATE_NEWGAME && oldGameState != STATE_SETTINGS && oldGameState != STATE_PAUSED))
 	{
-		menuSound = soundSystem->createStream("SeductressDubstep_Test.mp3");
+		menuSound = soundSystem->createStream("TechTalk_Test.mp3");
 		soundSystem->playSound(menuSound);
 	}
 	if(gameState == STATE_GAMESTART && retry == false && oldGameState != STATE_PAUSED)
