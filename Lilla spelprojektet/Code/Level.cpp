@@ -202,7 +202,7 @@ bool Level::loadLevel(string fileName)
 			}
 		}
 	}
-	goal = winPercent*nrOfBuilable;
+	goal = (int)(winPercent*nrOfBuilable);
 	return true;
 }
 Level::~Level(void)
@@ -686,12 +686,12 @@ void Level::getHPBarInfo(vector<HPBarInfo>& hpBars)
 	}
 }
 
-float Level::getNrOfBuilding()const
+int Level::getNrOfBuildings()const
 {
 	return this->nrOfStructures;
 }
 
-float Level::getGoal()const
+int Level::getGoal()const
 {
 	return goal;
 }

@@ -116,8 +116,8 @@ void Game::render()
 			float x = cameraPosition.x - pos.x;
 			float y = cameraPosition.y - pos.y;
 			float z = cameraPosition.z - pos.z;
-			hp[i].translate._41 -= x * 0.1;
-			hp[i].translate._43 -= z * 0.1;
+			hp[i].translate._41 -= x * 0.1f;
+			hp[i].translate._43 -= z * 0.1f;
 			hp[i].translate = orient * hp[i].translate;
 		}
 		engine->setHPBars(hp);
@@ -152,8 +152,8 @@ int Game::update(float dt)
 		pSystem->update(dt);
 		int resource = gameLogic->getResource();
 		int supply = gameLogic->getSupply();
-		float nrOfBuildings = gameLogic->getNrOfBuilding();
-		float goal = gameLogic->getGoal();
+		int nrOfBuildings = gameLogic->getNrOfBuildings();
+		int goal = gameLogic->getGoal();
 		int selectedStructure = gameLogic->getSelectedBuilding();
 		gui->setInGameText(resource, supply, nrOfBuildings, goal, selectedStructure);
 		

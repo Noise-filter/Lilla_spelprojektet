@@ -381,12 +381,12 @@ int GameLogic::getSupply()const
 	return this->availableSupply;
 }
 
-float GameLogic::getNrOfBuilding()const
+int GameLogic::getNrOfBuildings()const
 {
-	return this->level->getNrOfBuilding();
+	return this->level->getNrOfBuildings();
 }
 
-float GameLogic::getGoal()const
+int GameLogic::getGoal()const
 {
 	return this->level->getGoal();
 }
