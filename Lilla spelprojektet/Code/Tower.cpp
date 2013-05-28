@@ -29,10 +29,10 @@ Tower::Tower(Vec3 pos, int meshID, int textureID, float hp, int lightID, float d
 
 	sound = SoundSystem::Getinstance()->createSound("Swoosh_test.mp3");
 
-	topTower = new RenderData(ENTITY_TOWERTOP, textureID, this->renderData.worldMat, 0);
+	topTower = new RenderData(ENTITY_TOWERTOP, textureID, this->renderData.worldMat, LIGHT_NONE);
 
 	//Top part
-	D3DXMatrixTranslation(&topPointTrans, 0.5, 0, 0);
+	D3DXMatrixTranslation(&topPointTrans, 0.5f, 0, 0);
 	D3DXMatrixTranslation(&topTrans, pos.x, pos.y, pos.z);
 	D3DXMatrixIdentity(&topRotation);
 	D3DXMatrixTranslation(&translate, pos.x+2.1f, pos.y, pos.z);
@@ -210,6 +210,9 @@ vector<RenderData*> Tower::getRenderData()
 	vector<RenderData*> renderData;
 	renderData.reserve(projectiles.size()+2);
 
+	this->renderData.worldMat._14 = translate._41;
+	this->renderData.worldMat._24 = translate._42;
+	this->renderData.worldMat._34 = translate._43;
 	renderData.push_back(&this->renderData);
 	renderData.push_back(topTower);
 	for(int i = 0; i < (int)projectiles.size(); i++)

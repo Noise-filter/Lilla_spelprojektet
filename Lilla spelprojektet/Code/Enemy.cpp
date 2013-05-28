@@ -32,7 +32,7 @@ Enemy::Enemy(Vec3 pos, int meshID, int textureID, float hp, int lightID, float s
 
 Enemy::~Enemy()
 {
-	ParticleSystem::Getinstance()->addDeathExplosion(Vec3(1,0,0), getPosition(), 100, 0.5, 30);
+	ParticleSystem::Getinstance()->addDeathExplosion(Vec3(1,0,0), getPosition(), 100, 0.5f, 30);
 }
 
 int Enemy::update(float dt)

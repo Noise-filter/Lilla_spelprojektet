@@ -5,6 +5,7 @@ Engine::Engine(void)
 	d3d = new D3D11Handler();
 	win32 = new WinHandler();
 	pGeoManager = new GeometryManager();
+	blendState = NULL;
 }
 
 Engine::~Engine(void)
@@ -14,6 +15,7 @@ Engine::~Engine(void)
 	SAFE_DELETE(pGeoManager);
 	pFontWrapper->Release();
 	pFW1Factory->Release();
+	SAFE_RELEASE(blendState);
 }
 
 bool Engine::init(HINSTANCE hInstance, int cmdShow)
@@ -34,8 +36,27 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 	//pGeoManager->initMeshes(d3d->pDevice, d3d->pDeviceContext, mapSize);
 
 	HRESULT hResult = FW1CreateFactory(FW1_VERSION, &pFW1Factory);
-	hResult = pFW1Factory->CreateFontWrapper(d3d->pDevice, L"Arial", &pFontWrapper);
+	hResult = pFW1Factory->CreateFontWrapper(d3d->pDevice, L"Arial Black", &pFontWrapper);
 
+	//Create blendstate
+	D3D11_BLEND_DESC blendDesc;
+	ZeroMemory(&blendDesc, sizeof(blendDesc));
+
+	blendDesc.RenderTarget->BlendEnable = TRUE;
+	blendDesc.RenderTarget->SrcBlend = D3D11_BLEND_SRC_COLOR;
+	blendDesc.RenderTarget->DestBlend = D3D11_BLEND_DEST_COLOR;
+	blendDesc.RenderTarget->BlendOp = D3D11_BLEND_OP_MAX;
+	blendDesc.RenderTarget->SrcBlendAlpha = D3D11_BLEND_ONE;
+	blendDesc.RenderTarget->DestBlendAlpha = D3D11_BLEND_ZERO;
+	blendDesc.RenderTarget->BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blendDesc.RenderTarget->RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	hr = S_OK;
+
+	hr = this->d3d->pDevice->CreateBlendState(&blendDesc, &blendState);
+	if(FAILED(hr))
+		return false;
+	this->d3d->pDeviceContext->OMSetBlendState(blendState, 0, 0xffffffff);
 
 	return true; // allt gick bra
 }
@@ -83,27 +104,8 @@ void Engine::render(Matrix& view, Matrix& proj, Text* text, int nrOfText,  Vec3 
 	
 
 	//till för ljuset
-
-	ID3D11BlendState* blendState = NULL;
-	D3D11_BLEND_DESC blendDesc;
-	ZeroMemory(&blendDesc, sizeof(blendDesc));
-
-	blendDesc.RenderTarget->BlendEnable = TRUE;
-	blendDesc.RenderTarget->SrcBlend = D3D11_BLEND_SRC_COLOR;
-	blendDesc.RenderTarget->DestBlend = D3D11_BLEND_DEST_COLOR;
-	blendDesc.RenderTarget->BlendOp = D3D11_BLEND_OP_MAX;
-	blendDesc.RenderTarget->SrcBlendAlpha = D3D11_BLEND_ONE;
-	blendDesc.RenderTarget->DestBlendAlpha = D3D11_BLEND_ZERO;
-	blendDesc.RenderTarget->BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	blendDesc.RenderTarget->RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-
-	HRESULT hr = S_OK;
-
-	hr = this->d3d->pDevice->CreateBlendState(&blendDesc, &blendState);
-	if(FAILED(hr))
-		return;
 	this->d3d->pDeviceContext->OMSetBlendState(blendState, 0, 0xffffffff);
-
+	
 	//ljus
 	Matrix ViewProj = view * proj;
 	Matrix invertViewProj;
@@ -141,7 +143,9 @@ void Engine::render(Matrix& view, Matrix& proj, Text* text, int nrOfText,  Vec3 
 	temp->SetResource("textures", texture);
 	temp->Apply(0);
 	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfGUIObjects(), 0, 0);
+
 	blurTexture(temp);
+
 	view = view * proj;
 	renderDebug(view);
 
@@ -159,7 +163,7 @@ void Engine::render(Matrix& view, Matrix& proj, Text* text, int nrOfText,  Vec3 
 	//Draw hp bars, rita ut dem sist för att få dem över allt annat
 	temp = this->d3d->setPass(PASS_HPBARS);
 	pGeoManager->applyHpBarBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	temp->SetMatrix("vp", view);
+	temp->SetMatrix("vp", ViewProj);
 	temp->Apply(0);
 	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfHPBars(), 0, 0);
 	

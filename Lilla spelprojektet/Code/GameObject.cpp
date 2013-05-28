@@ -33,6 +33,9 @@ void GameObject::mUpdate(ID3D11DeviceContext *dc, std::vector<RenderData*> data)
 
 	for(int i = 0; i < (int)data.size(); i++)
 	{
+		data[i]->worldMat._14 = 0;
+		data[i]->worldMat._24 = 0;
+		data[i]->worldMat._34 = 0;
 		instance[i].mWorld     = data[i]->worldMat;
 		instance[i].iTextureID = data[i]->textureID;
 	}
@@ -52,28 +55,37 @@ void GameObject::mUpdate(ID3D11DeviceContext *dc ,  std::vector<std::vector<Rend
 	{
 		for(int i = 0; i < (int)data[j].size(); i++)
 		{
-
 			if(data[j][i]->lightID != LIGHT_NONE)
 			{
 				instance[i + this->iNrOfinstances].fLightRadius     = 12;
-				instance[i + this->iNrOfinstances].mWorld           = data[j][i]->worldMat;
 				instance[i + this->iNrOfinstances].vLightColor      = Vec3(1, 1, 1);
-				instance[i + this->iNrOfinstances].vLightPosition = Vec3(data[j][i]->worldMat._41,  data[j][i]->worldMat._42 +8, data[j][i]->worldMat._43);
+				instance[i + this->iNrOfinstances].vLightPosition = Vec3(data[j][i]->worldMat._14,  data[j][i]->worldMat._24 +8, data[j][i]->worldMat._34);
 
 				if( j == ENTITY_NODE_GREEN)
 				{
 					instance[i + this->iNrOfinstances].fLightRadius     = 10;
 					instance[i + this->iNrOfinstances].vLightPosition.y = 9;
-					instance[i + this->iNrOfinstances].vLightColor      = Vec3(0, 1, 0);
-					instance[i + this->iNrOfinstances].vLightPosition.x -= 2;
-				}
+					if(data[j][i]->textureID == 0)
+						instance[i + this->iNrOfinstances].vLightColor = Vec3(0, 1, 0);
+					else if(data[j][i]->textureID == 1)
+						instance[i + this->iNrOfinstances].vLightColor = Vec3(1, 0, 0);
+					else
+						instance[i + this->iNrOfinstances].vLightColor = Vec3(1, 1, 0);
 
-				if( j == ENTITY_ENEMY)
+					instance[i + this->iNrOfinstances].vLightPosition.x -= 0;
+				}
+				else if( j == ENTITY_ENEMY)
 				{
 					instance[i + this->iNrOfinstances].vLightColor = Vec3(1, 0 ,0);
 				}
+				else if(j == ENTITY_SPIRALSPHERE || j == ENTITY_NEUTRALGATE || j == ENTITY_PYRAMID)
+				{
+					instance[i + this->iNrOfinstances].fLightRadius     = 15;
+					instance[i + this->iNrOfinstances].vLightPosition.y = 11;
+					instance[i + this->iNrOfinstances].vLightColor = Vec3(1, 1, 1);
+					instance[i + this->iNrOfinstances].vLightPosition.x -= 2;
+				}
 			}
-
 			else
 			{
 				this->iNrOfinstances--;
@@ -293,13 +305,3 @@ void GameObject::mUnmap(ID3D11DeviceContext *dc, ID3D11Buffer *buffer)
 {
 	dc->Unmap(buffer, 0);
 }
-
-
-
-
-
-
-
-
-
-

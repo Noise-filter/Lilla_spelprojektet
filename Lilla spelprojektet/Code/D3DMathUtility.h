@@ -129,6 +129,7 @@ enum GAMESTATES
    STATE_MENU,
    STATE_SETTINGS,
    STATE_NEWGAME,
+   STATE_LOADING,
    STATE_GAMESTART,
    STATE_PLAYING,
    STATE_PAUSED, 
@@ -294,26 +295,19 @@ struct MatrixInstance
 
 struct POINTLIGHTINSTANCE
 {
-	Matrix mWorld;
 	Vec3 vLightPosition;
 	Vec3 vLightColor;
 	float fLightRadius;
 	
 	POINTLIGHTINSTANCE()
 	{
-		mWorld = Matrix(0.0f, 0.0f, 0.0f, 0.0f,
-						0.0f, 0.0f, 0.0f, 0.0f,
-						0.0f, 0.0f, 0.0f, 0.0f,
-						0.0f, 0.0f, 0.0f, 1.0f);
-
 		vLightPosition = Vec3(0.0f , 0.0f , 0.0f);
 		vLightColor    = Vec3(0.0f , 0.0f , 0.0f);
 		fLightRadius   = 0;
 	};
 
-	POINTLIGHTINSTANCE(Matrix world , Vec3 position , Vec3 color, float radius)
+	POINTLIGHTINSTANCE(Vec3 position , Vec3 color, float radius)
 	{
-		mWorld         = world;
 		vLightPosition = position;
 		vLightColor    = color;
 		fLightRadius   = radius;

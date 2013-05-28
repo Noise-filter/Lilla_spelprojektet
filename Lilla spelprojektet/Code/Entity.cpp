@@ -101,6 +101,9 @@ void Entity::setTextureID(int ID)
 
 RenderData& Entity::getRenderData()
 {
+	renderData.worldMat._14 = translate._41;
+	renderData.worldMat._24 = translate._42;
+	renderData.worldMat._34 = translate._43;
 	return renderData;
 }
 
