@@ -50,7 +50,5 @@ private:
 	Structure* selectedStructureRenderData;
 	int oldSelectedStructure;
 	Vec3 oldMouseWorldPos;
-
-	Statistics* endStats;
 };
 

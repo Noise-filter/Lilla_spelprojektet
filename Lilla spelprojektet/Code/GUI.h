@@ -102,8 +102,6 @@ private:
 	int nrOfBoxes;
 	GUI_Panel* panels;
 	int nrOfPanles;
-
-	Statistics* endStats;
 	wstring wStats[10];
 
 	int GUI_STATE;

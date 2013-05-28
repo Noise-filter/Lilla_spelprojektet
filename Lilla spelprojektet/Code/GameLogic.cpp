@@ -15,17 +15,17 @@ GameLogic::GameLogic(void)
 	mouseWorldPos = Vec3(0, 0, 0);
 	selectedStructureRenderData = new Headquarter();
 
-	endStats = Statistics::Getinstance();
 
-	endStats->totalSupply += 40;
-	endStats->totalRes += 20;
+
+	Statistics::Getinstance()->totalSupply += 40;
+	Statistics::Getinstance()->totalRes += 20;
 }
 
 GameLogic::~GameLogic(void)
 {
 	SAFE_DELETE(this->level);
 	SAFE_DELETE(this->eHandler);
-	endStats->shutdown();
+	Statistics::Getinstance()->shutdown();
 	SAFE_DELETE(selectedStructureRenderData);
 }
 
@@ -61,7 +61,7 @@ void GameLogic::giveSupply(float dt)
 	{
 		int res = resPerTick + level->getNrOfSupplyStructures()/2;
 		this->availableSupply += res;
-		endStats->totalSupply += res;
+		Statistics::Getinstance()->totalSupply += res;
 		cout << "gained supply: " << resPerTick + level->getNrOfSupplyStructures()/2 << " you now have: " << availableSupply << endl;
 		currentResCD = 0;
 	}
@@ -150,7 +150,7 @@ int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX v
 	int ret = level->update(dt, eHandler->getEnemies()); // returnera 4 om vinst 5 om förlust
 	if(gameState == STATE_PLAYING)
 	{
-		endStats->totalTime += dt;
+		Statistics::Getinstance()->totalTime += dt;
 		switch(mState->btnState)
 		{
 			case VK_LBUTTON:
@@ -178,11 +178,11 @@ int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX v
 		}
 
 		int nrOfKilledEnemies = eHandler->update(dt);
-		endStats->totalEnemiesKilled += nrOfKilledEnemies;
+		Statistics::Getinstance()->totalEnemiesKilled += nrOfKilledEnemies;
 		if(nrOfKilledEnemies > 0)
 		{
 			this->resource += resPerEnemy* level->getExtraResPerEnemy()  + resPerEnemy * nrOfKilledEnemies;
-			endStats->totalRes += resPerEnemy* level->getExtraResPerEnemy()  + resPerEnemy * nrOfKilledEnemies;
+			Statistics::Getinstance()->totalRes += resPerEnemy* level->getExtraResPerEnemy()  + resPerEnemy * nrOfKilledEnemies;
 		}
 	}
 	
@@ -203,7 +203,7 @@ bool GameLogic::init(int quadSize, GameSettings &settings, string filename, int 
 
 	this->level->init(quadSize, difficulty);
 	this->level->loadLevel(filename);
-	this->endStats->init();
+	Statistics::Getinstance()->init();
 	this->eHandler->init(level->getStructures(), level->getNodes(), level->getMapSize(), quadSize,settings.enemiesPerMin,settings.difficulty);
 
 	vector<RenderData*> renderData;

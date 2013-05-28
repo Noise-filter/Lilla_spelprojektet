@@ -37,6 +37,19 @@ Statistics* Statistics::Getinstance()
 bool Statistics::init()
 {
 
+	totalScore = 0;
+	totalRes = 0;
+	totalSupply = 0;
+	totalNrOfBuildings = 0;
+	totalEnemiesKilled = 0;
+	totalNrOfUpgrades = 0;
+	totalNrOfMaxLvlTowers = 0;
+	
+	totalTime = 0;
+	averageTowerLvl = 0;
+
+	levelName = "";
+
 	return true;
 }
 
