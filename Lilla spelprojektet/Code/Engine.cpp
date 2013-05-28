@@ -36,7 +36,7 @@ bool Engine::init(HINSTANCE hInstance, int cmdShow)
 	//pGeoManager->initMeshes(d3d->pDevice, d3d->pDeviceContext, mapSize);
 
 	HRESULT hResult = FW1CreateFactory(FW1_VERSION, &pFW1Factory);
-	hResult = pFW1Factory->CreateFontWrapper(d3d->pDevice, L"Arial", &pFontWrapper);
+	hResult = pFW1Factory->CreateFontWrapper(d3d->pDevice, L"Arial Black", &pFontWrapper);
 
 	//Create blendstate
 	D3D11_BLEND_DESC blendDesc;

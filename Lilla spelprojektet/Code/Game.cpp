@@ -42,7 +42,7 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 
 	soundSystem->init();
 	playlist = soundSystem->createPlaylist("playlist.m3u");
-	menuSound = soundSystem->createStream("SeductressDubstep_Test.mp3");
+	menuSound = soundSystem->createStream("TechTalk_Test.mp3");
 	soundSystem->playSound(menuSound);
 	
 
@@ -90,10 +90,10 @@ void Game::render()
 		engine->setRenderData(gameLogic->getRenderData());
 
 		engine->setRenderData(pSystem->getVertexData());
-		//if(nrOfPanels != 0)
-		{
-			engine->setGUI(panels, nrOfPanels);
-		}
+		
+
+		engine->setGUI(panels, nrOfPanels);
+		
 
 		//Get hp bars and put them in the correct position
 		vector<HPBarInfo> hp = gameLogic->getHPBarInfo();
@@ -116,15 +116,15 @@ void Game::render()
 			float x = cameraPosition.x - pos.x;
 			float y = cameraPosition.y - pos.y;
 			float z = cameraPosition.z - pos.z;
-			hp[i].translate._41 -= x * 0.1;
-			hp[i].translate._43 -= z * 0.1;
+			hp[i].translate._41 -= x * 0.1f;
+			hp[i].translate._43 -= z * 0.1f;
 			hp[i].translate = orient * hp[i].translate;
 		}
 		engine->setHPBars(hp);
 
 		engine->render(camera->View(), camera->Proj(), temp, tempSize, camera->GetPosition());
 	}
-	else //if(gameState == STATE_MENU || gameState == STATE_SETTINGS || gameState == STATE_NEWGAME || gameState == STATE_PAUSED || gameState == STATE_WIN || gameState == STATE_LOSE)
+	else 
 	{
 		engine->setGUI(panels, nrOfPanels);
 		engine->renderGui(temp, tempSize);
@@ -139,6 +139,14 @@ int Game::update(float dt)
 	handleInput(dt);
 	soundSystem->update();
 
+	bool retry;
+	gui->update(input->getMs(), gameState, muted, retry);
+	if(oldGameState != gameState)
+	{
+		changeState(retry);
+		oldGameState = gameState;
+	}
+
 	if(gameState == STATE_MENU || gameState == STATE_NEWGAME || gameState == STATE_PAUSED || gameState == STATE_WIN || gameState == STATE_LOSE)
 	{
 		soundSystem->setPaused(playlist, true);
@@ -152,33 +160,18 @@ int Game::update(float dt)
 		pSystem->update(dt);
 		int resource = gameLogic->getResource();
 		int supply = gameLogic->getSupply();
-		float nrOfBuildings = gameLogic->getNrOfBuilding();
-		float goal = gameLogic->getGoal();
+		int nrOfBuildings = gameLogic->getNrOfBuildings();
+		int goal = gameLogic->getGoal();
 		int selectedStructure = gameLogic->getSelectedBuilding();
 		gui->setInGameText(resource, supply, nrOfBuildings, goal, selectedStructure);
 		
 
 	}
-	//if(gameState == STATE_WIN) 
-	//{
-	//	cout << "YOU WON" << endl;
-	//}
-	//else if(gameState == STATE_LOSE)
-	//{
-	//	//hantera win/lose state
-	//	cout << "YOU LOSE" << endl;
-	//}
 	else if(gameState == STATE_QUIT)
 	{
 		return 0;
 	}
-	bool retry;
-	gui->update(input->getMs(), gameState, muted, retry);
-	if(oldGameState != gameState)
-	{
-		changeState(retry);
-		oldGameState = gameState;
-	}
+	
 	
 	soundSystem->setMute(muted);
 	input->resetBtnState();
@@ -193,7 +186,7 @@ void Game::changeState(bool retry)
 {
 	if((gameState == STATE_MENU || gameState == STATE_PAUSED || gameState == STATE_WIN || gameState == STATE_LOSE) && (oldGameState != STATE_NEWGAME && oldGameState != STATE_SETTINGS && oldGameState != STATE_PAUSED))
 	{
-		menuSound = soundSystem->createStream("SeductressDubstep_Test.mp3");
+		menuSound = soundSystem->createStream("TechTalk_Test.mp3");
 		soundSystem->playSound(menuSound);
 	}
 	if(gameState == STATE_GAMESTART && retry == false && oldGameState != STATE_PAUSED)
@@ -215,6 +208,7 @@ void Game::changeState(bool retry)
 		soundSystem->setPaused(playlist, false);
 		retrylevel(gui->getCurrentLevel(), gui->getCurrentDiff());
 	}
+	
 }
 
 void Game::handleInput(float dt)

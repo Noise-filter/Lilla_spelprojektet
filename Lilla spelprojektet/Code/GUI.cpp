@@ -48,6 +48,7 @@ void GUI::render(Button*& btns, Text*& text)
 
 int GUI::update(MouseState *mouse, int& state, bool& muted, bool& retry)
 {
+	
 	if(GUI_STATE != state)
 	{
 		old_GUI_STATE = GUI_STATE;
@@ -65,6 +66,14 @@ int GUI::update(MouseState *mouse, int& state, bool& muted, bool& retry)
 		createPanels(state);
 		GUI_STATE = state;
 	}
+	else if(state == STATE_LOADING && GUI_STATE == state)
+	{
+		state = STATE_GAMESTART;
+		clearTexts();
+		clearPanels();
+		createPanels(state);
+	}
+	
 
 	for(int i = 0; i < this->nrOfBtns; i++)
 	{
@@ -75,6 +84,9 @@ int GUI::update(MouseState *mouse, int& state, bool& muted, bool& retry)
 			
 		}
 	}
+
+	
+
 	muted = this->muted;
 	retry = this->retry;
 	return state;
@@ -128,24 +140,11 @@ void GUI::createBtns(int state)
 		this->menuBtns[4] = createBtn(D3DXVECTOR2(0.5*(1*SCREEN_WIDTH),0.5*(1.45*SCREEN_HEIGHT)), STARTGAME);
 		this->menuBtns[5] = createBtn(D3DXVECTOR2(0.5*(1*SCREEN_WIDTH),0.5*(1.6*SCREEN_HEIGHT)), BACK);
 	}
-	else if(state == STATE_GAMESTART || state == STATE_PLAYING)
+	else if(state == STATE_LOADING)
 	{
-		if(first)
-		{
-		this->nrOfBoxes+=3;
-		first = false;
-		}
-		Text* temp = new Text[this->nrOfBoxes];
-		for(int i = 0; i < this->nrOfBoxes-1; i++)
-		{
-			temp[i] = this->textBoxes[i];
-		}
-		delete []this->textBoxes;
-		this->textBoxes = NULL;
-		this->textBoxes = temp;
-		this->textBoxes[8] = createTextBox(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.7*SCREEN_HEIGHT)), L"Resource:", 18, 0xffffffff);
-		this->textBoxes[9] = createTextBox(D3DXVECTOR2(0.5*(0.775*SCREEN_WIDTH),0.5*(1.875*SCREEN_HEIGHT)), L"Supply:", 18, 0xffffffff);
-		this->textBoxes[10] = createTextBox(D3DXVECTOR2(0.5*(1.2*SCREEN_WIDTH),0.5*(1.7*SCREEN_HEIGHT)), L"Time:", 18, 0xffffffff);
+		this->nrOfBoxes = 1;
+		this->textBoxes = new Text[nrOfBoxes];
+		this->textBoxes[0] = createTextBox(D3DXVECTOR2(0.5*(1*SCREEN_WIDTH),0.5*(1*SCREEN_HEIGHT)), L"LOADING", 150, 0xffa8a8a8);
 	}
 	else if(state == STATE_WIN)
 	{
@@ -313,7 +312,7 @@ Text GUI::createTextBox(D3DXVECTOR2 pos, wchar_t* text, float size, UINT32 color
 
 void GUI::createPanels(int state)
 {
-	if(state == STATE_MENU || state == SETTINGS || state == STATE_NEWGAME || state == STATE_PAUSED || state == STATE_WIN || state == STATE_LOSE)
+	if(state == STATE_MENU || state == SETTINGS || state == STATE_NEWGAME || state == STATE_PAUSED || state == STATE_WIN || state == STATE_LOSE || state == STATE_LOADING)
 	{
 		this->nrOfPanles = 1;
 		this->panels = new GUI_Panel[nrOfPanles];
@@ -363,6 +362,10 @@ int GUI::changeState(Button btn)
 		state = STATE_NEWGAME;
 	}
 	else if(btn.type == STARTGAME && state == STATE_NEWGAME)
+	{
+		state = STATE_LOADING;
+	}
+	else if(state == STATE_LOADING)
 	{
 		state = STATE_GAMESTART;
 	}
@@ -474,11 +477,11 @@ void GUI::changeText(D3DXVECTOR2 pos, BUTTONTYPE type)
 string GUI::getCurrentLevel()const
 {
 	string temp;
+
 	for(int i = 0; i < (int)levelList[currentLevel].size(); i++)
 	{
 		temp.push_back(levelList[currentLevel][i]);
 	}
-
 	return temp;
 }
 
@@ -618,7 +621,7 @@ void GUI::setInGameText(int resource, int supply, float nrOfBuildings, float goa
 		
 	if(first)
 	{
-		this->nrOfBoxes = 8;
+		this->nrOfBoxes = 11;
 		this->textBoxes = new Text[this->nrOfBoxes];
 		
 	}
@@ -650,7 +653,10 @@ void GUI::setInGameText(int resource, int supply, float nrOfBuildings, float goa
 	this->textBoxes[5] = createTextBox(D3DXVECTOR2(0.5*(0.5*SCREEN_WIDTH),0.5*(1.7*SCREEN_HEIGHT)), (wchar_t*)wStats[5].c_str(), 18, 0xffffffff);
 	this->textBoxes[6] = createTextBox(D3DXVECTOR2(0.5*(0.51*SCREEN_WIDTH),0.5*(1.8*SCREEN_HEIGHT)), (wchar_t*)wStats[6].c_str(), 14, 0xffffffff);
 	this->textBoxes[7] = createTextBox(D3DXVECTOR2(0.5*(0.5*SCREEN_WIDTH),0.5*(1.9*SCREEN_HEIGHT)), (wchar_t*)wStats[7].c_str(), 14, 0xffffffff);
-
+	this->textBoxes[8] = createTextBox(D3DXVECTOR2(0.5*(0.8*SCREEN_WIDTH),0.5*(1.7*SCREEN_HEIGHT)), L"Resource:", 18, 0xffffffff);
+	this->textBoxes[9] = createTextBox(D3DXVECTOR2(0.5*(0.775*SCREEN_WIDTH),0.5*(1.875*SCREEN_HEIGHT)), L"Supply:", 18, 0xffffffff);
+	this->textBoxes[10] = createTextBox(D3DXVECTOR2(0.5*(1.2*SCREEN_WIDTH),0.5*(1.7*SCREEN_HEIGHT)), L"Time:", 18, 0xffffffff);
+	
 	this->panels[0].textureID = currentBuilding;
 }
 
