@@ -90,10 +90,10 @@ void Game::render()
 		engine->setRenderData(gameLogic->getRenderData());
 
 		engine->setRenderData(pSystem->getVertexData());
-		//if(nrOfPanels != 0)
-		{
-			engine->setGUI(panels, nrOfPanels);
-		}
+		
+
+		engine->setGUI(panels, nrOfPanels);
+		
 
 		//Get hp bars and put them in the correct position
 		vector<HPBarInfo> hp = gameLogic->getHPBarInfo();
@@ -139,6 +139,14 @@ int Game::update(float dt)
 	handleInput(dt);
 	soundSystem->update();
 
+	bool retry;
+	gui->update(input->getMs(), gameState, muted, retry);
+	if(oldGameState != gameState)
+	{
+		changeState(retry);
+		oldGameState = gameState;
+	}
+
 	if(gameState == STATE_MENU || gameState == STATE_NEWGAME || gameState == STATE_PAUSED || gameState == STATE_WIN || gameState == STATE_LOSE)
 	{
 		soundSystem->setPaused(playlist, true);
@@ -163,13 +171,7 @@ int Game::update(float dt)
 	{
 		return 0;
 	}
-	bool retry;
-	gui->update(input->getMs(), gameState, muted, retry);
-	if(oldGameState != gameState)
-	{
-		changeState(retry);
-		oldGameState = gameState;
-	}
+	
 	
 	soundSystem->setMute(muted);
 	input->resetBtnState();
@@ -206,6 +208,7 @@ void Game::changeState(bool retry)
 		soundSystem->setPaused(playlist, false);
 		retrylevel(gui->getCurrentLevel(), gui->getCurrentDiff());
 	}
+	
 }
 
 void Game::handleInput(float dt)
