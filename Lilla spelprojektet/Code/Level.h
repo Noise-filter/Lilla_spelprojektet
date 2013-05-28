@@ -41,8 +41,8 @@ public:
 
 	bool loadLevel(string fileName);
 
-	float getNrOfBuilding()const;
-	float getGoal()const;
+	int getNrOfBuildings()const;
+	int getGoal()const;
 
 private:
 	int destroyBuildings();

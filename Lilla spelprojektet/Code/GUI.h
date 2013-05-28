@@ -74,7 +74,7 @@ public:
 	int getNrOfPanels()const;
 	string getCurrentLevel()const;
 	int getCurrentDiff()const;
-	void setInGameText(int resource, int supply, float currPercent, float winPercent, int selectedStructure);
+	void setInGameText(int resource, int supply, int currPercent, int winPercent, int selectedStructure);
 	void restartStats();
 
 private:

@@ -16,8 +16,8 @@ public:
 	void setSelectedStructure(int select);
 	int getResource()const;
 	int getSupply()const;
-	float getNrOfBuilding()const;
-	float getGoal()const;
+	int getNrOfBuildings()const;
+	int getGoal()const;
 	int getSelectedBuilding()const;
 
 	vector<vector<RenderData*>>& getRenderData();
