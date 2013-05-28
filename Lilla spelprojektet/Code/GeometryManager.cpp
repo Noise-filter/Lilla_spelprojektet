@@ -303,12 +303,11 @@ void GeometryManager::applyGUIBuffer(ID3D11DeviceContext *dc, D3D_PRIMITIVE_TOPO
 
 void GeometryManager::updateEntityBuffer(ID3D11DeviceContext *dc, std::vector<std::vector<RenderData*>> data)
 {
+	this->vLightTypes.at(LIGHT_POINT)->mUpdate(dc, data);
 	for(int i = 0; i < (int)data.size(); i++)
 	{
 		this->vEntities.at(i)->mUpdate(dc, data[i]);
 	}
-
-	this->vLightTypes.at(LIGHT_POINT)->mUpdate(dc, data);
 }
 void GeometryManager::updateParticles(ID3D11DeviceContext *dc, std::vector<std::vector<MESH_PNC>> data)
 {

@@ -41,7 +41,6 @@ struct VSIn
 	float3 normal : NORMAL; //behövs igentligen inte. 
 	float2 uv     : TEXTCOORD; //behövs igentligen inte. 
 
-	row_major float4x4 world  : WORLD; // ta bort
 	float3 lightPos           : LIGHTPOS;
 	float3 lightColor         : LIGHTCOLOR;
 	float lightRadius         : LIGHTRADIUS;
