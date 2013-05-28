@@ -26,7 +26,7 @@ Node::Node(Vec3 pos, int meshID, int textureID, float hp, int lightID, int color
 		upTranslate = false;
 
 	this->pos = pos;
-	translatePosMax = 0.5;
+	translatePosMax = 0.5f;
 }
 
 Node::~Node()

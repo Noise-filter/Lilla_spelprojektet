@@ -32,7 +32,7 @@ Tower::Tower(Vec3 pos, int meshID, int textureID, float hp, int lightID, float d
 	topTower = new RenderData(ENTITY_TOWERTOP, textureID, this->renderData.worldMat, 0);
 
 	//Top part
-	D3DXMatrixTranslation(&topPointTrans, 0.5, 0, 0);
+	D3DXMatrixTranslation(&topPointTrans, 0.5f, 0, 0);
 	D3DXMatrixTranslation(&topTrans, pos.x, pos.y, pos.z);
 	D3DXMatrixIdentity(&topRotation);
 	D3DXMatrixTranslation(&translate, pos.x+2.1f, pos.y, pos.z);
