@@ -331,7 +331,6 @@ GameSettings Game::readSettingsFromFile(string fileName)
 
 void Game::newLevel(string filename, int difficulty)
 {
-	
 	SAFE_DELETE(gameLogic);
 	pSystem->shutdown();
 
@@ -342,7 +341,7 @@ void Game::newLevel(string filename, int difficulty)
 	loadlevel(filename+".txt", difficulty);
 
 	int mapSize = gameLogic->getMapSize();
-
+	cout << "MAPSIZE: " << mapSize << endl;
 	engine->start(mapSize);
 
 }

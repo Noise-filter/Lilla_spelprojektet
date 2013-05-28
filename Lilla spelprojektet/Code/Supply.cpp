@@ -7,7 +7,7 @@ Supply::Supply() : Structure()
 Supply::Supply(Vec3 pos, int meshID, int textureID, float hp, int lightID, bool fakeBuilding)
 	: Structure(pos, meshID, textureID, hp, lightID, fakeBuilding)
 {
-	topSupply = new RenderData(ENTITY_SUPPLYTOP, textureID, renderData.worldMat, 0);
+	topSupply = new RenderData(ENTITY_SUPPLYTOP, textureID, renderData.worldMat, LIGHT_NONE);
 
 	D3DXMatrixTranslation(&translate, pos.x+1.9f, pos.y, pos.z);
 
@@ -49,6 +49,9 @@ vector<RenderData*> Supply::getRenderData()
 	vector<RenderData*> renderData;
 	renderData.reserve(2);
 
+	this->renderData.worldMat._14 = translate._41;
+	this->renderData.worldMat._24 = translate._42;
+	this->renderData.worldMat._34 = translate._43;
 	renderData.push_back(&this->renderData);
 	renderData.push_back(topSupply);
 

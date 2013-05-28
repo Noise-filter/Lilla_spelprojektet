@@ -36,6 +36,8 @@ class Engine
 		IFW1Factory *pFW1Factory;
 		IFW1FontWrapper *pFontWrapper;
 
+		ID3D11BlendState* blendState;
+
 	private:
 		void blurTexture(Shader *temp);
 		void renderDebug(Matrix &vp);
