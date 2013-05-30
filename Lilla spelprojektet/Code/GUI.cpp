@@ -83,8 +83,6 @@ int GUI::update(MouseState *mouse, int& state, bool& muted, bool& retry)
 		}
 	}
 
-	
-
 	muted = this->muted;
 	retry = this->retry;
 	return state;
@@ -363,10 +361,6 @@ int GUI::changeState(Button btn)
 	{
 		state = STATE_LOADING;
 	}
-	else if(state == STATE_LOADING)
-	{
-		state = STATE_GAMESTART;
-	}
 	else if(btn.type == SETTINGS)
 	{
 		state = STATE_SETTINGS;
@@ -399,7 +393,7 @@ int GUI::changeState(Button btn)
 	}
 	else if(btn.type == RETRY)
 	{
-		state = STATE_GAMESTART;
+		state = STATE_LOADING;
 		this->retry = true;
 		first = true;
 	}
@@ -619,7 +613,7 @@ void GUI::setInGameText(int resource, int supply, int nrOfBuildings, int goal, i
 		
 	if(first)
 	{
-		this->nrOfBoxes = 11;
+		this->nrOfBoxes = 16;
 		this->textBoxes = new Text[this->nrOfBoxes];
 		
 	}
@@ -654,6 +648,11 @@ void GUI::setInGameText(int resource, int supply, int nrOfBuildings, int goal, i
 	this->textBoxes[8] = createTextBox(D3DXVECTOR2(0.5f*(0.8f*SCREEN_WIDTH),0.5f*(1.7f*SCREEN_HEIGHT)), L"Resource:", 18, 0xffffffff);
 	this->textBoxes[9] = createTextBox(D3DXVECTOR2(0.5f*(0.775f*SCREEN_WIDTH),0.5f*(1.875f*SCREEN_HEIGHT)), L"Supply:", 18, 0xffffffff);
 	this->textBoxes[10] = createTextBox(D3DXVECTOR2(0.5f*(1.2f*SCREEN_WIDTH),0.5f*(1.7f*SCREEN_HEIGHT)), L"Time:", 18, 0xffffffff);
+	this->textBoxes[11] = createTextBox(D3DXVECTOR2(0.5f*(1.24f*SCREEN_WIDTH),0.5f*(1.84f*SCREEN_HEIGHT)), L"1", 20, 0xffffffff);
+	this->textBoxes[12] = createTextBox(D3DXVECTOR2(0.5f*(1.42f*SCREEN_WIDTH),0.5f*(1.84f*SCREEN_HEIGHT)), L"2", 20, 0xffffffff);
+	this->textBoxes[13] = createTextBox(D3DXVECTOR2(0.5f*(1.6f*SCREEN_WIDTH),0.5f*(1.84f*SCREEN_HEIGHT)), L"3", 20, 0xffffffff);
+	this->textBoxes[14] = createTextBox(D3DXVECTOR2(0.5f*(1.775f*SCREEN_WIDTH),0.5f*(1.84f*SCREEN_HEIGHT)), L"4", 20, 0xffffffff);
+	this->textBoxes[15] = createTextBox(D3DXVECTOR2(0.5f*(1.95f*SCREEN_WIDTH),0.5f*(1.84f*SCREEN_HEIGHT)), L"5", 20, 0xffffffff);
 	
 	this->panels[0].textureID = currentBuilding;
 }
