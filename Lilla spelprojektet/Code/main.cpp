@@ -70,12 +70,14 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 			currTimeStamp = 0;
 			QueryPerformanceCounter((LARGE_INTEGER*)&currTimeStamp);
 			dt = (currTimeStamp - prevTimeStamp) * secsPerCnt;
-
-			//main logic and draw calls
-			if(game->update(dt) == 0)
-				break;
-			game->render();
-
+			cout << dt << endl;
+			if(dt < 0.5)
+			{
+				//main logic and draw calls
+				if(game->update(dt) == 0)
+					break;
+				game->render();
+			}
 			prevTimeStamp = currTimeStamp;
 		}
 	}

@@ -216,22 +216,20 @@ void Game::handleInput(float dt)
 	static bool pausedMusic = true;
 
 	input->updateMs(engine->getMouseState());
-	
 
-	
 	if(gameState == STATE_GAMESTART || gameState == STATE_PLAYING) 
 	{
 		if(input->checkMovement('W') && camera->GetPosition().x > (gameLogic->getMapSize()-5 * -1))	//W
-			camera->Walk(-100.0f * dt);
+			camera->Walk(-100 * dt);
 
 		if(input->checkMovement('A') && camera->GetPosition().z > (gameLogic->getMapSize()-5 * -1))	//A
-			camera->Strafe(-100.0f * dt);
+			camera->Strafe(-100 * dt);
 
 		if(input->checkMovement('S') && camera->GetPosition().x < (gameLogic->getMapSize()) * 10)	//S
-			camera->Walk(100.0f * dt);
+			camera->Walk(100 * dt);
 
 		if(input->checkMovement('D') && camera->GetPosition().z < (gameLogic->getMapSize()) * 10)	//D
-			camera->Strafe(100.0f * dt);
+			camera->Strafe(100 * dt);
 
 		if(input->checkKeyDown(VK_ESCAPE))
 		{
@@ -333,11 +331,10 @@ void Game::newLevel(string filename, int difficulty)
 
 
 	loadlevel(filename+".txt", difficulty);
-
+	
 	int mapSize = gameLogic->getMapSize();
 	cout << "MAPSIZE: " << mapSize << endl;
 	engine->start(mapSize);
-
 }
 
 void Game::loadlevel(string filename, int difficulty)
@@ -349,10 +346,9 @@ void Game::retrylevel(string filename, int difficulty)
 {	
 	SAFE_DELETE(gameLogic);
 	pSystem->shutdown();
-	
 
 	gameLogic = new GameLogic();
 	pSystem = pSystem->Getinstance();
-
+	
 	loadlevel(filename+".txt", difficulty);
 }

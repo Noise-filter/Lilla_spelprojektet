@@ -10,7 +10,7 @@ GameLogic::GameLogic(void)
 	this->resource = 20;
 
 	this->maxResCD = 0;
-	this->resPerEnemy = 5;
+	this->resPerEnemy = 3;
 
 	mouseWorldPos = Vec3(0, 0, 0);
 	selectedStructureRenderData = new Headquarter();
