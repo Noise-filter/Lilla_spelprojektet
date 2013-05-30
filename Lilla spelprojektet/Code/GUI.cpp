@@ -20,7 +20,6 @@ GUI::GUI()
 	this->currentBuilding = TEXTURE_MAINBUILDING;
 	createBtns(STATE_MENU);
 	createPanels(STATE_MENU);
-	endStats = Statistics::Getinstance();
 	
 }
 
@@ -34,7 +33,6 @@ GUI::~GUI()
 	this->nrOfLevels = 0;
 	SAFE_DELETE_ARRAY(difficultyList);
 	this->nrOfDifficultys = 0;
-	endStats->shutdown();
 }
 
 void GUI::render(Button*& btns, Text*& text)
@@ -523,17 +521,17 @@ void GUI::getEndStats()
 	string Stats[7];
 	Stats[0] = "Level: " + getCurrentLevel();
 	Stats[1] = "Resources: ";
-	Stats[1].append( itoa(this->endStats->totalRes, temp, 10) );
+	Stats[1].append( itoa(Statistics::Getinstance()->totalRes, temp, 10) );
 	Stats[2] = "Supplys: ";
-	Stats[2].append (itoa(this->endStats->totalSupply, temp, 10) );
+	Stats[2].append (itoa(Statistics::Getinstance()->totalSupply, temp, 10) );
 	Stats[3] = "Time: ";
-	Stats[3].append( itoa(this->endStats->totalTime, temp, 10) );
+	Stats[3].append( itoa(Statistics::Getinstance()->totalTime, temp, 10) );
 	Stats[4] = "Buildings built: ";
-	Stats[4].append( itoa(this->endStats->totalNrOfBuildings, temp, 10) );
+	Stats[4].append( itoa(Statistics::Getinstance()->totalNrOfBuildings, temp, 10) );
 	Stats[5] = "Enemies killed: ";
-	Stats[5].append( itoa(this->endStats->totalEnemiesKilled, temp, 10) );
+	Stats[5].append( itoa(Statistics::Getinstance()->totalEnemiesKilled, temp, 10) );
 	Stats[6] = "Nr of Upgrades: ";
-	Stats[6].append( itoa(this->endStats->totalNrOfUpgrades, temp, 10) );
+	Stats[6].append( itoa(Statistics::Getinstance()->totalNrOfUpgrades, temp, 10) );
 
 	
 	for(int i = 0; i < nrOfStats; i++)
@@ -629,7 +627,7 @@ void GUI::setInGameText(int resource, int supply, int nrOfBuildings, int goal, i
 	string Stats[8];
 	Stats[0] = itoa(resource, temp, 10);
 	Stats[1] = itoa(supply, temp, 10);
-	Stats[2] = itoa((int)this->endStats->totalTime, temp, 10);
+	Stats[2] = itoa((int)Statistics::Getinstance()->totalTime, temp, 10);
 	Stats[3] = "Built: ";
 	Stats[3].append( convertFloat(nrOfBuildings) );
 	Stats[4] = "Goal: ";
@@ -658,10 +656,4 @@ void GUI::setInGameText(int resource, int supply, int nrOfBuildings, int goal, i
 	this->textBoxes[10] = createTextBox(D3DXVECTOR2(0.5f*(1.2f*SCREEN_WIDTH),0.5f*(1.7f*SCREEN_HEIGHT)), L"Time:", 18, 0xffffffff);
 	
 	this->panels[0].textureID = currentBuilding;
-}
-
-void GUI::restartStats()
-{
-	endStats->shutdown();
-	endStats = endStats->Getinstance();
 }

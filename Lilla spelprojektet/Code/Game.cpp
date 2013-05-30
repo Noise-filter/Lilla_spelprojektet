@@ -353,7 +353,6 @@ void Game::retrylevel(string filename, int difficulty)
 
 	gameLogic = new GameLogic();
 	pSystem = pSystem->Getinstance();
-	gui->restartStats();
 
 	loadlevel(filename+".txt", difficulty);
 }
