@@ -423,7 +423,6 @@ void GUI::createLevelList()
 		{
 			this->levelList[count].push_back(attribute[i]);
 		}
-		//this->levelList[count] = wstring(attribute.begin(), attribute.end());
 
 		count++;
 	}
