@@ -98,9 +98,9 @@ void GUI::createBtns(int state)
 	{
 		this->nrOfBtns = 3;
 		this->menuBtns = new Button[nrOfBtns];
-		this->menuBtns[0] = createBtn(D3DXVECTOR2(0.5f*(0.3f*SCREEN_WIDTH),0.5f*(0.9f*SCREEN_HEIGHT)), STARTGAME);
-		this->menuBtns[1] = createBtn(D3DXVECTOR2(0.5f*(0.3f*SCREEN_WIDTH),0.5f*(1.1f*SCREEN_HEIGHT)), SETTINGS);
-		this->menuBtns[2] = createBtn(D3DXVECTOR2(0.5f*(0.3f*SCREEN_WIDTH),0.5f*(1.3f*SCREEN_HEIGHT)), QUIT);
+		this->menuBtns[0] = createBtn(D3DXVECTOR2(0.5f*(0.4f*SCREEN_WIDTH),0.5f*(0.9f*SCREEN_HEIGHT)), STARTGAME);
+		this->menuBtns[1] = createBtn(D3DXVECTOR2(0.5f*(0.4f*SCREEN_WIDTH),0.5f*(1.1f*SCREEN_HEIGHT)), SETTINGS);
+		this->menuBtns[2] = createBtn(D3DXVECTOR2(0.5f*(0.4f*SCREEN_WIDTH),0.5f*(1.3f*SCREEN_HEIGHT)), QUIT);
 	}
 	else if(state == STATE_SETTINGS)
 	{
@@ -615,7 +615,7 @@ void GUI::setInGameText(int resource, int supply, int nrOfBuildings, int goal, i
 	{
 		this->nrOfBoxes = 16;
 		this->textBoxes = new Text[this->nrOfBoxes];
-		
+		first = false;
 	}
 	char temp[255];
 	string Stats[8];
@@ -655,8 +655,4 @@ void GUI::setInGameText(int resource, int supply, int nrOfBuildings, int goal, i
 	this->textBoxes[15] = createTextBox(D3DXVECTOR2(0.5f*(1.95f*SCREEN_WIDTH),0.5f*(1.84f*SCREEN_HEIGHT)), L"5", 20, 0xffffffff);
 	
 	this->panels[0].textureID = currentBuilding;
-}
-
-void GUI::restartStats()
-{
 }
