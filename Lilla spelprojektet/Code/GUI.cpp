@@ -621,7 +621,7 @@ void GUI::setInGameText(int resource, int supply, int nrOfBuildings, int goal, i
 	{
 		this->nrOfBoxes = 11;
 		this->textBoxes = new Text[this->nrOfBoxes];
-		
+		first = false;
 	}
 	char temp[255];
 	string Stats[8];
