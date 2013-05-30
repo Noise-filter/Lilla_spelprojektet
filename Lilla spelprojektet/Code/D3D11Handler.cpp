@@ -33,7 +33,7 @@ D3D11Handler::D3D11Handler()
 
 	SCREEN_WIDTH  = GetSystemMetrics(SM_CXSCREEN);
 	SCREEN_HEIGHT = GetSystemMetrics(SM_CYSCREEN);
-	FullScreen = true;
+	FullScreen = false;
 	if(!FullScreen)
 	{
 		// If windowed then set it to 800x600 resolution.
