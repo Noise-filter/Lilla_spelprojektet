@@ -1,6 +1,7 @@
 cbuffer EveryFrame
 {
 	Matrix vp;
+	uint SCREEN_HEIGHT;
 };
 
 struct VSIn
@@ -35,6 +36,10 @@ PSIn VSScene(VSIn input)
 
 float4 PSScene(PSIn input) : SV_Target
 {
+	uint ui = 0;
+	ui = SCREEN_HEIGHT - (SCREEN_HEIGHT * 0.2);
+
+	clip(input.pos.y > ui ? -1:1);
 	return float4(0, 1, 0, 1);
 }
 

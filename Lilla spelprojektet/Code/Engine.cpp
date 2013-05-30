@@ -164,6 +164,7 @@ void Engine::render(Matrix& view, Matrix& proj, Text* text, int nrOfText,  Vec3 
 	temp = this->d3d->setPass(PASS_HPBARS);
 	pGeoManager->applyHpBarBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	temp->SetMatrix("vp", ViewProj);
+	temp->SetInt("SCREEN_HEIGHT", SCREEN_HEIGHT);
 	temp->Apply(0);
 	this->d3d->pDeviceContext->DrawInstanced(6, pGeoManager->getNrOfHPBars(), 0, 0);
 	
