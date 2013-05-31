@@ -83,7 +83,7 @@ void GameObject::mUpdate(ID3D11DeviceContext *dc ,  std::vector<std::vector<Rend
 					instance[i + this->iNrOfinstances].fLightRadius     = 15;
 					instance[i + this->iNrOfinstances].vLightPosition.y = 11;
 					instance[i + this->iNrOfinstances].vLightColor = Vec3(1, 1, 1);
-					instance[i + this->iNrOfinstances].vLightPosition.x -= 2;
+					instance[i + this->iNrOfinstances].vLightPosition.x += 2;
 				}
 			}
 			else

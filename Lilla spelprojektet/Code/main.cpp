@@ -70,7 +70,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 			currTimeStamp = 0;
 			QueryPerformanceCounter((LARGE_INTEGER*)&currTimeStamp);
 			dt = (currTimeStamp - prevTimeStamp) * secsPerCnt;
-			cout << dt << endl;
+
 			if(dt < 0.5)
 			{
 				//main logic and draw calls
