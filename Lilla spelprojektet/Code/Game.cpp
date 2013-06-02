@@ -44,8 +44,6 @@ bool Game::init(HINSTANCE hInstance, int cmdShow)
 	playlist = soundSystem->createPlaylist("playlist.m3u");
 	menuSound = soundSystem->createStream("TechTalk_Test.mp3");
 	soundSystem->playSound(menuSound);
-	
-
 
 
 	camera->LookAt(Vec3(50,40,45), Vec3(35, 0, 45), Vec3(-1, 0, 0));
@@ -327,7 +325,7 @@ void Game::newLevel(string filename, int difficulty)
 {
 	SAFE_DELETE(gameLogic);
 	pSystem->shutdown();
-
+	Statistics::Getinstance();
 	gameLogic = new GameLogic();
 	pSystem = pSystem->Getinstance();
 

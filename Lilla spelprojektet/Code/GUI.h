@@ -102,6 +102,7 @@ private:
 	GUI_Panel* panels;
 	int nrOfPanles;
 	wstring wStats[10];
+	wstring bestTime;
 
 	int GUI_STATE;
 	int old_GUI_STATE;
