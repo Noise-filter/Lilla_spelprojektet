@@ -71,11 +71,13 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 			QueryPerformanceCounter((LARGE_INTEGER*)&currTimeStamp);
 			dt = (currTimeStamp - prevTimeStamp) * secsPerCnt;
 
-			//main logic and draw calls
-			if(game->update(dt) == 0)
-				break;
-			game->render();
-
+			if(dt < 0.5)
+			{
+				//main logic and draw calls
+				if(game->update(dt) == 0)
+					break;
+				game->render();
+			}
 			prevTimeStamp = currTimeStamp;
 		}
 	}

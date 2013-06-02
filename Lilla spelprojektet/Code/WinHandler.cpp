@@ -104,14 +104,14 @@ LRESULT CALLBACK WinHandler::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPA
 		break;
 	case WM_LBUTTONDOWN:
 		winHandler->setButtonState(wParam);
-			break;
+		break;
 	case WM_MOUSEHWHEEL:
 		winHandler->setButtonState(wParam);
 		break;
 		
 	case WM_MOUSEMOVE:
 		winHandler->setMouseState(lParam);
-			break;
+		break;
 
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
