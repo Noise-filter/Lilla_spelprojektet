@@ -181,7 +181,7 @@ int GameLogic::update(int &gameState, float dt, MouseState* mState, D3DXMATRIX v
 		Statistics::Getinstance()->totalEnemiesKilled += nrOfKilledEnemies;
 		if(nrOfKilledEnemies > 0)
 		{
-			this->resource += resPerEnemy* level->getExtraResPerEnemy()  + resPerEnemy * nrOfKilledEnemies;
+			this->resource += resPerEnemy* (level->getExtraResPerEnemy()/2)  + resPerEnemy * nrOfKilledEnemies;
 			Statistics::Getinstance()->totalRes += resPerEnemy* level->getExtraResPerEnemy()  + resPerEnemy * nrOfKilledEnemies;
 		}
 	}

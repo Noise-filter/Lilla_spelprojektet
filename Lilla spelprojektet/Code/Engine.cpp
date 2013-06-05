@@ -147,7 +147,7 @@ void Engine::render(Matrix& view, Matrix& proj, Text* text, int nrOfText,  Vec3 
 	blurTexture(temp);
 
 	view = view * proj;
-	renderDebug(view);
+	//renderDebug(view);
 
 	temp = this->d3d->setPass(PASS_FULLSCREENQUAD);
 	pGeoManager->applyQuadBuffer(d3d->pDeviceContext, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

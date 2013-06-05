@@ -49,7 +49,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	QueryPerformanceFrequency((LARGE_INTEGER*)&cntsPerSec);
 	float secsPerCnt = 1.0f / (float)cntsPerSec;
 	QueryPerformanceCounter((LARGE_INTEGER*)&prevTimeStamp);
-	SetStdOutToNewConsole();
+	//SetStdOutToNewConsole();
 	Game *game = new Game();
 
 	if(!game->init(hInstance,nCmdShow))
