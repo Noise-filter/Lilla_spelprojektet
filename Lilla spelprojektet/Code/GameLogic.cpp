@@ -202,8 +202,8 @@ bool GameLogic::init(int quadSize, GameSettings &settings, string filename, int 
 	this->currentResCD = 0;
 
 	this->level->init(quadSize, difficulty);
-	this->level->loadLevel(filename);
 	Statistics::Getinstance()->init();
+	this->level->loadLevel(filename);
 	this->eHandler->init(level->getStructures(), level->getNodes(), level->getMapSize(), quadSize,settings.enemiesPerMin,settings.difficulty);
 
 	vector<RenderData*> renderData;

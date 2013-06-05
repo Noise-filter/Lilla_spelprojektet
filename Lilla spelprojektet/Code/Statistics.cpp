@@ -49,7 +49,20 @@ bool Statistics::init()
 	averageTowerLvl = 0;
 
 	levelName = "";
+	ifstream fin;
+	fin.open("highscore.txt");
+	if(fin.fail())
+	{
+		ofstream fout;
+		fout.open("highscore.txt");
 
+		
+		fout << 0;
+		
+		fout.close();
+	}
+	fin.close();
+	
 	return true;
 }
 
@@ -62,15 +75,16 @@ bool Statistics::shutdown()
 bool Statistics::writeScoreToFile(string fileName)
 {
 	//write the totalTime that it took for player to win if the time is higher than the current written time
-	ifstream fin;
+	ifstream fin(fileName);
+	
 	vector<string> levelNames;
 	vector<float> totalTimes;
 	int nrOfEntries = 0;
 	bool writeNewScore = false;
 	bool levelExists = false;
-	fin.open(fileName);
+	
 
-	if(fin.fail() == true)
+	if(!fin)
 	{
 		return false;
 	}
@@ -81,7 +95,7 @@ bool Statistics::writeScoreToFile(string fileName)
 	for(int i = 0; i < nrOfEntries; i++)
 	{
 		string tempLevelName = "";
-		float tempTotalTime = 0.0f;
+		float tempTotalTime = 10000.0f;
 
 		fin >> tempLevelName >> tempTotalTime;
 		
@@ -92,7 +106,7 @@ bool Statistics::writeScoreToFile(string fileName)
 		{
 			levelExists = true;
 			
-			if(this->totalTime > tempTotalTime)
+			if(this->totalTime < tempTotalTime)
 			{
 				totalTimes[i] = totalTime;
 				writeNewScore = true;
@@ -173,5 +187,5 @@ int Statistics::readScoreFromFile(string fileName,string levelName)
 	}
 	fin.close();
 
-	return 1;	
+	return 0;	
 }

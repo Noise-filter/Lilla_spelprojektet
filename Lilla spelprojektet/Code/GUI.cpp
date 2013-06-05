@@ -98,24 +98,24 @@ void GUI::createBtns(int state)
 	{
 		this->nrOfBtns = 3;
 		this->menuBtns = new Button[nrOfBtns];
-		this->menuBtns[0] = createBtn(D3DXVECTOR2(0.5f*(0.4f*SCREEN_WIDTH),0.5f*(0.9f*SCREEN_HEIGHT)), STARTGAME);
-		this->menuBtns[1] = createBtn(D3DXVECTOR2(0.5f*(0.4f*SCREEN_WIDTH),0.5f*(1.1f*SCREEN_HEIGHT)), SETTINGS);
-		this->menuBtns[2] = createBtn(D3DXVECTOR2(0.5f*(0.4f*SCREEN_WIDTH),0.5f*(1.3f*SCREEN_HEIGHT)), QUIT);
+		this->menuBtns[0] = createBtn(D3DXVECTOR2(0.5f*(0.4f*SCREEN_WIDTH),0.5f*(0.7f*SCREEN_HEIGHT)), STARTGAME);
+		this->menuBtns[1] = createBtn(D3DXVECTOR2(0.5f*(0.4f*SCREEN_WIDTH),0.5f*(0.9f*SCREEN_HEIGHT)), SETTINGS);
+		this->menuBtns[2] = createBtn(D3DXVECTOR2(0.5f*(0.4f*SCREEN_WIDTH),0.5f*(1.1f*SCREEN_HEIGHT)), QUIT);
 	}
 	else if(state == STATE_SETTINGS)
 	{
 		this->nrOfBtns = 2;
 		this->menuBtns = new Button[nrOfBtns];
-		this->menuBtns[0] = createBtn(D3DXVECTOR2(0.5f*(1*SCREEN_WIDTH),0.5f*(0.55f*SCREEN_HEIGHT)), MUTE);
-		this->menuBtns[1] = createBtn(D3DXVECTOR2(0.5f*(1*SCREEN_WIDTH),0.5f*(1.55f*SCREEN_HEIGHT)), BACK);
+		this->menuBtns[0] = createBtn(D3DXVECTOR2(0.5f*(0.4f*SCREEN_WIDTH),0.5f*(0.7f*SCREEN_HEIGHT)), MUTE);
+		this->menuBtns[1] = createBtn(D3DXVECTOR2(0.5f*(0.4f*SCREEN_WIDTH),0.5f*(1.5f*SCREEN_HEIGHT)), BACK);
 	}
 	else if(state == STATE_PAUSED)
 	{
 		this->nrOfBtns = 3;
 		this->menuBtns = new Button[nrOfBtns];
-		this->menuBtns[0] = createBtn(D3DXVECTOR2(0.5f*(0.3f*SCREEN_WIDTH),0.5f*(0.9f*SCREEN_HEIGHT)), PAUSED_CONTINUE);
-		this->menuBtns[1] = createBtn(D3DXVECTOR2(0.5f*(0.3f*SCREEN_WIDTH),0.5f*(1.1f*SCREEN_HEIGHT)), SETTINGS);
-		this->menuBtns[2] = createBtn(D3DXVECTOR2(0.5f*(0.3f*SCREEN_WIDTH),0.5f*(1.3f*SCREEN_HEIGHT)), MAIN_MENU);
+		this->menuBtns[0] = createBtn(D3DXVECTOR2(0.5f*(0.4f*SCREEN_WIDTH),0.5f*(0.7f*SCREEN_HEIGHT)), PAUSED_CONTINUE);
+		this->menuBtns[1] = createBtn(D3DXVECTOR2(0.5f*(0.4f*SCREEN_WIDTH),0.5f*(0.9f*SCREEN_HEIGHT)), SETTINGS);
+		this->menuBtns[2] = createBtn(D3DXVECTOR2(0.5f*(0.4f*SCREEN_WIDTH),0.5f*(1.1f*SCREEN_HEIGHT)), MAIN_MENU);
 		for(int i = 0; i < this->nrOfBtns; i++)
 		{
 			setLeftAligned(this->menuBtns[i].text);
@@ -123,18 +123,44 @@ void GUI::createBtns(int state)
 	}
 	else if(state == STATE_NEWGAME)
 	{
-		this->nrOfBoxes = 2;
+		
+		int time = Statistics::Getinstance()->readScoreFromFile("highscore.txt", convertWstrToStr(level)+".txt");
+		char temp[255];
+		string score = itoa(time, temp, 10);
+	
+		if(score == "0")
+		{
+			score = "No score set yet.";
+			
+		}
+		else
+		{
+			string best = "Best time: ";
+			int min = time/60;
+			int sek = time%60;
+			if(min != 0)
+			{
+			best.append( itoa(min, temp, 10) );
+			best.append(" min ");
+			}
+			best.append ( itoa(sek, temp, 10) );
+			best.append(" sek");
+			score = best;
+		}
+		bestTime = convertStrToWstr(score);
+		this->nrOfBoxes = 3;
 		this->textBoxes = new Text[nrOfBoxes];
-		this->textBoxes[0] = createTextBox(D3DXVECTOR2(0.5f*(1*SCREEN_WIDTH),0.5f*(0.5f*SCREEN_HEIGHT)), level, 36, 0xffa8a8a8);
-		this->textBoxes[1] = createTextBox(D3DXVECTOR2(0.5f*(1*SCREEN_WIDTH),0.5f*(0.65f*SCREEN_HEIGHT)), difficulty, 36, 0xffa8a8a8);
+		this->textBoxes[0] = createTextBox(D3DXVECTOR2(0.5f*(0.4f*SCREEN_WIDTH),0.5f*(0.7f*SCREEN_HEIGHT)), level, 36, 0xffa8a8a8);
+		this->textBoxes[1] = createTextBox(D3DXVECTOR2(0.5f*(0.4f*SCREEN_WIDTH),0.5f*(0.9f*SCREEN_HEIGHT)), difficulty, 36, 0xffa8a8a8);
+		this->textBoxes[2] = createTextBox(D3DXVECTOR2(0.5f*(0.4f*SCREEN_WIDTH),0.5f*(1.1f*SCREEN_HEIGHT)), (wchar_t*)bestTime.c_str(), 24, 0xffa8a8a8);
 		this->nrOfBtns = 6;
 		this->menuBtns = new Button[nrOfBtns];
 		this->menuBtns[0] = createBtn(D3DXVECTOR2(textBoxes[0].pos.x - 80, textBoxes[0].pos.y), LAST);
 		this->menuBtns[1] = createBtn(D3DXVECTOR2(textBoxes[0].pos.x + 80, textBoxes[0].pos.y), NEXT);
 		this->menuBtns[2] = createBtn(D3DXVECTOR2(textBoxes[1].pos.x - 80, textBoxes[1].pos.y), LAST);
 		this->menuBtns[3] = createBtn(D3DXVECTOR2(textBoxes[1].pos.x + 80, textBoxes[1].pos.y), NEXT);
-		this->menuBtns[4] = createBtn(D3DXVECTOR2(0.5f*(1*SCREEN_WIDTH),0.5f*(1.45f*SCREEN_HEIGHT)), STARTGAME);
-		this->menuBtns[5] = createBtn(D3DXVECTOR2(0.5f*(1*SCREEN_WIDTH),0.5f*(1.6f*SCREEN_HEIGHT)), BACK);
+		this->menuBtns[4] = createBtn(D3DXVECTOR2(0.4f*(0.5*SCREEN_WIDTH),0.5f*(1.45f*SCREEN_HEIGHT)), STARTGAME);
+		this->menuBtns[5] = createBtn(D3DXVECTOR2(0.4f*(0.5*SCREEN_WIDTH),0.5f*(1.6f*SCREEN_HEIGHT)), BACK);
 	}
 	else if(state == STATE_LOADING)
 	{
@@ -164,6 +190,7 @@ void GUI::createBtns(int state)
 		this->menuBtns = new Button[nrOfBtns];
 		this->menuBtns[0] = createBtn(D3DXVECTOR2(0.5f*(0.8f*SCREEN_WIDTH),0.5f*(1.6f*SCREEN_HEIGHT)), MAIN_MENU);
 		this->menuBtns[1] = createBtn(D3DXVECTOR2(0.5f*(1.2f*SCREEN_WIDTH),0.5f*(1.6f*SCREEN_HEIGHT)), RETRY);
+		Statistics::Getinstance()->writeScoreToFile( "highscore.txt" );
 	}
 	else if(state == STATE_LOSE)
 	{
@@ -186,6 +213,7 @@ void GUI::createBtns(int state)
 		this->menuBtns = new Button[nrOfBtns];
 		this->menuBtns[0] = createBtn(D3DXVECTOR2(0.5f*(0.8f*SCREEN_WIDTH),0.5f*(1.6f*SCREEN_HEIGHT)), MAIN_MENU);
 		this->menuBtns[1] = createBtn(D3DXVECTOR2(0.5f*(1.2f*SCREEN_WIDTH),0.5f*(1.6f*SCREEN_HEIGHT)), RETRY);
+
 	}
 }
 
@@ -463,6 +491,32 @@ void GUI::changeText(D3DXVECTOR2 pos, BUTTONTYPE type)
 	}
 	wchar_t* difficulty = (wchar_t*)difficultyList[currentDifficulty].c_str();
 	textBoxes[1].text = difficulty;
+
+	
+	int time = Statistics::Getinstance()->readScoreFromFile("highscore.txt", convertWstrToStr(levelList[currentLevel])+".txt");
+	char temp[255];
+	string score = itoa(time, temp, 10);
+	
+	if(score == "0")
+	{
+		score = "No score set yet.";
+	}
+	else
+	{
+		string best = "Best time: ";
+		int min = time/60;
+		int sek = time%60;
+		if(min != 0)
+		{
+		best.append( itoa(min, temp, 10) );
+		best.append(" min ");
+		}
+		best.append ( itoa(sek, temp, 10) );
+		best.append(" sek.");
+		score = best;
+	}
+	bestTime = convertStrToWstr(score);
+	textBoxes[2].text = (wchar_t*)bestTime.c_str();
 }
 
 string GUI::getCurrentLevel()const
@@ -519,8 +573,22 @@ void GUI::getEndStats()
 	Stats[2].append( itoa(Statistics::Getinstance()->totalRes, temp, 10) );
 	Stats[3] = "Supplys: ";
 	Stats[3].append (itoa(Statistics::Getinstance()->totalSupply, temp, 10) );
-	Stats[4] = "Time: ";
-	Stats[4].append( itoa((int)Statistics::Getinstance()->totalTime, temp, 10) );
+
+	int totalTime = (int)Statistics::Getinstance()->totalTime;
+	string time = "Time: ";
+	int min = totalTime/60;
+	int sek = totalTime%60;
+	if(min != 0)
+	{
+		time.append( itoa(min, temp, 10) );
+		time.append(" min ");
+	}
+	time.append ( itoa(sek, temp, 10) );
+	time.append(" sek");
+
+	
+	Stats[4] = time;
+
 	Stats[5] = "Buildings built: ";
 	Stats[5].append( itoa(Statistics::Getinstance()->totalNrOfBuildings, temp, 10) );
 	Stats[6] = "Enemies killed: ";

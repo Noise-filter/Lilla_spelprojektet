@@ -132,7 +132,7 @@ void GameObject::mUpdate(ID3D11DeviceContext *dc , std::vector<HPBarInfo>& data)
 	Matrix scale;
 	for(int j = 0; j < (int)data.size(); j++)
 	{
-		D3DXMatrixScaling(&scale, data[j].hpPercent * 3, 0.2, 1.0f);
+		D3DXMatrixScaling(&scale, data[j].hpPercent * 3, 0.2f, 1.0f);
 		mesh[j].world = scale * data[j].translate;
 	}
 
